@@ -1,0 +1,9 @@
+{
+  // configuration that goes into atomist.config.ts
+  // this gets applied when running on eg PCF
+  "endpoints": {
+    "api": "https://automation.atomist.com/registration",
+    "graphql": "https://automation.atomist.com/graphql/team"
+  },
+  "teamIds": [ "T095SFFBK", "T29E48P34", "T489LV5QF" ]
+}

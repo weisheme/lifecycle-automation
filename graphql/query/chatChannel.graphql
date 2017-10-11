@@ -1,0 +1,10 @@
+query Repo($channelName: String!, $repoOwner: String!, $repoName: String!) {
+  ChatChannel(name: $channelName) {
+    name
+    repos(owner: $repoOwner, name: $repoName) {
+      name
+      owner
+    }
+  }
+}
+

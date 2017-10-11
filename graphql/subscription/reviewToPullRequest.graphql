@@ -1,0 +1,161 @@
+subscription ReviewToPullRequestLifecycle
+{
+  Review {
+    _id
+    pullRequest {
+      number
+      name
+      body
+      state
+      merged
+      timestamp
+      title
+      createdAt
+      mergedAt
+      baseBranchName
+      branchName
+      head {
+        sha
+      }
+      lastAssignedBy {
+        login
+        name
+        person {
+          gitHubId {
+            login
+          }
+          chatId {
+            screenName
+            id
+          }
+        }
+      }
+      closedAt
+      branch {
+        name
+        deleted
+        timestamp
+      }
+      author {
+        login
+        name
+        person {
+          gitHubId {
+            login
+          }
+          chatId {
+            screenName
+            id
+          }
+        }
+      }
+      merger {
+        login
+        name
+        person {
+          gitHubId {
+            login
+          }
+          chatId {
+            screenName
+            id
+          }
+        }
+      }
+      assignees {
+        login
+        name
+        person {
+          gitHubId {
+            login
+          }
+          chatId {
+            screenName
+            id
+          }
+        }
+      }
+      reviewers {
+        login
+        name
+        person {
+          gitHubId {
+            login
+          }
+          chatId {
+            screenName
+            id
+          }
+        }
+      }
+      labels {
+        name
+      }
+      comments {
+        body
+      }
+      commits {
+        sha
+        message
+        timestamp
+        tags {
+          name
+          release {
+            name
+            timestamp
+          }
+        }
+        statuses {
+          state
+          description
+          context
+          targetUrl
+        }
+        author {
+          login
+          name
+          person {
+            gitHubId {
+              login
+            }
+            chatId {
+              screenName
+              id
+            }
+          }
+        }
+      }
+      builds {
+        name
+        status
+        buildUrl
+        provider
+      }
+      reviews {
+        state
+        by {
+          login
+        }
+      }
+      repo {
+        name
+        owner
+        channels {
+          name
+        }
+        allowRebaseMerge
+        allowSquashMerge
+        allowMergeCommit
+        defaultBranch
+        org {
+          provider {
+            url
+            apiUrl
+            gitUrl
+          }
+        }
+      }
+    }
+  }
+}
+

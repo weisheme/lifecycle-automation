@@ -1,0 +1,22 @@
+import { EventHandler, Tags } from "@atomist/automation-client/decorators";
+import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { EventFired } from "@atomist/automation-client/Handlers";
+import * as graphql from "../../../typings/types";
+import { PushLifecycleHandler } from "./PushLifecycle";
+
+/**
+ * A Event handler that sends a lifecycle message on Issue events.
+ */
+@EventHandler("Event handler that sends a lifecycle message on Issue events",
+    GraphQL.subscriptionFromFile("graphql/subscription/issueToPush"))
+@Tags("lifecycle", "push", "issue")
+export class IssueToPushLifecycle extends PushLifecycleHandler<graphql.IssueToPushLifecycle.Subscription> {
+
+    protected extractNodes(event: EventFired<graphql.IssueToPushLifecycle.Subscription>):
+        [graphql.PushToPushLifecycle.Push[], string] {
+
+        const pushes = [];
+        event.data.Issue[0].resolvingCommits.forEach(c => pushes.push(...c.pushes));
+        return [pushes, new Date().getTime().toString()];
+    }
+}

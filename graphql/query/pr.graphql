@@ -1,0 +1,29 @@
+query PR($teamId: ID!, $orgOwner: String!, $repoName: String!, $prName: String!) {
+  ChatTeam(id: $teamId) {
+    orgs(owner: $orgOwner) {
+      repo(name: $repoName) {
+        name
+        owner
+        pullRequest(name: $prName) {
+          state
+          number
+          name
+          title
+          body
+          repo {
+            name
+            owner
+            org {
+              provider {
+                url
+                apiUrl
+                gitUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

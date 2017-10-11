@@ -1,0 +1,48 @@
+subscription NotifyAuthorOnReview
+{
+  Review {
+    _id
+    body
+    state
+    htmlUrl
+    by {
+      login
+    }
+    pullRequest {
+      head {
+        sha
+      }
+      author {
+        login
+        person {
+          chatId {
+            screenName
+            preferences {
+              properties
+            }
+          }
+        }
+      }
+      number
+      title
+      state
+      merged
+      labels {
+        name
+      }
+      repo {
+        name
+        owner
+        org {
+          provider {
+            url
+          }
+        }
+        channels {
+          name
+          channelId
+        }
+      }
+    }
+  }
+}

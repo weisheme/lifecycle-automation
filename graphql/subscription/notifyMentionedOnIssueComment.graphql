@@ -1,0 +1,50 @@
+subscription NotifyMentionedOnIssueComment
+{
+  Comment {
+    _id
+    gitHubId
+    body
+    by {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    issue {
+      title
+      body
+      state
+      timestamp
+      number
+      lastAssignedBy {
+        login
+      }
+      openedBy {
+        login
+      }
+      repo {
+        name
+        owner
+        org {
+          provider {
+            url
+          }
+        }
+        channels {
+          name
+          channelId
+        }
+      }
+    }
+  }
+}
+
+
+
+
+

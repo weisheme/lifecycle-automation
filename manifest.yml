@@ -1,0 +1,14 @@
+applications:
+- name: lifecycle-automation
+  command: $(npm bin)/atomist-client
+  routes:
+  - route: lifecycle.a.atomist.com
+  memory: 128M
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack
+  env:
+    NODE_OPTIONS: --trace-warnings
+    SUPPRESS_NO_CONFIG_WARNING: true
+  services:
+  - github-token
+  - dashboard-credentials
+  - logzio-credentials

@@ -1,0 +1,227 @@
+import {
+    buttonForCommand,
+    menuForCommand,
+    SelectSpec,
+} from "@atomist/automation-client/spi/message/MessageClient";
+import { Action } from "@atomist/slack-messages/SlackMessages";
+import {
+    AbstractIdentifiableContribution, ActionContributor,
+    RendererContext,
+} from "../../../../lifecycle/Lifecycle";
+import * as graphql from "../../../../typings/types";
+
+export abstract class AbstractCommentActionContributor extends AbstractIdentifiableContribution
+    implements ActionContributor<any> {
+
+    constructor(private identifier: string, private forIssue: boolean, private forPr: boolean) {
+        super(identifier);
+    }
+
+    public supports(node: any): boolean {
+        if (node.body && (node.issue || node.pullRequest)) {
+            const comment = node as any;
+            return (comment.issue != null && comment.issue.state === "open")
+                || (comment.pullRequest != null && comment.pullRequest.state === "open");
+
+        } else {
+            return false;
+        }
+    }
+
+    public buttonsFor(comment: any, context: RendererContext):
+        Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo");
+        const issue = context.lifecycle.extract("issue");
+        const pr = context.lifecycle.extract("pullrequest");
+
+        const buttons = [];
+
+        if (context.rendererId === "issuecomment" || context.rendererId === "pullrequestcomment") {
+            let button;
+
+            if (this.forIssue && issue != null) {
+                button = this.createButton(comment, issue.number, repo);
+            } else if (this.forPr && pr != null) {
+                button = this.createButton(comment, pr.number, repo);
+            }
+
+            if (button != null) {
+                buttons.push(button);
+            }
+        }
+        return Promise.resolve(buttons);
+    }
+
+    public menusFor(comment: any, context: RendererContext)
+        : Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo");
+        const issue = context.lifecycle.extract("issue");
+        const pr = context.lifecycle.extract("pullrequest");
+
+        const menues = [];
+
+        if (context.rendererId === "issuecomment" || context.rendererId === "pullrequestcomment") {
+            let menu;
+
+            if (this.forIssue && issue != null) {
+                menu = this.createMenu(comment, issue.number, issue.labels, repo);
+            } else if (this.forPr && pr != null) {
+                menu = this.createMenu(comment, pr.number, (pr as any).labels, repo);
+            }
+
+            if (menu != null) {
+                menues.push(menu);
+            }
+        }
+        return Promise.resolve(menues);
+    }
+
+    protected abstract createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
+
+    protected abstract createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
+}
+
+export class AssignActionContributor extends AbstractCommentActionContributor
+    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+
+    constructor() {
+        super("assign", true, false);
+    }
+
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return buttonForCommand({ text: "Assign to Me" }, "AssignToMeGitHubIssue", {
+            issue: id,
+            repo: repo.name,
+            owner: repo.owner,
+        });
+    }
+
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return null;
+    }
+}
+
+export class LabelActionContributor extends AbstractCommentActionContributor
+    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+
+    constructor() {
+        super("label", true, false);
+    }
+
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return null;
+    }
+
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        let options = [];
+        if (repo.labels != null && repo.labels.length > 0) {
+            repo.labels.sort((l1, l2) => l1.name.localeCompare(l2.name))
+                .forEach(l => options.push({ text: l.name, value: l.name }));
+        } else {
+            options = [{ text: "bug", value: "bug" }, { text: "duplicate", value: "duplicate" },
+            { text: "enhancement", value: "enhancement" }, { text: "help wanted", value: "help wanted" },
+            { text: "invalid", value: "invalid" }, { text: "question", value: "question" },
+            { text: "wontfix", value: "wontfix" }];
+        }
+
+        const existingLabels = (labels != null ? labels.
+            sort((l1, l2) => l1.name.localeCompare(l2.name)).map(l => l.name) : []);
+        const unusedLabels = options.filter(l => existingLabels.indexOf(l.text) < 0);
+
+        const menu: SelectSpec = {
+            text: "Label",
+            options: [{
+                text: "\u2611", options: existingLabels.map(l => {
+                    return { text: l, value: l };
+                }),
+            },
+            { text: "\u2610", options: unusedLabels },
+            ],
+        };
+
+        return menuForCommand(menu, "ToggleLabelGitHubIssue", "label", {
+            issue: id,
+            repo: repo.name,
+            owner: repo.owner,
+        });
+    }
+}
+
+export class CloseActionContributor extends AbstractCommentActionContributor
+    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+
+    constructor() {
+        super("close", true, false);
+    }
+
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return buttonForCommand({ text: "Close" }, "CloseGitHubIssue", {
+            issue: id,
+            repo: repo.name,
+            owner: repo.owner,
+        });
+    }
+
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return null;
+    }
+}
+
+export class CommentActionContributor extends AbstractCommentActionContributor
+    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+
+    constructor() {
+        super("comment", true, true);
+    }
+
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return buttonForCommand({ text: "Comment" }, "CommentGitHubIssue", {
+            issue: id,
+            repo: repo.name,
+            owner: repo.owner,
+        });
+    }
+
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return null;
+    }
+}
+
+export class ReactionActionContributor extends AbstractCommentActionContributor
+    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+
+    constructor() {
+        super("reaction", true, true);
+    }
+
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return buttonForCommand({ text: ":+1:" }, "ReactGitHubIssueComment", {
+            comment: comment.gitHubId,
+            repo: repo.name,
+            owner: repo.owner,
+            reaction: "+1",
+        });
+    }
+
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return null;
+    }
+}

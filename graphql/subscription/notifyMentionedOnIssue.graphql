@@ -1,0 +1,67 @@
+subscription NotifyMentionedOnIssue
+{
+  Issue {
+    _id
+    name
+    number
+    title
+    body
+    state
+    lastAssignedBy {
+      login
+    }
+    openedBy {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    closedBy {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    assignees {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    repo {
+      name
+      owner
+      labels {
+        name
+      }
+      channels {
+        name
+        channelId
+      }
+      org {
+        provider {
+          apiUrl
+          gitUrl
+          url
+        }
+      }
+    }
+  }
+}
+
+

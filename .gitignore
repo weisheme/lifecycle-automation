@@ -1,0 +1,9 @@
+/.idea
+/node_modueles
+/target
+/node_modules
+/build
+/lifecycle-rugs.iml
+/git.properties
+/config/development.json
+git-info.json

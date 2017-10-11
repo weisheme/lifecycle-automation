@@ -1,0 +1,39 @@
+subscription NotifyPusherOnBuild
+{
+  Build {
+    _id
+    status
+    buildUrl
+    name
+    commit {
+      sha
+      message
+      author {
+        login
+        person {
+          chatId {
+            screenName
+            preferences {
+              properties
+            }
+          }
+        }
+      }
+    }
+    repo {
+      name
+      owner
+      org {
+        provider {
+          url
+          apiUrl
+        }
+      }
+      channels {
+        name
+        channelId
+      }
+    }
+  }
+}
+

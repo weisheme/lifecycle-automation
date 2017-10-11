@@ -1,0 +1,615 @@
+import {
+    Action,
+    Attachment,
+    bold,
+    codeLine,
+    emoji as slackEmoji,
+    escape,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages/SlackMessages";
+import * as config from "config";
+import {
+    AbstractIdentifiableContribution,
+    NodeRenderer,
+    RendererContext,
+} from "../../../../lifecycle/Lifecycle";
+import * as graphql from "../../../../typings/types";
+import {
+    avatarUrl,
+    branchUrl,
+    commitUrl,
+    issueUrl,
+    repoSlug,
+    repoUrl,
+    tagUrl,
+    truncateCommitMessage,
+    userUrl,
+} from "../../../../util/Helpers";
+import { Domain } from "../PushLifecycle";
+
+export const EMOJI_SCHEME = {
+
+    default: {
+        impact: {
+            noChange: "\u25CE",
+            info: "\u25C9",
+            warning: "\u25C9",
+            error: "\u25C9",
+        },
+        build: {
+            started: "\u25cf",
+            failed: "\u2717",
+            passed: "\u2713",
+        },
+    },
+
+    atomist: {
+        impact: {
+            noChange: slackEmoji("atomist_impact_no_line"),
+            info: slackEmoji("atomist_impact_info_line"),
+            warning: slackEmoji("atomist_impact_warning_line"),
+            error: slackEmoji("atomist_impact_error_line"),
+        },
+        build: {
+            started: slackEmoji("atomist_build_started"),
+            failed: slackEmoji("atomist_build_failed"),
+            passed: slackEmoji("atomist_build_passed"),
+        },
+    },
+};
+
+export class PushNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("push");
+    }
+
+    public supports(node: any): boolean {
+        return node.after;
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
+        context: RendererContext): Promise<SlackMessage> {
+        const repo = context.lifecycle.extract("repo");
+
+        msg.text = `${push.commits.length} new ${(push.commits.length > 1 ? "commits" : "commit")} ` +
+            `to ${bold(url(branchUrl(repo, push.branch), `${repoSlug(repo)}/${push.branch}`))}`;
+        msg.attachments = [];
+
+        return Promise.resolve(msg);
+    }
+}
+
+export class CommitNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    public style: "fingerprint-inline" | "fingerprint-multi-line" =
+    config.get("lifecycles.push.configuration.fingerprints.style") || "fingerprint-inline";
+
+    public renderUnchangedFingerprints: boolean =
+    config.get("lifecycles.push.configuration.fingerprints.render-unchanged") || true;
+
+    public aboutHint: true = config.get("lifecycles.push.configuration.fingerprints.about-hint") || true;
+
+    public emojiStyle: "default" | "atomist" = config.get("lifecycles.push.configuration.emoji-style") || "default";
+
+    public fingerprints: any = config.get("fingerprints.data") || {};
+
+    constructor() {
+        super("commit");
+    }
+
+    public supports(node: any): boolean {
+        return node.after;
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
+        context: RendererContext): Promise<SlackMessage> {
+        const repo = context.lifecycle.extract("repo");
+        const slug = repo.owner + "/" + repo.name + "/" + push.branch;
+        const commits = push.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
+        const commitsGroupedByAuthor = [];
+
+        let author = null;
+        let commitsByAuthor: any = {};
+        for (const commit of commits) {
+            const ca = (commit.author != null ? commit.author.login : "<unkown>");
+            if (author == null || author !== ca) {
+                commitsByAuthor = {
+                    author: ca,
+                    commits: [],
+                };
+                author = ca;
+                commitsGroupedByAuthor.push(commitsByAuthor);
+            }
+            if (ca === author) {
+                commitsByAuthor.commits.push(commit);
+            }
+        }
+
+        let attachments: Attachment[] = [];
+
+        commitsGroupedByAuthor
+            .forEach(cgba => {
+                const a = cgba.author;
+                let foundFingerprints = false;
+
+                // TODO this should use reduce here
+                const message = cgba.commits.map(c => {
+                    const [m, fp] = this.renderCommitMessage(c, push, repo);
+                    if (fp) {
+                        foundFingerprints = true;
+                    }
+                    return m;
+                }).join("\n");
+
+                const footer = (this.aboutHint && foundFingerprints
+                    ? `${url("http://docs.atomist.com/user-guide/fingerprints/", "About fingerprints")}`
+                    : null);
+
+                const attachment: Attachment = {
+                    author_name: `@${a}`,
+                    author_link: userUrl(repo, a),
+                    author_icon: avatarUrl(repo, a),
+                    text: message,
+                    mrkdwn_in: ["text"],
+                    color: "#00a5ff",
+                    fallback: `${cgba.commits.length} ${(cgba.commits.length > 1 ? "commits" : "commit")}` +
+                    ` to ${url(branchUrl(repo, push.branch), slug)} by @${a}`,
+                    footer,
+                    actions: [],
+                };
+                attachments.push(attachment);
+            });
+
+        // Limit number of commits by author to 2
+        if (attachments.length > 2) {
+            attachments = attachments.slice(0, 2);
+            const attachment: Attachment = {
+                author_link: branchUrl(repo, push.branch),
+                author_name: "Show more...",
+                mrkdwn_in: ["text"],
+                color: "#00a5ff",
+                fallback: `Show more...`,
+                actions: [],
+            };
+            attachments.push(attachment);
+        }
+
+        if (attachments.length > 0) {
+            const lastAttachment = attachments[attachments.length - 1];
+            lastAttachment.actions = actions;
+            lastAttachment.footer_icon = "http://images.atomist.com/rug/commit.png";
+            if (lastAttachment.footer != null) {
+                lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
+            } else {
+                lastAttachment.footer = url(repoUrl(repo), repoSlug(repo));
+            }
+            lastAttachment.ts = Math.floor(Date.parse(push.timestamp) / 1000);
+        }
+
+        msg.attachments = msg.attachments.concat(attachments);
+
+        return Promise.resolve(msg);
+    }
+
+    private renderCommitMessage(commitNode: graphql.PushToPushLifecycle.Commits, push: any,
+        repo: any): [string, boolean] {
+        // Cut commit to 50 chars of first line
+        let m = truncateCommitMessage(commitNode.message, repo);
+        let foundFingerprints = false;
+        // Verify that fingerprints aren't displayed for the first commit after the "initial commit"
+        if ((push.before != null && push.before.message !== "Initial commit" || push.before == null)
+            && (commitNode as any).impact != null) {
+
+            const impact = (commitNode as any).impact;
+            // [[["plugins",0],["rest",1],["deps",0]]]
+            const data = JSON.parse(impact.data);
+
+            if (data != null) {
+                if (this.style === "fingerprint-multi-line") {
+                    const changedFingerprints: string[] = [];
+                    data.forEach(i => i.filter(f => f[1] > 0).forEach(f => {
+                        if (changedFingerprints.indexOf(f[0]) < 0) {
+                            m = `${m}${this.renderFingerprintMessageMultiLine(f[0], impact)}`;
+                            foundFingerprints = true;
+                        }
+                    }));
+                } else if (this.style === "fingerprint-inline") {
+                    const fm = [];
+                    data.filter(i => i.filter(f => f[1] > 0).length > 0).forEach(i => {
+                        const fpv = [];
+                        // Filter the relevant fingerprints and map to their group names
+                        i.filter(f => this.renderUnchangedFingerprints
+                            || (!this.renderUnchangedFingerprints && f[1] === 1))
+                            .map(f => [this.getGroup(f[0]), f[1]]).forEach(f => {
+                                const fpvf = fpv.filter(fp => fp[0] === f[0]);
+                                if (fpvf.length > 0) {
+                                    fpvf.forEach(fp => fp[1] += f[1]);
+                                } else {
+                                    fpv.push(f);
+                                }
+                            });
+
+                        const max = fpv.reduce((a, b) => (a[0].length > b[0].length ? a : b))[0].length;
+                        fpv.sort((f1, f2) => f1[0].localeCompare(f2[0])).forEach(f => {
+                            // tslint:disable-next-line:max-line-length
+                            fm.push(`${(f[1] > 0 ? EMOJI_SCHEME[this.emojiStyle].impact[this.getFingerprintLevel(f[0])]
+                                : EMOJI_SCHEME[this.emojiStyle].impact.noChange)} ${this.pad(max, f[0], " ")}`);
+                        });
+                    });
+
+                    // box drawing light vertical: \u2502
+                    // box drawings light up and right: \u2514
+                    // box drawings light vertical and right: \u251c
+                    if (fm.length > 6) {
+                        const groups = this.groups(fm, 5);
+                        for (let i = 0; i < groups.length; i++) {
+                            if (i < groups.length - 1) {
+                                m += "\n\u251c " + groups[i].join(" \t ");
+                            } else {
+                                m += "\n\u2514 " + groups[i].join(" \t ");
+                            }
+                        }
+                    } else if (fm.length > 0) {
+                        m += "\n\u2514 " + fm.join(" \t ");
+                    }
+
+                    if (fm.length > 0) {
+                        foundFingerprints = true;
+                    }
+                }
+            }
+        }
+        return ["`" + url(commitUrl(repo, commitNode), commitNode.sha.substring(0, 7)) + "` " + m, foundFingerprints];
+    }
+
+    private renderFingerprintMessageMultiLine(fingerprint: string, impact: graphql.PushToPushLifecycle.Impact): string {
+        return `\n┗ ${EMOJI_SCHEME[this.emojiStyle].impact[this.getFingerprintLevel(fingerprint)]}`
+            + ` ${this.getFingerprintDescription(fingerprint)} ${url(impact.url, "more...")}`;
+    }
+
+    private getFingerprintDescription(fingerprint: string): string {
+        if (this.fingerprints[fingerprint] != null) {
+            return this.fingerprints[fingerprint].description;
+        } else {
+            return `Fingerprint ${fingerprint} changed`;
+        }
+    }
+
+    private getFingerprintLevel(fingerprint: string): string {
+        if (this.fingerprints[fingerprint] != null) {
+            return this.fingerprints[fingerprint].level;
+        } else {
+            return "warning";
+        }
+    }
+
+    private getGroup(fingerprint: string): string {
+        if (this.fingerprints[fingerprint] != null && this.fingerprints[fingerprint].group != null) {
+            return this.fingerprints[fingerprint].group;
+        } else {
+            return fingerprint;
+        }
+    }
+
+    private groups(msgs: string[], size: number = 5) {
+        const sets = [];
+        const chunks = msgs.length / size;
+        for (let i = 0, j = 0; i < chunks; i++ , j += size) {
+            sets[i] = msgs.slice(j, j + size);
+        }
+        return sets;
+    }
+
+    private pad(width: number, str: string, padding: string) {
+        return (width <= str.length) ? str : this.pad(width, str + padding, padding);
+    }
+}
+
+export class BuildNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Builds> {
+
+    public style: "attachment" | "footer" | "decorator" =
+    config.get("lifecycles.push.configuration.build.style") || "decorator";
+
+    public emojiStyle: "default" | "atomist" = config.get("lifecycles.push.configuration.emoji-style") || "default";
+
+    constructor() {
+        super("build");
+    }
+
+    public supports(node: any): boolean {
+        return node.buildUrl;
+    }
+
+    public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
+        context: RendererContext): Promise<SlackMessage> {
+        const push = context.lifecycle.extract("push");
+        const random = `${push.after.sha}-${new Date().getTime().toString()}`;
+
+        let title;
+        let fallback;
+
+        // build.name might be a number in which case we should render "Build #<number>".
+        // It it isn't a number just render the build.name
+        if (isNaN(+build.name)) {
+            title = `${build.name} ${build.status}`;
+            fallback = `${build.name} ${build.status}`;
+        } else {
+            title = `Build #${build.name} ${build.status}`;
+            fallback = `Build #${build.name} ${build.status}`;
+        }
+
+        let icon;
+        let color;
+        let emoji;
+        if (build.status === "passed") {
+            icon = `https://images.atomist.com/rug/check-circle.gif?gif=${random}`;
+            color = "#45B254";
+            emoji = EMOJI_SCHEME[this.emojiStyle].build.passed;
+        } else if (build.status === "started") {
+            icon = `https://images.atomist.com/rug/pulsating-circle.gif?gif=${random}`;
+            color = "#cccc00";
+            emoji = EMOJI_SCHEME[this.emojiStyle].build.started;
+        } else {
+            icon = `https://images.atomist.com/rug/cross-circle.png`;
+            color = "#D94649";
+            emoji = EMOJI_SCHEME[this.emojiStyle].build.failed;
+        }
+
+        if (this.style === "footer") {
+            this.renderFooter(build, actions, msg, title, icon);
+        } else if (this.style === "attachment") {
+            this.renderAttachment(build, actions, msg, title, icon, color, fallback);
+        } else if (this.style === "decorator") {
+            this.renderDecorator(build, push, actions, msg, emoji, color);
+        }
+
+        return Promise.resolve(msg);
+    }
+
+    private renderDecorator(build: graphql.PushToPushLifecycle.Builds, push: graphql.PushToPushLifecycle.Push,
+        actions: Action[], msg: SlackMessage, emoji: string, color: string) {
+        // For now we only render the last build as decorator
+        const builds = push.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
+        if (builds[0].buildId !== build.buildId) {
+            return;
+        }
+
+        const attachment: Attachment = msg.attachments[0];
+        if (attachment) {
+            const messages = attachment.text.split(("\n"));
+
+            let title;
+            // build.name might be a number in which case we should render "Build #<number>".
+            // It it isn't a number just render the build.name
+            if (isNaN(+build.name)) {
+                title = build.name;
+            } else {
+                title = `Build #${build.name}`;
+            }
+
+            messages[0] = `${messages[0]} ${emoji} ${url(build.buildUrl, title)}`;
+            attachment.text = messages.join("\n");
+            if (attachment.actions != null) {
+                attachment.actions = attachment.actions.concat(actions);
+            } else {
+                attachment.actions = actions;
+            }
+
+            if (this.emojiStyle === "default") {
+                // Colorize the push to indicate something might be wrong for builds
+                attachment.color = color;
+            }
+        }
+    }
+
+    private renderAttachment(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
+        title: string, icon: string, color: string, fallback: string) {
+        const attachment: Attachment = {
+            author_name: title,
+            author_icon: icon,
+            author_link: build.buildUrl,
+            color,
+            fallback,
+            actions,
+        };
+
+        msg.attachments.push(attachment);
+    }
+
+    private renderFooter(build: graphql.PushToPushLifecycle.Builds, actions: Action[],
+        msg: SlackMessage, title: string, icon: string) {
+        const attachment: Attachment = msg.attachments[msg.attachments.length - 1];
+        attachment.footer = url(build.buildUrl, title);
+        attachment.footer_icon = icon;
+        if (attachment.actions) {
+            attachment.actions = attachment.actions.concat(actions);
+        } else {
+            attachment.actions = actions;
+        }
+    }
+}
+
+export class TagNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Tags> {
+
+    constructor() {
+        super("tag");
+    }
+
+    public supports(node: any): boolean {
+        return "release" in node;
+    }
+
+    public render(tag: graphql.PushToPushLifecycle.Tags, actions: Action[], msg: SlackMessage,
+        context: RendererContext): Promise<SlackMessage> {
+        const repo = context.lifecycle.extract("repo");
+        const attachment: Attachment = {
+            author_name: `Tag ${tag.name} created`,
+            author_link: tagUrl(repo, tag),
+            author_icon: `https://images.atomist.com/rug/tag-outline.png`,
+            fallback: `Tag ${tag.name} created`,
+            // color: "#767676",
+            actions,
+        };
+        msg.attachments.push(attachment);
+
+        return Promise.resolve(msg);
+    }
+}
+
+export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<Domain> {
+
+    constructor() {
+        super("application");
+    }
+
+    public supports(node: any): boolean {
+        return node.name && node.apps;
+    }
+
+    public render(domain: Domain, actions: Action[], msg: SlackMessage,
+        context: RendererContext): Promise<SlackMessage> {
+
+        const domains = context.lifecycle.extract("domains") as Domain[];
+        const running = domain.apps.filter(a => a.state === "started" || a.state === "healthy").length;
+        const stopped = domain.apps.filter(a => a.state === "stopping").length;
+        const unhealthy = domain.apps.filter(a => a.state === "unhealthy").map(a => a.host);
+
+        const domainMessage = [];
+        if (running > 0) {
+            domainMessage.push(`${running} started`);
+        }
+        if (stopped > 0) {
+            domainMessage.push(`${stopped} stopped`);
+        }
+        if (unhealthy.length > 0) {
+            domainMessage.push(`${unhealthy.length} unhealthy (\`${unhealthy.join(", ")}\`)`);
+        }
+        // sort the domains by name and render an attachment per domain
+        const attachment: Attachment = {
+            text: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
+            author_name: domains.indexOf(domain) === 0 ? "Services" : undefined,
+            author_icon: domains.indexOf(domain) === 0 ? `https://images.atomist.com/rug/tasks.png` : undefined,
+            fallback: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
+            // color: "#767676",
+            mrkdwn_in: ["text"],
+            actions,
+        };
+        msg.attachments.push(attachment);
+
+        return Promise.resolve(msg);
+    }
+}
+
+export class K8PodNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("k8pod");
+    }
+
+    public supports(node: any): boolean {
+        return node.after
+            && node.commits.filter(c => c.tags != null)
+                .some(c => c.tags.some(t => t.containers && t.containers.length > 0));
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[],
+        msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
+        const images = {};
+        push.commits.filter(c => c.tags != null).forEach(c => c.tags.filter(t => t.containers != null)
+            .forEach(t => t.containers.forEach(con => {
+                const image = con.image;
+                if (images[image]) {
+                    images[image].push(con);
+                } else {
+                    images[image] = [con];
+                }
+            })));
+
+        const messages = [];
+        // tslint:disable-next-line:forin
+        for (const image in images) {
+            images[image].forEach(i => {
+
+                const pulling = i.pods.filter(j => j.state === "Pulling").length;
+                const created = i.pods.filter(j => j.state === "Created").length;
+                const pulled = i.pods.filter(j => j.state === "Pulled").length;
+                const scheduled = i.pods.filter(j => j.state === "Scheduled").length;
+                const started = i.pods.filter(j => j.state === "Started").length;
+                const unhealthy = i.pods.filter(j => j.state === "Unhealthy").length;
+                const killing = i.pods.filter(j => j.state === "Killing").length;
+
+                const imageMessages = [];
+                if (pulling > 0 || scheduled > 0) {
+                    imageMessages.push(`${pulling + scheduled} starting`);
+                }
+                if (created > 0 || pulled > 0 || started > 0) {
+                    imageMessages.push(`${created + pulled + started} started`);
+                }
+                if (unhealthy > 0) {
+                    imageMessages.push(`${unhealthy} stopping`);
+                }
+                if (killing > 0) {
+                    imageMessages.push(`${killing} stopped`);
+                }
+                messages.push(`${codeLine(i.image.split("/")[1])} ${imageMessages.join(", ")}`);
+                console.log(messages);
+            });
+        }
+
+        const attachment: Attachment = {
+            text: escape(messages.join("\n")),
+            author_name: "Containers",
+            author_icon: `https://images.atomist.com/rug/kubes.png`,
+            fallback: escape(messages.join("\n")),
+            // color: "#767676",
+            mrkdwn_in: ["text"],
+            actions,
+        };
+        msg.attachments.push(attachment);
+
+        return Promise.resolve(msg);
+    }
+}
+
+export class IssueNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("issue");
+    }
+
+    public supports(node: any): boolean {
+        return node.after
+            && node.commits.filter(c => c.resolves != null && c.resolves.length > 0).length > 0;
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
+        context: RendererContext): Promise<SlackMessage> {
+        const repo = context.lifecycle.extract("repo");
+        const issues = [];
+        push.commits.filter(c => c.resolves != null).forEach(c => c.resolves.forEach(i => {
+            if (issues.indexOf(i.number) < 0) {
+                // tslint:disable-next-line:variable-name
+                const author_name = `#${i.number}: ${truncateCommitMessage(i.title, repo)}`;
+                const attachment: Attachment = {
+                    author_name,
+                    author_icon: `https://images.atomist.com/rug/issue-${i.state}.png`,
+                    author_link: issueUrl(repo, i),
+                    fallback: author_name,
+                };
+                msg.attachments.push(attachment);
+                issues.push(i.number);
+            }
+        }));
+
+        return Promise.resolve(msg);
+    }
+}

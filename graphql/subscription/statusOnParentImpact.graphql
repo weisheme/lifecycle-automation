@@ -1,0 +1,21 @@
+subscription StatusOnParentImpact
+{
+  ParentImpact {
+    _id
+    data
+    url
+    commit {
+      sha
+      repo {
+        name
+        owner
+        org {
+          provider {
+            apiUrl
+          }
+        }
+      }
+    }
+  }
+}
+

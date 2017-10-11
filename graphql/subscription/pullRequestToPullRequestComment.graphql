@@ -1,0 +1,59 @@
+subscription PullRequestToPullRequestCommentLifecycle
+{
+  PullRequest {
+    _id
+    title
+    number
+    state
+    merged
+    repo {
+      name
+      owner
+      channels {
+        name
+      }
+      org {
+        provider {
+          apiUrl
+          url
+        }
+      }
+      labels {
+        name
+      }
+    }
+    assignees {
+      login
+      person {
+        chatId {
+          screenName
+        }
+      }
+    }
+    labels {
+      name
+    }
+    comments {
+      gitHubId
+      timestamp
+      body
+      by {
+        login
+        name
+        person {
+          chatId {
+            screenName
+          }
+          gitHubId {
+            login
+          }
+        }
+      }
+      pullRequest {
+        number
+        state
+      }
+    }
+  }
+}
+

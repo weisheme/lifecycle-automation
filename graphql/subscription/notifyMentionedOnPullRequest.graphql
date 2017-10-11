@@ -1,0 +1,81 @@
+subscription NotifyMentionedOnPullRequest
+{
+  PullRequest {
+    _id
+    name
+    number
+    title
+    body
+    state
+    merged
+    lastAssignedBy {
+      login
+    }
+    author {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    merger {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    assignees {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    reviewers {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    repo {
+      name
+      owner
+      labels {
+        name
+      }
+      channels {
+        name
+        channelId
+      }
+      org {
+        provider {
+          apiUrl
+          gitUrl
+          url
+        }
+      }
+    }
+  }
+}
+
+
+
+

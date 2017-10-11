@@ -1,0 +1,104 @@
+subscription ParentImpactToPushLifecycle
+{
+    ParentImpact {
+        _id
+        commit {
+            pushes {
+                builds {
+                    buildId
+                    buildUrl
+                    name
+                    provider
+                    status
+                    commit {
+                        sha
+                    }
+                    timestamp
+                }
+                before {
+                    sha
+                }
+                after {
+                    sha
+                    message
+                    statuses {
+                        context
+                        description
+                        targetUrl
+                        state
+                    }
+                    tags {
+                        name
+                        release {
+                            name
+                        }
+                    }
+                }
+                repo {
+                    owner
+                    name
+                    channels {
+                        name
+                    }
+                    labels {
+                        name
+                    }
+                    org {
+                        provider {
+                            url
+                            apiUrl
+                            gitUrl
+                        }
+                    }
+                    defaultBranch
+                }
+                commits {
+                    sha
+                    message
+                    resolves {
+                        number
+                        name
+                        title
+                        state
+                    }
+                    impact {
+                        data
+                        url
+                    }
+                    apps {
+                        state
+                        host
+                        domain
+                        data
+                    }
+                    tags {
+                        name
+                        release {
+                            name
+                        }
+                        containers {
+                            pods {
+                                host
+                                state
+                                name
+                            }
+                            image
+                        }
+                    }
+                    author {
+                        login
+                        person {
+                            chatId {
+                                screenName
+                            }
+                        }
+                    }
+                    timestamp
+                }
+                timestamp
+                branch
+            }
+            timestamp
+        }
+    }
+}

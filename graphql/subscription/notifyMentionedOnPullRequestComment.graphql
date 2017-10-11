@@ -1,0 +1,48 @@
+subscription NotifyMentionedOnPullRequestComment
+{
+  Comment {
+    _id
+    gitHubId
+    body
+    by {
+      login
+      person {
+        chatId {
+          screenName
+          preferences {
+            properties
+          }
+        }
+      }
+    }
+    pullRequest {
+      title
+      body
+      state
+      timestamp
+      number
+      lastAssignedBy {
+        login
+      }
+      author {
+        login
+      }
+      repo {
+        name
+        owner
+        org {
+          provider {
+            url
+          }
+        }
+        channels {
+          name
+          channelId
+        }
+      }
+    }
+  }
+}
+
+
+

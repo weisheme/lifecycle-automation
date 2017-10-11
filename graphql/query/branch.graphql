@@ -1,0 +1,20 @@
+query Branch($teamId: ID!, $repoOwner: String!, $repoName: String!, $branchName: String!) {
+    ChatTeam(id: $teamId) {
+        orgs {
+            repo(owner: $repoOwner, name: $repoName) {
+                owner
+                name
+                branches(name: $branchName) {
+                    name
+                    deleted
+                    pullRequests {
+                        state
+                        commits {
+                            sha
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
