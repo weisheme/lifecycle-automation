@@ -1,26 +1,65 @@
 import "mocha";
 import * as assert from "power-assert";
-import { replaceChatIdWithGitHubId } from "../../src/util/Helpers";
-// import { CortexToken } from "../../src/atomist.config";
+import { isDmDisabled } from "../../src/util/Helpers";
 
-describe("Helper", () => {
+describe("Helpers", () => {
 
-    /*  it("should replace chatIds in string", done => {
-          const ctx: HandlerContext = {
-              teamId: "T1L0VDKJP",
-              correlationId: "xxx",
-              graphClient: new ApolloGraphClient(DefaultStagingAtomistGraphQLServer, process),
-          };
-          const body = `some bla and bla and <@U1L22E3SA> some more bla. And some more from <@U1N8YRTPD>.`;
+    it("test if DMs are enabled", () => {
+        const chatId = {
+            preferences: [ {
+                name: "repo_mapping_flow",
+                value: "{\"disable_for_all\":true,\"disabled_repos\":[],\"disabled_for_unmapped_user\":false}",
+            }, {
+                name: "dm",
+                value: "{\"disable_for_all\":false}",
+            },
+            ],
+        };
+        assert(isDmDisabled(chatId) === false);
 
-          replaceChatIdWithGitHubId(body, ctx)
-              .then(result => {
-                  console.log(result);
-                  assert(result.indexOf("cd") > 0);
-                  done();
-              })
-              .catch(err => {
-                  console.log(`Encountered ${err}`);
-              });
-      }).timeout(5000); */
+      });
+
+    it("test if DMs are disabled", () => {
+        const chatId = {
+            preferences: [ {
+                name: "repo_mapping_flow",
+                value: "{\"disable_for_all\":true,\"disabled_repos\":[],\"disabled_for_unmapped_user\":false}",
+            }, {
+                name: "dm",
+                value: "{\"disable_for_all\":true}",
+            },
+            ],
+        };
+        assert(isDmDisabled(chatId) === true);
+
+    });
+
+    it("test if DMs for builds are disabled", () => {
+        const chatId = {
+            preferences: [ {
+                name: "repo_mapping_flow",
+                value: "{\"disable_for_all\":true,\"disabled_repos\":[],\"disabled_for_unmapped_user\":false}",
+            }, {
+                name: "dm",
+                value: "{\"disable_for_all\":false, \"disable_for_build\":true}",
+            },
+            ],
+        };
+        assert(isDmDisabled(chatId, "build") === true);
+    });
+
+    it("test if DMs are disabled when overridden", () => {
+        const chatId = {
+            preferences: [ {
+                name: "repo_mapping_flow",
+                value: "{\"disable_for_all\":true,\"disabled_repos\":[],\"disabled_for_unmapped_user\":false}",
+            }, {
+                name: "dm",
+                value: "{\"disable_for_all\":true, \"disable_for_build\":false}",
+            },
+            ],
+        };
+        assert(isDmDisabled(chatId, "build") === true);
+
+    });
 });

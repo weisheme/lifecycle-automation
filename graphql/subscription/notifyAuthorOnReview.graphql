@@ -18,7 +18,8 @@ subscription NotifyAuthorOnReview
           chatId {
             screenName
             preferences {
-              properties
+              name
+              value
             }
           }
         }

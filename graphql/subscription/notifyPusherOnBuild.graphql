@@ -14,7 +14,8 @@ subscription NotifyPusherOnBuild
           chatId {
             screenName
             preferences {
-              properties
+              name
+              value
             }
           }
         }

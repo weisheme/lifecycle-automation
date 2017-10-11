@@ -4,6 +4,10 @@ query ChatId($teamId: ID!, $chatId: String!) {
             person {
               	chatId {
                   screenName
+                  preferences {
+                    name
+                    value
+                  }
                 }
                 gitHubId {
                   login

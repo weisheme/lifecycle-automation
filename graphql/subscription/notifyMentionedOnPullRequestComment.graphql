@@ -10,7 +10,8 @@ subscription NotifyMentionedOnPullRequestComment
         chatId {
           screenName
           preferences {
-            properties
+            name
+            value
           }
         }
       }

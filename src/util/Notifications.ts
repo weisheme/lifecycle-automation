@@ -6,6 +6,7 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
+import { DirectMessagePreferences } from "../handlers/command/preferences/preferences";
 import * as graphql from "../typings/types";
 import {
     avatarUrl,
@@ -39,7 +40,7 @@ export function issueNotification(
                         .then(notifier => {
                             if (m !== login
                                 && notifier
-                                && !isDmDisabled(notifier)) {
+                                && !isDmDisabled(notifier, DirectMessagePreferences.mention.id)) {
                                 // tslint:disable-next-line:variable-name
                                 const footer_icon = `https://images.atomist.com/rug/issue-${issue.state}.png`;
                                 const text = `${prefix} ${url(issueUrl(repo, issue),
@@ -88,7 +89,7 @@ export function prNotification(
                         .then(notifier => {
                             if (m !== login
                                 && notifier
-                                && !isDmDisabled(notifier)) {
+                                && !isDmDisabled(notifier, DirectMessagePreferences.mention.id)) {
                                 // tslint:disable-next-line:variable-name
                                 const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
                                 const text = `${prefix} ${url(prUrl(repo, pr),
@@ -133,7 +134,7 @@ export function issueAssigneeNotification(
             if (!isAssigner(issue, assignee.login)
                 && screenName
                 && issue.openedBy.login !== assignee.login
-                && !isDmDisabled(assignee.person.chatId)) {
+                && !isDmDisabled(assignee.person.chatId, DirectMessagePreferences.assignee.id)) {
                 // tslint:disable-next-line:variable-name
                 const footer_icon = `https://images.atomist.com/rug/issue-${issue.state}.png`;
                 const text = `${prefix} ${url(issueUrl(repo, issue),
@@ -175,7 +176,7 @@ export function prAssigneeNotification(
             if (!isAssigner(pr, assignee.login)
                 && screenName
                 && pr.author.login !== assignee.login
-                && !isDmDisabled(assignee.person.chatId)) {
+                && !isDmDisabled(assignee.person.chatId, DirectMessagePreferences.assignee.id)) {
                 // tslint:disable-next-line:variable-name
                 const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
                 const text = `${prefix} ${url(prUrl(repo, pr),
@@ -216,7 +217,7 @@ export function prRevieweeNotification(
             const login = _.get(review, "person.chatId.screenName");
             if (login
                 && pr.author.login !== login
-                && !isDmDisabled(review.person.chatId)) {
+                && !isDmDisabled(review.person.chatId, DirectMessagePreferences.reviewee.id)) {
                 // tslint:disable-next-line:variable-name
                 const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
                 const text = `${prefix} ${url(prUrl(repo, pr),
@@ -255,7 +256,7 @@ export function prAuthorMergeNotification(
     return linkGitHubUsers(body, ctx)
         .then(b => {
             if (_.get(pr, "author.person.chatId.screenName")
-                && !isDmDisabled(pr.author.person.chatId)
+                && !isDmDisabled(pr.author.person.chatId, DirectMessagePreferences.merge.id)
                 && pr.merger && pr.merger.login !== pr.author.login) {
                 const login = pr.author.person.chatId.screenName;
                 // tslint:disable-next-line:variable-name
@@ -298,7 +299,7 @@ export function prAuthorReviewNotification(
     return linkGitHubUsers(body, ctx)
         .then(b => {
             if (_.get(pr, "author.person.chatId.screenName")
-                && !isDmDisabled(pr.author.person.chatId)
+                && !isDmDisabled(pr.author.person.chatId, DirectMessagePreferences.review.id)
                 && !review.by.some(r => r.login === pr.author.login)) {
                 const login = pr.author.person.chatId.screenName;
                 // tslint:disable-next-line:variable-name
@@ -349,7 +350,7 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build, repo
                                   ctx: HandlerContext): Promise<any> {
 
     const login = _.get(build, "commit.author.person.chatId.screenName");
-    if (!login || isDmDisabled(build.commit.author.person.chatId)) {
+    if (!login || isDmDisabled(build.commit.author.person.chatId, DirectMessagePreferences.build.id)) {
         return Promise.resolve(null);
     }
 

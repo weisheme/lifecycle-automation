@@ -17,7 +17,8 @@ subscription NotifyMentionedOnPullRequest
         chatId {
           screenName
           preferences {
-            properties
+            name
+            value
           }
         }
       }
@@ -28,7 +29,8 @@ subscription NotifyMentionedOnPullRequest
         chatId {
           screenName
           preferences {
-            properties
+            name
+            value
           }
         }
       }
@@ -39,7 +41,8 @@ subscription NotifyMentionedOnPullRequest
         chatId {
           screenName
           preferences {
-            properties
+            name
+            value
           }
         }
       }
@@ -50,7 +53,8 @@ subscription NotifyMentionedOnPullRequest
         chatId {
           screenName
           preferences {
-            properties
+            name
+            value
           }
         }
       }
