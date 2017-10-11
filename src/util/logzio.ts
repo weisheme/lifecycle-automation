@@ -13,16 +13,13 @@ import {
     EventIncoming,
 } from "@atomist/automation-client/internal/transport/RequestProcessor";
 import * as nsp from "@atomist/automation-client/internal/util/cls";
-import { init } from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     AutomationEventListener,
     AutomationEventListenerSupport,
 } from "@atomist/automation-client/server/AutomationEventListener";
 import { EventStore } from "@atomist/automation-client/spi/event/EventStore";
 import * as appRoot from "app-root-path";
-import * as cfenv from "cfenv";
 import { createLogger } from "logzio-nodejs";
 
 /* tslint:disable */
@@ -30,13 +27,6 @@ const logzioWinstonTransport = require("winston-logzio");
 const _assign = require("lodash.assign");
 const pj = require(`${appRoot}/package.json`);
 /* tslint:enable */
-
-/*const appEnv = cfenv.getAppEnv();
-const credService = appEnv.getServiceCreds("logzio-credentials");
-
-const env = process.env.VCAP_APPLICATION ? JSON.parse(process.env.VCAP_APPLICATION) : undefined;
-const space = env ? env.space_name : "local";
-const appId = env ? env.application_id : guid(); */
 
 let logzio;
 

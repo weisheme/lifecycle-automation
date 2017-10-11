@@ -1,4 +1,5 @@
 import { Configuration } from "@atomist/automation-client/configuration";
+import { guid } from "@atomist/automation-client/internal/util/string";
 import * as appRoot from "app-root-path";
 import * as cfenv from "cfenv";
 import * as config from "config";
@@ -60,7 +61,7 @@ import { ReleaseToPushLifecycle } from "./handlers/event/push/ReleaseToPushLifec
 import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecycle";
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
-import { LogzioAutomationEventListener } from "./util/logzio";
+import { LogzioAutomationEventListener, LogzioOptions } from "./util/logzio";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot}/package.json`);
@@ -68,12 +69,20 @@ const pj = require(`${appRoot}/package.json`);
 const appEnv = cfenv.getAppEnv();
 const credService = appEnv.getServiceCreds("github-token");
 const dashboardService = appEnv.getServiceCreds("dashboard-credentials");
+const logzioCredService = appEnv.getServiceCreds("logzio-credentials");
 
 const token = credService ? credService.token : process.env.GITHUB_TOKEN;
 const username = dashboardService ? dashboardService.user : undefined;
+
 const password = dashboardService ? dashboardService.password : undefined;
 
 const authEnabled = !appEnv.isLocal;
+
+const logzioOptions: LogzioOptions = {
+    applicationId: appEnv.app ? appEnv.app.application_id : guid(),
+    environmentId: appEnv.app ? appEnv.app.space_name : "local",
+    token: logzioCredService ? logzioCredService.token : undefined,
+};
 
 export const configuration: Configuration = {
     name: pj.name,
@@ -160,9 +169,7 @@ export const configuration: Configuration = {
         // () => new PullRequestToReviewLifecycle(),
         // () => new ReviewToReviewLifecycle(),
     ],
-    listeners: [
-        new LogzioAutomationEventListener(),
-    ],
+    listeners: logzioOptions.token ? [ new LogzioAutomationEventListener(logzioOptions) ] : [],
     token,
     http: {
         enabled: true,
