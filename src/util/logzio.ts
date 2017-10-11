@@ -40,6 +40,7 @@ function initLogzioLogging(options: LogzioOptions) {
         protocol: "https",
         bufferSize: 10,
         extraFields: {
+            "service": pj.name,
             "artifact": pj.name,
             "version": pj.version,
             "environment": options.environmentId,
