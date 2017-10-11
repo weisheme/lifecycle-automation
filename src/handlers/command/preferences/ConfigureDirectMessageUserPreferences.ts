@@ -34,9 +34,14 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
 
     @Parameter({ description: "ID of the message to use for confirmation", pattern: /^.*$/,
         required: false, displayable: false })
-    public id: string = guid();
+    public id: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+
+        if (!this.id) {
+            this.id = guid();
+        }
+
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
             graphql.ChatId.Variables>("graphql/query/chatId",
             { teamId: ctx.teamId, chatId: this.requester })
