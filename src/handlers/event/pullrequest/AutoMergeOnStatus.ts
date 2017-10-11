@@ -1,13 +1,14 @@
 import { Secret } from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
-import { Success } from "@atomist/automation-client/HandlerResult";
 import {
     EventFired,
     EventHandler,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,
     Secrets,
+    Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
 import * as _ from "lodash";
@@ -25,8 +26,8 @@ export class AutoMergeOnStatus implements HandleEvent<graphql.AutoMergeOnStatus.
     public handle(root: EventFired<graphql.AutoMergeOnStatus.Subscription>,
                   ctx: HandlerContext): Promise<HandlerResult> {
         const prs = _.get(root, "data.Status[0].commit.pullRequests");
-        return Promise.all(prs.map(pr => autoMerge(pr)))
+        return Promise.all(prs.map(pr => autoMerge(pr, this.githubToken)))
             .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message }));
+            .catch(err => failure(err));
     }
 }

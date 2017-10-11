@@ -24,6 +24,6 @@ export class AutoMergeOnBuild implements HandleEvent<graphql.AutoMergeOnBuild.Su
     public handle(root: EventFired<graphql.AutoMergeOnBuild.Subscription>,
                   ctx: HandlerContext): Promise<HandlerResult> {
         const pr = _.get(root, "data.Build[0].pullRequest");
-        return autoMerge(pr);
+        return autoMerge(pr, this.githubToken);
     }
 }

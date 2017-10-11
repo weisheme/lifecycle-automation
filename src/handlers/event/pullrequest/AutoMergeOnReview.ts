@@ -24,6 +24,6 @@ export class AutoMergeOnReview implements HandleEvent<graphql.AutoMergeOnReview.
     public handle(root: EventFired<graphql.AutoMergeOnReview.Subscription>,
                   ctx: HandlerContext): Promise<HandlerResult> {
         const pr = _.get(root, "data.Review[0].pullRequest");
-        return autoMerge(pr);
+        return autoMerge(pr, this.githubToken);
     }
 }

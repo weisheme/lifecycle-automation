@@ -1,4 +1,5 @@
 import {
+    failure,
     HandlerResult,
     Success,
 } from "@atomist/automation-client/Handlers";
@@ -8,7 +9,7 @@ import * as github from "../../command/github/gitHubApi";
 
 export const AutoMergeTag = "[atomist:enable-auto-merge]";
 
-export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest): Promise<HandlerResult> {
+export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: string): Promise<HandlerResult> {
     if (pr) {
         // Couple of rules for auto-merging
         // 1. at least one approved review
@@ -29,7 +30,7 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest): Promise<Ha
 
         if (isPrTagged(pr)) {
             // Let's do it
-            const api = github.api(this.gitHubToken, apiUrl(pr.repo));
+            const api = github.api(token, apiUrl(pr.repo));
 
             return api.pullRequests.merge({
                 owner: pr.repo.owner,
@@ -61,7 +62,7 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest): Promise<Ha
                     });
                 })
                 .then(() => Success)
-                .catch(err => ({ code: 1, message: err.message }));
+                .catch(err => failure(err));
         }
     }
     return Promise.resolve(Success);
