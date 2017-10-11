@@ -1,10 +1,8 @@
-# lifecycle-automation
+# @atomist/lifecycle-automation
 
-[![Build Status](https://travis-ci.com/atomist/lifecycle-automation.svg?branch=master)](https://travis-ci.org/atomist/lifecycle-automation)
+[![Build Status](https://travis-ci.org/atomist/lifecycle-automation.svg?branch=master)](https://travis-ci.org/atomist/lifecycle-automation)
 
 This project contains lifecycle automations for GitHub Issues, PullRequests, Pushes and Builds.
-
-## Rugs
 
 ## Support
 
