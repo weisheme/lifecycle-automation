@@ -66,7 +66,7 @@ export class CreateGitHubIssue implements HandleCommand {
             .then(result => {
                 // run a graphql query to check whether the current channel to mapped to the repo we are creating the
                 // issue in.
-                return ctx.graphClient.executeFile<graphql.Repo.Query, graphql.Repo.Variables>(
+                return ctx.graphClient.executeQueryFromFile<graphql.Repo.Query, graphql.Repo.Variables>(
                     "graphql/query/chatChannel",
                     { channelName: this.channelName, repoOwner: this.owner, repoName: this.repo })
                     .then(repoChannelMapping => {

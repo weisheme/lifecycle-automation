@@ -156,7 +156,8 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
 
 export function loadIssue(owner: string, repo: string, name: string, ctx: HandlerContext): Promise<any> {
 
-    return ctx.graphClient.executeFile<graphql.Issue.Query, graphql.Issue.Variables>("graphql/query/issue",
+    return ctx.graphClient.executeQueryFromFile<graphql.Issue.Query, graphql.Issue.Variables>(
+        "graphql/query/issue",
         { teamId: ctx.teamId, orgOwner: owner, repoName: repo, issueName: name })
         .then(result => {
             if (result) {
@@ -177,7 +178,8 @@ export function loadIssue(owner: string, repo: string, name: string, ctx: Handle
 
 export function loadPullRequest(owner: string, repo: string, name: string, ctx: HandlerContext): any {
 
-    return ctx.graphClient.executeFile<graphql.Pr.Query, graphql.Pr.Variables>("graphql/query/pr",
+    return ctx.graphClient.executeQueryFromFile<graphql.Pr.Query, graphql.Pr.Variables>(
+        "graphql/query/pr",
         { teamId: ctx.teamId, orgOwner: owner, repoName: repo, prName: name })
         .then(result => {
             if (result) {
@@ -262,7 +264,8 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
 }
 
 export function loadChatId(ctx: HandlerContext, id: string): Promise<ChatId> {
-    return ctx.graphClient.executeFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>("graphql/query/gitHubId",
+    return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
+        "graphql/query/gitHubId",
         { teamId: ctx.teamId, gitHubId: id })
         .then(result => {
             if (result) {
@@ -272,6 +275,7 @@ export function loadChatId(ctx: HandlerContext, id: string): Promise<ChatId> {
                         return {
                             id: result.GitHubId[0].person.chatId.id,
                             screenName: result.GitHubId[0].person.chatId.screenName,
+                            preferences: result.GitHubId[0].person.chatId.preferences,
                         };
                     }
                 }
@@ -284,7 +288,8 @@ export function loadChatId(ctx: HandlerContext, id: string): Promise<ChatId> {
 }
 
 export function loadGitHubId(ctx: HandlerContext, id: string): Promise<string> {
-    return ctx.graphClient.executeFile<graphql.ChatId.Query, graphql.ChatId.Variables>("graphql/query/chatId",
+    return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
+        "graphql/query/chatId",
         { teamId: ctx.teamId, chatId: id })
         .then(result => {
             if (result) {
@@ -307,9 +312,12 @@ export function loadGitHubId(ctx: HandlerContext, id: string): Promise<string> {
 export interface ChatId {
     id?: string;
     screenName?: string;
-    preferences?: {
-        properties?: any;
-    };
+    preferences?: Preferences[];
+}
+
+export interface Preferences {
+    name?: string;
+    value?: string;
 }
 
 /**
@@ -403,7 +411,8 @@ export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext
     const matches = getChatIds(body);
     if (matches != null) {
         return Promise.all(matches.map(m => {
-            return ctx.graphClient.executeFile<graphql.ChatId.Query, graphql.ChatId.Variables>("graphql/query/chatId",
+            return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
+                "graphql/query/chatId",
                 { teamId: ctx.teamId, chatId: m })
                 .then(result => {
                     if (result) {
@@ -453,14 +462,15 @@ export function isAssigner(assignable: any, assigneeLogin: string): boolean {
     return assignable.lastAssignedBy != null ? assignable.lastAssignedBy.login === assigneeLogin : false;
 }
 
-export function isDmDisabled(chatId: ChatId): boolean {
-    const properties = _.get(chatId, "preferences.properties");
-    if (properties) {
-        const dm = JSON.parse(properties).dm;
-        if (dm) {
-            const config = JSON.parse(dm);
-            if (config.disable_for_all === true) {
+export function isDmDisabled(chatId: ChatId, type?: string): boolean {
+    if (chatId.preferences) {
+        const preferences = chatId.preferences.find(p => p.name === "dm");
+        if (preferences) {
+            const json = JSON.parse(preferences.value);
+            if (json.disable_for_all === true) {
                 return true;
+            } else {
+                return json[`disable_for_${type}`] === true;
             }
         }
     }

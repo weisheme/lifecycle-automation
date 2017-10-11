@@ -128,7 +128,7 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
-            public executeFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
+            public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
 
                 return Promise.resolve({
                     ChatTeam: [
@@ -157,6 +157,16 @@ describe("StatusToPushLifecycle", () => {
             }
 
             public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeMutation<T, Q>(mutation: string, variables?: Q): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
             }

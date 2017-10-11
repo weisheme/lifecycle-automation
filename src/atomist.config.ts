@@ -18,7 +18,10 @@ import { CreateGitHubTag } from "./handlers/command/github/CreateGitHubTag";
 import { DeleteGitHubBranch } from "./handlers/command/github/DeleteGitHubBranch";
 import { DisplayGitHubIssue } from "./handlers/command/github/DisplayGitHubIssue";
 import { EnableGitHubPullRequestAutoMerge } from "./handlers/command/github/EnableGitHubPullRequestAutoMerge";
-import { InstallGitHubOrgWebhook, InstallGitHubRepoWebhook } from "./handlers/command/github/InstallGitHubWebhook";
+import {
+    InstallGitHubOrgWebhook,
+    InstallGitHubRepoWebhook,
+} from "./handlers/command/github/InstallGitHubWebhook";
 import { ListMyGitHubIssues } from "./handlers/command/github/ListMyGitHubIssues";
 import { MergeGitHubPullRequest } from "./handlers/command/github/MergeGitHubPullRequest";
 import { RaiseGitHubPullRequest } from "./handlers/command/github/RaiseGitHubPullRequest";
@@ -27,6 +30,10 @@ import { ReactGitHubIssueComment } from "./handlers/command/github/ReactGitHubIs
 import { ReopenGitHubIssue } from "./handlers/command/github/ReopenGitHubIssue";
 import { SearchGitHubRepositoryIssues } from "./handlers/command/github/SearchGitHubRepositoryIssues";
 import { ToggleLabelGitHubIssue } from "./handlers/command/github/ToggleLabelGitHubIssue";
+import {
+    ConfigureDirectMessageUserPreferences,
+} from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
+import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
@@ -117,6 +124,10 @@ export const configuration: Configuration = {
         () => new ReopenGitHubIssue(),
         () => new SearchGitHubRepositoryIssues(),
         () => new ToggleLabelGitHubIssue(),
+
+        // preferences
+        () => new ConfigureDirectMessageUserPreferences(),
+        () => new SetUserPreference(),
 
         // travis
         () => new RestartTravisBuild(),

@@ -111,7 +111,7 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
         if (ctx.rendererId === "commit") {
             const repo = ctx.lifecycle.extract("repo");
 
-            return ctx.context.graphClient.executeFile<graphql.Branch.Query, graphql.Branch.Variables>(
+            return ctx.context.graphClient.executeQueryFromFile<graphql.Branch.Query, graphql.Branch.Variables>(
                 "graphql/query/branch",
                 { teamId: ctx.context.teamId, repoName: repo.name, repoOwner: repo.owner, branchName: node.branch })
                 .then(result => {
