@@ -9,9 +9,11 @@ branches:
 env:
   global:
   - NPM_REGISTRY=https://atomist.jfrog.io/atomist/api/npm/npm-dev-local
-before_install:
-- openssl aes-256-cbc -K $encrypted_e466dd0f1e03_key -iv $encrypted_e466dd0f1e03_iv
-  -in scripts/.npmrc.enc -out $HOME/.npmrc -d
+  - secure: rdOrSGj3eOCRUEXsKva70Gl5i+LKsGG7gmJe/wH3NT7gtIEZ3UOmDLohNQsJrqV13mJhb3ywgk5HYW/XVreYyrJMSmryjI52utkRxeogFjJ4DtaExQEVu2Ah8BIfzarDj+1bkTV+llwIrVjKI/IzyyNWkaxcfQXV9Jro48Zyieh5kL+2pDheklvJS9quG+E3rF67V5OunZUwrSYEgs5PjggH+AgbdXvzOHHMtcxfHIAMErDSQ9JCK1aDsmIMJMgcRRug5pEt0bGhyM+zPbut9jAY3GtvEqsgdwoj9WfvxkFOEJr8q0yLGfQ3aHIPGb4tNZbUNiJ46+I0z/CeDJNLwMijuD4YU/rwrPtKxoniAVzKWBgOEJpMYfcqzO/kYB+FCBHAhag2GpL5vlu4hT1SMg3QacDfOl4+H3K+kecWiC6uLltWAcbJ39N4KQdwSnDESEU70EJe2oW5VMeXjv5QsfUhOwATmFaADgkvnzZv+lyOP7T41BbFBcbval+ONE7TqFxX0/XGOQDxTElmT4viXEgYlXvMYhHy3VV1k6CTUWUjo7EQR1UUo/nwV4tTIxzcSCqqPDv8OfFH3DLhsdfgAdu0FiLEHu2zYMxTpivD+uee5WX8DeyaiJ22kpJQ8gEF2KsDftKdNOLi2aYVR1mYZLWUoh2ty39khuCvWLh+iEY=
+  - secure: GMOgbJIU+43qoKPknMYKIZqY8MpmGaclZC1+RFhy1ywUE8uhhbdL1leQvYc/8tOZQNcO5r174/OpfNUVsBr8hoxa1J2CTUnCB9CfbXAmabYzPksqWrt0hFiFIOKK8gbHjXD0YmhwwvDd8fHYwpiw3ITy7o3oFkr2uLq+5dLdpiwPhOtTLbTLZWxpOWUa46Vcz0XBJmbU8eoRrUKL+NvOH4sZdIX83x2dGjiGhyxV3onJ/ZPk9GygyuVSU+hmuUcemZoQI62nFKJ8yXhCriwpDODx8XGVdy4fcI133J0gh0kGkjDh+tNkkc/B+lntraE+1AK8ofSyipheO/e6XDc8BfmVWl6Lt1RwQjqBuMJ3Wk/8gbZnjqCVfiX5hVRxdGrNZlbpEfDDohz3mBwhUlzxqlviTVOmSEUypn2oQ0HbWqm2sXc5r23/Lsuo1nXmDCg3S5GYi2UZFZ/linVA30HtiY5gAapyUQy/3mlR/dY+JI2hDJ+bWpf6k5wMWyUtUMAaCmXzMFXnC13nV+uRYnegJQFJf0ihJAhPbbWXnsQM+U4Y+Ct4XsUt/mEPZty06ANpOozfpozVdSEAH8OYUL3dKBtSa/sgGHohaVPLkjB5Xgx2MeNVnSLSCxdi3tPmF31L9iHX6yGAdghJEjMilxQhAFvyzaVxvqxQ4FSfuG6Kbaw=
+#before_install:
+#- openssl aes-256-cbc -K $encrypted_e466dd0f1e03_key -iv $encrypted_e466dd0f1e03_iv
+#  -in scripts/.npmrc.enc -out $HOME/.npmrc -d
 script: bash scripts/travis-build.bash
 notifications:
   email: false
@@ -26,10 +28,10 @@ notifications:
 cache:
   directories:
   - "$HOME/.npm"
-bladeploy:
+deploy:
   provider: releases
   api_key:
-    secure: M8yF6uIEmOJ56KV286PlM9cNph4ZRohDhkOKiuSob5P65GLMmjy88oZ8njppPnn8u76lJH2o0jCgznlcE+UZHtoWRdTFxaPD3xWbvgwGuScdnKz2wDe2EsC42jkjsr1c1daPjQ9bvF9IbHBknLDhZLs4vOl5ny2jsO8SDW94S2GwqmjQ6XiDKVGHBi4o7xieR67oGlxbsH10+OgIBfXUe8wZh3jGKB6Moc5Ln01l/JR/8ic3CCm6JhvaMooLHoxgGatwx/YOztn5MrrMXthOia2MAGX2yMMyPE5lZKjqw42LdU/yTtJhP9bRU+GNVx9MCGNhiMTCzM1pJkCizLx4+dYRepqdvnWq3P6qbn1vgAk6PR/Re6rMPDj1q7SZ4MKSoCtB5OpkI7Ld2mR7b8tz63ybcsdm/YWRDAfxTXdrAmp22IY4U3kRvQj7MrETHb+hBVosumiZb7XrVKp1QWqevHNS1be93Fdj9Gs+aH+r7ucRxxn9a2bvYBdIdmpeUgHijds5qEx5PV3C4AvtCqvwM22xIUr3DcTm5DbMtsf+6Uc+BQEKBg/++o9MRnjARhhekOwHpwp+Ce+5VmF2tcvSH448unzYccpImfkedP5f0tI4De/b3v6dntUr8ZBDItxTkN0OFljBzli2gbjwlCv9wwWTHx0uqFVIyYZ1DniFIE0=
+    secure: vzokJUVgSnbcLTHmSePDd2leZEb8/HLpH3xwuiTksNPiNCS1uxbtzaObph7GIAYRRgtr66+74co9+3YM7QpLx9CpIT1rDQ+t5D5oAgCHswyNaHHDvvR4Cd/bQ7wZ1dmCj4MhETIkHDUI5a1pTUA9U0xwcD/8PofsiM+rqRs7Oke237UK+C+CUb7cWyLuXg/kWctmNmJdZlgM5cFmWIc3UoWqLDHzZMj8QRVm5G90NxMOtT7uSqR1aoUm7GnihHelkLbUSAe1NRRnvBZ4GdrJ1GAt+6gpH4ugW67C1TOCqmqJs367Lra4beeZsgRqvIroLneLowNlZkddpBl83oXwoVeHaxEATbXrwi9S92vPQwKBKUMX3wI7whyDpZx++I3yCf7e6Iqua/26hxi6DNwdzI4uzUy7M8SGldTNCOZaK7awzv5T7LZD2Bis8WLUk1fv61DfMS+1SOanXhPMAAosbZtnqsOrovXXBu9DMR9G0iDHclgTF8ClB5T11SJ36ZetTk90cIhfCTPqUS46sbzTzhTQxtcxDBdEwZCH+9PeAsg35h42VfHCBpleqGKtjdUWiV2hQJ4FX6GdK3NZKkJuIGnrvAWkG9MDuCgWsViXHFAOKAN49p2efexbUbKj+uRj9eo1fKDHUzV5sKuCohGVSKaKJudtWqFsfigsMdrfI0s=
   on:
     tags: true
     condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(-(m|rc)\\.[0-9]+)?$"

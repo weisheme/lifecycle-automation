@@ -191,10 +191,10 @@ function main () {
             return 1
         fi
     elif [[ $TRAVIS_BRANCH == master ]]; then
-        if ! npm-publish-timestamp; then
-            err "failed to publish master build"
-            return 1
-        fi
+        #if ! npm-publish-timestamp; then
+        #    err "failed to publish master build"
+        #    return 1
+        #fi
     fi
 }
 
