@@ -4,32 +4,32 @@ export const DirectMessagePreferences = {
     build: {
         id: "build",
         name: "Failed Builds",
-        description: "Displays notifications for failed builds",
+        description: "DM me when my build fails",
     },
     mention: {
         id: "mention",
         name: "@-Mentions",
-        description: "Displays notifications of @-mentions in issues, pull requests discussions",
+        description: "DM me when someone @-mentions me in issues or pull requests",
     },
     assignee: {
         id: "assignee",
         name: "Assignments",
-        description: "Receive notifications when you get assigned an issue or pull request",
+        description: "DM me when someone assigns me an issue or pull request",
     },
     review: {
         id: "review",
         name: "Review Comments",
-        description: "Display notifications about new review comments on your pull requests",
+        description: "DM me when I get new review comments on my pull requests",
     },
     reviewee: {
         id: "reviewee",
         name: "Review Requests",
-        description: "Receive notifications when you get asked to review a pull request",
+        description: "DM me when I'm asked to review a pull request",
     },
     merge: {
         id: "merge",
         name: "Pull Request Merges",
-        description: "Receive notifications when your pull requests get merged; either automatically or manually",
+        description: "DM me when my pull request is manually or automatically merged",
     },
 
 };
