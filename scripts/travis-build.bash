@@ -190,7 +190,7 @@ function main () {
         if ! git-tag "$TRAVIS_TAG+travis.$TRAVIS_BUILD_NUMBER"; then
             return 1
         fi
-    elif [[ $TRAVIS_BRANCH == master ]]; then
+    #elif [[ $TRAVIS_BRANCH == master ]]; then
         #if ! npm-publish-timestamp; then
         #    err "failed to publish master build"
         #    return 1
