@@ -71,7 +71,7 @@ export class PushNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
 
         msg.text = `${push.commits.length} new ${(push.commits.length > 1 ? "commits" : "commit")} ` +
@@ -106,7 +106,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const slug = repo.owner + "/" + repo.name + "/" + push.branch;
         const commits = push.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
@@ -196,7 +196,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderCommitMessage(commitNode: graphql.PushToPushLifecycle.Commits, push: any,
-        repo: any): [string, boolean] {
+                                repo: any): [string, boolean] {
         // Cut commit to 50 chars of first line
         let m = truncateCommitMessage(commitNode.message, repo);
         let foundFingerprints = false;
@@ -326,7 +326,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const push = context.lifecycle.extract("push");
         const random = `${push.after.sha}-${new Date().getTime().toString()}`;
 
@@ -372,7 +372,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderDecorator(build: graphql.PushToPushLifecycle.Builds, push: graphql.PushToPushLifecycle.Push,
-        actions: Action[], msg: SlackMessage, emoji: string, color: string) {
+                            actions: Action[], msg: SlackMessage, emoji: string, color: string) {
         // For now we only render the last build as decorator
         const builds = push.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
         if (builds[0].buildId !== build.buildId) {
@@ -408,7 +408,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderAttachment(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
-        title: string, icon: string, color: string, fallback: string) {
+                             title: string, icon: string, color: string, fallback: string) {
         const attachment: Attachment = {
             author_name: title,
             author_icon: icon,
@@ -422,7 +422,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderFooter(build: graphql.PushToPushLifecycle.Builds, actions: Action[],
-        msg: SlackMessage, title: string, icon: string) {
+                         msg: SlackMessage, title: string, icon: string) {
         const attachment: Attachment = msg.attachments[msg.attachments.length - 1];
         attachment.footer = url(build.buildUrl, title);
         attachment.footer_icon = icon;
@@ -446,7 +446,7 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(tag: graphql.PushToPushLifecycle.Tags, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const attachment: Attachment = {
             author_name: `Tag ${tag.name} created`,
@@ -474,7 +474,7 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(domain: Domain, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
 
         const domains = context.lifecycle.extract("domains") as Domain[];
         const running = domain.apps.filter(a => a.state === "started" || a.state === "healthy").length;
@@ -521,7 +521,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[],
-        msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
+                  msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
         const images = {};
         push.commits.filter(c => c.tags != null).forEach(c => c.tags.filter(t => t.containers != null)
             .forEach(t => t.containers.forEach(con => {
@@ -592,7 +592,7 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const issues = [];
         push.commits.filter(c => c.resolves != null).forEach(c => c.resolves.forEach(i => {

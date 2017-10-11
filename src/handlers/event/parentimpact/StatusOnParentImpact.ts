@@ -29,7 +29,7 @@ export class StatusOnParentImpact implements HandleEvent<graphql.StatusOnParentI
     public fingerprints: any = config.get("fingerprints.data") || {};
 
     public handle(event: EventFired<graphql.StatusOnParentImpact.Subscription>,
-        ctx: HandlerContext): Promise<HandlerResult> {
+                  ctx: HandlerContext): Promise<HandlerResult> {
         const impact = event.data.ParentImpact[0];
         const repo = impact.commit.repo;
 

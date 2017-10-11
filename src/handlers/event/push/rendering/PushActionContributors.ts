@@ -215,7 +215,7 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
                             dismiss_text: "Cancel",
                             ok_text: "Proceed",
                             text: `Do you really want to stop application?`,
-                        }
+                        },
                     }, "StopCloudFoundryApplication", { guid }));
                 }
                 actions.push(buttonForCommand({ text: "Scale" }, "ScaleCloudFoundryApplication",

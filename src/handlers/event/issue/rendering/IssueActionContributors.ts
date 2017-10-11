@@ -45,12 +45,12 @@ export abstract class AbstractIssueActionContributor extends AbstractIdentifiabl
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-        repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
         return null;
     }
 
     protected createMenu(issue: graphql.IssueToIssueLifecycle.Issue,
-        repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                         repo: graphql.IssueToIssueLifecycle.Repo): Action {
         return null;
     }
 }
@@ -117,7 +117,7 @@ export class CloseActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-        repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
         return buttonForCommand({ text: "Close" },
             "CloseGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
     }
@@ -131,7 +131,7 @@ export class CommentActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-        repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
         return buttonForCommand({ text: "Comment" },
             "CommentGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
     }
@@ -145,7 +145,7 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-        repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
         return buttonForCommand({ text: ":+1:" },
             "ReactGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner, reaction: "+1" });
     }
@@ -163,7 +163,7 @@ export class ReopenActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-        repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
         return buttonForCommand({ text: "Reopen" },
             "ReopenGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
     }

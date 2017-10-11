@@ -34,7 +34,7 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(node: graphql.IssueToIssueCommentLifecycle.Comments, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const issue = context.lifecycle.extract("issue");
 
@@ -79,7 +79,7 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
     }
 
     public render(node: graphql.PullRequestToPullRequestCommentLifecycle.Comments, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const pr = context.lifecycle.extract("pullrequest");
 

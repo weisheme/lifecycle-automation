@@ -46,10 +46,11 @@ export class DisplayGitHubIssue implements HandleCommand {
                     const handler = new ResponseIssueToIssueLifecycle();
                     return handler.handle({
                         data: { Issue: issue as any },
-                        extensions: { operationName: "DisplayGitHubIssue" }
+                        extensions: { operationName: "DisplayGitHubIssue" },
                     }, ctx);
                 } else {
-                    return { code: 1, message: `Issue #${this.issue} could not be found in ${this.owner}/${this.repo}` };
+                    return { code: 1,
+                        message: `Issue #${this.issue} could not be found in ${this.owner}/${this.repo}` };
                 }
             })
             .catch(err => ({ code: 1, message: err.message, stack: err.stack }));

@@ -11,7 +11,7 @@ import { buildNotification } from "../../../util/Notifications";
 export class NotifyPusherOnBuild implements HandleEvent<graphql.NotifyPusherOnBuild.Subscription> {
 
     public handle(root: EventFired<graphql.NotifyPusherOnBuild.Subscription>,
-        ctx: HandlerContext): Promise<HandlerResult> {
+                  ctx: HandlerContext): Promise<HandlerResult> {
         const build = root.data.Build[0];
         if (build.status === "broken" || build.status === "failed") {
             return buildNotification(build, build.repo, ctx)

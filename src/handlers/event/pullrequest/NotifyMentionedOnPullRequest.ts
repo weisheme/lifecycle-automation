@@ -23,7 +23,7 @@ import {
 export class NotifyMentionedOnPullRequest implements HandleEvent<graphql.NotifyMentionedOnPullRequest.Subscription> {
 
     public handle(root: EventFired<graphql.NotifyMentionedOnPullRequest.Subscription>,
-        ctx: HandlerContext): Promise<HandlerResult> {
+                  ctx: HandlerContext): Promise<HandlerResult> {
 
         const pr = root.data.PullRequest[0];
         const repo = pr.repo;

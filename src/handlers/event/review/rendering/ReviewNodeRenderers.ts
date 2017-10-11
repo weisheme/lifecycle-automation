@@ -35,7 +35,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(review: graphql.ReviewToReviewLifecycle.Review, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const pr = context.lifecycle.extract("pullrequest") as graphql.ReviewToReviewLifecycle.PullRequest;
 
@@ -63,7 +63,7 @@ export class ReviewDetailNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(review: graphql.ReviewToReviewLifecycle.Review, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const pr = context.lifecycle.extract("pullrequest") as graphql.ReviewToReviewLifecycle.PullRequest;
 

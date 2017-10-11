@@ -38,7 +38,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const repoSlug = `${repo.owner}/${repo.name}`;
         const state = (pr.state === "closed" ?
@@ -121,7 +121,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const repoSlug = repo.owner + "/" + repo.name + "/" + pr.branchName;
         const commits = pr.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
@@ -166,7 +166,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderCommitMessage(c: graphql.PullRequestToPullRequestLifecycle.Commits,
-        repo: graphql.PullRequestToPullRequestLifecycle.Repo) {
+                                repo: graphql.PullRequestToPullRequestLifecycle.Repo) {
         // Cut commit to 50 chars of first line
         const m = truncateCommitMessage(c.message, repo);
         return "`" + url(commitUrl(repo, c), c.sha.substring(0, 7)) + "` " + m;
@@ -191,7 +191,7 @@ export class StatusNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const commits = pr.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp))
             .filter(c => c.statuses != null && c.statuses.length > 0);
@@ -268,7 +268,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: SlackMessage,
-        context: RendererContext): Promise<SlackMessage> {
+                  context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
 
         const reviews = pr.reviews.filter(r => r.by.some(l => l.login !== pr.author.login));

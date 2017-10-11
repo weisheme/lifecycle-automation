@@ -103,7 +103,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     protected abstract prepareLifecycle(event: EventFired<R>): Lifecycle[];
 
     private createMessage(slackMessage: SlackMessage, lifecycle: Lifecycle,
-        messageClient: MessageClient): Promise<any> {
+                          messageClient: MessageClient): Promise<any> {
         slackMessage.unfurl_links = false;
         slackMessage.unfurl_media = false;
 
@@ -165,7 +165,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     }
 
     private configureContributors(contributors: Array<ActionContributor<any>>,
-        lifecycleConfiguration: LifecycleConfiguration) {
+                                  lifecycleConfiguration: LifecycleConfiguration) {
         if (lifecycleConfiguration != null) {
             if (lifecycleConfiguration.contributors != null) {
                 contributors = this.filterAndSort(contributors,
@@ -176,7 +176,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     }
 
     private configureRenderers(renderers: Array<NodeRenderer<any>>,
-        lifecycleConfiguration: LifecycleConfiguration): Array<NodeRenderer<any>> {
+                               lifecycleConfiguration: LifecycleConfiguration): Array<NodeRenderer<any>> {
         if (lifecycleConfiguration != null) {
             if (lifecycleConfiguration.renderers != null) {
                 renderers = this.filterAndSort(renderers, lifecycleConfiguration.renderers) as Array<NodeRenderer<any>>;

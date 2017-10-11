@@ -346,7 +346,7 @@ export function prAuthorReviewNotification(
 }
 
 export function buildNotification(build: graphql.NotifyPusherOnBuild.Build, repo: graphql.NotifyPusherOnBuild.Repo,
-    ctx: HandlerContext): Promise<any> {
+                                  ctx: HandlerContext): Promise<any> {
 
     const login = _.get(build, "commit.author.person.chatId.screenName");
     if (!login || isDmDisabled(build.commit.author.person.chatId)) {

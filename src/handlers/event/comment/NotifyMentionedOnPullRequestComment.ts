@@ -12,7 +12,7 @@ export class NotifyMentionedOnPullRequestComment
     implements HandleEvent<graphql.NotifyMentionedOnPullRequestComment.Subscription> {
 
     public handle(event: EventFired<graphql.NotifyMentionedOnPullRequestComment.Subscription>,
-        ctx: HandlerContext): Promise<HandlerResult> {
+                  ctx: HandlerContext): Promise<HandlerResult> {
 
         const comment = event.data.Comment[0];
         const pr = comment.pullRequest;

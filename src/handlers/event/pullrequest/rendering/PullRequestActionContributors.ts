@@ -53,7 +53,7 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
     }
 
     private mergePRActions(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
+                           repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
         const buttons: Action[] = [];
         const mergeMethods = {
             merge: undefined,
@@ -113,7 +113,7 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
     }
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        context: RendererContext): Promise<Action[]> {
+                      context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
@@ -130,7 +130,7 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
     }
 
     public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        context: RendererContext): Promise<Action[]> {
+                    context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 }
@@ -153,7 +153,7 @@ export class ApproveActionContributor extends AbstractIdentifiableContribution
     }
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        context: RendererContext): Promise<Action[]> {
+                      context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
@@ -180,7 +180,7 @@ export class ApproveActionContributor extends AbstractIdentifiableContribution
     }
 
     public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        context: RendererContext): Promise<Action[]> {
+                    context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 }
@@ -277,7 +277,7 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
     }
 
     public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        context: RendererContext): Promise<Action[]> {
+                    context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 }
@@ -307,7 +307,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
     }
 
     public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        context: RendererContext): Promise<Action[]> {
+                    context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 }

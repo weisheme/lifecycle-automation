@@ -112,7 +112,7 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
 }
 
 function handleResponse(response: any, correlationId: string, url: string,
-    owner: string, repo?: string): string | SlackMessage {
+                        owner: string, repo?: string): string | SlackMessage {
     const body = JSON.parse(response.message);
     const errors = body.errors;
     const code = response.code;

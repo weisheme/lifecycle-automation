@@ -77,11 +77,11 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
     }
 
     protected abstract createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
+                                    repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
 
     protected abstract createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
+                                  labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                                  repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
 }
 
 export class AssignActionContributor extends AbstractCommentActionContributor
@@ -92,7 +92,7 @@ export class AssignActionContributor extends AbstractCommentActionContributor
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return buttonForCommand({ text: "Assign to Me" }, "AssignToMeGitHubIssue", {
             issue: id,
             repo: repo.name,
@@ -101,8 +101,8 @@ export class AssignActionContributor extends AbstractCommentActionContributor
     }
 
     protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return null;
     }
 }
@@ -115,13 +115,13 @@ export class LabelActionContributor extends AbstractCommentActionContributor
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return null;
     }
 
     protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         let options = [];
         if (repo.labels != null && repo.labels.length > 0) {
             repo.labels.sort((l1, l2) => l1.name.localeCompare(l2.name))
@@ -164,7 +164,7 @@ export class CloseActionContributor extends AbstractCommentActionContributor
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return buttonForCommand({ text: "Close" }, "CloseGitHubIssue", {
             issue: id,
             repo: repo.name,
@@ -173,8 +173,8 @@ export class CloseActionContributor extends AbstractCommentActionContributor
     }
 
     protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return null;
     }
 }
@@ -187,7 +187,7 @@ export class CommentActionContributor extends AbstractCommentActionContributor
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return buttonForCommand({ text: "Comment" }, "CommentGitHubIssue", {
             issue: id,
             repo: repo.name,
@@ -196,8 +196,8 @@ export class CommentActionContributor extends AbstractCommentActionContributor
     }
 
     protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return null;
     }
 }
@@ -210,7 +210,7 @@ export class ReactionActionContributor extends AbstractCommentActionContributor
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return buttonForCommand({ text: ":+1:" }, "ReactGitHubIssueComment", {
             comment: comment.gitHubId,
             repo: repo.name,
@@ -220,8 +220,8 @@ export class ReactionActionContributor extends AbstractCommentActionContributor
     }
 
     protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-        labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-        repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
         return null;
     }
 }
