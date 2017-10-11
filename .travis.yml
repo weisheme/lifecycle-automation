@@ -10,10 +10,9 @@ env:
   global:
   - NPM_REGISTRY=https://atomist.jfrog.io/atomist/api/npm/npm-dev-local
   - secure: rdOrSGj3eOCRUEXsKva70Gl5i+LKsGG7gmJe/wH3NT7gtIEZ3UOmDLohNQsJrqV13mJhb3ywgk5HYW/XVreYyrJMSmryjI52utkRxeogFjJ4DtaExQEVu2Ah8BIfzarDj+1bkTV+llwIrVjKI/IzyyNWkaxcfQXV9Jro48Zyieh5kL+2pDheklvJS9quG+E3rF67V5OunZUwrSYEgs5PjggH+AgbdXvzOHHMtcxfHIAMErDSQ9JCK1aDsmIMJMgcRRug5pEt0bGhyM+zPbut9jAY3GtvEqsgdwoj9WfvxkFOEJr8q0yLGfQ3aHIPGb4tNZbUNiJ46+I0z/CeDJNLwMijuD4YU/rwrPtKxoniAVzKWBgOEJpMYfcqzO/kYB+FCBHAhag2GpL5vlu4hT1SMg3QacDfOl4+H3K+kecWiC6uLltWAcbJ39N4KQdwSnDESEU70EJe2oW5VMeXjv5QsfUhOwATmFaADgkvnzZv+lyOP7T41BbFBcbval+ONE7TqFxX0/XGOQDxTElmT4viXEgYlXvMYhHy3VV1k6CTUWUjo7EQR1UUo/nwV4tTIxzcSCqqPDv8OfFH3DLhsdfgAdu0FiLEHu2zYMxTpivD+uee5WX8DeyaiJ22kpJQ8gEF2KsDftKdNOLi2aYVR1mYZLWUoh2ty39khuCvWLh+iEY=
-  - secure: GMOgbJIU+43qoKPknMYKIZqY8MpmGaclZC1+RFhy1ywUE8uhhbdL1leQvYc/8tOZQNcO5r174/OpfNUVsBr8hoxa1J2CTUnCB9CfbXAmabYzPksqWrt0hFiFIOKK8gbHjXD0YmhwwvDd8fHYwpiw3ITy7o3oFkr2uLq+5dLdpiwPhOtTLbTLZWxpOWUa46Vcz0XBJmbU8eoRrUKL+NvOH4sZdIX83x2dGjiGhyxV3onJ/ZPk9GygyuVSU+hmuUcemZoQI62nFKJ8yXhCriwpDODx8XGVdy4fcI133J0gh0kGkjDh+tNkkc/B+lntraE+1AK8ofSyipheO/e6XDc8BfmVWl6Lt1RwQjqBuMJ3Wk/8gbZnjqCVfiX5hVRxdGrNZlbpEfDDohz3mBwhUlzxqlviTVOmSEUypn2oQ0HbWqm2sXc5r23/Lsuo1nXmDCg3S5GYi2UZFZ/linVA30HtiY5gAapyUQy/3mlR/dY+JI2hDJ+bWpf6k5wMWyUtUMAaCmXzMFXnC13nV+uRYnegJQFJf0ihJAhPbbWXnsQM+U4Y+Ct4XsUt/mEPZty06ANpOozfpozVdSEAH8OYUL3dKBtSa/sgGHohaVPLkjB5Xgx2MeNVnSLSCxdi3tPmF31L9iHX6yGAdghJEjMilxQhAFvyzaVxvqxQ4FSfuG6Kbaw=
-#before_install:
-#- openssl aes-256-cbc -K $encrypted_e466dd0f1e03_key -iv $encrypted_e466dd0f1e03_iv
-#  -in scripts/.npmrc.enc -out $HOME/.npmrc -d
+before_install:
+- openssl aes-256-cbc -K $encrypted_195b2e60f131_key -iv $encrypted_195b2e60f131_iv
+  -in scripts/.npmrc.enc -out $HOME/.npmrc -d
 script: bash scripts/travis-build.bash
 notifications:
   email: false
