@@ -12,3 +12,4 @@ applications:
   - github-token
   - dashboard-credentials
   - logzio-credentials
+  - mixpanel-credentials
