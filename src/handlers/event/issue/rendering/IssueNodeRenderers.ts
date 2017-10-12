@@ -4,7 +4,7 @@ import { AbstractIdentifiableContribution, NodeRenderer, RendererContext } from 
 import {
     avatarUrl, issueUrl, linkGitHubUsers, linkIssues, repoAndlabelsAndAssigneesFooter,
     userUrl,
-} from "../../../../util/Helpers";
+} from "../../../../util/helpers";
 
 export class IssueNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
 

@@ -23,7 +23,7 @@ import {
     repoUrl,
     truncateCommitMessage,
     userUrl,
-} from "../../../../util/Helpers";
+} from "../../../../util/helpers";
 import { summarizeStatusCounts } from "../../push/rendering/StatusesNodeRenderer";
 
 export class PullRequestNodeRenderer extends AbstractIdentifiableContribution

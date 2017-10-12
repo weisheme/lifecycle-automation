@@ -21,7 +21,7 @@ import {
     repoAndlabelsAndAssigneesFooter,
     reviewUrl,
     userUrl,
-} from "../../../../util/Helpers";
+} from "../../../../util/helpers";
 
 export class ReviewNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review> {

@@ -13,7 +13,7 @@ import {
     Secrets,
     Success,
 } from "@atomist/automation-client/Handlers";
-import { replaceChatIdWithGitHubId } from "../../../util/Helpers";
+import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Raise a GitHub pull request", ["raise pr", "raise pullrequest"])

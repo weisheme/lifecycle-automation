@@ -4,7 +4,7 @@ import { HandlerResult, Success } from "@atomist/automation-client/HandlerResult
 import { HandleCommand, MappedParameters, Secrets } from "@atomist/automation-client/Handlers";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
-import { replaceChatIdWithGitHubId } from "../../../util/Helpers";
+import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import { IssueToIssueLifecycle } from "../../event/issue/IssueToIssueLifecycle";
 import * as github from "./gitHubApi";
 

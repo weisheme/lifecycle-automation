@@ -14,7 +14,7 @@ import {
     Success,
 } from "@atomist/automation-client/Handlers";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { loadGitHubId } from "../../../util/Helpers";
+import { loadGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Assign a GitHub issue to the invoking user", "assign issue to me")

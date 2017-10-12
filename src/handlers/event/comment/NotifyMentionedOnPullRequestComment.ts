@@ -3,7 +3,7 @@ import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import { EventFired } from "@atomist/automation-client/Handlers";
 import { Failure, HandleEvent, HandlerContext, HandlerResult, Success } from "@atomist/automation-client/Handlers";
 import * as graphql from "../../../typings/types";
-import { prNotification } from "../../../util/Notifications";
+import { prNotification } from "../../../util/notifications";
 
 @EventHandler("Event handler that notifies mentioned user in slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyMentionedOnPullRequestComment"))

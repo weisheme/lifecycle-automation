@@ -1,5 +1,5 @@
 import { Action, Attachment, SlackMessage } from "@atomist/slack-messages/SlackMessages";
-import { extractLinkedIssues, issueUrl, prUrl, truncateCommitMessage } from "../../util/Helpers";
+import { extractLinkedIssues, issueUrl, prUrl, truncateCommitMessage } from "../../util/helpers";
 import { AbstractIdentifiableContribution, NodeRenderer, RendererContext } from "../Lifecycle";
 
 export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContribution

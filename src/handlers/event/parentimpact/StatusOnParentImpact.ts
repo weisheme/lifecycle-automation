@@ -15,7 +15,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as config from "config";
 import * as graphql from "../../../typings/types";
-import { apiUrl } from "../../../util/Helpers";
+import { apiUrl } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
 @EventHandler("Send Fingerprint changes to GitHub statuses",

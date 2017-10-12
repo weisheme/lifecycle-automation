@@ -20,7 +20,7 @@ import {
     linkIssues,
     repoAndlabelsAndAssigneesFooter,
     userUrl,
-} from "../../../../util/Helpers";
+} from "../../../../util/helpers";
 
 export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.IssueToIssueCommentLifecycle.Comments> {

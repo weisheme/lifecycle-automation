@@ -13,7 +13,7 @@ import {
     Secrets,
     Success,
 } from "@atomist/automation-client/Handlers";
-import { getChatIds, loadGitHubId } from "../../../util/Helpers";
+import { getChatIds, loadGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 /**

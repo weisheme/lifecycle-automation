@@ -4,7 +4,7 @@ import {
     Success,
 } from "@atomist/automation-client/Handlers";
 import * as graphql from "../../../typings/types";
-import { apiUrl } from "../../../util/Helpers";
+import { apiUrl } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
 export const AutoMergeTag = "[atomist:enable-auto-merge]";

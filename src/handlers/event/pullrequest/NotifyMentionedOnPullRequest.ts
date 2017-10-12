@@ -15,7 +15,7 @@ import {
     prAuthorMergeNotification,
     prNotification,
     prRevieweeNotification,
-} from "../../../util/Notifications";
+} from "../../../util/notifications";
 
 @EventHandler("Event handler that notifies mentioned user in slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyMentionedOnPullRequest"))

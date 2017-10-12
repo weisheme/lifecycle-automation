@@ -25,7 +25,7 @@ import {
     reviewUrl,
     truncateCommitMessage,
     userUrl,
-} from "./Helpers";
+} from "./helpers";
 
 export function issueNotification(
     id: string, prefix: string, body: string, login: string, issue: graphql.NotifyMentionedOnIssue.Issue,

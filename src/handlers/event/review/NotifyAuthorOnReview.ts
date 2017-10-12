@@ -12,7 +12,7 @@ import {
     Success,
 } from "@atomist/automation-client/Handlers";
 import * as graphql from "../../../typings/types";
-import { prAuthorReviewNotification } from "../../../util/Notifications";
+import { prAuthorReviewNotification } from "../../../util/notifications";
 
 @EventHandler("Event handler that notifies pull request authors in slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyAuthorOnReview"))

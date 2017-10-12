@@ -7,7 +7,7 @@ import {
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
-import { truncateCommitMessage } from "../../../../util/Helpers";
+import { truncateCommitMessage } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution

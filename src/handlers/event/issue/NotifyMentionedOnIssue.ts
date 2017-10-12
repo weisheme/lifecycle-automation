@@ -15,7 +15,7 @@ import * as graphql from "../../../typings/types";
 import {
     issueAssigneeNotification,
     issueNotification,
-} from "../../../util/Notifications";
+} from "../../../util/notifications";
 
 @EventHandler("Event handler that notifies mentioned user in slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyMentionedOnIssue"))

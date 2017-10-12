@@ -25,7 +25,7 @@ import {
     tagUrl,
     truncateCommitMessage,
     userUrl,
-} from "../../../../util/Helpers";
+} from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
 
 export const EMOJI_SCHEME = {

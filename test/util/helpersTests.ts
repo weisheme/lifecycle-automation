@@ -1,6 +1,6 @@
 import "mocha";
 import * as assert from "power-assert";
-import { isDmDisabled } from "../../src/util/Helpers";
+import { isDmDisabled } from "../../src/util/helpers";
 
 describe("Helpers", () => {
 
