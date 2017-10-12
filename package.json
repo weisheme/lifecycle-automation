@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist Rugs displaying development and operations lifecycle messages in chat",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -35,6 +35,7 @@
     "lodash": "^4.17.4",
     "logzio-nodejs": "^0.4.4",
     "promise-each": "^2.2.0",
+    "shortid": "^2.2.8",
     "winston-logzio": "^1.0.3"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { Configuration } from "@atomist/automation-client/configuration";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as appRoot from "app-root-path";
-import * as cfenv from "cfenv";
+
 import * as config from "config";
 import { CloudFoundryApplicationDetail } from "./handlers/command/cloudfoundry/CloudFoundryApplicationDetail";
 import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/ScaleCloudFoundryApplication";
@@ -69,26 +69,21 @@ import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecyc
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { LogzioAutomationEventListener, LogzioOptions } from "./util/logzio";
+import { appEnv, secret } from "./util/secrets";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot}/package.json`);
 
-const appEnv = cfenv.getAppEnv();
-const credService = appEnv.getServiceCreds("github-token");
-const dashboardService = appEnv.getServiceCreds("dashboard-credentials");
-const logzioCredService = appEnv.getServiceCreds("logzio-credentials");
-
-const token = credService ? credService.token : process.env.GITHUB_TOKEN;
-const username = dashboardService ? dashboardService.user : undefined;
-
-const password = dashboardService ? dashboardService.password : undefined;
+const token = secret("github.token", process.env.GITHUB_TOKEN);
 
 const authEnabled = !appEnv.isLocal;
+const username = secret("dashboard.user");
+const password = secret("dashboard.password");
 
 const logzioOptions: LogzioOptions = {
-    applicationId: appEnv.app ? appEnv.app.application_id : guid(),
-    environmentId: appEnv.app ? appEnv.app.space_name : "local",
-    token: logzioCredService ? logzioCredService.token : undefined,
+    applicationId: appEnv.app ? `cf.${appEnv.app.application_id}` : guid(),
+    environmentId: appEnv.app ? `cf.${appEnv.app.space_name}` : "local",
+    token: secret("logzio.token"),
 };
 
 export const configuration: Configuration = {

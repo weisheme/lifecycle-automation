@@ -1,11 +1,13 @@
 import {
     EventFired,
     Failure,
+    failure,
     HandleEvent,
     HandlerResult,
     Success,
 } from "@atomist/automation-client/Handlers";
 import { HandlerContext } from "@atomist/automation-client/Handlers";
+import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
     MessageClient,
@@ -15,8 +17,10 @@ import {
     Action,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
+import axios from "axios";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
+import { wrapLinks } from "../util/tracking";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -139,11 +143,11 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         slackMessage.unfurl_links = false;
         slackMessage.unfurl_media = false;
 
-        const id = lifecycle.id;
         let ts = this.normalizeTimestamp(lifecycle.timestamp);
         if (ts == null) {
             ts = new Date().getTime().toString();
         }
+
         let ttl;
         if (lifecycle.ttl != null) {
             ttl = this.normalizeTimestamp(lifecycle.ttl);
@@ -151,35 +155,66 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         }
 
         const options: MessageOptions = {
-            id,
+            id: lifecycle.id,
             ttl,
             ts: +ts,
             post: lifecycle.post,
         };
 
+        return this.shortenUrls(slackMessage, lifecycle)
+            .then(message => {
+                return this.sendMessage(message, options, lifecycle, messageClient);
+            })
+            .catch(err => failure(err));
+    }
+
+    private sendMessage(slackMessage: SlackMessage, options: MessageOptions, lifecycle: Lifecycle,
+                        messageClient: MessageClient): Promise<any> {
         const msgs: Array<Promise<any>> = [];
         if (lifecycle.channels && lifecycle.channels.length > 0) {
             msgs.push(messageClient.addressChannels(slackMessage, lifecycle.channels, options)
                 .then(() => {
-                    logger.info("Successfully sent lifecycle message to channels '%s'", id);
+                    logger.info("Successfully sent lifecycle message to channels '%s'", lifecycle.id);
                     return Success;
                 }));
         }
         if (lifecycle.users && lifecycle.users.length > 0) {
             msgs.push(messageClient.addressUsers(slackMessage, lifecycle.users, options)
                 .then(() => {
-                    logger.info("Successfully sent lifecycle message to users '%s'", id);
+                    logger.info("Successfully sent lifecycle message to users '%s'", lifecycle.id);
                     return Success;
                 }));
         }
         if (lifecycle.respond && lifecycle.respond === true) {
             msgs.push(messageClient.respond(slackMessage, options)
                 .then(() => {
-                    logger.info("Successfully sent response lifecycle message '%s'", id);
+                    logger.info("Successfully sent response lifecycle message '%s'", lifecycle.id);
                     return Success;
                 }));
         }
         return Promise.all(msgs);
+    }
+
+    private shortenUrls(slackMessage: SlackMessage, lifecycle: Lifecycle): Promise<SlackMessage> {
+        const nsp = namespace.get();
+        const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, lifecycle.name);
+        return axios.put("https://r.atomist.com/v2/shorten", {
+                teamId: nsp.teamId,
+                teamName: nsp.teamName,
+                group: "atomist",
+                artifact: nsp.name,
+                version: nsp.version,
+                name: nsp.operation,
+                messageId: lifecycle.id,
+                redirects: hashesToUrl.map(([hash, url]) => ({hash, url })),
+            })
+            .then(() => {
+                return wrappedSlackMessage;
+            })
+            .catch(err => {
+                console.warn(`Error shorting urls: '${err.message}'`);
+                return slackMessage;
+            });
     }
 
     private normalizeTimestamp(timestamp: string): string {

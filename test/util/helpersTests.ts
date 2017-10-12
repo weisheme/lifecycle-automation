@@ -2,7 +2,7 @@ import "mocha";
 import * as assert from "power-assert";
 import { isDmDisabled } from "../../src/util/helpers";
 
-describe("Helpers", () => {
+describe("helpers", () => {
 
     it("test if DMs are enabled", () => {
         const chatId = {
