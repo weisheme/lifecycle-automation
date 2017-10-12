@@ -16,13 +16,14 @@ import {
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
 import * as config from "config";
+import * as deepmerge from "deepmerge";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
  */
 export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
-    public lifecycleConfigurations = config.get("lifecycles") || {};
+    public defaultConfigurations = config.get("lifecycles") || {};
 
     public handle(event: EventFired<R>, ctx: HandlerContext): Promise<HandlerResult> {
         // Let the concrete handler configure the lifecycle message
@@ -35,10 +36,14 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
         const results = lifecycles.filter(l => l != null).map(lifecycle => {
 
-            const lifecycleConfiguration = this.lifecycleConfigurations[lifecycle.name] as LifecycleConfiguration;
-            if (lifecycleConfiguration != null) {
-                lifecycle.renderers = this.configureRenderers(lifecycle.renderers, lifecycleConfiguration);
-                lifecycle.contributors = this.configureContributors(lifecycle.contributors, lifecycleConfiguration);
+            // merge default and handler provided configuration
+            const configuration = deepmerge(
+                this.defaultConfigurations[lifecycle.name] as LifecycleConfiguration,
+                this.prepareConfiguration(event, lifecycle.name));
+
+            if (configuration) {
+                lifecycle.renderers = this.configureRenderers(lifecycle.renderers, configuration);
+                lifecycle.contributors = this.configureContributors(lifecycle.contributors, configuration);
             }
 
             const renderers: any[] = [];
@@ -47,7 +52,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             lifecycle.renderers.forEach(r => {
                 lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
                     // First collect all buttons/actions for the given node
-                    const context = new RendererContext(r.id(), lifecycle, ctx);
+                    const context = new RendererContext(r.id(), lifecycle, configuration, ctx);
 
                     const contributors: any[] = [];
                     lifecycle.contributors.filter(c => c.supports(n)).forEach(c => {
@@ -101,6 +106,33 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
      * @param event the cortex event the path expression matched
      */
     protected abstract prepareLifecycle(event: EventFired<R>): Lifecycle[];
+
+    /**
+     * Extension point for handlers to extract preferences from user or chatteam nodes.
+     * @param {EventFired<R>} event
+     * @returns {Preferences[]}
+     */
+    protected extractPreferences(event: EventFired<R>): Preferences[] {
+        return [];
+    }
+
+    private prepareConfiguration(event: EventFired<R>, name: string): LifecycleConfiguration {
+        const preferences = this.extractPreferences(event);
+        if (preferences) {
+            const lifecycles = preferences.find(p => p.name === "lifecycles");
+            if (lifecycles && lifecycles.value) {
+                try {
+                    const configuration = JSON.parse(lifecycles.value)[name] as LifecycleConfiguration;
+                    if (configuration) {
+                        return configuration;
+                    }
+                } catch (err) {
+                    console.warn(`Lifecycle configuration corrupt: '${lifecycles.value}'`);
+                }
+            }
+        }
+        return {} as LifecycleConfiguration;
+    }
 
     private createMessage(slackMessage: SlackMessage, lifecycle: Lifecycle,
                           messageClient: MessageClient): Promise<any> {
@@ -165,23 +197,37 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     }
 
     private configureContributors(contributors: Array<ActionContributor<any>>,
-                                  lifecycleConfiguration: LifecycleConfiguration) {
-        if (lifecycleConfiguration != null) {
-            if (lifecycleConfiguration.contributors != null) {
+                                  configuration: LifecycleConfiguration) {
+        if (configuration) {
+            if (configuration.contributors) {
                 contributors = this.filterAndSort(contributors,
-                    lifecycleConfiguration.contributors) as Array<ActionContributor<any>>;
+                    configuration.contributors) as Array<ActionContributor<any>>;
             }
+        } else {
+            configuration = {} as LifecycleConfiguration;
         }
+        contributors.forEach(c => {
+           if (c.configure) {
+               c.configure(configuration);
+           }
+        });
         return contributors;
     }
 
     private configureRenderers(renderers: Array<NodeRenderer<any>>,
-                               lifecycleConfiguration: LifecycleConfiguration): Array<NodeRenderer<any>> {
-        if (lifecycleConfiguration != null) {
-            if (lifecycleConfiguration.renderers != null) {
-                renderers = this.filterAndSort(renderers, lifecycleConfiguration.renderers) as Array<NodeRenderer<any>>;
+                               configuration: LifecycleConfiguration): Array<NodeRenderer<any>> {
+        if (configuration) {
+            if (configuration.renderers) {
+                renderers = this.filterAndSort(renderers, configuration.renderers) as Array<NodeRenderer<any>>;
             }
+        } else {
+            configuration = {} as LifecycleConfiguration;
         }
+        renderers.forEach(c => {
+            if (c.configure) {
+                c.configure(configuration);
+            }
+        });
         return renderers;
     }
 
@@ -200,10 +246,13 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 export interface LifecycleConfiguration {
 
     renderers: string[];
-
     contributors: string[];
-
     configuration: any;
+}
+
+export interface Preferences {
+    name?: string;
+    value?: string;
 }
 
 /**
@@ -283,6 +332,8 @@ export interface IdentifiableContribution {
      * Unique id of this renderer
      */
     id(): string;
+
+    configure?(config: LifecycleConfiguration);
 }
 
 /**
@@ -325,7 +376,8 @@ export interface ActionContributor<T> extends IdentifiableContribution {
 
 export class RendererContext {
 
-    constructor(public rendererId: string, public lifecycle: Lifecycle, public context: HandlerContext) { }
+    constructor(public rendererId: string, public lifecycle: Lifecycle,
+                public configuration: LifecycleConfiguration, public context: HandlerContext) { }
 }
 
 export abstract class AbstractIdentifiableContribution implements IdentifiableContribution {

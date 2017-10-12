@@ -53,6 +53,12 @@ subscription K8PodToPushLifecycle
                                     apiUrl
                                     gitUrl
                                 }
+                                chatTeam {
+                                    preferences {
+                                        name
+                                        value
+                                    }
+                                }
                             }
                             defaultBranch
                         }

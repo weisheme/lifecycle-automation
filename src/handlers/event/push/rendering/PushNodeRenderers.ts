@@ -10,7 +10,7 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as config from "config";
 import {
-    AbstractIdentifiableContribution,
+    AbstractIdentifiableContribution, LifecycleConfiguration,
     NodeRenderer,
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
@@ -85,20 +85,25 @@ export class PushNodeRenderer extends AbstractIdentifiableContribution
 export class CommitNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
 
-    public style: "fingerprint-inline" | "fingerprint-multi-line" =
-    config.get("lifecycles.push.configuration.fingerprints.style") || "fingerprint-inline";
+    public style: "fingerprint-inline" | "fingerprint-multi-line";
 
-    public renderUnchangedFingerprints: boolean =
-    config.get("lifecycles.push.configuration.fingerprints.render-unchanged") || true;
+    public renderUnchangedFingerprints: boolean;
 
-    public aboutHint: true = config.get("lifecycles.push.configuration.fingerprints.about-hint") || true;
+    public aboutHint: true;
 
-    public emojiStyle: "default" | "atomist" = config.get("lifecycles.push.configuration.emoji-style") || "default";
+    public emojiStyle: "default" | "atomist";
 
     public fingerprints: any = config.get("fingerprints.data") || {};
 
     constructor() {
         super("commit");
+    }
+
+    public configure(configuration: LifecycleConfiguration) {
+        this.style = configuration.configuration.fingerprints.style || "fingerprint-inline";
+        this.renderUnchangedFingerprints = configuration.configuration.fingerprints["render-unchanged"] || true;
+        this.aboutHint = configuration.configuration.fingerprints["about-hint"] || true;
+        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
     }
 
     public supports(node: any): boolean {
@@ -312,13 +317,17 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 export class BuildNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PushToPushLifecycle.Builds> {
 
-    public style: "attachment" | "footer" | "decorator" =
-    config.get("lifecycles.push.configuration.build.style") || "decorator";
+    public style: "attachment" | "footer" | "decorator";
 
-    public emojiStyle: "default" | "atomist" = config.get("lifecycles.push.configuration.emoji-style") || "default";
+    public emojiStyle: "default" | "atomist";
 
     constructor() {
         super("build");
+    }
+
+    public configure(configuration: LifecycleConfiguration) {
+        this.style = configuration.configuration.build.style || "decorator";
+        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
     }
 
     public supports(node: any): boolean {
@@ -347,9 +356,9 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
         let color;
         let emoji;
         if (build.status === "passed") {
-            icon = `https://images.atomist.com/rug/check-circle.gif?gif=${random}`;
-            color = "#45B254";
-            emoji = EMOJI_SCHEME[this.emojiStyle].build.passed;
+                icon = `https://images.atomist.com/rug/check-circle.gif?gif=${random}`;
+                color = "#45B254";
+                emoji = EMOJI_SCHEME[this.emojiStyle].build.passed;
         } else if (build.status === "started") {
             icon = `https://images.atomist.com/rug/pulsating-circle.gif?gif=${random}`;
             color = "#cccc00";

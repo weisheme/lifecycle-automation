@@ -1,17 +1,29 @@
-import { Action, Attachment, SlackMessage } from "@atomist/slack-messages/SlackMessages";
-import * as slack from "@atomist/slack-messages/SlackMessages";
-import * as config from "config";
-import { AbstractIdentifiableContribution, NodeRenderer, RendererContext } from "../../../../lifecycle/Lifecycle";
+import {
+    Action,
+    Attachment,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages/SlackMessages";
+import {
+    AbstractIdentifiableContribution,
+    LifecycleConfiguration,
+    NodeRenderer,
+    RendererContext,
+} from "../../../../lifecycle/Lifecycle";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
 export class StatusesNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
 
-    public emojiStyle: "default" | "atomist" = config.get("lifecycles.push.configuration.emoji-style") || "default";
-
-    public showOnPush: boolean = config.get("lifecycles.push.configuration.show-statuses-on-push") || true;
+    public showOnPush: boolean;
+    public emojiStyle: "default" | "atomist";
 
     constructor() {
         super("statuses");
+    }
+
+    public configure(configuration: LifecycleConfiguration) {
+        this.showOnPush = configuration.configuration["show-statuses-on-push"] || true;
+        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
     }
 
     public supports(node: any): boolean {
@@ -39,7 +51,7 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution imple
         // Now each one
         const lines = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
             if (s.targetUrl != null && s.targetUrl.length > 0) {
-                return `${this.emoji(s.state)} ${s.description} - ${slack.url(s.targetUrl, s.context)}`;
+                return `${this.emoji(s.state)} ${s.description} - ${url(s.targetUrl, s.context)}`;
             } else {
                 return `${this.emoji(s.state)} ${s.description} - ${s.context}`;
             }

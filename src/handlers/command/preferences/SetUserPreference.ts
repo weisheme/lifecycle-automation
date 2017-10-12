@@ -65,9 +65,7 @@ export class SetUserPreference implements HandleCommand {
                 }
                 return ctx.graphClient.executeMutationFromFile<graphql.SetUserPreference.Mutation,
                     graphql.SetUserPreference.Variables>("graphql/mutation/setUserPreference",
-                    { userId: this.requester, name: this.key, value: JSON.stringify(preferences) })
-                    // TODO remove this once we have a proper response back from the API
-                    .catch(err => console.log(err));
+                    { userId: this.requester, name: this.key, value: JSON.stringify(preferences) });
             })
             .then(() => {
                 const msg: SlackMessage = {

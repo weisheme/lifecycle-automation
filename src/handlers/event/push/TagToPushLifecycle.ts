@@ -1,6 +1,8 @@
 import { EventHandler, Tags } from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import { EventFired } from "@atomist/automation-client/Handlers";
+import * as _ from "lodash";
+import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
@@ -17,5 +19,9 @@ export class TagToPushLifecycle extends PushLifecycleHandler<graphql.TagToPushLi
 
         const pushes = event.data.Tag[0].commit.pushes;
         return [pushes, event.data.Tag[0].timestamp];
+    }
+
+    protected extractPreferences(event: EventFired<graphql.TagToPushLifecycle.Subscription>): Preferences[] {
+        return _.get(event, "data.Tag[0].commit.pushes[0].repo.org.chatTeam.preferences", []);
     }
 }

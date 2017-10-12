@@ -1,5 +1,4 @@
 import { EventFired } from "@atomist/automation-client/Handlers";
-import { forEach } from "async";
 import { Lifecycle, LifecycleHandler } from "../../../lifecycle/Lifecycle";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { PushToPushLifecycle } from "../../../typings/types";

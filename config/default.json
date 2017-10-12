@@ -10,7 +10,7 @@
   "lifecycles": {
     "push": {
       "configuration": {
-        "emoji-style": "atomist",
+        "emoji-style": "default",
         "show-statuses-on-push": true,
         "build": {
           "style": "decorator"

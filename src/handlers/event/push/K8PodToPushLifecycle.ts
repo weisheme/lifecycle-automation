@@ -1,6 +1,8 @@
 import { EventHandler, Tags } from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import { EventFired } from "@atomist/automation-client/Handlers";
+import * as _ from "lodash";
+import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
@@ -18,5 +20,9 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
         const pushes = [];
         event.data.K8Pod[0].images.forEach(i => pushes.push(...i.tag.commit.pushes));
         return [pushes, event.data.K8Pod[0].timestamp];
+    }
+
+    protected extractPreferences(event: EventFired<graphql.K8PodToPushLifecycle.Subscription>): Preferences[] {
+        return _.get(event, "data.K8Pod[0].images[0].tag.commit.pushes[0].repo.org.chatTeam.preferences", []);
     }
 }

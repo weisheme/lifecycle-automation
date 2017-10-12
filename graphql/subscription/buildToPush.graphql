@@ -48,6 +48,12 @@ subscription BuildToPushLifecycle
                         apiUrl
                         gitUrl
                     }
+                    chatTeam {
+                        preferences {
+                            name
+                            value
+                        }
+                    }
                 }
                 defaultBranch
             }

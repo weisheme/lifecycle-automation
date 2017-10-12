@@ -49,6 +49,12 @@ subscription ParentImpactToPushLifecycle
                             apiUrl
                             gitUrl
                         }
+                        chatTeam {
+                            preferences {
+                                name
+                                value
+                            }
+                        }
                     }
                     defaultBranch
                 }

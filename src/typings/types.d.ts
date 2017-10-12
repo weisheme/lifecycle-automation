@@ -670,12 +670,22 @@ export namespace ApplicationToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type _Commits = {
@@ -1360,12 +1370,22 @@ export namespace BuildToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -2420,12 +2440,22 @@ export namespace IssueToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -2592,12 +2622,22 @@ export namespace K8PodToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -3283,12 +3323,22 @@ export namespace ParentImpactToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -3838,12 +3888,22 @@ export namespace PushToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -4003,12 +4063,22 @@ export namespace ReleaseToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -4756,12 +4826,22 @@ export namespace StatusToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
@@ -4917,12 +4997,22 @@ export namespace TagToPushLifecycle {
 
   export type Org = {
     provider?: Provider; 
+    chatTeam?: ChatTeam; 
   } 
 
   export type Provider = {
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 
   export type Commits = {
