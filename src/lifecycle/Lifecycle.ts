@@ -197,7 +197,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
     private shortenUrls(slackMessage: SlackMessage, lifecycle: Lifecycle): Promise<SlackMessage> {
         const nsp = namespace.get();
+        if (!nsp) {
+            return Promise.resolve(slackMessage);
+        }
+
         const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, lifecycle.name);
+
         return axios.put("https://r.atomist.com/v2/shorten", {
                 teamId: nsp.teamId,
                 teamName: nsp.teamName,
