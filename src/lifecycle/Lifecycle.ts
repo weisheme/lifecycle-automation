@@ -217,7 +217,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 return wrappedSlackMessage;
             })
             .catch(err => {
-                console.warn(`Error shorting urls: '${err.message}'`);
+                console.warn(`Error shortening urls: '${err.message}'`);
                 return slackMessage;
             });
     }
@@ -373,6 +373,10 @@ export interface IdentifiableContribution {
      */
     id(): string;
 
+    /**
+     * Configure the contributions with the provided configuration
+     * @param {LifecycleConfiguration} config
+     */
     configure?(config: LifecycleConfiguration);
 }
 
