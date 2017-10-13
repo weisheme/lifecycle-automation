@@ -211,8 +211,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 version: nsp.version,
                 name: nsp.operation,
                 messageId: lifecycle.id,
-                redirects: hashesToUrl.map(([hash, url]) => ({hash, url })),
-            })
+                redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
+            }, { timeout: 2000 })
             .then(() => {
                 return wrappedSlackMessage;
             })
