@@ -75,7 +75,8 @@ export class TagActionContributor extends AbstractIdentifiableContribution
                 githubToSlack(commits[0].message), repo);
         }
 
-        buttons.push(buttonForCommand({ text: "Release" },
+        buttons.push(buttonForCommand({ text: "Release", confirm: { title: "Create Release",
+            text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel" } },
             "CreateGitHubRelease", {
                 org: repo.owner,
                 repo: repo.name,
