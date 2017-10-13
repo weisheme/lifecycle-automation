@@ -81,7 +81,7 @@ const authEnabled = !appEnv.isLocal;
 const logzioOptions: LogzioOptions = {
     applicationId: appEnv.app ? `cf.${appEnv.app.application_id}` : guid(),
     environmentId: appEnv.app ? `cf.${appEnv.app.space_name}` : "local",
-    token: secret("logzio.token"),
+    token: secret("logzio.token", process.env.LOGZIO_TOKEN),
 };
 
 export const configuration: Configuration = {

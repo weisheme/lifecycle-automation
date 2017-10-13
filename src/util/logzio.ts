@@ -32,8 +32,7 @@ let logzio;
 
 function initLogzioLogging(options: LogzioOptions) {
 
-    // create the logzio event logger
-    logzio = createLogger({
+    const logzioOptions = {
         token: options.token,
         level: "debug",
         type: "automation-client",
@@ -46,7 +45,9 @@ function initLogzioLogging(options: LogzioOptions) {
             "environment": options.environmentId,
             "application-id": options.applicationId,
         },
-    });
+    }
+    // create the logzio event logger
+    logzio = createLogger(logzioOptions);
 
     logzioWinstonTransport.prototype.log = function(level, msg, meta, callback) {
 
@@ -85,7 +86,7 @@ function initLogzioLogging(options: LogzioOptions) {
     };
 
     // create the winston logging adapter
-    (logger as any).add(logzioWinstonTransport, options);
+    (logger as any).add(logzioWinstonTransport, logzioOptions);
 
 }
 
