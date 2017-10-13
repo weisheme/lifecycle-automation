@@ -190,7 +190,7 @@ export const configuration: Configuration = {
                 clientId: secret("oauth.clientId"),
                 clientSecret: secret("oauth.clientSecret"),
                 callbackUrl: secret("oauth.callbackUrl"),
-                org: "atomisthq",
+                org: "atomisthqa",
             },
         },
     },
