@@ -83,12 +83,12 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
         const repo = context.lifecycle.extract("repo");
         const pr = context.lifecycle.extract("pullrequest");
 
-        const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
+        const state = (pr.state === "closed" ? (pr.merged === true ? "merged" : "closed") : "open");
 
         return linkGitHubUsers(githubToSlack(node.body), context.context)
             .then(body => {
                 const attachment: Attachment = {
-                    pretext: `New comment on ${pr.state} pull request ${bold(url(issueUrl(repo, pr, node),
+                    pretext: `New comment on ${state} pull request ${bold(url(issueUrl(repo, pr, node),
                         `#${pr.number.toString()}: ${pr.title}`))}`,
                     text: linkIssues(body, repo),
                     author_name: `@${node.by.login}`,

@@ -41,8 +41,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const repoSlug = `${repo.owner}/${repo.name}`;
-        const state = (pr.state === "closed" ?
-            ((pr.merged === true || (pr.merged as any) === "true") ? "merged" : "closed") : "open");
+        const state = (pr.state === "closed" ? (pr.merged === true ? "merged" : "closed") : "open");
 
         let color;
         let ts;
