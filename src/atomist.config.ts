@@ -77,8 +77,6 @@ const pj = require(`${appRoot}/package.json`);
 const token = secret("github.token", process.env.GITHUB_TOKEN);
 
 const authEnabled = !appEnv.isLocal;
-const username = secret("dashboard.user");
-const password = secret("dashboard.password");
 
 const logzioOptions: LogzioOptions = {
     applicationId: appEnv.app ? `cf.${appEnv.app.application_id}` : guid(),
@@ -181,12 +179,18 @@ export const configuration: Configuration = {
         enabled: true,
         auth: {
             basic: {
-                enabled: authEnabled,
-                username,
-                password,
+                enabled: false,
             },
             bearer: {
                 enabled: authEnabled,
+                token,
+            },
+            github: {
+                enabled: true,
+                clientId: secret("oauth.clientId"),
+                clientSecret: secret("oauth.clientSecret"),
+                callbackUrl: secret("oauth.callbackUrl"),
+                org: "atomisthq",
             },
         },
     },

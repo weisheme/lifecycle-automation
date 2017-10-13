@@ -11,6 +11,7 @@ applications:
     SUPPRESS_NO_CONFIG_WARNING: true
   services:
   - github-token
+  - github-oauth
   - dashboard-credentials
   - logzio-credentials
   - mixpanel-credentials

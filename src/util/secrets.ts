@@ -8,6 +8,7 @@ export const secrets = {
     dashboard: appEnv.getServiceCreds("dashboard-credentials"),
     logzio: appEnv.getServiceCreds("logzio-credentials"),
     mixpanel: appEnv.getServiceCreds("mixpanel-credentials"),
+    oauth: appEnv.getServiceCreds("github-oauth"),
 };
 
 /**

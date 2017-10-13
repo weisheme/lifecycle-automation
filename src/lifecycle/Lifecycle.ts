@@ -21,6 +21,7 @@ import axios from "axios";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
 import { wrapLinks } from "../util/tracking";
+import { guid } from "@atomist/automation-client/internal/util/string";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -210,7 +211,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 artifact: nsp.name,
                 version: nsp.version,
                 name: nsp.operation,
-                messageId: lifecycle.id,
+                messageId: lifecycle.id ? lifecycle.id : guid(),
                 redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
             }, { timeout: 2000 })
             .then(() => {
