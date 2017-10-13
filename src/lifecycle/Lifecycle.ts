@@ -9,6 +9,7 @@ import {
 import { HandlerContext } from "@atomist/automation-client/Handlers";
 import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
+import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     MessageClient,
     MessageOptions,
@@ -21,7 +22,6 @@ import axios from "axios";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
 import { wrapLinks } from "../util/tracking";
-import { guid } from "@atomist/automation-client/internal/util/string";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
