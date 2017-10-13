@@ -2,7 +2,7 @@ applications:
 - name: lifecycle-automation
   command: $(npm bin)/atomist-client
   routes:
-  - route: lifecycle.a.atomist.com
+  - route: lifecycle-automation.cfapps.io
   memory: 128M
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
   env:
