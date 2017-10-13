@@ -87,7 +87,7 @@ const logzioOptions: LogzioOptions = {
 export const configuration: Configuration = {
     name: pj.name,
     version: pj.version,
-    teamIds: config.get("teamIds") as string[],
+    teamIds: JSON.parse(secret("teams.ids", `[ "T1L0VDKJP" ]`)) as string[],
     commands: [
         // cloudfoundry
         () => new CloudFoundryApplicationDetail(),
@@ -186,7 +186,7 @@ export const configuration: Configuration = {
                 token,
             },
             github: {
-                enabled: true,
+                enabled: authEnabled,
                 clientId: secret("oauth.clientId"),
                 clientSecret: secret("oauth.clientSecret"),
                 callbackUrl: secret("oauth.callbackUrl"),

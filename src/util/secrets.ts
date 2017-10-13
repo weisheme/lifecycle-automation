@@ -9,6 +9,7 @@ export const secrets = {
     logzio: appEnv.getServiceCreds("logzio-credentials"),
     mixpanel: appEnv.getServiceCreds("mixpanel-credentials"),
     oauth: appEnv.getServiceCreds("github-oauth"),
+    teams: appEnv.getServiceCreds("teams"),
 };
 
 /**

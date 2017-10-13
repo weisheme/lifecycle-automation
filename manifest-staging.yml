@@ -10,6 +10,7 @@ applications:
     NODE_OPTIONS: --trace-warnings
     SUPPRESS_NO_CONFIG_WARNING: true
   services:
+  - teams
   - github-token
   - github-oauth
   - dashboard-credentials
