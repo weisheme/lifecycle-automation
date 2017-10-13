@@ -85,7 +85,7 @@ function initLogzioLogging(options: LogzioOptions) {
     };
 
     // create the winston logging adapter
-    logger.add(logzioWinstonTransport, options);
+    (logger as any).add(logzioWinstonTransport, options);
 
 }
 
@@ -141,7 +141,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             "team-id": nsp.get().teamId,
             "team-name": nsp.get().teamName,
             "event-type": eventType,
-            "level": "info",
+            "level": status === "failed" ? "error" : "info",
             status,
             "execution-time": new Date().getTime() - start,
             "correlation-id": nsp.get().correlationId,
