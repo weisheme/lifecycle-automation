@@ -597,7 +597,7 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
 
     public supports(node: any): boolean {
         return node.after
-            && node.commits.filter(c => c.resolves != null && c.resolves.length > 0).length > 0;
+            && node.commits.some(c => c.resolves != null && c.resolves.length > 0);
     }
 
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
@@ -605,7 +605,7 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const issues = [];
         push.commits.filter(c => c.resolves != null).forEach(c => c.resolves.forEach(i => {
-            if (issues.indexOf(i.number) < 0) {
+            if (issues.indexOf(i.number) < 0 && i.title && i.state) {
                 // tslint:disable-next-line:variable-name
                 const author_name = `#${i.number}: ${truncateCommitMessage(i.title, repo)}`;
                 const attachment: Attachment = {
