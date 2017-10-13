@@ -45,7 +45,7 @@ function initLogzioLogging(options: LogzioOptions) {
             "environment": options.environmentId,
             "application-id": options.applicationId,
         },
-    }
+    };
     // create the logzio event logger
     logzio = createLogger(logzioOptions);
 
