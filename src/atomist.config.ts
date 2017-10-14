@@ -177,6 +177,7 @@ export const configuration: Configuration = {
     token,
     http: {
         enabled: true,
+        forceSecure: authEnabled,
         auth: {
             basic: {
                 enabled: false,
