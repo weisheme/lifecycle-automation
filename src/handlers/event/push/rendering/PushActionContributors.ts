@@ -1,6 +1,7 @@
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import {
     AbstractIdentifiableContribution,
     ActionContributor,
@@ -9,7 +10,6 @@ import {
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
-import * as _ from "lodash";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PushToPushLifecycle.Builds> {
