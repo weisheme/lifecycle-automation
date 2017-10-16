@@ -180,14 +180,14 @@ export const configuration: Configuration = {
         forceSecure: authEnabled,
         auth: {
             basic: {
-                enabled: false,
+                enabled: !authEnabled,
             },
             bearer: {
                 enabled: authEnabled,
                 token,
             },
             github: {
-                enabled: authEnabled,
+                enabled: authEnabled && process.env.NODE_ENV === "production",
                 clientId: secret("oauth.clientId"),
                 clientSecret: secret("oauth.clientSecret"),
                 callbackUrl: secret("oauth.callbackUrl"),
