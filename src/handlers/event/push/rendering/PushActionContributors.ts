@@ -9,7 +9,7 @@ import {
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
-import * as _ "lodash";
+import * as _ from "lodash";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PushToPushLifecycle.Builds> {
