@@ -9,6 +9,7 @@ import {
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
+import * as _ "lodash";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PushToPushLifecycle.Builds> {
@@ -120,14 +121,14 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
                     const buttons = [];
 
                     // If there are open PRs on the branch, don't show the button
-                    const branch = result.ChatTeam[0].orgs[0].repo[0].branches[0];
-                    if (branch.deleted) {
+                    const branch = _.get(result, "ChatTeam[0].orgs[0].repo[0].branches[0]");
+                    if (branch && branch.deleted) {
                         showButton = false;
                         // If there are PRs that already contain this push's after commit, don't show the button
-                    } else if (branch.pullRequests != null
+                    } else if (branch && branch.pullRequests != null
                         && branch.pullRequests.filter(pr => pr.state === "open").length > 0) {
                         showButton = false;
-                    } else if (branch.pullRequests != null) {
+                    } else if (branch && branch.pullRequests != null) {
                         branch.pullRequests.forEach(pr => {
                             if (pr.commits.filter(c => c.sha === node.after.sha).length > 0) {
                                 showButton = false;
