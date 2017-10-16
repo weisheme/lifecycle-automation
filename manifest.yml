@@ -1,9 +1,7 @@
 applications:
 - name: lifecycle-automation
   command: $(npm bin)/atomist-client
-  routes:
-  - route: lifecycle.atomist.io
-  memory: 128M
+  memory: 256M
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
   env:
     NODE_OPTIONS: --trace-warnings
