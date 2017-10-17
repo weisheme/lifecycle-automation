@@ -7,3 +7,4 @@
 /git.properties
 /config/development.json
 git-info.json
+*.iml
