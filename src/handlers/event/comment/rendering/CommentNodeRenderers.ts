@@ -3,7 +3,6 @@ import {
     Action,
     Attachment,
     bold,
-    escape,
     SlackMessage,
     url,
 } from "@atomist/slack-messages/SlackMessages";
@@ -30,7 +29,7 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.issue;
+        return node.issue && node.issue.title;
     }
 
     public render(node: graphql.IssueToIssueCommentLifecycle.Comments, actions: Action[], msg: SlackMessage,
@@ -50,12 +49,12 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
             .then(body => {
                 const attachment: Attachment = {
                     pretext: `New comment on ${issue.state} issue ${bold(url(issueUrl(repo, issue, node),
-                        `#${issue.number.toString()}: ${issue.title}`))}`,
+                        `#${issue.number}: ${issue.title}`))}`,
                     text: linkIssues(body, repo),
                     author_name: `@${node.by.login}`,
                     author_icon: avatarUrl(repo, node.by.login),
                     author_link: userUrl(repo, node.by.login),
-                    fallback: `New comment on ${issue.state} issue #${issue.number.toString()}: ${issue.title}`,
+                    fallback: `New comment on ${issue.state} issue #${issue.number}: ${issue.title}`,
                     mrkdwn_in: ["text", "pretext"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, issue.labels, issue.assignees),
                     footer_icon,
@@ -75,7 +74,7 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
     }
 
     public supports(node: any): boolean {
-        return node.pullRequest;
+        return node.pullRequest && node.pullRequest.title;
     }
 
     public render(node: graphql.PullRequestToPullRequestCommentLifecycle.Comments, actions: Action[], msg: SlackMessage,
@@ -89,12 +88,12 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
             .then(body => {
                 const attachment: Attachment = {
                     pretext: `New comment on ${state} pull request ${bold(url(issueUrl(repo, pr, node),
-                        `#${pr.number.toString()}: ${pr.title}`))}`,
+                        `#${pr.number}: ${pr.title}`))}`,
                     text: linkIssues(body, repo),
                     author_name: `@${node.by.login}`,
                     author_icon: avatarUrl(repo, node.by.login),
                     author_link: userUrl(repo, node.by.login),
-                    fallback: `New comment on ${pr.state} issue #${pr.number.toString()}: ${pr.title}`,
+                    fallback: `New comment on ${pr.state} issue #${pr.number}: ${pr.title}`,
                     mrkdwn_in: ["text", "pretext"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, pr.labels, pr.assignees),
                     footer_icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
