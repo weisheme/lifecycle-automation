@@ -180,7 +180,7 @@ export const configuration: Configuration = {
         forceSecure: authEnabled,
         auth: {
             basic: {
-                enabled: !authEnabled,
+                enabled: false,
             },
             bearer: {
                 enabled: authEnabled,
