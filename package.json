@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist Rugs displaying development and operations lifecycle messages in chat",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -65,7 +65,7 @@
     "compile": "npm run git:info && tsc -p .",
     "fmt": "tsfmt --replace",
     "lint": "tslint '**/*.ts' --exclude 'node_modules/**' --exclude 'build/**' -t verbose",
-    "lint-fix": "tslint --fix '**/*.ts' --exclude 'node_modules/**' --exclude 'build/**' -t verbose",
+    "lint:fix": "tslint --fix '**/*.ts' --exclude 'node_modules/**' --exclude 'build/**' -t verbose",
     "testone": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
     "test": "mocha --require espower-typescript/guess \"test/**/*.ts\"",
     "benchmark": "mocha --prof --compilers ts:espower-typescript/guess \"test/**/*Benchmark.ts\"; node --prof-process isolate-* > profile.txt",
