@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 cf target -s production
 
 cf delete lifecycle-automation-old -f
