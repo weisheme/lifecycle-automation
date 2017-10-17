@@ -23,6 +23,7 @@ describe("tracking", () => {
             name: "test",
             version: "0.1.0",
             invocationId: messageId,
+            ts: new Date().getTime(),
         });
         secrets.mixpanel = { token: "xxx" };
     }
