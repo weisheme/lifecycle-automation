@@ -102,7 +102,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
         return Promise.all(results)
             .then(resolved => {
-                return resolved.some(r => r === Failure) ? Failure : Success;
+                const error = resolved.some(r => r.some(ri => ri.code !== 0));
+                return error ? Failure : Success;
             });
     }
 
@@ -175,23 +176,28 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         if (lifecycle.channels && lifecycle.channels.length > 0) {
             msgs.push(messageClient.addressChannels(slackMessage, lifecycle.channels, options)
                 .then(() => {
-                    logger.info("Successfully sent lifecycle message to channels '%s'", lifecycle.id);
+                    logger.info("Sending lifecycle message '%s' to channels '%s'", lifecycle.id,
+                        lifecycle.channels.join(", "));
                     return Success;
-                }));
+                })
+                .catch(err => failure(err)));
         }
         if (lifecycle.users && lifecycle.users.length > 0) {
             msgs.push(messageClient.addressUsers(slackMessage, lifecycle.users, options)
                 .then(() => {
-                    logger.info("Successfully sent lifecycle message to users '%s'", lifecycle.id);
+                    logger.info("Sending lifecycle message '%s' to users '%s'", lifecycle.id,
+                        lifecycle.users.join(", "));
                     return Success;
-                }));
+                })
+                .catch(err => failure(err)));
         }
         if (lifecycle.respond && lifecycle.respond === true) {
             msgs.push(messageClient.respond(slackMessage, options)
                 .then(() => {
-                    logger.info("Successfully sent response lifecycle message '%s'", lifecycle.id);
+                    logger.info("Sending lifecycle response message '%s'", lifecycle.id);
                     return Success;
-                }));
+                })
+                .catch(err => failure(err)));
         }
         return Promise.all(msgs);
     }
