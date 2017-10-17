@@ -84,10 +84,11 @@ const logzioOptions: LogzioOptions = {
     token: secret("logzio.token", process.env.LOGZIO_TOKEN),
 };
 
-export const configuration: Configuration = {
+export const configuration = {
     name: pj.name,
     version: pj.version,
-    teamIds: JSON.parse(secret("teams.ids", `[ "T1L0VDKJP" ]`)) as string[],
+    teamIds: null,
+    groups: ["all"],
     commands: [
         // cloudfoundry
         () => new CloudFoundryApplicationDetail(),
