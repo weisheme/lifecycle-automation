@@ -208,6 +208,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             return Promise.resolve(slackMessage);
         }
 
+        logger.debug("Starting url shortening");
         const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, lifecycle.name);
 
         return axios.put("https://r.atomist.com/v2/shorten", {
@@ -221,6 +222,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
             }, { timeout: 2000 })
             .then(() => {
+                logger.debug("Finished url shortening");
                 return wrappedSlackMessage;
             })
             .catch(err => {
