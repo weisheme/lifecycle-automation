@@ -1,0 +1,8 @@
+query BotOwner {
+  ChatId(isPrimaryOwner: "true") {
+    isOwner
+    isAdmin
+    isPrimaryOwner
+    screenName
+  }
+}

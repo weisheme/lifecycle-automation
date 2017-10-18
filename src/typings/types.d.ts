@@ -131,6 +131,21 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
+export namespace SetTeamnPreference {
+  export type Variables = {
+    name: string;
+    value: string;
+  }
+
+  export type Mutation = {
+    setTeamPreference?: SetTeamPreference[]; 
+  } 
+
+  export type SetTeamPreference = {
+    name?: string; 
+    value?: string; 
+  } 
+}
 export namespace SetUserPreference {
   export type Variables = {
     userId: string;
@@ -145,6 +160,21 @@ export namespace SetUserPreference {
   export type SetUserPreference = {
     name?: string; 
     value?: string; 
+  } 
+}
+export namespace BotOwner {
+  export type Variables = {
+  }
+
+  export type Query = {
+    ChatId?: ChatId[]; 
+  } 
+
+  export type ChatId = {
+    isOwner?: boolean; 
+    isAdmin?: boolean; 
+    isPrimaryOwner?: boolean; 
+    screenName?: string; 
   } 
 }
 export namespace Branch {
@@ -2812,6 +2842,24 @@ export namespace NotifiyBotOwnerOnPush {
 
   export type Push = {
     id?: string; 
+    repo?: Repo; 
+  } 
+
+  export type Repo = {
+    org?: Org; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[]; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 }
 export namespace NotifyMentionedOnIssue {

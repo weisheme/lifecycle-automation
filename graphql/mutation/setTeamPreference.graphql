@@ -1,0 +1,6 @@
+mutation SetTeamnPreference($name: String!, $value: String!) {
+  setTeamPreference(name: $name, value: $value) {
+    name
+    value
+  }
+}

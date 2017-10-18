@@ -62,6 +62,7 @@ import { ApplicationToPushLifecycle } from "./handlers/event/push/ApplicationToP
 import { BuildToPushLifecycle } from "./handlers/event/push/BuildToPushLifecycle";
 import { IssueToPushLifecycle } from "./handlers/event/push/IssueToPushLifecycle";
 import { K8PodToPushLifecycle } from "./handlers/event/push/K8PodToPushLifecycle";
+import { NotifyBotOwnerOnPush } from "./handlers/event/push/NotifiyBotOwnerOnPush";
 import { ParentImpactToPushLifecycle } from "./handlers/event/push/ParentImpactToPushLifecycle";
 import { PushToPushLifecycle } from "./handlers/event/push/PushToPushLifecycle";
 import { ReleaseToPushLifecycle } from "./handlers/event/push/ReleaseToPushLifecycle";
@@ -87,7 +88,7 @@ const logzioOptions: LogzioOptions = {
 export const configuration = {
     name: pj.name,
     version: pj.version,
-    // teamIds: "T1L0VDKJP",
+    // teamIds: "T095SFFBK",
     teamIds: null,
     groups: ["all"],
     commands: [
@@ -139,6 +140,7 @@ export const configuration = {
         () => new BuildToPushLifecycle(),
         () => new IssueToPushLifecycle(),
         () => new K8PodToPushLifecycle(),
+        () => new NotifyBotOwnerOnPush(),
         () => new ParentImpactToPushLifecycle(),
         () => new PushToPushLifecycle(),
         () => new ReleaseToPushLifecycle(),

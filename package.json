@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist Rugs displaying development and operations lifecycle messages in chat",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -29,6 +29,7 @@
     "base64-js": "^1.2.1",
     "cf-nodejs-client": "^0.13.0",
     "cfenv": "^1.0.4",
+    "current-week-number": "^1.0.7",
     "deepmerge": "^2.0.0",
     "format-date": "^1.0.0",
     "github": "^11.0.0",
