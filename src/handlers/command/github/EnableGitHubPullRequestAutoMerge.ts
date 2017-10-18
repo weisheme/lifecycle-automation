@@ -13,9 +13,9 @@ import {
     Secrets,
     Success,
 } from "@atomist/automation-client/Handlers";
-import { loadGitHubId } from "../../../util/helpers";
 import { AutoMergeTag } from "../../event/pullrequest/autoMerge";
 import * as github from "./gitHubApi";
+import { failure } from "@atomist/automation-client/HandlerResult";
 
 /**
  * Approve GitHub status on commit.
@@ -41,9 +41,6 @@ export class EnableGitHubPullRequestAutoMerge implements HandleCommand {
     })
     public issue: number;
 
-    @MappedParameter(MappedParameters.SlackUser)
-    public requester: string;
-
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
@@ -51,17 +48,13 @@ export class EnableGitHubPullRequestAutoMerge implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-
-        return loadGitHubId(ctx, this.requester)
-            .then(chatId => {
-                return github.api(this.githubToken, this.apiUrl).issues.createComment({
-                    owner: this.owner,
-                    repo: this.repo,
-                    number: this.issue,
-                    body: `Pull request auto merge enabled by @${chatId}. ${AutoMergeTag}`,
-                });
-            })
-            .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+        return github.api(this.githubToken, this.apiUrl).issues.createComment({
+            owner: this.owner,
+            repo: this.repo,
+            number: this.issue,
+            body: `Pull request auto merge enabled. ${AutoMergeTag}`,
+        })
+        .then(() => Success)
+        .catch(err => failure(err));
     }
 }
