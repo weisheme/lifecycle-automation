@@ -9,7 +9,7 @@ import * as graphql from "../../typings/types";
 
 const PageSize = 50;
 const Message = "GitHub events are flowing for your organizations but they're not visible in any Slack channels yet. " +
-    "To enable this, go to a channel and invite me by typing `@atomist`"
+    "To enable this, go to a channel and invite me by typing `@atomist`";
 
 export abstract class AbstractNotifyBotOwner implements HandleEvent<any> {
 
@@ -20,7 +20,7 @@ export abstract class AbstractNotifyBotOwner implements HandleEvent<any> {
             "graphql/query/channels",
             { first: PageSize, offset: 0 })
             .then(function page(result, offset = 1, mappedRepo = false) {
-                if (!result.Repo || result.Repo.length === 0 || mappedRepo == true) {
+                if (!result.Repo || result.Repo.length === 0 || mappedRepo === true) {
                     if (!mappedRepo) {
                         // TODO change to DM the bot author
                         return ctx.messageClient.addressUsers(Message, "cd",

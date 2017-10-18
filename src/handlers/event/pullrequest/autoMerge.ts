@@ -37,8 +37,8 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
                 repo: pr.repo.name,
                 number: pr.number,
             })
-            .then(pr => {
-                if (pr.data.mergeable) {
+            .then(gpr => {
+                if (gpr.data.mergeable) {
                     return api.pullRequests.merge({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
