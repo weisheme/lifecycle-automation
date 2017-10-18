@@ -7,6 +7,7 @@ import {
     Success,
 } from "@atomist/automation-client/Handlers";
 import { HandlerContext } from "@atomist/automation-client/Handlers";
+import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { guid } from "@atomist/automation-client/internal/util/string";
@@ -22,7 +23,6 @@ import axios from "axios";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
 import { wrapLinks } from "../util/tracking";
-import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
