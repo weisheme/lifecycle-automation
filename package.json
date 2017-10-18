@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.1.46-20171018164037.tgz",
+    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.1.46-20171018173756.tgz",
     "@atomist/slack-messages": "^0.12.0",
     "async-exit-hook": "^2.0.1",
     "base64-js": "^1.2.1",
@@ -79,6 +79,6 @@
   },
   "engines": {
     "node": "8.7.x",
-    "npm": "5.3.x"
+    "npm": "5.4.x"
   }
 }
