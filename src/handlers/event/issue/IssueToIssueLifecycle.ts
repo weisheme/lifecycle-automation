@@ -5,9 +5,9 @@ import * as graphql from "../../../typings/types";
 import { IssueLifecycleHandler } from "./IssueLifecycle";
 
 /**
- * A Event handler that sends a lifecycle message on Issue events.
+ * Send a lifecycle message on Issue events.
  */
-@EventHandler("Event handler that sends a lifecycle message on Issue events",
+@EventHandler("Send a lifecycle message on Issue events",
     GraphQL.subscriptionFromFile("graphql/subscription/issueToIssue"))
 @Tags("lifecycle", "issue")
 export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueToIssueLifecycle.Subscription> {

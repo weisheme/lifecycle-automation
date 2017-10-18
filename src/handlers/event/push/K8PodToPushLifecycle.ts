@@ -7,9 +7,9 @@ import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
 /**
- * A Event handler that sends a lifecycle message on K8Pod events.
+ * Send a lifecycle message on K8Pod events.
  */
-@EventHandler("Event handler that sends a lifecycle message on K8Pod events",
+@EventHandler("Send a lifecycle message on K8Pod events",
     GraphQL.subscriptionFromFile("graphql/subscription/k8podToPush"))
 @Tags("lifecycle", "push", "k8pod")
 export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPushLifecycle.Subscription> {

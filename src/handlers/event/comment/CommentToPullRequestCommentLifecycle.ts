@@ -6,9 +6,9 @@ import * as graphql from "../../../typings/types";
 import { CommentLifecycleHandler } from "./CommentLifecycle";
 
 /**
- * A Event handler that sends a lifecycle message on Comment events.
+ * Send a lifecycle message on Comment events.
  */
-@EventHandler("Event handler that sends a lifecycle message on Comment events",
+@EventHandler("Send a lifecycle message on Comment events",
     GraphQL.subscriptionFromFile("graphql/subscription/commentToPullRequestComment"))
 @Tags("lifecycle", "pr comment", "comment")
 export class CommentToPullRequestCommentLifecycle

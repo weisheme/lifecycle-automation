@@ -9,9 +9,9 @@ import * as graphql from "../../../typings/types";
 import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 
 /**
- * A Event handler that sends a lifecycle message on Commit events.
+ * Send a lifecycle message on Commit events.
  */
-@EventHandler("Event handler that sends a lifecycle message on Commit events",
+@EventHandler("Send a lifecycle message on Commit events",
     GraphQL.subscriptionFromFile("graphql/subscription/commitToPullRequest"),
 )
 @Tags("lifecycle", "pr", "commit")

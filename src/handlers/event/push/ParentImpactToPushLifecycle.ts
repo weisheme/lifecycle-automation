@@ -10,9 +10,9 @@ import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
 /**
- * A Event handler that sends a lifecycle message on ParentImpact events.
+ * Send a lifecycle message on ParentImpact events.
  */
-@EventHandler("Event handler that sends a lifecycle message on ParentImpact events",
+@EventHandler("Send a lifecycle message on ParentImpact events",
     GraphQL.subscriptionFromFile("graphql/subscription/parentimpactToPush"))
 @Tags("lifecycle", "push", "parentImpact")
 export class ParentImpactToPushLifecycle

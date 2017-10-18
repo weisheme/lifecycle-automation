@@ -188,6 +188,25 @@ export namespace Branch {
     sha?: string; 
   } 
 }
+export namespace Channels {
+  export type Variables = {
+    first: number;
+    offset: number;
+  }
+
+  export type Query = {
+    Repo?: Repo[]; 
+  } 
+
+  export type Repo = {
+    name?: string; 
+    channels?: Channels[]; 
+  } 
+
+  export type Channels = {
+    name?: string; 
+  } 
+}
 export namespace Repo {
   export type Variables = {
     channelName: string;
@@ -2781,6 +2800,18 @@ export namespace NotifyAuthorOnReview {
   export type Channels = {
     name?: string; 
     channelId?: string; 
+  } 
+}
+export namespace NotifiyBotOwnerOnPush {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Push?: Push[]; 
+  } 
+
+  export type Push = {
+    id?: string; 
   } 
 }
 export namespace NotifyMentionedOnIssue {

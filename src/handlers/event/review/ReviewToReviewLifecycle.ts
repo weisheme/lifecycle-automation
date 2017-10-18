@@ -6,9 +6,9 @@ import * as graphql from "../../../typings/types";
 import { ReviewLifecycleHandler } from "./ReviewLifecycle";
 
 /**
- * A Event handler that sends a lifecycle message on Review events.
+ * Send a lifecycle message on Review events.
  */
-@EventHandler("Event handler that sends a lifecycle message on Review events",
+@EventHandler("Send a lifecycle message on Review events",
     GraphQL.subscriptionFromFile("graphql/subscription/reviewToReview"))
 @Tags("lifecycle", "review")
 export class ReviewToReviewLifecycle extends ReviewLifecycleHandler<graphql.ReviewToReviewLifecycle.Subscription> {

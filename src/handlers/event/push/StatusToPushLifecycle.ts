@@ -7,9 +7,9 @@ import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
 /**
- * A Event handler that sends a Push lifecycle message on Status events.
+ * Send a Push lifecycle message on Status events.
  */
-@EventHandler("Event handler that sends a lifecycle message on Status events",
+@EventHandler("Send a lifecycle message on Status events",
     GraphQL.subscriptionFromFile("graphql/subscription/statusToPush"))
 @Tags("lifecycle", "push", "status")
 export class StatusToPushLifecycle extends PushLifecycleHandler<graphql.StatusToPushLifecycle.Subscription> {

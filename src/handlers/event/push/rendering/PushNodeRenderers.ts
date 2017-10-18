@@ -569,7 +569,6 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
                     imageMessages.push(`${killing} stopped`);
                 }
                 messages.push(`${codeLine(i.image.split("/")[1])} ${imageMessages.join(", ")}`);
-                console.log(messages);
             });
         }
 
