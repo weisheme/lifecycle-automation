@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist Rugs displaying development and operations lifecycle messages in chat",
-  "version": "0.1.19",
+  "version": "0.1.21",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.1.46-20171018173756.tgz",
+    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.1.46-20171018181652.tgz",
     "@atomist/slack-messages": "^0.12.0",
     "async-exit-hook": "^2.0.1",
     "base64-js": "^1.2.1",
