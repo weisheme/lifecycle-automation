@@ -69,12 +69,15 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
                         });
                     })
                     .then(() => Success);
+                } else {
+                    return Success;
                 }
             })
             .catch(err => failure(err));
         }
+    } else {
+        return Promise.resolve(Success);
     }
-    return Promise.resolve(Success);
 }
 
 export function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest) {
