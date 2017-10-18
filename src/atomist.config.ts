@@ -87,6 +87,7 @@ const logzioOptions: LogzioOptions = {
 export const configuration = {
     name: pj.name,
     version: pj.version,
+    // teamIds: "T1L0VDKJP",
     teamIds: null,
     groups: ["all"],
     commands: [
