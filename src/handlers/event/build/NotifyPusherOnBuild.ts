@@ -5,7 +5,7 @@ import { Failure, HandleEvent, HandlerContext, HandlerResult, Success } from "@a
 import * as graphql from "../../../typings/types";
 import { buildNotification } from "../../../util/notifications";
 
-@EventHandler("Event handler that notifies pushers of failing builds in Slack",
+@EventHandler("Notify pushers of failing builds in Slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyPusherOnBuild"))
 @Tags("lifecycle", "build", "notification")
 export class NotifyPusherOnBuild implements HandleEvent<graphql.NotifyPusherOnBuild.Subscription> {

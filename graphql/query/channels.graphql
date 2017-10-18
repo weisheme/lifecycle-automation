@@ -1,12 +1,8 @@
-query Channels($teamId: ID!, $first: Int!, $offset: Int!) {
-    ChatTeam(id: $teamId) {
-        orgs {
-            repo(first: $first offset: $offset) {
-                name
-                channels {
-                    name
-                }
-            }
+query Channels($first: Int!, $offset: Int!) {
+    Repo(first: $first, offset: $offset) {
+        name
+        channels {
+            name
         }
     }
 }

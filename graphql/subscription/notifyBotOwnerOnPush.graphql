@@ -1,0 +1,6 @@
+subscription NotifiyBotOwnerOnPush
+{
+    Push {
+        id
+    }
+}
