@@ -13,7 +13,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { autoMerge } from "./autoMerge";
 
-@EventHandler("Event handler that auto merges reviewed and approved pull requests on Build events",
+@EventHandler("Auto merge reviewed and approved pull requests on Build events",
     GraphQL.subscriptionFromFile("graphql/subscription/autoMergeOnBuild"))
 @Tags("lifecycle", "pr", "automerge")
 export class AutoMergeOnBuild implements HandleEvent<graphql.AutoMergeOnBuild.Subscription> {

@@ -5,7 +5,7 @@ import { Failure, HandleEvent, HandlerContext, HandlerResult, Success } from "@a
 import * as graphql from "../../../typings/types";
 import { issueNotification } from "../../../util/notifications";
 
-@EventHandler("Event handler that notifies mentioned user in slack",
+@EventHandler("Notify mentioned user in slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyMentionedOnIssueComment"))
 @Tags("lifecycle", "issue comment", "notification")
 export class NotifyMentionedOnIssueComment implements HandleEvent<graphql.NotifyMentionedOnIssueComment.Subscription> {

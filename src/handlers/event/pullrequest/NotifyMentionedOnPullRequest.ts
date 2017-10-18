@@ -17,7 +17,7 @@ import {
     prRevieweeNotification,
 } from "../../../util/notifications";
 
-@EventHandler("Event handler that notifies mentioned user in slack",
+@EventHandler("Notify mentioned user in slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyMentionedOnPullRequest"))
 @Tags("lifecycle", "pr", "notification")
 export class NotifyMentionedOnPullRequest implements HandleEvent<graphql.NotifyMentionedOnPullRequest.Subscription> {

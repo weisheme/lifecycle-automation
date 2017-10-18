@@ -15,7 +15,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { autoMerge } from "./autoMerge";
 
-@EventHandler("Event handler that auto merges reviewed and approved pull requests on Status events",
+@EventHandler("Auto merge reviewed and approved pull requests on Status events",
     GraphQL.subscriptionFromFile("graphql/subscription/autoMergeOnStatus"))
 @Tags("lifecycle", "pr", "automerge")
 export class AutoMergeOnStatus implements HandleEvent<graphql.AutoMergeOnStatus.Subscription> {
