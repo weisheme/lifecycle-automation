@@ -32,37 +32,46 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
             // Let's do it
             const api = github.api(token, apiUrl(pr.repo));
 
-            return api.pullRequests.merge({
+            return api.pullRequests.get({
                 owner: pr.repo.owner,
                 repo: pr.repo.name,
                 number: pr.number,
-                merge_method: "merge",
-                sha: pr.head.sha,
-                commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
             })
-                .then(() => {
-                    const body = `Pull request auto merged by Atomist.
+            .then(pr => {
+                if (pr.data.mergeable) {
+                    return api.pullRequests.merge({
+                        owner: pr.repo.owner,
+                        repo: pr.repo.name,
+                        number: pr.number,
+                        merge_method: "merge",
+                        sha: pr.head.sha,
+                        commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
+                    })
+                    .then(() => {
+                        const body = `Pull request auto merged by Atomist.
 
 * ${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews.map(
                             r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}
 * ${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}`;
 
-                    return api.issues.createComment({
-                        owner: pr.repo.owner,
-                        repo: pr.repo.name,
-                        number: pr.number,
-                        body,
-                    });
-                })
-                .then(() => {
-                    return api.gitdata.deleteReference({
-                        owner: pr.repo.owner,
-                        repo: pr.repo.name,
-                        ref: `heads/${pr.branch.name.trim()}`,
-                    });
-                })
-                .then(() => Success)
-                .catch(err => failure(err));
+                        return api.issues.createComment({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            number: pr.number,
+                            body,
+                        });
+                    })
+                    .then(() => {
+                        return api.gitdata.deleteReference({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            ref: `heads/${pr.branch.name.trim()}`,
+                        });
+                    })
+                    .then(() => Success);
+                }
+            })
+            .catch(err => failure(err));
         }
     }
     return Promise.resolve(Success);
