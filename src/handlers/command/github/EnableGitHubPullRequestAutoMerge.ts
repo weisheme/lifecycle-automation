@@ -5,6 +5,7 @@ import {
     Secret,
     Tags,
 } from "@atomist/automation-client/decorators";
+import { failure } from "@atomist/automation-client/HandlerResult";
 import {
     HandleCommand,
     HandlerContext,
@@ -15,7 +16,6 @@ import {
 } from "@atomist/automation-client/Handlers";
 import { AutoMergeTag } from "../../event/pullrequest/autoMerge";
 import * as github from "./gitHubApi";
-import { failure } from "@atomist/automation-client/HandlerResult";
 
 /**
  * Approve GitHub status on commit.

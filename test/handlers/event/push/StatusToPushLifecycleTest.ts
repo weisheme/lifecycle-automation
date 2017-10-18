@@ -187,6 +187,7 @@ describe("StatusToPushLifecycle", () => {
 
     }).timeout(5000);
 
+    /* tslint:disable */
     const payloadNoChannel = `{
     "data": {
         "Status": [{
@@ -254,7 +255,7 @@ describe("StatusToPushLifecycle", () => {
         "correlation_id": "fe4a5e6b-d079-4687-ab04-baf0d2ee3faf"
     }
 }`;
-
+    /* tslint:enable */
     it("don't render message of empty channel", done => {
         class MockMessageClient extends MessageClientSupport {
 
