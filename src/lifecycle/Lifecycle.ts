@@ -39,9 +39,9 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             return Promise.resolve({ code: 0, message: "No lifecycle created" });
         }
 
-        const results = lifecycles.filter(l => l != null).map(lifecycle => {
+        const results = lifecycles.filter(l => this.validate(l)).map(lifecycle => {
 
-            // merge default and handler provided configuration
+            // Merge default and handler provided configuration
             const configuration = deepmerge(
                 this.defaultConfigurations[lifecycle.name] as LifecycleConfiguration,
                 this.prepareConfiguration(event, lifecycle.name));
@@ -229,6 +229,18 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 console.warn(`Error shortening urls: '${err.message}'`);
                 return slackMessage;
             });
+    }
+
+    private validate(lifecycle: Lifecycle): boolean {
+        // Make sure there is a lifecycle
+        if (lifecycle == null) {
+            return false;
+        }
+
+        // Verify that lifecycle has channels, users or is a response message
+        return (lifecycle.channels && lifecycle.channels.length > 0)
+            || (lifecycle.users && lifecycle.users.length > 0)
+            || (lifecycle.respond && lifecycle.respond === true);
     }
 
     private normalizeTimestamp(timestamp: string): string {
