@@ -1,4 +1,3 @@
-import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
@@ -181,6 +180,126 @@ describe("StatusToPushLifecycle", () => {
         };
         const handler = new StatusToPushLifecycle();
         handler.handle(JSON.parse(payloadRaisePr) as EventFired<any>, ctx)
+            .then(result => {
+                console.log(result);
+                done();
+            });
+
+    }).timeout(5000);
+
+    const payloadNoChannel = `{
+    "data": {
+        "Status": [{
+            "_id": 557056,
+            "commit": {
+                "pushes": [{
+                    "builds": [],
+                    "before": {
+                        "sha": "c3f04c3b37eaee80923b3321c5304dfc2b8fb1ff"
+                    },
+                    "after": {
+                        "sha": "886a5c0b985d55659c2c1fdf2542719846daafe2",
+                        "message": "2017.4.0 - release",
+                        "statuses": [{
+                            "context": "fingerprint/atomist",
+                            "description": "No blocking Fingerprint changes",
+                            "targetUrl": "",
+                            "state": "success"
+                        }],
+                        "tags": []
+                    },
+                    "repo": {
+                        "owner": "test-owner",
+                        "name": "test-name",
+                        "channels": [{
+                            "name": ""
+                        }],
+                        "labels": [],
+                        "org": {
+                            "provider": null,
+                            "chatTeam": {
+                                "preferences": []
+                            }
+                        },
+                        "defaultBranch": "master"
+                    },
+                    "commits": [{
+                        "sha": "886a5c0b985d55659c2c1fdf2542719846daafe2",
+                        "message": "2017.4.0 - release",
+                        "resolves": [],
+                        "impact": {
+                            "data": "[[[\\"travis\\",0],[\\"docker\\",0],[\\"props\\",0],[\\"rest\\",0],[\\"plugsMgt\\",1],[\\"depsMgt\\",0],[\\"plugins\\",0],[\\"deps\\",0]]]",
+                            "url": ""
+                        },
+                        "apps": [],
+                        "tags": [],
+                        "author": {
+                            "login": "testperson",
+                            "person": null
+                        },
+                        "timestamp": "2017-10-18T13:25:19+01:00"
+                    }],
+                    "timestamp": "2017-10-18T12:25:53.168Z",
+                    "branch": "release/2017.4.x"
+                }],
+                "timestamp": "2017-10-18T13:25:19+01:00"
+            }
+        }]
+    },
+    "extensions": {
+        "type": "READ_ONLY",
+        "operationName": "StatusToPushLifecycle",
+        "team_id": "xxx",
+        "team_name": "xxx",
+        "correlation_id": "fe4a5e6b-d079-4687-ab04-baf0d2ee3faf"
+    }
+}`;
+
+    it("don't render message of empty channel", done => {
+        class MockMessageClient extends MessageClientSupport {
+
+            protected doSend(msg: string | SlackMessage, userNames: string | string[],
+                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+        }
+
+        class MockGraphClient implements GraphClient {
+
+            public endpoint = "";
+
+            public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeMutation<T, Q>(mutation: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+        }
+
+        const ctx: HandlerContext = {
+            teamId: "xxx",
+            correlationId: "fe4a5e6b-d079-4687-ab04-baf0d2ee3faf",
+            invocationId: guid(),
+            graphClient: new MockGraphClient(),
+            messageClient: new MockMessageClient(),
+        };
+        const handler = new StatusToPushLifecycle();
+        handler.handle(JSON.parse(payloadNoChannel) as EventFired<any>, ctx)
             .then(result => {
                 console.log(result);
                 done();

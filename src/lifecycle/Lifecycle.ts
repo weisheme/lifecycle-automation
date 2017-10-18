@@ -22,6 +22,7 @@ import axios from "axios";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
 import { wrapLinks } from "../util/tracking";
+import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -236,6 +237,9 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         if (lifecycle == null) {
             return false;
         }
+
+        lifecycle.channels = clean(lifecycle.channels);
+        lifecycle.users = clean(lifecycle.users);
 
         // Verify that lifecycle has channels, users or is a response message
         return (lifecycle.channels && lifecycle.channels.length > 0)
