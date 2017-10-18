@@ -29,7 +29,6 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
         }
 
         if (isPrTagged(pr)) {
-            // Let's do it
             const api = github.api(token, apiUrl(pr.repo));
 
             return api.pullRequests.get({
@@ -70,14 +69,13 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
                     })
                     .then(() => Success);
                 } else {
-                    return Success;
+                    return Promise.resolve(Success);
                 }
             })
             .catch(err => failure(err));
         }
-    } else {
-        return Promise.resolve(Success);
     }
+    return Promise.resolve(Success);
 }
 
 export function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest) {
