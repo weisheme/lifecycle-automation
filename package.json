@@ -54,30 +54,33 @@
     "supervisor": "^0.12.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.4.3",
-    "typescript": "2.5.3"
+    "typescript": "2.5.3",
+    "typescript-formatter": "^6.0.0"
   },
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "git:info": "$(npm bin)/git-info",
+    "autostart": "npm-run-all --parallel watch:build watch:server --print-label",
     "autotest": "supervisor -q -n exit -e ts -x npm -- run test",
-    "clean": "rm -f *-v8.log; rm -f profile.txt; rm -rf build; rm -rf target",
-    "gql:gen": "gql-gen --file node_modules/@atomist/automation-client/graph/schema.cortex.json --template typescript -m --out ./src/typings/ \"./graphql/**/*.graphql\"",
-    "compile": "npm run git:info && tsc -p .",
+    "build": "npm run lint && npm run compile && npm test",
+    "clean": "npm run clean:js ; rm -rf *-v8.log profile.txt build",
+    "clean:js": "find src test -type f -name '*.js' -print0 | xargs -0 rm -f",
+    "compile": "npm run gql:gen && tsc -p .",
+    "debug": "npm run compile && node $NODE_DEBUG_OPTION --trace_gc --expose_gc --trace-warnings --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
+    "distclean": "npm run clean ; rm -rf node_modules",
     "fmt": "tsfmt --replace",
+    "git:info": "$(npm bin)/git-info",
+    "gql:gen": "gql-gen --file node_modules/@atomist/automation-client/graph/schema.cortex.json --template typescript -m --out ./src/typings/ \"./graphql/**/*.graphql\"",
     "lint": "tslint '**/*.ts' --exclude 'node_modules/**' --exclude 'build/**' -t verbose",
     "lint:fix": "tslint --fix '**/*.ts' --exclude 'node_modules/**' --exclude 'build/**' -t verbose",
-    "testone": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
-    "test": "mocha --require espower-typescript/guess \"test/**/*.ts\"",
-    "benchmark": "mocha --prof --compilers ts:espower-typescript/guess \"test/**/*Benchmark.ts\"; node --prof-process isolate-* > profile.txt",
     "start": "node --trace-warnings --trace_gc --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
-    "autostart": "npm-run-all --parallel watch:build watch:server --print-label",
-    "debug": "npm run compile && node $NODE_DEBUG_OPTION --trace_gc --expose_gc --trace-warnings --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
+    "test": "mocha --require espower-typescript/guess \"test/**/*.ts\"",
+    "testone": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
     "watch:build": "tsc --watch",
     "watch:server": "nodemon node_modules/@atomist/automation-client/start.client.js --watch './build'",
     "cf:push": "sh push.sh",
-    "cf:push-staging": "npm run clean && npm run compile && cf target -s development && cf bgd lifecycle-automation-staging -f manifest-staging.yml && cf stop lifecycle-automation-staging-old && cf apps"
+    "cf:push-staging": "sh push-staging.sh"
   },
   "engines": {
     "node": "8.x.x",
