@@ -1,6 +1,11 @@
 import "mocha";
 import * as assert from "power-assert";
+
+import { LoggingConfig } from "@atomist/automation-client/internal/util/logger";
+
 import { isDmDisabled } from "../../src/util/helpers";
+
+LoggingConfig.format = "cli";
 
 describe("helpers", () => {
 
