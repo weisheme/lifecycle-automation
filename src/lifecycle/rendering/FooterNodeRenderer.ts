@@ -1,7 +1,13 @@
-import { Action, emoji, SlackMessage, url } from "@atomist/slack-messages/SlackMessages";
-import { NodeRenderer, RendererContext } from "../Lifecycle";
-
+import {
+    Action,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages/SlackMessages";
 import * as base64 from "../../util/base64";
+import {
+    NodeRenderer,
+    RendererContext,
+} from "../Lifecycle";
 
 export class FooterNodeRenderer implements NodeRenderer<any> {
 

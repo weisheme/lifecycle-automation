@@ -1,7 +1,5 @@
-import { Configuration } from "@atomist/automation-client/configuration";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as appRoot from "app-root-path";
-
 import * as config from "config";
 import { CloudFoundryApplicationDetail } from "./handlers/command/cloudfoundry/CloudFoundryApplicationDetail";
 import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/ScaleCloudFoundryApplication";
@@ -70,6 +68,7 @@ import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecyc
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { LogzioAutomationEventListener, LogzioOptions } from "./util/logzio";
+import { HeapDumpCommand, initMemoryMonitoring, MemoryUsageCommand } from "./util/men";
 import { appEnv, secret } from "./util/secrets";
 
 // tslint:disable-next-line:no-var-requires
@@ -127,6 +126,9 @@ export const configuration = {
 
         // travis
         () => new RestartTravisBuild(),
+
+        () => new HeapDumpCommand(),
+        () => new MemoryUsageCommand(),
     ],
     events: [
         // build
@@ -208,3 +210,5 @@ export const configuration = {
         teamId: "T095SFFBK",
     },
 };
+
+initMemoryMonitoring(`${appRoot.path}/node_modules/@atomist/automation-client/public/heap`);

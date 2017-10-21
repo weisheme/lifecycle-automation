@@ -22,7 +22,7 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
 
         // Verify that there is at least a issue and repo node
         if (issue == null) {
-            console.log(`Lifecycle event is missing issue and/or repo node`);
+            console.debug(`Lifecycle event is missing issue and/or repo node`);
             return null;
         }
 

@@ -43,7 +43,7 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
 
                 // Verify that there is at least a comment and repo node
                 if (comment == null || repo == null) {
-                    console.log(`Lifecycle event is missing comment and/or repo node`);
+                    console.debug(`Lifecycle event is missing comment and/or repo node`);
                     return null;
                 }
 

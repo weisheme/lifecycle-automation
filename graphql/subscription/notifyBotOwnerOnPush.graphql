@@ -1,4 +1,4 @@
-subscription NotifiyBotOwnerOnPush
+subscription NotifyBotOwnerOnPush
 {
   Push {
     id

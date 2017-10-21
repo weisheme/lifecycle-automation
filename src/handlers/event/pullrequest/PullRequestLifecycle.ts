@@ -37,7 +37,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
 
         // Verify that there is at least a pullrequest and repo node
         if (pullrequest == null || repo == null) {
-            console.log(`Lifecycle event is missing pullrequest and/or repo node`);
+            console.debug(`Lifecycle event is missing pullrequest and/or repo node`);
             return null;
         }
 
