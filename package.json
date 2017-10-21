@@ -33,7 +33,7 @@
     "deepmerge": "^2.0.0",
     "format-date": "^1.0.0",
     "github": "^11.0.0",
-    "install": "^0.10.1",
+    "heapdump": "^0.3.9",
     "lodash": "^4.17.4",
     "logzio-nodejs": "^0.4.4",
     "promise-each": "^2.2.0",
@@ -71,7 +71,7 @@
     "testone": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
     "test": "mocha --require espower-typescript/guess \"test/**/*.ts\"",
     "benchmark": "mocha --prof --compilers ts:espower-typescript/guess \"test/**/*Benchmark.ts\"; node --prof-process isolate-* > profile.txt",
-    "start": "npm run compile && node --trace-warnings trace_gc --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
+    "start": "node --trace-warnings trace_gc --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
     "autostart": "npm-run-all --parallel watch:build watch:server --print-label",
     "debug": "npm run compile && node $NODE_DEBUG_OPTION --trace_gc --expose_gc --trace-warnings --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
     "watch:build": "tsc --watch",
@@ -80,7 +80,7 @@
     "cf:push-staging": "npm run clean && npm run compile && cf target -s development && cf bgd lifecycle-automation-staging -f manifest-staging.yml && cf stop lifecycle-automation-staging-old && cf apps"
   },
   "engines": {
-    "node": "8.6.x",
+    "node": "8.x.x",
     "npm": "5.x.x"
   }
 }
