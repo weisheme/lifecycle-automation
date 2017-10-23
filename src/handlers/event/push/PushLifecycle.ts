@@ -16,7 +16,7 @@ import {
     BuildNodeRenderer,
     CommitNodeRenderer,
     IssueNodeRenderer,
-    K8PodNodeRenderer,
+    K8PodNodeRenderer, PullRequestNodeRenderer,
     PushNodeRenderer,
     TagNodeRenderer,
 } from "./rendering/PushNodeRenderers";
@@ -71,6 +71,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new CommitNodeRenderer(),
                     new StatusesNodeRenderer(),
                     new IssueNodeRenderer(),
+                    new PullRequestNodeRenderer(),
                     new TagNodeRenderer(),
                     new BuildNodeRenderer(),
                     new ApplicationNodeRenderer(),

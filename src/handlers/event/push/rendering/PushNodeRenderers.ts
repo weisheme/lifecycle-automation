@@ -19,7 +19,7 @@ import {
     avatarUrl,
     branchUrl,
     commitUrl,
-    issueUrl,
+    issueUrl, prUrl,
     repoSlug,
     repoUrl,
     tagUrl,
@@ -27,6 +27,7 @@ import {
     userUrl,
 } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
+import * as _ from "lodash";
 
 export const EMOJI_SCHEME = {
 
@@ -619,5 +620,43 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
         }));
 
         return Promise.resolve(msg);
+    }
+}
+
+export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("pullrequest");
+    }
+
+    public supports(node: any): boolean {
+        return node.branch;
+    }
+
+    public render(node: graphql.PushToPushLifecycle.Push, actions: Action[],
+                  msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
+        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+
+        return context.context.graphClient.executeQueryFromFile<graphql.OpenPr.Query, graphql.OpenPr.Variables>(
+            "graphql/query/openPr",
+            { repoName: repo.name, ownerName: repo.owner, branchName: node.branch })
+            .then(result => {
+                const pr = _.get(result, "Repo[0].branches[0].pullRequests[0]") as graphql.OpenPr.PullRequests;
+                if (pr) {
+                    const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
+                    // tslint:disable-next-line:variable-name
+                    const author_name = `#${pr.number}: ${truncateCommitMessage(pr.title, repo)}`;
+                    const attachment: Attachment = {
+                        author_name,
+                        author_icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
+                        author_link: prUrl(repo, pr),
+                        fallback: author_name,
+                    };
+                    msg.attachments.push(attachment);
+                }
+                return msg;
+            })
+            .catch(() => msg);
     }
 }

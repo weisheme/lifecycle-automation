@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist Rugs displaying development and operations lifecycle messages in chat",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "^0.1.47",
+    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.2.0-20171023011728.tgz",
     "@atomist/slack-messages": "^0.12.0",
     "async-exit-hook": "^2.0.1",
     "base64-js": "^1.2.1",
@@ -71,7 +71,7 @@
     "testone": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
     "test": "mocha --require espower-typescript/guess \"test/**/*.ts\"",
     "benchmark": "mocha --prof --compilers ts:espower-typescript/guess \"test/**/*Benchmark.ts\"; node --prof-process isolate-* > profile.txt",
-    "start": "node --trace-warnings trace_gc --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
+    "start": "node --trace-warnings --trace_gc --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
     "autostart": "npm-run-all --parallel watch:build watch:server --print-label",
     "debug": "npm run compile && node $NODE_DEBUG_OPTION --trace_gc --expose_gc --trace-warnings --optimize_for_size --always_compact --max_old_space_size=256 node_modules/@atomist/automation-client/start.client.js",
     "watch:build": "tsc --watch",

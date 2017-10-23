@@ -65,8 +65,8 @@ function handleResult(mappedRepo: boolean, ctx: HandlerContext): Promise<Handler
             .catch(err => failure(err));
     } else {
         console.log(`Setting team preferences '${PreferenceKey}' to 'true'`);
-        return ctx.graphClient.executeMutationFromFile<graphql.SetTeamnPreference.Mutation,
-                graphql.SetTeamnPreference.Variables>("graphql/mutation/setTeamPreference",
+        return ctx.graphClient.executeMutationFromFile<graphql.SetTeamPreference.Mutation,
+                graphql.SetTeamPreference.Variables>("graphql/mutation/setTeamPreference",
                 {name: PreferenceKey, value: "true"})
             .then(() => Success)
             .catch(err => failure(err));

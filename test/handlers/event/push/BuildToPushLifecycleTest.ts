@@ -1,5 +1,4 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
-import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
@@ -106,11 +105,15 @@ describe("BuildToPushLifecycle", () => {
             }
         }
 
-        const ctx: HandlerContext = {
+        const ctx: any = {
             teamId: "T095SFFBK",
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
-            graphClient: undefined,
+            graphClient: {
+                executeQueryFromFile(name: string, variables?: any): Promise<any> {
+                    return Promise.resolve();
+                }
+            },
             messageClient: new MockMessageClient(),
         };
         const handler = new BuildToPushLifecycle();

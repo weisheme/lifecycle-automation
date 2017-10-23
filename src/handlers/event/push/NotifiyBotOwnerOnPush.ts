@@ -9,9 +9,9 @@ import { AbstractNotifyBotOwner } from "../AbstractNotifyBotOwner";
 @EventHandler("Notify the bot owner of GitHub activity in Slack",
     GraphQL.subscriptionFromFile("graphql/subscription/notifyBotOwnerOnPush"))
 @Tags("lifecycle", "notification")
-export class NotifyBotOwnerOnPush extends AbstractNotifyBotOwner<graphql.NotifiyBotOwnerOnPush.Subscription> {
+export class NotifyBotOwnerOnPush extends AbstractNotifyBotOwner<graphql.NotifyBotOwnerOnPush.Subscription> {
 
-    protected extractPreferences(event: EventFired<graphql.NotifiyBotOwnerOnPush.Subscription>): Preferences[] {
+    protected extractPreferences(event: EventFired<graphql.NotifyBotOwnerOnPush.Subscription>): Preferences[] {
         return _.get(event, "data.Push[0].repo.org.chatTeam.preferences");
     }
 

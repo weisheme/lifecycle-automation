@@ -1,0 +1,15 @@
+query OpenPR ($repoName: String!, $ownerName:String!, $branchName: String!) {
+  Repo(name: $repoName, owner: $ownerName) {
+    name
+    branches(name: $branchName) {
+      name
+      pullRequests(state: "open") {
+        state
+        merged
+        number
+        title
+      }
+    }
+  }
+}
+

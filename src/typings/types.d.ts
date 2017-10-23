@@ -131,7 +131,7 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
-export namespace SetTeamnPreference {
+export namespace SetTeamPreference {
   export type Variables = {
     name: string;
     value: string;
@@ -577,6 +577,34 @@ export namespace Issue {
 
   export type _Labels = {
     name?: string; 
+  } 
+}
+export namespace OpenPr {
+  export type Variables = {
+    repoName: string;
+    ownerName: string;
+    branchName: string;
+  }
+
+  export type Query = {
+    Repo?: Repo[]; 
+  } 
+
+  export type Repo = {
+    name?: string; 
+    branches?: Branches[]; 
+  } 
+
+  export type Branches = {
+    name?: string; 
+    pullRequests?: PullRequests[]; 
+  } 
+
+  export type PullRequests = {
+    state?: string; 
+    merged?: boolean; 
+    number?: number; 
+    title?: string; 
   } 
 }
 export namespace Pr {
@@ -2832,7 +2860,7 @@ export namespace NotifyAuthorOnReview {
     channelId?: string; 
   } 
 }
-export namespace NotifiyBotOwnerOnPush {
+export namespace NotifyBotOwnerOnPush {
   export type Variables = {
   }
 
