@@ -2426,6 +2426,7 @@ export namespace IssueToIssueCommentLifecycle {
   export type _Issue = {
     number?: number; 
     state?: IssueState; 
+    title?: string; 
   } 
 }
 export namespace IssueToPushLifecycle {

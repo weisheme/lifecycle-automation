@@ -63,6 +63,7 @@ subscription IssueToIssueCommentLifecycle
       issue {
         number
         state
+        title
       }
     }
   }
