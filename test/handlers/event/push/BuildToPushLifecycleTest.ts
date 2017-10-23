@@ -112,7 +112,7 @@ describe("BuildToPushLifecycle", () => {
             graphClient: {
                 executeQueryFromFile(name: string, variables?: any): Promise<any> {
                     return Promise.resolve();
-                }
+                },
             },
             messageClient: new MockMessageClient(),
         };

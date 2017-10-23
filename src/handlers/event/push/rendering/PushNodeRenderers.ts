@@ -9,6 +9,7 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import * as config from "config";
+import * as _ from "lodash";
 import {
     AbstractIdentifiableContribution, LifecycleConfiguration,
     NodeRenderer,
@@ -27,7 +28,6 @@ import {
     userUrl,
 } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
-import * as _ from "lodash";
 
 export const EMOJI_SCHEME = {
 

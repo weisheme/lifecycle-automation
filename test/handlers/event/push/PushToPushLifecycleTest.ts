@@ -94,7 +94,7 @@ describe("PushToPushLifecycle", () => {
             graphClient: {
                 executeQueryFromFile(name: string, variables?: any): Promise<any> {
                     return Promise.resolve();
-                }
+                },
             },
             messageClient: new MockMessageClient(),
         };
@@ -126,7 +126,7 @@ describe("PushToPushLifecycle", () => {
             graphClient: {
             executeQueryFromFile(name: string, variables?: any): Promise<any> {
                     return Promise.resolve();
-                }
+                },
             },
             messageClient: new MockMessageClient(),
         };
@@ -159,7 +159,7 @@ describe("PushToPushLifecycle", () => {
             graphClient: {
                 executeQueryFromFile(name: string, variables?: any): Promise<any> {
                     return Promise.resolve();
-                }
+                },
             },
             messageClient: new MockMessageClient(),
         };
@@ -309,14 +309,14 @@ describe("PushToPushLifecycle", () => {
                                         {
                                             state: "open",
                                             number: 128,
-                                            title: "Simplify filter. Add a note"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                            title: "Simplify filter. Add a note",
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     ]});
-                }
+                },
             },
             messageClient: new MockMessageClient(),
         };
