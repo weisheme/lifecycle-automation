@@ -3846,6 +3846,7 @@ export namespace PullRequestToPullRequestCommentLifecycle {
   export type _PullRequest = {
     number?: number; 
     state?: string; 
+    title?: string; 
   } 
 }
 export namespace PullRequestToReviewLifecycle {

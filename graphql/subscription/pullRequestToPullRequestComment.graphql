@@ -52,6 +52,7 @@ subscription PullRequestToPullRequestCommentLifecycle
       pullRequest {
         number
         state
+        title
       }
     }
   }
