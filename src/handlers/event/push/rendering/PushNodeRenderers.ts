@@ -638,6 +638,11 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
 
+        // Make sure we only attempt to render PR for non-default branch pushes
+        if (node.branch === (repo.defaultBranch || "master")) {
+            return Promise.resolve(msg);
+        }
+
         return context.context.graphClient.executeQueryFromFile<graphql.OpenPr.Query, graphql.OpenPr.Variables>(
             "graphql/query/openPr",
             { repoName: repo.name, ownerName: repo.owner, branchName: node.branch })
