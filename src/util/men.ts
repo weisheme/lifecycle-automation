@@ -25,7 +25,7 @@ export function initMemoryMonitoring(dataDirectory: string = `${appRoot.path}/he
 }
 
 export function heapDump(): string {
-    logger.debug("Memory stats for pid '%s': %j", process.pid, process.memoryUsage());
+    logger.debug("Memory stats for pid '%s': %j", process.pid, memoryUsage());
     const heapdump = require("heapdump");
     const name = `heapdump-${Date.now()}.heapsnapshot`;
     heapdump.writeSnapshot(`${DataDirectory}/${name}`, (err, filename) => {
@@ -35,10 +35,13 @@ export function heapDump(): string {
 }
 
 export function memoryUsage() {
+    const mem = process.memoryUsage();
     const usage = {
-        ...process.memoryUsage(),
-        freemem: os.freemem(),
-        totalmem: os.totalmem(),
+        rss: (mem.rss / 1024 / 1024).toFixed(2),
+        heapTotal: (mem.heapTotal / 1024 / 1024).toFixed(2),
+        heapUsed: (mem.heapUsed / 1024 / 1024 ).toFixed(2),
+        memFree: (os.freemem() / 1024 / 1024).toFixed(2),
+        memTotal: (os.totalmem() / 1024 / 1024).toFixed(2),
     };
     return usage;
 }
@@ -63,7 +66,7 @@ export class HeapDumpCommand implements HandleCommand {
             gc();
 
             return ctx.messageClient
-                .addressUsers(`Thread dump available at ${url("https://lifecycle.atomist.com/heap/" + name,
+                .addressUsers(`Heap dump available at ${url("https://lifecycle.atomist.io/heap/" + name,
                     name)}`, "cd")
                 .then(() => ({code: 0, filename: name}));
         } else {
@@ -87,5 +90,20 @@ export class MemoryUsageCommand implements HandleCommand {
         } else {
             return Promise.resolve(Success);
         }
+    }
+}
+
+@CommandHandler("Run GC", "lifecycle gc")
+@Tags("memory", "usage")
+export class GcCommand implements HandleCommand {
+
+    @MappedParameter(MappedParameters.SlackUser)
+    public slackUser: string;
+
+    public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        if (this.slackUser === "U095T3BPF" || this.slackUser === "U1L22E3SA") {
+            gc();
+        }
+        return Promise.resolve(Success);
     }
 }

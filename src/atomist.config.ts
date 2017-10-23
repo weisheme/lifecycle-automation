@@ -1,3 +1,4 @@
+import { Configuration } from "@atomist/automation-client/configuration";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as appRoot from "app-root-path";
 import * as config from "config";
@@ -68,7 +69,7 @@ import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecyc
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { LogzioAutomationEventListener, LogzioOptions } from "./util/logzio";
-import { HeapDumpCommand, initMemoryMonitoring, MemoryUsageCommand } from "./util/men";
+import { GcCommand, HeapDumpCommand, initMemoryMonitoring, MemoryUsageCommand } from "./util/men";
 import { appEnv, secret } from "./util/secrets";
 
 // tslint:disable-next-line:no-var-requires
@@ -129,6 +130,7 @@ export const configuration = {
 
         () => new HeapDumpCommand(),
         () => new MemoryUsageCommand(),
+        () => new GcCommand(),
     ],
     events: [
         // build
@@ -186,7 +188,9 @@ export const configuration = {
         forceSecure: authEnabled,
         auth: {
             basic: {
-                enabled: false,
+                enabled: process.env.NODE_ENV === "staging",
+                username: secret("dashboard.user"),
+                password: secret("dashboard.password"),
             },
             bearer: {
                 enabled: authEnabled,

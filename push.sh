@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-npm run lint:fix && npm run compile
+npm run lint:fix
+npm run compile
 
 cf target -s production
 
