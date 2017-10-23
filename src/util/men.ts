@@ -42,8 +42,25 @@ export function memoryUsage() {
         heapUsed: (mem.heapUsed / 1024 / 1024 ).toFixed(2),
         memFree: (os.freemem() / 1024 / 1024).toFixed(2),
         memTotal: (os.totalmem() / 1024 / 1024).toFixed(2),
+        upTime: formatMillis(process.uptime() * 1000),
     };
     return usage;
+}
+
+function formatMillis(millis: number): string {
+    var date = new Date(millis);
+    var str = "";
+    if (date.getUTCDate() > 1) {
+        str += date.getUTCDate()-1 + " d, ";
+    }
+    if (date.getUTCHours() > 0) {
+        str += date.getUTCHours() + " hr, ";
+    }
+    if (date.getUTCMinutes() > 0) {
+        str += date.getUTCMinutes() + " min, ";
+    }
+    str += date.getUTCSeconds() + " s";
+    return str;
 }
 
 export function gc() {
