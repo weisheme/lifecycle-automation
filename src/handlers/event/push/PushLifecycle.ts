@@ -142,7 +142,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                 const branch = push.branch;
 
                 push.repo.channels.forEach(channel => {
-                    const channelConfiguration = configuration.filter(c => c.name === channel.name);
+                    const channelConfiguration = configuration.filter(c => matches(c.name, channel.name));
                     if (channelConfiguration.length > 0) {
                         channelConfiguration.forEach(c => {
                             c.repositories.filter(r => r.owner === owner && r.name === repo).forEach(r => {

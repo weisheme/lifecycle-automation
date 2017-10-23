@@ -42,7 +42,7 @@ describe("PushToPushLifecycle", () => {
                     "chatTeam": {
                         "preferences": [{
                             "name": "branch_configuration",
-                            "value": "[{\\"name\\":\\"some-channel1\\",\\"repositories\\":[{\\"owner\\":\\"some-owner\\",\\"name\\":\\"some-repo\\",%%CONFIG%%}]}]"
+                            "value": "[{\\"name\\":\\"^some-ch.*el1$\\",\\"repositories\\":[{\\"owner\\":\\"some-owner\\",\\"name\\":\\"some-repo\\",%%CONFIG%%}]}]"
                           }]
                     }
                 },
