@@ -48,10 +48,10 @@ export function memoryUsage() {
 }
 
 function formatMillis(millis: number): string {
-    var date = new Date(millis);
-    var str = "";
+    const date = new Date(millis);
+    let str = "";
     if (date.getUTCDate() > 1) {
-        str += date.getUTCDate()-1 + " d, ";
+        str += date.getUTCDate() - 1 + " d, ";
     }
     if (date.getUTCHours() > 0) {
         str += date.getUTCHours() + " hr, ";
