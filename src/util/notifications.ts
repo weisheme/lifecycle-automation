@@ -61,8 +61,8 @@ export function issueNotification(
                                         },
                                     ],
                                 };
-                                // tslint:disable-next-line:max-line-length
                                 const msgId =
+                                    // tslint:disable-next-line:max-line-length
                                     `user_message/issue/mention/${notifier.screenName}/${repo.owner}/${repo.name}/${id}`;
                                 return ctx.messageClient.addressUsers(slackMessage, notifier.screenName, { id: msgId });
                             }
@@ -110,8 +110,8 @@ export function prNotification(
                                         },
                                     ],
                                 };
-                                // tslint:disable-next-line:max-line-length
                                 const msgId =
+                                    // tslint:disable-next-line:max-line-length
                                     `user_message/pullrequest/mention/${notifier.screenName}/${repo.owner}/${repo.name}/${id}`;
                                 return ctx.messageClient.addressUsers(slackMessage, notifier.screenName, { id: msgId });
                             }
@@ -364,7 +364,8 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build, repo
                 author_link: userUrl(repo, commit.author.login),
                 author_icon: avatarUrl(repo, commit.author.login),
                 // tslint:disable-next-line:max-line-length
-                text: "`" + url(commitUrl(repo, commit), commit.sha.substring(0, 7)) + "` " + truncateCommitMessage(commit.message, repo),
+                text: "`" + url(commitUrl(repo, commit), commit.sha.substring(0, 7))
+                    + "` " + truncateCommitMessage(commit.message, repo),
                 mrkdwn_in: ["text"],
                 fallback: `Build #${build.name} of your push failed`,
                 color: "#D94649",

@@ -49,8 +49,8 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
         const baseBranchName = (pr as any).baseBranchName;
         if (state === "open") {
             msg.text = `${url(userUrl(repo, pr.author.login),
-                // tslint:disable-next-line:max-line-length
                 `@${pr.author.login}`)} wants to merge ${pr.commits.length} ${pr.commits.length > 1 ? "commits"
+                    // tslint:disable-next-line:max-line-length
                     : "commit"} from ${url(branchUrl(repo, branchName), branchName)} to ${url(branchUrl(repo, baseBranchName), baseBranchName)}`;
             color = "#6FC44C";
             ts = pr.createdAt;
@@ -60,8 +60,8 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
             ts = pr.mergedAt;
         } else if (state === "merged") {
             msg.text = `${url(userUrl(repo, pr.merger.login),
-                // tslint:disable-next-line:max-line-length
                 `@${pr.merger.login}`)} merged ${pr.commits.length} ${pr.commits.length > 1 ? "commits"
+                    // tslint:disable-next-line:max-line-length
                     : "commit"} from ${url(branchUrl(repo, branchName), branchName)} to ${url(branchUrl(repo, baseBranchName), baseBranchName)}`;
             color = "#6E5692";
             ts = pr.mergedAt;
