@@ -1,5 +1,6 @@
 import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import * as shortId from "shortid";
 import { encode } from "./base64";
 import { secret } from "./secrets";
@@ -15,11 +16,12 @@ import { secret } from "./secrets";
 export function wrapLinks(message: SlackMessage, event: string):
     [SlackMessage, Array<[string, string]>] {
 
+    const clonedMessage = _.cloneDeep(message);
     const hashToUrl: Array<[string, string]> = [];
 
-    message.text = wrapLinksInText(message.text, `${event}/text`, hashToUrl);
-    if (message.attachments) {
-        message.attachments.forEach(a => {
+    clonedMessage.text = wrapLinksInText(clonedMessage.text, `${event}/text`, hashToUrl);
+    if (clonedMessage.attachments) {
+        clonedMessage.attachments.forEach(a => {
             a.author_link = trackableLink(a.author_link, `${event}/attachment/author_link`, hashToUrl);
             a.title_link = trackableLink(a.title_link, `${event}/attachment/title_link`, hashToUrl);
 
@@ -29,13 +31,12 @@ export function wrapLinks(message: SlackMessage, event: string):
             a.pretext = wrapLinksInText(a.pretext, `${event}/attachment/pretext`, hashToUrl);
         });
     }
-    return [message, hashToUrl];
+    return [clonedMessage, hashToUrl];
 }
 
 /**
  * Put event information in JSON structure and base64 encode the
  * stringified result.
- *
  * @param url link URL
  * @param event name of event triggering this message
  * @return base 64 encoded stringified version of JSON payload
