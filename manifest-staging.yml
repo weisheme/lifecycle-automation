@@ -1,9 +1,9 @@
 applications:
 - name: lifecycle-automation-staging
-  command: npm start
+  command: npm run start:server
+  memory: 256M
   routes:
   - route: lifecycle.a-staging.atomist.com
-  memory: 256M
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
   health-check-type: http
   health-check-http-endpoint: /health
