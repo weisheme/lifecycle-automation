@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.1.0...HEAD
 
+### Changed
+
+-   Updated package scripts to have standard names and be platform
+    agnostic
+
 ## [0.1.0][] - 2017-10-11
 
 [0.1.0]: https://github.com/atomist/lifecycle-automation/tree/0.1.0
@@ -16,5 +21,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Initial Release
 
 ### Added
- 
--   Lifecycle rendering for Github Issues, PullRequest, Pushes as well as Builds etc   
+
+-   Lifecycle rendering for Github Issues, PullRequest, Pushes as well
+    as Builds etc.
