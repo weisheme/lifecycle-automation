@@ -8,9 +8,9 @@ PullRequests, Pushes, Builds, and Deployments using
 the [`@atomist/automation-client`][client] node module to implement a
 local client that connects to the Atomist API.
 
-<div style="text-align:center">
-<img alt="Atomist Bot PR Message" height="324" width="481" src="img/pr.png" />
-</div>
+<p align="center">
+  <img alt="Atomist Bot PR Message" height="324" width="481" src="img/pr.png" />
+</p>
 
 [slack]: https://slack.com (Slack)
 [client]: https://github.com/atomist/automation-client-ts (@atomist/automation-client Node Module)
@@ -20,11 +20,11 @@ can provide your team with better Slack messages about what is
 happening in your development and delivery lifecycle by
 simply adding the Atomist Bot to your Slack team:
 
-<div style="text-align:center">
-<a href="https://atm.st/2wiDlUe">
-<img alt="Add to Slack" height="50" width="174" src="https://platform.slack-edge.com/img/add_to_slack@2x.png" />
-</a>
-</div>
+<p align="center">
+ <a href="https://atm.st/2wiDlUe">
+  <img alt="Add to Slack" height="50" width="174" src="https://platform.slack-edge.com/img/add_to_slack@2x.png" />
+ </a>
+</p>
 
 Once the Atomist Bot is in your Slack team, invite the it to a channel
 where you discuss a repository and link the channel to the repository
