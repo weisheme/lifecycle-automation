@@ -8,6 +8,8 @@ PullRequests, Pushes, Builds, and Deployments using
 the [`@atomist/automation-client`][client] node module to implement a
 local client that connects to the Atomist API.
 
+![Atomist Bot PR Message](img/pr.png)
+
 [slack]: https://slack.com (Slack)
 [client]: https://github.com/atomist/automation-client-ts (@atomist/automation-client Node Module)
 
