@@ -3,10 +3,10 @@
 [![Build Status](https://travis-ci.org/atomist/lifecycle-automation.svg?branch=master)](https://travis-ci.org/atomist/lifecycle-automation)
 
 This project contains lifecycle automations that create beautiful,
-correlated, and actionable [Slack][slack] messages for GitHub Issues,
-PullRequests, Pushes, Builds, and Deployments using
+correlated, and actionable [Slack][slack] messages for issues,
+pull requests, pushes, builds, and deployments using
 the [`@atomist/automation-client`][client] node module to implement a
-local client that connects to the Atomist API.
+client that connects to the [Atomist][atomist] API.
 
 <p align="center">
   <img alt="Atomist Bot PR Message" height="324" width="481" src="img/pr.png" />
@@ -26,7 +26,7 @@ simply adding the Atomist Bot to your Slack team:
  </a>
 </p>
 
-Once the Atomist Bot is in your Slack team, invite the it to a channel
+Once the Atomist Bot is in your Slack team, invite it to a channel
 where you discuss a repository and link the channel to the repository
 using the `repo` command
 
