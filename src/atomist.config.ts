@@ -88,9 +88,8 @@ const logzioOptions: LogzioOptions = {
 export const configuration = {
     name: pj.name,
     version: pj.version,
-    // teamIds: "T095SFFBK",
-    teamIds: null,
-    groups: ["all"],
+    teamIds: config.get("teamIds"),
+    groups: config.get("groups"),
     commands: [
         // cloudfoundry
         () => new CloudFoundryApplicationDetail(),
@@ -181,7 +180,7 @@ export const configuration = {
         // () => new PullRequestToReviewLifecycle(),
         // () => new ReviewToReviewLifecycle(),
     ],
-    listeners: logzioOptions.token ? [ new LogzioAutomationEventListener(logzioOptions) ] : [],
+    listeners: logzioOptions.token ? [new LogzioAutomationEventListener(logzioOptions)] : [],
     token,
     http: {
         enabled: true,

@@ -1,6 +1,6 @@
 applications:
 - name: lifecycle-automation-staging
-  command: npm run start:server
+  command: npm start
   memory: 256M
   routes:
   - route: lifecycle.a-staging.atomist.com

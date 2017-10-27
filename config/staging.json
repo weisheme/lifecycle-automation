@@ -1,8 +1,2 @@
 {
-  // configuration that goes into atomist.config.ts
-  "endpoints": {
-    "api":"https://automation-staging.atomist.services/registration",
-    "graphql": "https://automation-staging.atomist.services/graphql/team"
-  },
-  "teamIds": [ "T1L0VDKJP" ]
 }

@@ -1,6 +1,6 @@
 applications:
 - name: lifecycle-automation
-  command: npm run start:server
+  command: npm start
   memory: 512M
   routes:
   - route: lifecycle.atomist.io
