@@ -77,6 +77,7 @@ $ npm -v
 Command | Reason
 ------- | ------
 `npm install` | to install all the required packages
+`npm run build` | lint, compile, and test
 `npm start` | to start the Atomist automation client
 `npm run autostart` | run the client, refreshing when files change
 `npm run lint` | to run tslint against the TypeScript
