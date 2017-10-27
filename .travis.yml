@@ -24,8 +24,6 @@ notifications:
     on_start: always
     on_cancel: always
     on_error: always
-  slack:
-    secure: 1GIUfP+1MjI0ZNWHgYa72zuptSLnQHPCDYNW8ngnWF7Px8tKIqEuYLpe+MeGDfeUTN6lKs/LSt7SeT2YfAg2BrJ3i2wmnw5k7UTc1BlZJGyWrYAelBHWV30RdhuNsaYVKeuFp+BAzsBiCpOJZIIoXnHG4+TVrQH2ujvEIhu06fLyaR6TyT8GANcKQaHZIbJjmSBSiA2t7jslFHzyagnmVesuZUlJcWPogvS9oY9/whZqlNFpum0rdyIHStcsvzxyiSPitW0/zRNjCA+a8I1BtGJg8PGIgOJMbnSbd7PpYN/IThOVIbbhWLS0TO1hPZiR6H0vZpC1F3SX/kpTNAAIIB3/WrlE+iuPo3Vg7kqVEXziJBGe/q4gVOUUmC1rfjFf10vW4OlBoyaky6uzfMI6ZUcfhHPTJTF9gWUhYAbc90AnpOiALyXzi5i87h9QewmaKoysb/Qm/ZT6LZQdtLoFdkUDEc6jX4zAR1lFaDFZvOSQq/hzhAHedqSq/44ZIIqi68IqzbEa35UIOghgExmpMmev3atKE0UzZECreKLu3j0DZ9hdoEqAed7g/ybFKh+9yMSkZzFCokr1UPaULBmvWjN5gqbS5vUWgnjlfNEYWejvu3OB+yRjPfAK84JFZcfUAtkCDPQP7IL4R/ut//qXJmc9gcEXkK3xWaWDYsbUq6w=
 cache:
   directories:
   - "$HOME/.npm"
