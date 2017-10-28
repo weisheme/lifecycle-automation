@@ -1,4 +1,3 @@
-import { Configuration } from "@atomist/automation-client/configuration";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as appRoot from "app-root-path";
 import * as config from "config";
@@ -71,12 +70,20 @@ import { ReleaseToPushLifecycle } from "./handlers/event/push/ReleaseToPushLifec
 import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecycle";
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
-import { LogzioAutomationEventListener, LogzioOptions } from "./util/logzio";
-import { GcCommand, HeapDumpCommand, initMemoryMonitoring, MemoryUsageCommand } from "./util/men";
+import {
+    LogzioAutomationEventListener,
+    LogzioOptions,
+} from "./util/logzio";
+import {
+    GcCommand,
+    HeapDumpCommand,
+    initMemoryMonitoring,
+    MemoryUsageCommand,
+} from "./util/men";
 import { appEnv, secret } from "./util/secrets";
 
 // tslint:disable-next-line:no-var-requires
-const pj = require(`${appRoot}/package.json`);
+const pj = require(`${appRoot.path}/package.json`);
 
 const token = secret("github.token", process.env.GITHUB_TOKEN);
 
