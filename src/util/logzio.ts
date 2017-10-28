@@ -21,6 +21,7 @@ import {
 import { EventStore } from "@atomist/automation-client/spi/event/EventStore";
 import * as appRoot from "app-root-path";
 import { createLogger } from "logzio-nodejs";
+import * as serializeError from "serialize-error";
 
 /* tslint:disable */
 const logzioWinstonTransport = require("winston-logzio");
@@ -151,9 +152,9 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
         };
         if (err) {
             if (status === "failed") {
-                data.stacktrace = JSON.stringify(err);
+                data.stacktrace = serializeError(err);
             } else if (status === "successful") {
-                data.result = JSON.stringify(err);
+                data.result = serializeError(err);
             }
         }
         if (logzio) {
