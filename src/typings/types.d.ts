@@ -4079,6 +4079,81 @@ export namespace PushToPushLifecycle {
     screenName?: string; 
   } 
 }
+export namespace PushToRepo {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Push?: Push[]; 
+  } 
+
+  export type Push = {
+    repo?: Repo; 
+    commits?: Commits[]; 
+  } 
+
+  export type Repo = {
+    owner?: string; 
+    name?: string; 
+    channels?: Channels[]; 
+    org?: Org; 
+  } 
+
+  export type Channels = {
+    name?: string; 
+  } 
+
+  export type Org = {
+    provider?: Provider; 
+    chatTeam?: ChatTeam; 
+  } 
+
+  export type Provider = {
+    url?: string; 
+    apiUrl?: string; 
+    gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    channels?: _Channels[]; 
+    preferences?: Preferences[]; 
+  } 
+
+  export type _Channels = {
+    channelId?: string; 
+    name?: string; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
+  } 
+
+  export type Commits = {
+    sha?: string; 
+    message?: string; 
+    author?: Author; 
+  } 
+
+  export type Author = {
+    login?: string; 
+    person?: Person; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId; 
+  } 
+
+  export type ChatId = {
+    screenName?: string; 
+    preferences?: _Preferences[]; 
+  } 
+
+  export type _Preferences = {
+    name?: string; 
+    value?: string; 
+  } 
+}
 export namespace ReleaseToPushLifecycle {
   export type Variables = {
   }

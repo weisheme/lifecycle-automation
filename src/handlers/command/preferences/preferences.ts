@@ -1,4 +1,3 @@
-
 export const DirectMessagePreferences = {
 
     build: {
@@ -30,6 +29,11 @@ export const DirectMessagePreferences = {
         id: "merge",
         name: "Pull Request Merges",
         description: "DM me when my pull request is manually or automatically merged",
+    },
+    mapRepo: {
+        id: "mapRepo",
+        name: "Map Repository To Channel",
+        description: "DM me when my commits are pushed to a repository not mapped to a chat channel",
     },
 
 };
