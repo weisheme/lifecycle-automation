@@ -131,6 +131,50 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
+export namespace AddBotToSlackChannel {
+  export type Variables = {
+    channelId: string;
+  }
+
+  export type Mutation = {
+    addBotToSlackChannel?: AddBotToSlackChannel; 
+  } 
+
+  export type AddBotToSlackChannel = {
+    name?: string; 
+    id?: string; 
+  } 
+}
+export namespace CreateSlackChannel {
+  export type Variables = {
+    name: string;
+  }
+
+  export type Mutation = {
+    createSlackChannel?: CreateSlackChannel; 
+  } 
+
+  export type CreateSlackChannel = {
+    name?: string; 
+    id?: string; 
+  } 
+}
+export namespace LinkSlackChannelToRepo {
+  export type Variables = {
+    channelId: string;
+    repo: string;
+    owner: string;
+  }
+
+  export type Mutation = {
+    linkSlackChannelToRepo?: LinkSlackChannelToRepo; 
+  } 
+
+  export type LinkSlackChannelToRepo = {
+    name?: string; 
+    id?: string; 
+  } 
+}
 export namespace SetTeamPreference {
   export type Variables = {
     name: string;
@@ -4077,6 +4121,81 @@ export namespace PushToPushLifecycle {
 
   export type ChatId = {
     screenName?: string; 
+  } 
+}
+export namespace PushToUnmappedRepo {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Push?: Push[]; 
+  } 
+
+  export type Push = {
+    repo?: Repo; 
+    commits?: Commits[]; 
+  } 
+
+  export type Repo = {
+    owner?: string; 
+    name?: string; 
+    channels?: Channels[]; 
+    org?: Org; 
+  } 
+
+  export type Channels = {
+    name?: string; 
+  } 
+
+  export type Org = {
+    provider?: Provider; 
+    chatTeam?: ChatTeam; 
+  } 
+
+  export type Provider = {
+    url?: string; 
+    apiUrl?: string; 
+    gitUrl?: string; 
+  } 
+
+  export type ChatTeam = {
+    channels?: _Channels[]; 
+    preferences?: Preferences[]; 
+  } 
+
+  export type _Channels = {
+    channelId?: string; 
+    name?: string; 
+  } 
+
+  export type Preferences = {
+    name?: string; 
+    value?: string; 
+  } 
+
+  export type Commits = {
+    sha?: string; 
+    message?: string; 
+    author?: Author; 
+  } 
+
+  export type Author = {
+    login?: string; 
+    person?: Person; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId; 
+  } 
+
+  export type ChatId = {
+    screenName?: string; 
+    preferences?: _Preferences[]; 
+  } 
+
+  export type _Preferences = {
+    name?: string; 
+    value?: string; 
   } 
 }
 export namespace ReleaseToPushLifecycle {
