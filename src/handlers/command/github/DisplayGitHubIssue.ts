@@ -19,7 +19,7 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue")
 export class DisplayGitHubIssue implements HandleCommand {
 
-    @Parameter({ description: "The issue number", pattern: /^.*$/ })
+    @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
     @MappedParameter(MappedParameters.GitHubRepository)

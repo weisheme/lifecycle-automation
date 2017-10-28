@@ -1,6 +1,6 @@
 import {
     CommandHandler,
-    MappedParameter,
+    MappedParameter, Parameter,
     Secret,
     Tags,
 } from "@atomist/automation-client/decorators";
@@ -20,7 +20,7 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Create a webhook for a whole organization", "install org-webhook")
+@CommandHandler("Install webhook for a whole organization", "install org-webhook")
 @Tags("github", "webhook")
 export class InstallGitHubOrgWebhook implements HandleCommand {
 
@@ -63,14 +63,14 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     }
 }
 
-@CommandHandler("Create a webhook for a repo", "install webhook")
+@CommandHandler("Install webhook for a repo", "install webhook")
 @Tags("github", "webhook")
 export class InstallGitHubRepoWebhook implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
 
-    @MappedParameter(MappedParameters.GitHubOwner)
+    @Parameter({ description: "name of organization or user", pattern: /^.*$/, required: true })
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubWebHookUrl)

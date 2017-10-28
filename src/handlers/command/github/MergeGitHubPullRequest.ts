@@ -24,7 +24,7 @@ export class MergeGitHubPullRequest implements HandleCommand {
 
     @Parameter({
         displayName: "Pull Request Number",
-        description: "the number of the pull request number to merge, with no leading `#`",
+        description: "number of the pull request number to merge, with no leading `#`",
         pattern: /^.*$/,
         validInput: "an open GitHub pull request number",
         minLength: 1,
@@ -35,7 +35,7 @@ export class MergeGitHubPullRequest implements HandleCommand {
 
     @Parameter({
         displayName: "Merge Method",
-        description: "the method to use when merging the pull request",
+        description: "method to use when merging the pull request",
         pattern: /(?:merge|squash|rebase)$/,
         validInput: "one of 'merge', 'squash', or 'rebase', see " +
         "https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button",

@@ -4,5 +4,7 @@
   "endpoints": {
     "api": "https://automation.atomist.com/registration",
     "graphql": "https://automation.atomist.com/graphql/team"
-  }
+  },
+  "groups": ["all"],
+  "teamIds": null,
 }

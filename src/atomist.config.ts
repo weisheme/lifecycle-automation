@@ -141,6 +141,7 @@ export const configuration = {
         // travis
         () => new RestartTravisBuild(),
 
+        // gc
         () => new HeapDumpCommand(),
         () => new MemoryUsageCommand(),
         () => new GcCommand(),

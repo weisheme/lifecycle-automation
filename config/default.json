@@ -4,8 +4,8 @@
     "api":"https://automation-staging.atomist.services/registration",
     "graphql": "https://automation-staging.atomist.services/graphql/team"
   },
-  "groups": ["all"],
-  "teamIds": null,
+  "groups": null,
+  "teamIds": "T1L0VDKJP",
 
   // lifecycle configuration
   "lifecycles": {

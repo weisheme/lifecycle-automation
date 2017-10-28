@@ -28,7 +28,7 @@ export class AssociateRepo implements HandleCommand {
 
     @Parameter({
         displayName: "Repository Name",
-        description: "Name of the repository to link",
+        description: "name of the repository to link",
         pattern: /^[-.\w]+$/,
         minLength: 1,
         maxLength: 100,

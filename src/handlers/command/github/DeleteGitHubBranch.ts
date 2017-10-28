@@ -19,7 +19,7 @@ import * as github from "./gitHubApi";
 @Tags("github", "branch")
 export class DeleteGitHubBranch implements HandleCommand {
 
-    @Parameter({ description: "The branch name", pattern: /^.*$/ })
+    @Parameter({ description: "branch name", pattern: /^.*$/ })
     public branch: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)

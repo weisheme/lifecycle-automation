@@ -19,7 +19,7 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue", "reaction")
 export class ReactGitHubIssue implements HandleCommand {
 
-    @Parameter({ description: "The reaction to add", pattern: /^\+1|-1|laugh|confused|heart|hooray$/ })
+    @Parameter({ description: "reaction to add", pattern: /^\+1|-1|laugh|confused|heart|hooray$/ })
     public reaction: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray";
 
     @Parameter({ description: "The issue number", pattern: /^.*$/ })

@@ -20,23 +20,23 @@ import * as github from "./gitHubApi";
 @Tags("github", "pr")
 export class RaiseGitHubPullRequest implements HandleCommand {
 
-    @Parameter({ description: "The pull request title", pattern: /^.*$/ })
+    @Parameter({ description: "pull request title", pattern: /^.*$/ })
     public title: string;
 
     @Parameter({
-        description: "The pull request body", pattern: /[\s\S]*/,
+        description: "pull request body", pattern: /[\s\S]*/,
         required: false,
     })
     public body: string;
 
     @Parameter({
-        description: "Branch the changes should get pulled into",
+        description: "branch the changes should get pulled into",
         pattern: /^.*$/,
     })
     public base: string;
 
     @Parameter({
-        description: "The branch containing the changes",
+        description: "branch containing the changes",
         pattern: /^.*$/,
     })
     public head: string;

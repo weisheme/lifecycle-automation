@@ -32,7 +32,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
-    @Parameter({ description: "ID of the message to use for confirmation", pattern: /^.*$/,
+    @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/,
         required: false, displayable: false })
     public id: string;
 

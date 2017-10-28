@@ -32,7 +32,7 @@ export class EnableGitHubPullRequestAutoMerge implements HandleCommand {
 
     @Parameter({
         displayName: "Pull Request Number",
-        description: "the number of the pull request number to merge, with no leading `#`",
+        description: "number of the pull request number to merge, with no leading `#`",
         pattern: /^.*$/,
         validInput: "an open GitHub pull request number",
         minLength: 1,

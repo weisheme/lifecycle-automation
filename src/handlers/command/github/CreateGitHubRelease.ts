@@ -19,10 +19,10 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue")
 export class CreateGitHubRelease implements HandleCommand {
 
-    @Parameter({ description: "The tag to release", pattern: /^.*$/ })
+    @Parameter({ description: "tag to release", pattern: /^.*$/ })
     public tag: string;
 
-    @Parameter({ description: "The release message", pattern: /^.*$/ })
+    @Parameter({ description: "release message", pattern: /^.*$/ })
     public message: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)

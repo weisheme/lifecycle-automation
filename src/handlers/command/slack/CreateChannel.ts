@@ -26,7 +26,7 @@ export class CreateChannel implements HandleCommand {
 
     @Parameter({
         displayName: "Channel Name",
-        description: "Name of the channel to create",
+        description: "name of the channel to create",
         pattern: /^\S+$/,
         minLength: 1,
         maxLength: 21,
@@ -36,7 +36,7 @@ export class CreateChannel implements HandleCommand {
 
     @Parameter({
         displayName: "Repo Name",
-        description: "Name of the repository to link to the channel",
+        description: "name of the repository to link to the channel",
         pattern: /^[-.\w]+$/,
         minLength: 1,
         maxLength: 100,

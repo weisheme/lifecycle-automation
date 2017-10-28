@@ -29,13 +29,13 @@ export class ApproveGitHubCommit implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
-    @Parameter({ description: "Comma-separated list of status' to approve", pattern: /^.*$/, required: true })
+    @Parameter({ description: "comma-separated list of status' to approve", pattern: /^.*$/, required: true })
     public shas: string;
 
-    @Parameter({ description: "Target URL of GitHub Status", pattern: /^.*$/, required: false })
+    @Parameter({ description: "target URL of GitHub Status", pattern: /^.*$/, required: false })
     public targetUrl: string;
 
-    @Parameter({ description: "Description of GitHub Status", pattern: /^.*$/, required: true })
+    @Parameter({ description: "description of GitHub Status", pattern: /^.*$/, required: true })
     public description: string;
 
     @MappedParameter(MappedParameters.SlackUser)

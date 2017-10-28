@@ -30,7 +30,7 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue")
 export class ListMyGitHubIssues implements HandleCommand {
 
-    @Parameter({ description: "Number of days to search", pattern: /^[0-9]*/, required: false })
+    @Parameter({ description: "number of days to search", pattern: /^[0-9]*/, required: false })
     public days: number = 1;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)

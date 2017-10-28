@@ -25,7 +25,7 @@ export class ReopenGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
-    @Parameter({ description: "The issue number", pattern: /^.*$/ })
+    @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)

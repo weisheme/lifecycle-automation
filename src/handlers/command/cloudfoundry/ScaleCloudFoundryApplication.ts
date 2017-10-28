@@ -18,7 +18,7 @@ export class ScaleCloudFoundryApplication extends AbstractCloudFoundryApplicatio
 
     @Parameter({
         displayName: "Instances",
-        description: "Number of Instances",
+        description: "number of Instances",
         pattern: /^[0-9]*$/,
         validInput: "number of instances",
         minLength: 1,

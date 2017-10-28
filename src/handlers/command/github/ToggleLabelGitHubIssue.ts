@@ -19,7 +19,7 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue")
 export class ToggleLabelGitHubIssue implements HandleCommand {
 
-    @Parameter({ description: "The issue number", pattern: /^.*$/ })
+    @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
     @Parameter({ description: "a label to add to or remove from an issue", pattern: /^.*$/ })

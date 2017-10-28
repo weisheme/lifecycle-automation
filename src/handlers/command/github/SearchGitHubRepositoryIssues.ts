@@ -27,16 +27,16 @@ import { ListMyGitHubIssues } from "./ListMyGitHubIssues";
 @Tags("github", "issue")
 export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements HandleCommand {
 
-    @Parameter({ description: "Issue search term", pattern: /^.*$/, required: false })
+    @Parameter({ description: "issue search term", pattern: /^.*$/, required: false })
     public q: string = "is:open is:issue";
 
-    @Parameter({ description: "Results per page", pattern: /^[0-9]*$/, required: false })
+    @Parameter({ description: "results per page", pattern: /^[0-9]*$/, required: false })
     public perPage: number = 5;
 
-    @Parameter({ description: "Results page", pattern: /^[0-9]*$/, required: false })
+    @Parameter({ description: "results page", pattern: /^[0-9]*$/, required: false })
     public page: number = 1;
 
-    @Parameter({ description: "Search Id", pattern: /^.*$/, required: false })
+    @Parameter({ description: "search Id", pattern: /^.*$/, required: false })
     public id: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
