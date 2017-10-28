@@ -1,0 +1,45 @@
+subscription pushToUnmappedRepo
+{
+  Push {
+    repo {
+      owner
+      name
+      channels {
+        name
+      }
+      org {
+        provider {
+          url
+          apiUrl
+          gitUrl
+        }
+        chatTeam {
+          channels {
+            channelId
+            name
+          }
+          preferences {
+            name
+            value
+          }
+        }
+      }
+    }
+    commits {
+      sha
+      message
+      author {
+        login
+        person {
+          chatId {
+            screenName
+            preferences {
+              name
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+}

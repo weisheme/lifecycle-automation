@@ -33,6 +33,8 @@ import {
     ConfigureDirectMessageUserPreferences,
 } from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
+import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
+import { CreateChannel } from "./handlers/command/slack/CreateChannel";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
@@ -64,6 +66,7 @@ import { K8PodToPushLifecycle } from "./handlers/event/push/K8PodToPushLifecycle
 import { NotifyBotOwnerOnPush } from "./handlers/event/push/NotifiyBotOwnerOnPush";
 import { ParentImpactToPushLifecycle } from "./handlers/event/push/ParentImpactToPushLifecycle";
 import { PushToPushLifecycle } from "./handlers/event/push/PushToPushLifecycle";
+import { PushToUnmappedRepo } from "./handlers/event/push/PushToUnmappedRepo";
 import { ReleaseToPushLifecycle } from "./handlers/event/push/ReleaseToPushLifecycle";
 import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecycle";
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
@@ -124,6 +127,10 @@ export const configuration = {
         () => new ConfigureDirectMessageUserPreferences(),
         () => new SetUserPreference(),
 
+        // slack
+        () => new AssociateRepo(),
+        () => new CreateChannel(),
+
         // travis
         () => new RestartTravisBuild(),
 
@@ -146,6 +153,7 @@ export const configuration = {
         () => new NotifyBotOwnerOnPush(),
         () => new ParentImpactToPushLifecycle(),
         () => new PushToPushLifecycle(),
+        () => new PushToUnmappedRepo(),
         () => new ReleaseToPushLifecycle(),
         () => new StatusToPushLifecycle(),
         () => new TagToPushLifecycle(),
