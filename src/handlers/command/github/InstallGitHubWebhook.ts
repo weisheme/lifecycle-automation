@@ -63,15 +63,15 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     }
 }
 
-@CommandHandler("Install webhook for a repo", "install webhook")
+@CommandHandler("Install webhook for a repository", "install webhook")
 @Tags("github", "webhook")
 export class InstallGitHubRepoWebhook implements HandleCommand {
 
-    @MappedParameter(MappedParameters.GitHubRepository)
-    public repo: string;
-
     @Parameter({ description: "name of organization or user", pattern: /^.*$/, required: true })
     public owner: string;
+
+    @Parameter({ description: "name of repository", pattern: /^.*$/, required: true })
+    public repo: string;
 
     @MappedParameter(MappedParameters.GitHubWebHookUrl)
     public url: string = "https://webhook.atomist.com/github";
