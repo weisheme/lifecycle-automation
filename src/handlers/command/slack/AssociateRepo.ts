@@ -12,10 +12,7 @@ import {
     MappedParameters,
     Success,
 } from "@atomist/automation-client/Handlers";
-import { logger } from "@atomist/automation-client/internal/util/logger";
-
-import { addBotToSlackChannel, linkSlackChannelToRepo } from "./mutations";
-
+import * as graphql from "../../../typings/types";
 /**
  * Link a repository and channel.
  */
@@ -30,7 +27,7 @@ export class AssociateRepo implements HandleCommand {
     public owner: string;
 
     @Parameter({
-        displayName: "Repo Name",
+        displayName: "Repository Name",
         description: "Name of the repository to link",
         pattern: /^[-.\w]+$/,
         minLength: 1,
@@ -40,14 +37,15 @@ export class AssociateRepo implements HandleCommand {
     public repo: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        logger.info(`linking repo ${this.owner}/${this.repo} to channel ${this.channelId}`);
-        return ctx.graphClient.executeMutationFromFile("graphql/addBotToSlackChannel", { channelId: this.channelId })
-            .then(_ => ctx.graphClient.executeMutationFromFile("graphql/linkSlackChannelToRepo", {
-                channelId: this.channelId,
-                repo: this.repo,
-                owner: this.owner,
-            }))
-            .then(_ => Success)
+        return ctx.graphClient.executeMutationFromFile<graphql.AddBotToSlackChannel.Mutation,
+            graphql.AddBotToSlackChannel.Variables>(
+                "graphql/mutation/addBotToSlackChannel",
+                { channelId: this.channelId })
+            .then(_ => ctx.graphClient.executeMutationFromFile<graphql.LinkSlackChannelToRepo.Mutation,
+                graphql.LinkSlackChannelToRepo.Variables>(
+                    "graphql/mutation/linkSlackChannelToRepo",
+                    { channelId: this.channelId, repo: this.repo, owner: this.owner }))
+            .then(() => Success)
             .catch(e => failure(e));
     }
 }

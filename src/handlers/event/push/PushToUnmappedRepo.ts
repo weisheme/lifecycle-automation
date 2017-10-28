@@ -1,17 +1,24 @@
-import { EventHandler, Tags } from "@atomist/automation-client/decorators";
+import {
+    EventHandler,
+    Tags,
+} from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
-import { Failure, Success } from "@atomist/automation-client/HandlerResult";
+import {
+    failure,
+    Success,
+} from "@atomist/automation-client/HandlerResult";
 import {
     EventFired,
     HandleEvent,
     HandlerContext,
     HandlerResult,
 } from "@atomist/automation-client/Handlers";
-import { logger } from "@atomist/automation-client/internal/util/logger";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
-import { Attachment, SlackMessage } from "@atomist/slack-messages/SlackMessages";
-
-import { PushToRepo } from "../../../typings/types";
+import {
+    Attachment,
+    SlackMessage,
+} from "@atomist/slack-messages/SlackMessages";
+import * as graphql from "../../../typings/types";
 import { isDmDisabled } from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
@@ -20,13 +27,11 @@ import { SetUserPreference } from "../../command/preferences/SetUserPreference";
  * A Event handler that sends a lifecycle message on Push events.
  */
 @EventHandler("suggest mapping a repo to committer on unmapped repo",
-    GraphQL.subscriptionFromFile("graphql/subscription/pushToRepo"))
+    GraphQL.subscriptionFromFile("graphql/subscription/pushToUnmappedRepo"))
 @Tags("lifecycle", "push")
-export class PushToUnmappedRepo implements HandleEvent<PushToRepo.Subscription> {
+export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRepo.Subscription> {
 
-    public handle(e: EventFired<PushToRepo.Subscription>, ctx: HandlerContext): Promise<HandlerResult> {
-        logger.info(`incoming event is %s`, JSON.stringify(e.data));
-
+    public handle(e: EventFired<graphql.PushToUnmappedRepo.Subscription>, ctx: HandlerContext): Promise<HandlerResult> {
         return Promise.all(e.data.Push.map(p => {
             if (p.repo && p.repo.channels && p.repo.channels.length > 0) {
                 // already mapped
@@ -56,10 +61,10 @@ export class PushToUnmappedRepo implements HandleEvent<PushToRepo.Subscription> 
                 const ttl = 14 * 24 * 60 * 60;
                 return ctx.messageClient.addressUsers(mapRepoMessage(p.repo, chatId), chatId.screenName, { id, ttl });
             }))
-                .then(_ => Success);
+            .then(_ => Success);
         }))
-            .then(_ => Success)
-            .catch(_ => Failure);
+        .then(() => Success)
+        .catch(err => failure(err));
     }
 
 }
@@ -67,7 +72,7 @@ export class PushToUnmappedRepo implements HandleEvent<PushToRepo.Subscription> 
 const repoMappingConfigKey = "repo_mapping_flow";
 const disabledReposConfigKey = "disabled_repos";
 
-function getDisabledRepos(preferences: PushToRepo.Preferences[]): string[] {
+function getDisabledRepos(preferences: graphql.PushToUnmappedRepo.Preferences[]): string[] {
     if (!preferences) {
         return [];
     }
@@ -89,12 +94,14 @@ function getDisabledRepos(preferences: PushToRepo.Preferences[]): string[] {
     return mappingConfig[disabledReposConfigKey] as string[];
 }
 
-export function leaveRepoUnmapped(repo: PushToRepo.Repo, chatId: PushToRepo.ChatId): boolean {
+export function leaveRepoUnmapped(repo: graphql.PushToUnmappedRepo.Repo,
+                                  chatId: graphql.PushToUnmappedRepo.ChatId): boolean {
     const slug = `${repo.owner}/${repo.name}`;
     return getDisabledRepos(chatId.preferences).some(r => r === repo.name || r === slug);
 }
 
-export function mapRepoMessage(repo: PushToRepo.Repo, chatId: PushToRepo.ChatId): SlackMessage {
+export function mapRepoMessage(repo: graphql.PushToUnmappedRepo.Repo,
+                               chatId: graphql.PushToUnmappedRepo.ChatId): SlackMessage {
     const channelName = channelNameForRepo(repo.name);
     const slug = `${repo.owner}/${repo.name}`;
     const disabledRepos = getDisabledRepos(chatId.preferences);

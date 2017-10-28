@@ -131,6 +131,50 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
+export namespace AddBotToSlackChannel {
+  export type Variables = {
+    channelId: string;
+  }
+
+  export type Mutation = {
+    addBotToSlackChannel?: AddBotToSlackChannel; 
+  } 
+
+  export type AddBotToSlackChannel = {
+    name?: string; 
+    id?: string; 
+  } 
+}
+export namespace CreateSlackChannel {
+  export type Variables = {
+    name: string;
+  }
+
+  export type Mutation = {
+    createSlackChannel?: CreateSlackChannel; 
+  } 
+
+  export type CreateSlackChannel = {
+    name?: string; 
+    id?: string; 
+  } 
+}
+export namespace LinkSlackChannelToRepo {
+  export type Variables = {
+    channelId: string;
+    repo: string;
+    owner: string;
+  }
+
+  export type Mutation = {
+    linkSlackChannelToRepo?: LinkSlackChannelToRepo; 
+  } 
+
+  export type LinkSlackChannelToRepo = {
+    name?: string; 
+    id?: string; 
+  } 
+}
 export namespace SetTeamPreference {
   export type Variables = {
     name: string;
@@ -4079,7 +4123,7 @@ export namespace PushToPushLifecycle {
     screenName?: string; 
   } 
 }
-export namespace PushToRepo {
+export namespace PushToUnmappedRepo {
   export type Variables = {
   }
 

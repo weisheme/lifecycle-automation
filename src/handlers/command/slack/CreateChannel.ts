@@ -12,9 +12,7 @@ import {
     MappedParameters,
     Success,
 } from "@atomist/automation-client/Handlers";
-import { logger } from "@atomist/automation-client/internal/util/logger";
-
-import { addBotToSlackChannel, createSlackChannel, linkSlackChannelToRepo } from "./mutations";
+import * as graphql from "../../../typings/types";
 
 /**
  * Create a channel and link it to a repository.
@@ -47,18 +45,22 @@ export class CreateChannel implements HandleCommand {
     public repo: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        logger.info(`creating repo ${this.owner}/${this.repo} and linking to channel ${this.channel}`);
-        return ctx.graphClient.executeMutation(createSlackChannel, { name: this.channel })
+        return ctx.graphClient.executeMutationFromFile<graphql.CreateSlackChannel.Mutation,
+            graphql.CreateSlackChannel.Variables>(
+                "graphql/mutation/createSlackChannel",
+                { name: this.channel })
             .then(channel => {
                 const channelId = (channel as any).createSlackChannel[0].id;
-                return ctx.graphClient.executeMutation(addBotToSlackChannel, { channelId })
-                    .then(_ => ctx.graphClient.executeMutation(linkSlackChannelToRepo, {
-                        channelId,
-                        repo: this.repo,
-                        owner: this.owner,
-                    }));
+                return ctx.graphClient.executeMutationFromFile<graphql.AddBotToSlackChannel.Mutation,
+                    graphql.AddBotToSlackChannel.Variables>(
+                        "graphql/mutation/addBotToSlackChannel",
+                        { channelId })
+                    .then(_ => ctx.graphClient.executeMutationFromFile<
+                        graphql.LinkSlackChannelToRepo.Mutation, graphql.LinkSlackChannelToRepo.Variables>(
+                            "graphql/mutation/linkSlackChannelToRepo",
+                        { channelId, repo: this.repo, owner: this.owner }));
             })
-            .then(_ => Success)
+            .then(() => Success)
             .catch(e => failure(e));
     }
 }
