@@ -20,6 +20,7 @@ subscription NotifyMentionedOnPullRequestComment
       title
       body
       state
+      merged
       timestamp
       number
       lastAssignedBy {

@@ -3289,6 +3289,7 @@ export namespace NotifyMentionedOnPullRequestComment {
     title?: string; 
     body?: string; 
     state?: string; 
+    merged?: boolean; 
     timestamp?: string; 
     number?: number; 
     lastAssignedBy?: LastAssignedBy; 
