@@ -22,6 +22,7 @@ import * as graphql from "../../../typings/types";
 import { isDmDisabled } from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
+import { CreateChannel } from "../../command/slack/CreateChannel";
 
 /**
  * A Event handler that sends a lifecycle message on Push events.
@@ -108,7 +109,7 @@ export function mapRepoMessage(repo: graphql.PushToUnmappedRepo.Repo,
 
     const mapText = `Want to put me to work on *${slug}* in *#${channelName}*?`;
     const mapFallback = `Want to put me to work on ${slug} in #${channelName}?`;
-    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, "CreateChannel", {
+    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, CreateChannel, {
         channel: channelName,
         owner: repo.owner,
         repo: repo.name,
