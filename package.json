@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist automations displaying development and operations lifecycle messages in chat",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.2.6-20171028190013.tgz",
+    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.2.6-20171030234846.tgz",
     "@atomist/slack-messages": "^0.12.0",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
