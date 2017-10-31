@@ -9,19 +9,19 @@ import {
 } from "@atomist/automation-client/HandlerResult";
 import {
     EventFired,
+    HandleCommand,
     HandleEvent,
     HandlerContext,
     HandlerResult,
 } from "@atomist/automation-client/Handlers";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
-import {
-    Attachment,
-    SlackMessage,
-} from "@atomist/slack-messages/SlackMessages";
+import * as slack from "@atomist/slack-messages/SlackMessages";
+
 import * as graphql from "../../../typings/types";
 import { isDmDisabled } from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
+import { AssociateRepo } from "../../command/slack/AssociateRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
 
 /**
@@ -43,7 +43,7 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 return Success;
             }
             if (p.commits.some(c => c.message === "Initial commit")) {
-                // not on initial commit
+                // not on initial push
                 return Success;
             }
 
@@ -62,10 +62,10 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 const ttl = 14 * 24 * 60 * 60;
                 return ctx.messageClient.addressUsers(mapRepoMessage(p.repo, chatId), chatId.screenName, { id, ttl });
             }))
-            .then(_ => Success);
+                .then(_ => Success);
         }))
-        .then(() => Success)
-        .catch(err => failure(err));
+            .then(() => Success)
+            .catch(err => failure(err));
     }
 
 }
@@ -73,7 +73,7 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
 const repoMappingConfigKey = "repo_mapping_flow";
 const disabledReposConfigKey = "disabled_repos";
 
-function getDisabledRepos(preferences: graphql.PushToUnmappedRepo.Preferences[]): string[] {
+function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]): string[] {
     if (!preferences) {
         return [];
     }
@@ -95,26 +95,52 @@ function getDisabledRepos(preferences: graphql.PushToUnmappedRepo.Preferences[])
     return mappingConfig[disabledReposConfigKey] as string[];
 }
 
-export function leaveRepoUnmapped(repo: graphql.PushToUnmappedRepo.Repo,
-                                  chatId: graphql.PushToUnmappedRepo.ChatId): boolean {
+export function leaveRepoUnmapped(
+    repo: graphql.PushToUnmappedRepo.Repo,
+    chatId: graphql.PushToUnmappedRepo.ChatId,
+): boolean {
+
     const slug = `${repo.owner}/${repo.name}`;
     return getDisabledRepos(chatId.preferences).some(r => r === repo.name || r === slug);
 }
 
-export function mapRepoMessage(repo: graphql.PushToUnmappedRepo.Repo,
-                               chatId: graphql.PushToUnmappedRepo.ChatId): SlackMessage {
+export function mapRepoMessage(
+    repo: graphql.PushToUnmappedRepo.Repo,
+    chatId: graphql.PushToUnmappedRepo.ChatId,
+): slack.SlackMessage {
+
     const channelName = channelNameForRepo(repo.name);
     const slug = `${repo.owner}/${repo.name}`;
+    const providerUrl = (repo && repo.org && repo.org.provider && repo.org.provider.url) ?
+        repo.org.provider.url : "https://github.com/";
+    const slugText = slack.url(`${providerUrl}${slug}`, slug);
+
+    let channelText: string;
+    let mapCommand: any;
+    let mapParameters: AssociateRepo | CreateChannel;
+    const channel = repo.org.chatTeam.channels.find(c => c.name === channelName);
+    if (channel) {
+        channelText = slack.channel(channel.channelId);
+        mapCommand = AssociateRepo;
+        mapParameters = new AssociateRepo();
+        mapParameters.channelId = channel.channelId;
+    } else {
+        channelText = slack.bold(`#${channelName}`);
+        mapCommand = CreateChannel;
+        mapParameters = new CreateChannel();
+        mapParameters.channel = channelName;
+    }
+    mapParameters.apiUrl = (repo.org.provider) ? repo.org.provider.apiUrl : undefined;
+    mapParameters.owner = repo.owner;
+    mapParameters.repo = repo.name;
+
     const disabledRepos = getDisabledRepos(chatId.preferences);
 
-    const mapText = `Want to put me to work on *${slug}* in *#${channelName}*?`;
     const mapFallback = `Want to put me to work on ${slug} in #${channelName}?`;
-    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, CreateChannel, {
-        channel: channelName,
-        owner: repo.owner,
-        repo: repo.name,
-    });
-    const mapAttachment: Attachment = {
+    const mapText = `Want to put me to work on ${slugText} in ${channelText}?`;
+
+    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, mapCommand, mapParameters);
+    const mapAttachment: slack.Attachment = {
         pretext: mapText,
         fallback: mapFallback,
         text: "",
@@ -122,9 +148,11 @@ export function mapRepoMessage(repo: graphql.PushToUnmappedRepo.Repo,
         actions: [mapRepoButton],
     };
 
-    const hintText = `or invite me to a relevant channel and type \`@atomist repo ${repo.owner} ${repo.name}\``;
-    const hintFallback = `or invite me to a relevant channel and type '@atomist repo ${repo.owner} ${repo.name}'`;
-    const hintAttachment: Attachment = {
+    const hintText = `or ${slack.codeLine("/invite @atomist")} me to a relevant channel and type
+${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
+    const hintFallback = `or '/invite @atomist' me to a relevant channel and type
+'@atomist repo owner=${repo.owner} repo=${repo.name}'`;
+    const hintAttachment: slack.Attachment = {
         fallback: hintFallback,
         text: hintText,
         mrkdwn_in: ["text"],
@@ -144,13 +172,13 @@ export function mapRepoMessage(repo: graphql.PushToUnmappedRepo.Repo,
         value: "true",
         label: `${DirectMessagePreferences.mapRepo.id} direct messages disabled`,
     });
-    const stopAttachment: Attachment = {
+    const stopAttachment: slack.Attachment = {
         text: stopText,
         fallback: stopText,
         actions: [stopButton, stopAllButton],
     };
 
-    const msg: SlackMessage = {
+    const msg: slack.SlackMessage = {
         attachments: [
             mapAttachment,
             hintAttachment,
