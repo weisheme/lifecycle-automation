@@ -142,17 +142,21 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                 const branch = push.branch;
 
                 push.repo.channels.forEach(channel => {
-                    const channelConfiguration = configuration.filter(c => matches(c.name, channel.name));
-                    if (channelConfiguration.length > 0) {
-                        channelConfiguration.forEach(c => {
-                            c.repositories.filter(r => r.owner === owner && r.name === repo).forEach(r => {
-                                const include = r.include ? matches(r.include, branch) : undefined;
-                                const exclude = r.exclude ? matches(r.exclude, branch) : undefined;
-                                if (include === true || exclude === false) {
-                                    channelNames.push(channel.name);
-                                }
-                            });
-                        });
+                    // Find the first match from the start of the configuration
+                    const channelConfiguration = configuration.find(c => matches(c.name, channel.name));
+                    if (channelConfiguration) {
+                        // Now find the first matching repository configuration
+                        const repoConfiguration = channelConfiguration.repositories
+                            .find(r => matches(r.owner, owner) && matches(r.name, repo));
+                        if (repoConfiguration) {
+                            const include = repoConfiguration.include ?
+                                matches(repoConfiguration.include, branch) : undefined;
+                            const exclude = repoConfiguration.exclude ?
+                                matches(repoConfiguration.exclude, branch) : undefined;
+                            if (include === true || exclude === false) {
+                                channelNames.push(channel.name);
+                            }
+                        }
                     } else {
                         channelNames.push(channel.name);
                     }
