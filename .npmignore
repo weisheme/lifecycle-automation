@@ -1,6 +1,5 @@
 .idea/
 config/
-graphql/
 src/
 test/
 tmp/
