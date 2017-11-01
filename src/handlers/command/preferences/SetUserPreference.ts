@@ -34,10 +34,10 @@ export class SetUserPreference implements HandleCommand {
     @Parameter({ description: "value to set the preference to", pattern: /^.*$/ })
     public value: string;
 
-    @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/, required: false})
+    @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/, required: false })
     public id: string;
 
-    @Parameter({ description: "label to show in confirmation message", pattern: /^.*$/, required: false})
+    @Parameter({ description: "label to show in confirmation message", pattern: /^.*$/, required: false })
     public label: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
@@ -48,32 +48,38 @@ export class SetUserPreference implements HandleCommand {
                 const preferences =
                     _.get(result, "ChatTeam[0].members[0].person.chatId.preferences") as graphql.ChatId.Preferences[];
                 if (preferences) {
-                    const dmPreferences = preferences.find(p => p.name === this.key);
-                    if (dmPreferences) {
-                        return JSON.parse(dmPreferences.value);
+                    const keyPreferences = preferences.find(p => p.name === this.key);
+                    if (keyPreferences) {
+                        return JSON.parse(keyPreferences.value);
                     }
                 }
                 return {};
             })
             .then(preferences => {
-                if (preferences) {
-                    preferences[this.name] = (this.value === "true");
+                let value: any;
+                try {
+                    value = JSON.parse(this.value);
+                } catch (e) {
+                    const err = (e as Error).message;
+                    console.error(`failed to parse config value '${this.value}' using string: ${err}`);
+                    value = this.value;
                 }
+                preferences[this.name] = value;
                 return ctx.graphClient.executeMutationFromFile<graphql.SetUserPreference.Mutation,
                     graphql.SetUserPreference.Variables>("graphql/mutation/setUserPreference",
                     { userId: this.requester, name: this.key, value: JSON.stringify(preferences) });
             })
             .then(() => {
                 const msg: SlackMessage = {
-                    attachments: [ {
+                    attachments: [{
                         author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
                         author_name: "Successfully updated your preferences",
                         fallback: "Successfully updated your preferences",
                         title: this.label ? this.label : undefined,
                         color: "#45B254",
                         actions: [
-                            buttonForCommand({text: "Configure DMs"}, "ConfigureDirectMessageUserPreferences",
-                                {id: this.id}),
+                            buttonForCommand({ text: "Configure DMs" }, "ConfigureDirectMessageUserPreferences",
+                                { id: this.id }),
                         ],
                     },
                     ],
