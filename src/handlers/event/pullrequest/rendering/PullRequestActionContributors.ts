@@ -19,7 +19,7 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
     public supports(node: any): boolean {
         if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
-            return pr.state === "open" && (pr.reviews === null || !pr.reviews.some(r => r.state !== "approved"));
+            return pr.state === "open" && (pr.reviews == null || !pr.reviews.some(r => r.state !== "approved"));
         } else {
             return false;
         }
@@ -60,37 +60,39 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
             squash: undefined,
             rebase: undefined,
         };
-        let commitMessage = `Merge pull request #${pr.number}`;
+        const commitMessage = `Merge pull request #${pr.number}`;
         if (repo.allowMergeCommit === true) {
-            mergeMethods.merge = "Merge";
+            mergeMethods.merge = { method: "Merge", commitMessage };
         }
         if (repo.allowSquashMerge === true) {
-            mergeMethods.squash = "Squash and Merge";
-            commitMessage = pr.commits.map(c => c.message).join("\n");
+            mergeMethods.squash = { method: "Squash and Merge",
+                commitMessage: pr.commits.map(c => `* ${c.message}`).join("\n")};
         }
         if (repo.allowRebaseMerge === true) {
-            mergeMethods.rebase = "Rebase and Merge";
+            mergeMethods.rebase = { method: "Rebase and Merge", commitMessage };
         }
         if (repo.allowMergeCommit === undefined
             && repo.allowSquashMerge === undefined
             && repo.allowRebaseMerge === undefined) {
-            mergeMethods.merge = "Merge";
+            mergeMethods.merge = { method: "Merge", commitMessage };
         }
 
         _.forIn(mergeMethods, (v, k) => {
             if (v) {
-                buttons.push(buttonForCommand({ text: v }, "MergeGitHubPullRequest",
-                    {
-                        issue: pr.number,
-                        repo: repo.name,
-                        owner: repo.owner,
-                        title: pr.title,
-                        message: commitMessage,
-                        mergeMethod: k,
-                        sha: pr.head.sha,
-                    }));
+                buttons.push(buttonForCommand({ text: v.method }, "MergeGitHubPullRequest",
+                {
+                    issue: pr.number,
+                    repo: repo.name,
+                    owner: repo.owner,
+                    title: pr.title,
+                    message: v.commitMessage,
+                    mergeMethod: k,
+                    sha: pr.head.sha,
+                }));
             }
         });
+
+
         return buttons;
     }
 

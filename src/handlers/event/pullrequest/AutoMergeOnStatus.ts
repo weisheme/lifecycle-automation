@@ -26,8 +26,13 @@ export class AutoMergeOnStatus implements HandleEvent<graphql.AutoMergeOnStatus.
     public handle(root: EventFired<graphql.AutoMergeOnStatus.Subscription>,
                   ctx: HandlerContext): Promise<HandlerResult> {
         const prs = _.get(root, "data.Status[0].commit.pullRequests");
-        return Promise.all(prs.map(pr => autoMerge(pr, this.githubToken)))
-            .then(() => Success)
-            .catch(err => failure(err));
+        if (prs) {
+            return Promise.all(prs.map(pr => autoMerge(pr, this.githubToken)))
+                .then(() => Success)
+                .catch(err => failure(err));
+        } else {
+            return Promise.resolve(Success);
+        }
+
     }
 }
