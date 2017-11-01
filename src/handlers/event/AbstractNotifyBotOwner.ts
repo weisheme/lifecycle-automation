@@ -1,5 +1,6 @@
 import {
     EventFired,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,

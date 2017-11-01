@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,

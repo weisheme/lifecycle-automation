@@ -2,6 +2,7 @@ import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
     EventHandler,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,
