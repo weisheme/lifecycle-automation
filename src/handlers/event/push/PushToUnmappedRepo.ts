@@ -83,7 +83,7 @@ function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]
         mappingConfig = JSON.parse(repoMappingFlow.value);
     } catch (e) {
         const err = (e as Error).message;
-        console.error(`failed to parse reposToLeaveUnmapped value '${repoMappingFlow.value}': ${err}`);
+        console.error(`failed to parse ${repoMappingConfigKey} value '${repoMappingFlow.value}': ${err}`);
         return [];
     }
     if (!mappingConfig[disabledReposConfigKey]) {
@@ -163,18 +163,19 @@ ${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
 
     const stopText = `Stop receiving similar suggestions for`;
     disabledRepos.push(repoString(repo));
-    const stopButton = buttonForCommand({ text: slug }, "SetUserPreference", {
-        key: repoMappingConfigKey,
-        name: disabledReposConfigKey,
-        value: JSON.stringify(disabledRepos),
-        label: `Disable direct messages about mapping ${slug}`,
-    });
-    const stopAllButton = buttonForCommand({ text: "All Repos" }, "SetUserPreference", {
-        key: "dm",
-        name: `disable_for_${DirectMessagePreferences.mapRepo.id}`,
-        value: "true",
-        label: `${DirectMessagePreferences.mapRepo.id} direct messages disabled`,
-    });
+    const stopParams = new SetUserPreference();
+    stopParams.key = repoMappingConfigKey;
+    stopParams.name = disabledReposConfigKey;
+    stopParams.value = JSON.stringify(disabledRepos);
+    stopParams.label = `Disable direct messages about mapping ${slug}`;
+    const stopButton = buttonForCommand({ text: slug }, SetUserPreference, stopParams);
+
+    const stopAllParams = new SetUserPreference();
+    stopAllParams.key = "dm";
+    stopAllParams.name = `disable_for_${DirectMessagePreferences.mapRepo.id}`;
+    stopAllParams.value = "true";
+    stopAllParams.label = `${DirectMessagePreferences.mapRepo.id} direct messages disabled`;
+    const stopAllButton = buttonForCommand({ text: "All Repos" }, SetUserPreference, stopAllParams);
     const stopAttachment: slack.Attachment = {
         text: stopText,
         fallback: stopText,
