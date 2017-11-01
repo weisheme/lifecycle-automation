@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.1.0...HEAD
 
+### Added
+
+-   Link repository to channel command and event handlers
+
 ### Changed
 
 -   Updated package scripts to have standard names and be platform

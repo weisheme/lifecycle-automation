@@ -9,6 +9,7 @@ subscription pushToUnmappedRepo
       }
       org {
         provider {
+          providerId
           url
           apiUrl
           gitUrl

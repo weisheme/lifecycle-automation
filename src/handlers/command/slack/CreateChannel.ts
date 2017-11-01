@@ -2,6 +2,7 @@ import {
     CommandHandler,
     MappedParameter,
     Parameter,
+    Secret,
     Tags,
 } from "@atomist/automation-client/decorators";
 import {
@@ -10,9 +11,12 @@ import {
     HandlerContext,
     HandlerResult,
     MappedParameters,
+    Secrets,
     Success,
 } from "@atomist/automation-client/Handlers";
-import * as graphql from "../../../typings/types";
+
+import { CreateSlackChannel } from "../../../typings/types";
+import { AssociateRepo } from "./AssociateRepo";
 
 /**
  * Create a channel and link it to a repository.
@@ -23,6 +27,12 @@ export class CreateChannel implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
+
+    @MappedParameter(MappedParameters.GitHubApiUrl)
+    public apiUrl: string = "https://api.github.com/";
+
+    @Secret(Secrets.userToken(["repo"]))
+    public githubToken: string;
 
     @Parameter({
         displayName: "Channel Name",
@@ -45,20 +55,16 @@ export class CreateChannel implements HandleCommand {
     public repo: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeMutationFromFile<graphql.CreateSlackChannel.Mutation,
-            graphql.CreateSlackChannel.Variables>(
-                "graphql/mutation/createSlackChannel",
-                { name: this.channel })
+        return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
+            "graphql/mutation/createSlackChannel", { name: this.channel })
             .then(channel => {
-                const channelId = (channel as any).createSlackChannel[0].id;
-                return ctx.graphClient.executeMutationFromFile<graphql.AddBotToSlackChannel.Mutation,
-                    graphql.AddBotToSlackChannel.Variables>(
-                        "graphql/mutation/addBotToSlackChannel",
-                        { channelId })
-                    .then(_ => ctx.graphClient.executeMutationFromFile<
-                        graphql.LinkSlackChannelToRepo.Mutation, graphql.LinkSlackChannelToRepo.Variables>(
-                            "graphql/mutation/linkSlackChannelToRepo",
-                        { channelId, repo: this.repo, owner: this.owner }));
+                const associateRepo = new AssociateRepo();
+                associateRepo.channelId = channel.createSlackChannel[0].id;
+                associateRepo.owner = this.owner;
+                associateRepo.apiUrl = this.apiUrl;
+                associateRepo.githubToken = this.githubToken;
+                associateRepo.repo = this.repo;
+                return associateRepo.handle(ctx);
             })
             .then(() => Success)
             .catch(e => failure(e));
