@@ -4154,6 +4154,7 @@ export namespace PushToUnmappedRepo {
   } 
 
   export type Provider = {
+    providerId?: string; 
     url?: string; 
     apiUrl?: string; 
     gitUrl?: string; 
