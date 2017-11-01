@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist automations displaying development and operations lifecycle messages in chat",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -84,7 +84,7 @@
     "lint:fix": "npm run lint -- --fix",
     "start": "npm-run-all git:info start:server",
     "start:client": "atomist-client --open=true",
-    "start:server": "node --trace-warnings --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/.bin/atomist-client",
+    "start:server": "node  $NODE_DEBUG_OPTION --trace-warnings --expose_gc --optimize_for_size --always_compact --max_old_space_size=256 node_modules/.bin/atomist-client",
     "test": "mocha --compilers ts:espower-typescript/guess 'test/**/*.ts'",
     "test:one": "mocha --compilers ts:espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
     "watch:compile": "tsc --project . --watch",

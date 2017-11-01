@@ -258,9 +258,9 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
     public supports(node: any): boolean {
         if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
-            const reviews = pr.reviews.filter(r => r.by.some(l => l.login !== pr.author.login));
             return pr.state === "open"
-                && reviews.length > 0;
+                && pr.reviews
+                && pr.reviews.some(r => r.by.some(l => l.login !== pr.author.login));
         } else {
             return false;
         }
