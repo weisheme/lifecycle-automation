@@ -70,8 +70,8 @@ export class AssociateRepo implements HandleCommand {
 
     private checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
         return github.api(token, url).repos.get({ owner, repo })
-            .then(_ => true)
-            .catch(_ => false);
+            .then(x => true)
+            .catch(e => false);
     }
 
     private noRepoMessage(repo: string, owner: string): SlackMessage {

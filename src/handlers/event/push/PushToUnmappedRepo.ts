@@ -95,13 +95,21 @@ function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]
     return mappingConfig[disabledReposConfigKey] as string[];
 }
 
+export function repoString(repo: graphql.PushToUnmappedRepo.Repo): string {
+    if (!repo) {
+        return "!";
+    }
+    const provider = (repo.org && repo.org.provider) ? `${repo.org.provider.providerId}:` : "";
+    return `${provider}${repo.owner}:${repo.name}`;
+}
+
 export function leaveRepoUnmapped(
     repo: graphql.PushToUnmappedRepo.Repo,
     chatId: graphql.PushToUnmappedRepo.ChatId,
 ): boolean {
 
-    const slug = `${repo.owner}/${repo.name}`;
-    return getDisabledRepos(chatId.preferences).some(r => r === repo.name || r === slug);
+    const repoStr = repoString(repo);
+    return getDisabledRepos(chatId.preferences).some(r => r === repoStr);
 }
 
 export function mapRepoMessage(
@@ -159,7 +167,7 @@ ${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
     };
 
     const stopText = `Stop receiving similar suggestions for`;
-    disabledRepos.push(slug);
+    disabledRepos.push(repoString(repo));
     const stopButton = buttonForCommand({ text: slug }, "SetUserPreference", {
         key: repoMappingConfigKey,
         name: disabledReposConfigKey,
