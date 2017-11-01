@@ -159,6 +159,21 @@ export namespace CreateSlackChannel {
     id?: string; 
   } 
 }
+export namespace InviteUserToSlackChannel {
+  export type Variables = {
+    channelId: string;
+    userId: string;
+  }
+
+  export type Mutation = {
+    inviteUserToSlackChannel?: InviteUserToSlackChannel; 
+  } 
+
+  export type InviteUserToSlackChannel = {
+    name?: string; 
+    id?: string; 
+  } 
+}
 export namespace LinkSlackChannelToRepo {
   export type Variables = {
     channelId: string;
