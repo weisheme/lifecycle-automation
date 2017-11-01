@@ -54,7 +54,7 @@ export class MergeGitHubPullRequest implements HandleCommand {
 
     @Parameter({
         displayName: "Commit Message",
-        pattern: /^.*$/,
+        pattern: /[\s\S]*/,
         minLength: 0,
         maxLength: 1000,
         required: false,
