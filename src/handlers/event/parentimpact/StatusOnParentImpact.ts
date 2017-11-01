@@ -1,17 +1,14 @@
-import {
-    EventHandler,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
-    failure,
+    EventHandler,
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    Secret,
     Secrets,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import * as config from "config";
 import * as graphql from "../../../typings/types";

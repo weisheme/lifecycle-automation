@@ -1,6 +1,5 @@
-import { failure } from "@atomist/automation-client/HandlerResult";
-import { EventFired } from "@atomist/automation-client/Handlers";
 import {
+    EventFired,
     HandleEvent,
     HandlerContext,
     HandlerResult,

@@ -1,4 +1,3 @@
-import { Secret } from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
@@ -6,6 +5,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    Secret,
     Secrets,
     Tags,
 } from "@atomist/automation-client/Handlers";

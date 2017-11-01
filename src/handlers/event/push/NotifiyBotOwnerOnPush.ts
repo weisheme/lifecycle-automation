@@ -1,6 +1,9 @@
-import { EventHandler, Tags } from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
-import { EventFired } from "@atomist/automation-client/HandleEvent";
+import {
+    EventFired,
+    EventHandler,
+    Tags,
+} from "@atomist/automation-client/Handlers";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";

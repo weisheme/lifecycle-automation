@@ -1,7 +1,14 @@
-import { EventHandler, Tags } from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
-import { EventFired } from "@atomist/automation-client/Handlers";
-import { Failure, HandleEvent, HandlerContext, HandlerResult, Success } from "@atomist/automation-client/Handlers";
+import {
+    EventFired,
+    EventHandler,
+    Failure,
+    HandleEvent,
+    HandlerContext,
+    HandlerResult,
+    Success,
+    Tags,
+} from "@atomist/automation-client/Handlers";
 import * as graphql from "../../../typings/types";
 import { buildNotification } from "../../../util/notifications";
 
