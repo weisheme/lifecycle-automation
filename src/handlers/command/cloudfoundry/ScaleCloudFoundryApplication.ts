@@ -2,7 +2,7 @@ import {
     CommandHandler,
     Parameter,
     Tags,
-} from "@atomist/automation-client/decorators";
+} from "@atomist/automation-client/Handlers";
 import { AbstractCloudFoundryApplicationUpdateCommand } from "./AbstractCloudFoundryApplicationUpdateCommand";
 import { CloudFoundryParameters } from "./parameters";
 

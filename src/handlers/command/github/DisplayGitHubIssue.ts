@@ -1,13 +1,15 @@
 import {
     CommandHandler,
+    HandleCommand,
+    HandlerContext,
+    HandlerResult,
     MappedParameter,
+    MappedParameters,
     Parameter,
     Secret,
+    Secrets,
     Tags,
-} from "@atomist/automation-client/decorators";
-import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import { HandlerResult } from "@atomist/automation-client/HandlerResult";
-import { HandleCommand, MappedParameters, Secrets } from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client/Handlers";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as _ from "lodash";
 import { Lifecycle } from "../../../lifecycle/Lifecycle";
@@ -34,7 +36,7 @@ export class DisplayGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

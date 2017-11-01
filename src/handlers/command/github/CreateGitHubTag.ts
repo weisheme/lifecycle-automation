@@ -1,17 +1,15 @@
 import {
     CommandHandler,
-    MappedParameter,
-    Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Parameter,
+    Secret,
     Secrets,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -65,7 +63,7 @@ export class CreateGitHubTag implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

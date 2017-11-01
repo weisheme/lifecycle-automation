@@ -1,17 +1,15 @@
 import {
     CommandHandler,
-    MappedParameter,
-    Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Parameter,
+    Secret,
     Secrets,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import { loadGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
@@ -44,7 +42,7 @@ export class ApproveGitHubCommit implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

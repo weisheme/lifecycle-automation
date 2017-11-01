@@ -1,15 +1,13 @@
 import {
     CommandHandler,
-    MappedParameter, Parameter,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
-    failure,
-    HandleCommand,
+    failure, HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Parameter,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";

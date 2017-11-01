@@ -1,18 +1,16 @@
 import {
     CommandHandler,
-    MappedParameter,
-    Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import { failure } from "@atomist/automation-client/HandlerResult";
-import {
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Parameter,
+    Secret,
     Secrets,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import { AutoMergeTag } from "../../event/pullrequest/autoMerge";
 import * as github from "./gitHubApi";
@@ -44,7 +42,7 @@ export class EnableGitHubPullRequestAutoMerge implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

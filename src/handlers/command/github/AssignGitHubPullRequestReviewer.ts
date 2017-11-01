@@ -1,17 +1,15 @@
 import {
     CommandHandler,
-    MappedParameter,
-    Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Parameter,
+    Secret,
     Secrets,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import { getChatIds, loadGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
@@ -52,7 +50,7 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

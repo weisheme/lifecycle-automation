@@ -1,7 +1,16 @@
-import { CommandHandler, MappedParameter, Parameter, Secret, Tags } from "@atomist/automation-client/decorators";
-import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import { HandlerResult, Success } from "@atomist/automation-client/HandlerResult";
-import { HandleCommand, MappedParameters, Secrets } from "@atomist/automation-client/Handlers";
+import {
+    CommandHandler,
+    HandleCommand,
+    HandlerContext,
+    HandlerResult,
+    MappedParameter,
+    MappedParameters,
+    Parameter,
+    Secret,
+    Secrets,
+    Success,
+    Tags,
+} from "@atomist/automation-client/Handlers";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
@@ -46,7 +55,7 @@ export class CreateGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

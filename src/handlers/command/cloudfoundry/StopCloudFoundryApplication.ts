@@ -1,8 +1,8 @@
+import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import {
     CommandHandler,
     Tags,
-} from "@atomist/automation-client/decorators";
-import { HandlerContext } from "@atomist/automation-client/HandlerContext";
+} from "@atomist/automation-client/Handlers";
 import * as cf from "cf-nodejs-client";
 import { AbstractCloudFoundryApplicationCommand } from "./AbstractCloudFoundryApplicationCommand";
 

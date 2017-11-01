@@ -1,15 +1,13 @@
 import {
     CommandHandler,
-    MappedParameter,
-    Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
     HandleCommand,
     HandlerContext,
+    MappedParameter,
     MappedParameters,
+    Parameter,
+    Secret,
     Secrets,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
@@ -51,7 +49,7 @@ export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements 
     @MappedParameter(MappedParameters.SlackChannelName)
     public channel: string;
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public gitHubToken: string;
 
     protected searchIssues(person: graphql.ChatId.Person): Promise<any> {

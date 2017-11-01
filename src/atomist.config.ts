@@ -135,8 +135,8 @@ export const configuration = {
         () => new SetUserPreference(),
 
         // slack
-        // () => new AssociateRepo(),
-        // () => new CreateChannel(),
+        () => new AssociateRepo(),
+        () => new CreateChannel(),
 
         // travis
         () => new RestartTravisBuild(),

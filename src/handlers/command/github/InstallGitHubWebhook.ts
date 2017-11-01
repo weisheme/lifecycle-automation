@@ -1,17 +1,14 @@
 import {
     CommandHandler,
-    MappedParameter, Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
-    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Secret,
     Secrets,
     Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import {
     Attachment,
@@ -33,7 +30,7 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
 
-    @Secret(Secrets.userToken(["admin:org_hook"]))
+    @Secret(Secrets.userToken("admin:org_hook"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
@@ -79,7 +76,7 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
 
-    @Secret(Secrets.userToken(["repo"]))
+    @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

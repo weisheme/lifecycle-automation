@@ -1,15 +1,13 @@
 import {
     CommandHandler,
-    MappedParameter,
-    Parameter,
-    Secret,
-    Tags,
-} from "@atomist/automation-client/decorators";
-import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    MappedParameter,
     MappedParameters,
+    Parameter,
+    Secret,
+    Secrets, Tags,
 } from "@atomist/automation-client/Handlers";
 import axios from "axios";
 
@@ -35,7 +33,7 @@ export class RestartTravisBuild implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
-    @Secret("github://user_token?scopes=repo,read:org,user:email")
+    @Secret(Secrets.userToken(["repo", "read:org", "user:email"]))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {

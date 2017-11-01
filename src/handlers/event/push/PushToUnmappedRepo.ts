@@ -1,33 +1,30 @@
-import {
-    EventHandler,
-    Tags,
-} from "@atomist/automation-client/decorators";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
-    failure,
-    Success,
-} from "@atomist/automation-client/HandlerResult";
-import {
     EventFired,
-    HandleCommand,
+    EventHandler,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    Success,
+    Tags,
 } from "@atomist/automation-client/Handlers";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import * as slack from "@atomist/slack-messages/SlackMessages";
-
 import * as graphql from "../../../typings/types";
-import { isDmDisabled } from "../../../util/helpers";
+import {
+    isDmDisabled,
+    repoUrl,
+} from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
 import { AssociateRepo } from "../../command/slack/AssociateRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
 
 /**
- * A Event handler that sends a lifecycle message on Push events.
+ * Suggest mapping a repo to committer on unmapped repo.
  */
-@EventHandler("suggest mapping a repo to committer on unmapped repo",
+@EventHandler("Suggest mapping a repo to committer on unmapped repo",
     GraphQL.subscriptionFromFile("graphql/subscription/pushToUnmappedRepo"))
 @Tags("lifecycle", "push")
 export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRepo.Subscription> {
@@ -58,7 +55,7 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
             const chatIds = commitsWithChatIds.map(c => c.author.person.chatId);
 
             return Promise.all(chatIds.map(chatId => {
-                const id = `push_lifecycle/${p.repo.owner}/${p.repo.name}/unmapped-repo/${chatId.screenName}`;
+                const id = `push_lifecycle/${p.repo.owner}/${p.repo.name}/unmapped_repo/${chatId.screenName}`;
                 const ttl = 14 * 24 * 60 * 60;
                 return ctx.messageClient.addressUsers(mapRepoMessage(p.repo, chatId), chatId.screenName, { id, ttl });
             }))
@@ -119,9 +116,7 @@ export function mapRepoMessage(
 
     const channelName = channelNameForRepo(repo.name);
     const slug = `${repo.owner}/${repo.name}`;
-    const providerUrl = (repo && repo.org && repo.org.provider && repo.org.provider.url) ?
-        repo.org.provider.url : "https://github.com/";
-    const slugText = slack.url(`${providerUrl}${slug}`, slug);
+    const slugText = slack.url(repoUrl(repo), slug);
 
     let channelText: string;
     let mapCommand: any;
