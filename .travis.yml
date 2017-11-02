@@ -10,9 +10,16 @@ env:
   global:
   - NPM_REGISTRY=https://atomist.jfrog.io/atomist/api/npm/npm-dev-local
   - secure: rdOrSGj3eOCRUEXsKva70Gl5i+LKsGG7gmJe/wH3NT7gtIEZ3UOmDLohNQsJrqV13mJhb3ywgk5HYW/XVreYyrJMSmryjI52utkRxeogFjJ4DtaExQEVu2Ah8BIfzarDj+1bkTV+llwIrVjKI/IzyyNWkaxcfQXV9Jro48Zyieh5kL+2pDheklvJS9quG+E3rF67V5OunZUwrSYEgs5PjggH+AgbdXvzOHHMtcxfHIAMErDSQ9JCK1aDsmIMJMgcRRug5pEt0bGhyM+zPbut9jAY3GtvEqsgdwoj9WfvxkFOEJr8q0yLGfQ3aHIPGb4tNZbUNiJ46+I0z/CeDJNLwMijuD4YU/rwrPtKxoniAVzKWBgOEJpMYfcqzO/kYB+FCBHAhag2GpL5vlu4hT1SMg3QacDfOl4+H3K+kecWiC6uLltWAcbJ39N4KQdwSnDESEU70EJe2oW5VMeXjv5QsfUhOwATmFaADgkvnzZv+lyOP7T41BbFBcbval+ONE7TqFxX0/XGOQDxTElmT4viXEgYlXvMYhHy3VV1k6CTUWUjo7EQR1UUo/nwV4tTIxzcSCqqPDv8OfFH3DLhsdfgAdu0FiLEHu2zYMxTpivD+uee5WX8DeyaiJ22kpJQ8gEF2KsDftKdNOLi2aYVR1mYZLWUoh2ty39khuCvWLh+iEY=
+  - secure: DJpGXA4V5EEkLDjYPG8Eqi+Cr+Y4v887dUmVD5N5FlBWM0g1PZf98I9+l9KQ42RjREbrUPNR5/x7AvGYnxmtyxXy3gPkzEuZ6XskZrTaWcaRFxz+b7bVZhm+o3Xmp43mZoRJJw26BHiluFRCVdTuNxjmvnflE+SrV55FmDgTMihZV/uQl5yMQvIflZQFdMSgSEnbn4ikMkNOxhAgATzO0y5JlnzVxXgx5gD9JkRw4XqttEYkSCaDi4p4+b9olXDGIq4sXwqK1yH9cilCBQqDBW8duQ0kXw/Wh4/nUh0BJ0/EMQ7USX/yxTK3CxzHIixGeInOgh72uIl3R4hmrNaCdQRskbZlVo7gCt0RhTUlDQWhJvQu5GOg2ILbfUZbYtna8LrVkSEVxckayogkMFSXTbkZxtEkgNceXPZRuqX+n+O+fCg9zW5fLbd1jxHzAuQPK3LFc/Te6+2TNIvXiih5yAqoftMkYnqTns/Ae5WTnR1spMB/nXZbcEjW70RXNcUVQogSJ9IoqPYBiCKEcKZkDVedaN1YTDNVDPjQxDZy3F4EW1HVHt1kNqmAW70s2skpC3UsoWYIVJAt5zQT60RpZwpARy1vwOjPE5NVsHZdSFbwPh7g81njkXpoWyKhWkyEVFWR4PdNs79VQZz09iJD40YIxNY/7SKuToSR2Bbokqc=
+  - secure: yGZhlw6TDOa2I3H56qinn32v5WrB1aUe1YhICGMxoy3k5RvXrng7/wX58XmleoMg8GM9vQ8KqUw2UxwbtWixlUNRg/voidRSlruJ2lB8h+DzGUilJgOvRCb5mmMawVdD+Hp7EUwcT06BbQEf+XXT2TNrCKUuT3Q7TTHZbgVl1JT2DhBoH7cTgEAgPSHFCwa54lU0m2Wgos5FJK6Rpe83Auia2mEQZM3sabFaUmUunYQTy2qimPG/MnJKug7KtWJ1GziFIyFLfagm9o+iiNtIbyKZvY52Rcvojonxtd3rFQLUgut57mCK5dFTKa0oZIT2n/RyJHRCM+7frFjzcph//wWzx9P5VZ+UWQSFcaUw1TSLHVd2jfmqNSMsFF+kgGmibzpqeMY9ojJMEdp6qBD0FF86fgmF8ekZvGymMdKrlJKxJPu/JXBuSas0ZHKWIJIbymZFzHl1nz7+/93A9XTYlLP/M7+Er78wUdVYsTLegxbhyJ8wgNC4bSF3GQwKfqoLPlQ0A/X+Ym4nQTpmHwubVuX79XeUgfm+8125mIHXCS5UTSAOjmysZAa/4oHkQojGzW38bviKR2KOJ7yVzMwT06Acmv0j5hjse8LeRXGj0oMAgy3eDekFvPHiT+4vz6gYvAj2z8tMoapkEI+PKfhVIVidU2sTGgUnS8AWAvMbDmg=
 before_install:
 - openssl aes-256-cbc -K $encrypted_195b2e60f131_key -iv $encrypted_195b2e60f131_iv
   -in scripts/.npmrc.enc -out $HOME/.npmrc -d
+- wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key |
+  sudo apt-key add -
+- echo "deb http://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+- sudo apt-get update
+- sudo apt-get install cf-cli
 script: bash scripts/travis-build.bash
 notifications:
   email: false
@@ -34,3 +41,5 @@ deploy:
   on:
     tags: true
     condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(-(m|rc)\\.[0-9]+)?$"
+after_deploy:
+- bash scripts/cf-push.bash lifecycle-automation
