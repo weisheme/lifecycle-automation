@@ -270,8 +270,7 @@ export function loadChatId(ctx: HandlerContext, id: string): Promise<ChatId> {
         .then(result => {
             if (result) {
                 if (result.GitHubId && result.GitHubId.length > 0) {
-                    if (result.GitHubId[0].person && result.GitHubId[0].person
-                        && result.GitHubId[0].person.chatId) {
+                    if (result.GitHubId[0].person && result.GitHubId[0].person.chatId) {
                         return {
                             id: result.GitHubId[0].person.chatId.id,
                             screenName: result.GitHubId[0].person.chatId.screenName,
