@@ -29,6 +29,9 @@ export class CreateChannel implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
 
+    @MappedParameter(MappedParameters.SlackUser)
+    public userId: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -60,11 +63,11 @@ export class CreateChannel implements HandleCommand {
                 associateRepo.channelId = channel.createSlackChannel[0].id;
                 associateRepo.owner = this.owner;
                 associateRepo.apiUrl = this.apiUrl;
+                associateRepo.userId = this.userId;
                 associateRepo.githubToken = this.githubToken;
                 associateRepo.repo = this.repo;
                 return associateRepo.handle(ctx);
             })
-            .then(() => Success)
             .catch(e => failure(e));
     }
 }
