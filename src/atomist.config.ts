@@ -1,4 +1,7 @@
+import { HandleCommand } from "@atomist/automation-client/Handlers";
+import { registerApplicationEvents } from "@atomist/automation-client/internal/env/applicationEvent";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";
 import * as config from "config";
 import { CloudFoundryApplicationDetail } from "./handlers/command/cloudfoundry/CloudFoundryApplicationDetail";
@@ -95,6 +98,8 @@ const logzioOptions: LogzioOptions = {
     token: secret("logzio.token", process.env.LOGZIO_TOKEN),
 };
 
+const AdminTeam = "atomist-automation";
+
 export const configuration = {
     name: pj.name,
     version: pj.version,
@@ -102,10 +107,10 @@ export const configuration = {
     groups: config.get("groups"),
     commands: [
         // cloudfoundry
-        () => new CloudFoundryApplicationDetail(),
-        () => new ScaleCloudFoundryApplication(),
-        () => new StartCloudFoundryApplication(),
-        () => new StopCloudFoundryApplication(),
+        secured.githubTeam(() => new CloudFoundryApplicationDetail(), AdminTeam),
+        secured.githubTeam(() => new ScaleCloudFoundryApplication(), AdminTeam),
+        secured.githubTeam(() => new StartCloudFoundryApplication(), AdminTeam),
+        secured.githubTeam(() => new StopCloudFoundryApplication(), AdminTeam),
 
         // github
         () => new ApproveGitHubCommit(),
@@ -142,9 +147,9 @@ export const configuration = {
         () => new RestartTravisBuild(),
 
         // gc
-        () => new HeapDumpCommand(),
-        () => new MemoryUsageCommand(),
-        () => new GcCommand(),
+        secured.githubTeam(() => new HeapDumpCommand(), AdminTeam),
+        secured.githubTeam(() => new MemoryUsageCommand(), AdminTeam),
+        secured.githubTeam(() => new GcCommand(), AdminTeam),
     ],
     events: [
         // build
@@ -230,4 +235,8 @@ export const configuration = {
     },
 };
 
+// Register Application events for this automation client
+registerApplicationEvents("T29E48P34");
+
+// For now, we enable a couple of interesting memory and heap commands on this automation-client
 initMemoryMonitoring(`${appRoot.path}/node_modules/@atomist/automation-client/public/heap`);

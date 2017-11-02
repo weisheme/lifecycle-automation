@@ -77,18 +77,13 @@ export class HeapDumpCommand implements HandleCommand {
     public slackUser: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        if (this.slackUser === "U095T3BPF" || this.slackUser === "U1L22E3SA") {
+        const name = heapDump();
+        gc();
 
-            const name = heapDump();
-            gc();
-
-            return ctx.messageClient
-                .addressUsers(`Heap dump available at ${url("https://lifecycle.atomist.io/heap/" + name,
-                    name)}`, "cd")
-                .then(() => ({code: 0, filename: name}));
-        } else {
-            return Promise.resolve(Success);
-        }
+        return ctx.messageClient
+            .addressUsers(`Heap dump available at ${url("https://lifecycle.atomist.io/heap/" + name,
+                name)}`, "cd")
+            .then(() => ({code: 0, filename: name}));
     }
 }
 
@@ -100,13 +95,9 @@ export class MemoryUsageCommand implements HandleCommand {
     public slackUser: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        if (this.slackUser === "U095T3BPF" || this.slackUser === "U1L22E3SA") {
-            return ctx.messageClient
-                .addressUsers(codeBlock(JSON.stringify(memoryUsage(), null, 2)), "cd")
-                .then(() => ({ code: 0, ...memoryUsage() }));
-        } else {
-            return Promise.resolve(Success);
-        }
+        return ctx.messageClient
+            .addressUsers(codeBlock(JSON.stringify(memoryUsage(), null, 2)), "cd")
+            .then(() => ({ code: 0, ...memoryUsage() }));
     }
 }
 
@@ -118,9 +109,7 @@ export class GcCommand implements HandleCommand {
     public slackUser: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        if (this.slackUser === "U095T3BPF" || this.slackUser === "U1L22E3SA") {
-            gc();
-        }
+        gc();
         return Promise.resolve(Success);
     }
 }
