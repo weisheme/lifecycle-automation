@@ -1,6 +1,5 @@
 mutation InviteUserToSlackChannel($channelId: String!, $userId: String!) {
   inviteUserToSlackChannel(channelId: $channelId, userId: $userId) {
-    name
     id
   }
 }

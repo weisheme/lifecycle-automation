@@ -1,6 +1,5 @@
 mutation AddBotToSlackChannel($channelId: String!) {
   addBotToSlackChannel(channelId: $channelId) {
-    name
     id
   }
 }

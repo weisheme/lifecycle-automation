@@ -137,12 +137,11 @@ export namespace AddBotToSlackChannel {
   }
 
   export type Mutation = {
-    addBotToSlackChannel?: AddBotToSlackChannel; 
+    addBotToSlackChannel?: AddBotToSlackChannel | null; 
   } 
 
   export type AddBotToSlackChannel = {
-    name?: string; 
-    id?: string; 
+    id?: string | null; 
   } 
 }
 export namespace CreateSlackChannel {
@@ -151,12 +150,11 @@ export namespace CreateSlackChannel {
   }
 
   export type Mutation = {
-    createSlackChannel?: CreateSlackChannel; 
+    createSlackChannel?: CreateSlackChannel | null; 
   } 
 
   export type CreateSlackChannel = {
-    name?: string; 
-    id?: string; 
+    id?: string | null; 
   } 
 }
 export namespace InviteUserToSlackChannel {
@@ -166,12 +164,11 @@ export namespace InviteUserToSlackChannel {
   }
 
   export type Mutation = {
-    inviteUserToSlackChannel?: InviteUserToSlackChannel; 
+    inviteUserToSlackChannel?: InviteUserToSlackChannel | null; 
   } 
 
   export type InviteUserToSlackChannel = {
-    name?: string; 
-    id?: string; 
+    id?: string | null; 
   } 
 }
 export namespace LinkSlackChannelToRepo {
@@ -182,12 +179,11 @@ export namespace LinkSlackChannelToRepo {
   }
 
   export type Mutation = {
-    linkSlackChannelToRepo?: LinkSlackChannelToRepo; 
+    linkSlackChannelToRepo?: LinkSlackChannelToRepo | null; 
   } 
 
   export type LinkSlackChannelToRepo = {
-    name?: string; 
-    id?: string; 
+    id?: string | null; 
   } 
 }
 export namespace SetTeamPreference {
@@ -197,12 +193,12 @@ export namespace SetTeamPreference {
   }
 
   export type Mutation = {
-    setTeamPreference?: SetTeamPreference[]; 
+    setTeamPreference?: SetTeamPreference[] | null; 
   } 
 
   export type SetTeamPreference = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace SetUserPreference {
@@ -213,12 +209,12 @@ export namespace SetUserPreference {
   }
 
   export type Mutation = {
-    setUserPreference?: SetUserPreference[]; 
+    setUserPreference?: SetUserPreference[] | null; 
   } 
 
   export type SetUserPreference = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace BotOwner {
@@ -226,14 +222,14 @@ export namespace BotOwner {
   }
 
   export type Query = {
-    ChatId?: ChatId[]; 
+    ChatId?: ChatId[] | null; 
   } 
 
   export type ChatId = {
-    isOwner?: string; 
-    isAdmin?: string; 
-    isPrimaryOwner?: string; 
-    screenName?: string; 
+    isOwner?: string | null; 
+    isAdmin?: string | null; 
+    isPrimaryOwner?: string | null; 
+    screenName?: string | null; 
   } 
 }
 export namespace Branch {
@@ -245,36 +241,36 @@ export namespace Branch {
   }
 
   export type Query = {
-    ChatTeam?: ChatTeam[]; 
+    ChatTeam?: ChatTeam[] | null; 
   } 
 
   export type ChatTeam = {
-    orgs?: Orgs[]; 
+    orgs?: Orgs[] | null; 
   } 
 
   export type Orgs = {
-    repo?: Repo[]; 
+    repo?: Repo[] | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    branches?: Branches[]; 
+    owner?: string | null; 
+    name?: string | null; 
+    branches?: Branches[] | null; 
   } 
 
   export type Branches = {
-    name?: string; 
-    deleted?: boolean; 
-    pullRequests?: PullRequests[]; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    pullRequests?: PullRequests[] | null; 
   } 
 
   export type PullRequests = {
-    state?: string; 
-    commits?: Commits[]; 
+    state?: string | null; 
+    commits?: Commits[] | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 }
 export namespace Channels {
@@ -284,16 +280,16 @@ export namespace Channels {
   }
 
   export type Query = {
-    Repo?: Repo[]; 
+    Repo?: Repo[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace Repo {
@@ -304,17 +300,17 @@ export namespace Repo {
   }
 
   export type Query = {
-    ChatChannel?: ChatChannel[]; 
+    ChatChannel?: ChatChannel[] | null; 
   } 
 
   export type ChatChannel = {
-    name?: string; 
-    repos?: Repos[]; 
+    name?: string | null; 
+    repos?: Repos[] | null; 
   } 
 
   export type Repos = {
-    name?: string; 
-    owner?: string; 
+    name?: string | null; 
+    owner?: string | null; 
   } 
 }
 export namespace ChatId {
@@ -324,40 +320,40 @@ export namespace ChatId {
   }
 
   export type Query = {
-    ChatTeam?: ChatTeam[]; 
+    ChatTeam?: ChatTeam[] | null; 
   } 
 
   export type ChatTeam = {
-    members?: Members[]; 
+    members?: Members[] | null; 
   } 
 
   export type Members = {
-    person?: Person; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
-    gitHubId?: GitHubId; 
-    emails?: Emails[]; 
+    chatId?: ChatId | null; 
+    gitHubId?: GitHubId | null; 
+    emails?: Emails[] | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
-    name?: string; 
+    login?: string | null; 
+    name?: string | null; 
   } 
 
   export type Emails = {
-    address?: string; 
+    address?: string | null; 
   } 
 }
 export namespace Commit {
@@ -366,139 +362,139 @@ export namespace Commit {
   }
 
   export type Query = {
-    Commit?: Commit[]; 
+    Commit?: Commit[] | null; 
   } 
 
   export type Commit = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    id?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: _Commit; 
+    id?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: _Commit | null; 
   } 
 
   export type _Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: Tags[]; 
-    author?: Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: Tags[] | null; 
+    author?: Author | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
+    pods?: Pods[] | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace GitHubId {
@@ -508,31 +504,31 @@ export namespace GitHubId {
   }
 
   export type Query = {
-    GitHubId?: GitHubId[]; 
+    GitHubId?: GitHubId[] | null; 
   } 
 
   export type GitHubId = {
-    person?: Person; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
-    id?: string; 
-    chatTeam?: ChatTeam; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
+    id?: string | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type ChatTeam = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace Issue {
@@ -544,98 +540,98 @@ export namespace Issue {
   }
 
   export type Query = {
-    ChatTeam?: ChatTeam[]; 
+    ChatTeam?: ChatTeam[] | null; 
   } 
 
   export type ChatTeam = {
-    orgs?: Orgs[]; 
+    orgs?: Orgs[] | null; 
   } 
 
   export type Orgs = {
-    repo?: Repo[]; 
+    repo?: Repo[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    issue?: Issue[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    issue?: Issue[] | null; 
   } 
 
   export type Issue = {
-    _id?: Long; 
-    name?: string; 
-    title?: string; 
-    body?: string; 
-    state?: IssueState; 
-    number?: number; 
-    createdAt?: string; 
-    updatedAt?: string; 
-    closedAt?: string; 
-    resolvingCommits?: ResolvingCommits[]; 
-    openedBy?: OpenedBy; 
-    closedBy?: ClosedBy; 
-    assignees?: Assignees[]; 
+    _id?: Long | null; 
+    name?: string | null; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: IssueState | null; 
+    number?: number | null; 
+    createdAt?: string | null; 
+    updatedAt?: string | null; 
+    closedAt?: string | null; 
+    resolvingCommits?: ResolvingCommits[] | null; 
+    openedBy?: OpenedBy | null; 
+    closedBy?: ClosedBy | null; 
+    assignees?: Assignees[] | null; 
     repo: _Repo; 
-    labels?: _Labels[]; 
-    timestamp?: string; 
+    labels?: _Labels[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type ResolvingCommits = {
-    author?: Author; 
+    author?: Author | null; 
   } 
 
   export type Author = {
-    person?: Person; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type OpenedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ClosedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _Repo = {
-    name?: string; 
-    owner?: string; 
-    labels?: Labels[]; 
-    channels?: Channels[]; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    labels?: Labels[] | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    gitUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+    url?: string | null; 
   } 
 
   export type _Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace OpenPr {
@@ -646,24 +642,24 @@ export namespace OpenPr {
   }
 
   export type Query = {
-    Repo?: Repo[]; 
+    Repo?: Repo[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    branches?: Branches[]; 
+    name?: string | null; 
+    branches?: Branches[] | null; 
   } 
 
   export type Branches = {
-    name?: string; 
-    pullRequests?: PullRequests[]; 
+    name?: string | null; 
+    pullRequests?: PullRequests[] | null; 
   } 
 
   export type PullRequests = {
-    state?: string; 
-    merged?: boolean; 
-    number?: number; 
-    title?: string; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    number?: number | null; 
+    title?: string | null; 
   } 
 }
 export namespace Pr {
@@ -675,46 +671,46 @@ export namespace Pr {
   }
 
   export type Query = {
-    ChatTeam?: ChatTeam[]; 
+    ChatTeam?: ChatTeam[] | null; 
   } 
 
   export type ChatTeam = {
-    orgs?: Orgs[]; 
+    orgs?: Orgs[] | null; 
   } 
 
   export type Orgs = {
-    repo?: Repo[]; 
+    repo?: Repo[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    pullRequest?: PullRequest[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    pullRequest?: PullRequest[] | null; 
   } 
 
   export type PullRequest = {
-    state?: string; 
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    body?: string; 
-    repo?: _Repo; 
+    state?: string | null; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    body?: string | null; 
+    repo?: _Repo | null; 
   } 
 
   export type _Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace ApplicationToPushLifecycle {
@@ -722,170 +718,170 @@ export namespace ApplicationToPushLifecycle {
   }
 
   export type Subscription = {
-    Application?: Application[]; 
+    Application?: Application[] | null; 
   } 
 
   export type Application = {
-    _id?: Long; 
-    commits?: Commits[]; 
-    timestamp?: string; 
+    _id?: Long | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commits = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: _Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: _Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type _Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace AutoMergeOnBuild {
@@ -893,71 +889,71 @@ export namespace AutoMergeOnBuild {
   }
 
   export type Subscription = {
-    Build?: Build[]; 
+    Build?: Build[] | null; 
   } 
 
   export type Build = {
-    _id?: Long; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type PullRequest = {
-    number?: number; 
-    body?: string; 
-    title?: string; 
-    branch?: Branch; 
-    head?: Head; 
-    reviews?: Reviews[]; 
-    commits?: Commits[]; 
-    repo?: Repo; 
-    comments?: Comments[]; 
+    number?: number | null; 
+    body?: string | null; 
+    title?: string | null; 
+    branch?: Branch | null; 
+    head?: Head | null; 
+    reviews?: Reviews[] | null; 
+    commits?: Commits[] | null; 
+    repo?: Repo | null; 
+    comments?: Comments[] | null; 
   } 
 
   export type Branch = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Head = {
-    sha?: string; 
-    statuses?: Statuses[]; 
+    sha?: string | null; 
+    statuses?: Statuses[] | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Commits = {
-    message?: string; 
+    message?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
+    apiUrl?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 }
 export namespace AutoMergeOnPullRequest {
@@ -965,67 +961,67 @@ export namespace AutoMergeOnPullRequest {
   }
 
   export type Subscription = {
-    PullRequest?: PullRequest[]; 
+    PullRequest?: PullRequest[] | null; 
   } 
 
   export type PullRequest = {
-    _id?: Long; 
-    number?: number; 
-    body?: string; 
-    title?: string; 
-    branch?: Branch; 
-    head?: Head; 
-    reviews?: Reviews[]; 
-    commits?: Commits[]; 
-    repo?: Repo; 
-    comments?: Comments[]; 
+    _id?: Long | null; 
+    number?: number | null; 
+    body?: string | null; 
+    title?: string | null; 
+    branch?: Branch | null; 
+    head?: Head | null; 
+    reviews?: Reviews[] | null; 
+    commits?: Commits[] | null; 
+    repo?: Repo | null; 
+    comments?: Comments[] | null; 
   } 
 
   export type Branch = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Head = {
-    sha?: string; 
-    statuses?: Statuses[]; 
+    sha?: string | null; 
+    statuses?: Statuses[] | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Commits = {
-    message?: string; 
+    message?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
+    apiUrl?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 }
 export namespace AutoMergeOnReview {
@@ -1033,71 +1029,71 @@ export namespace AutoMergeOnReview {
   }
 
   export type Subscription = {
-    Review?: Review[]; 
+    Review?: Review[] | null; 
   } 
 
   export type Review = {
-    _id?: Long; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type PullRequest = {
-    number?: number; 
-    body?: string; 
-    title?: string; 
-    branch?: Branch; 
-    head?: Head; 
-    reviews?: Reviews[]; 
-    commits?: Commits[]; 
-    repo?: Repo; 
-    comments?: Comments[]; 
+    number?: number | null; 
+    body?: string | null; 
+    title?: string | null; 
+    branch?: Branch | null; 
+    head?: Head | null; 
+    reviews?: Reviews[] | null; 
+    commits?: Commits[] | null; 
+    repo?: Repo | null; 
+    comments?: Comments[] | null; 
   } 
 
   export type Branch = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Head = {
-    sha?: string; 
-    statuses?: Statuses[]; 
+    sha?: string | null; 
+    statuses?: Statuses[] | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Commits = {
-    message?: string; 
+    message?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
+    apiUrl?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 }
 export namespace AutoMergeOnStatus {
@@ -1105,75 +1101,75 @@ export namespace AutoMergeOnStatus {
   }
 
   export type Subscription = {
-    Status?: Status[]; 
+    Status?: Status[] | null; 
   } 
 
   export type Status = {
-    _id?: Long; 
-    commit?: Commit; 
+    _id?: Long | null; 
+    commit?: Commit | null; 
   } 
 
   export type Commit = {
-    pullRequests?: PullRequests[]; 
+    pullRequests?: PullRequests[] | null; 
   } 
 
   export type PullRequests = {
-    number?: number; 
-    body?: string; 
-    title?: string; 
-    branch?: Branch; 
-    head?: Head; 
-    reviews?: Reviews[]; 
-    commits?: Commits[]; 
-    repo?: Repo; 
-    comments?: Comments[]; 
+    number?: number | null; 
+    body?: string | null; 
+    title?: string | null; 
+    branch?: Branch | null; 
+    head?: Head | null; 
+    reviews?: Reviews[] | null; 
+    commits?: Commits[] | null; 
+    repo?: Repo | null; 
+    comments?: Comments[] | null; 
   } 
 
   export type Branch = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Head = {
-    sha?: string; 
-    statuses?: Statuses[]; 
+    sha?: string | null; 
+    statuses?: Statuses[] | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Commits = {
-    message?: string; 
+    message?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
+    apiUrl?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 }
 export namespace BranchToPullRequestLifecycle {
@@ -1181,245 +1177,245 @@ export namespace BranchToPullRequestLifecycle {
   }
 
   export type Subscription = {
-    Branch?: Branch[]; 
+    Branch?: Branch[] | null; 
   } 
 
   export type Branch = {
-    _id?: Long; 
-    pullRequests?: PullRequests[]; 
+    _id?: Long | null; 
+    pullRequests?: PullRequests[] | null; 
   } 
 
   export type PullRequests = {
-    number?: number; 
-    name?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    title?: string; 
-    baseBranchName?: string; 
-    branchName?: string; 
-    createdAt?: string; 
-    mergedAt?: string; 
-    head?: Head; 
-    lastAssignedBy?: LastAssignedBy; 
-    closedAt?: string; 
-    branch?: _Branch; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    comments?: Comments[]; 
-    commits?: Commits[]; 
-    builds?: Builds[]; 
-    reviews?: Reviews[]; 
-    repo?: Repo; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: _Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    gitHubId?: GitHubId; 
-    chatId?: ChatId; 
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type _Branch = {
-    name?: string; 
-    deleted?: boolean; 
-    timestamp?: string; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    timestamp?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    gitHubId?: _GitHubId; 
-    chatId?: _ChatId; 
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    name?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    gitHubId?: __GitHubId; 
-    chatId?: __ChatId; 
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    name?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    gitHubId?: ___GitHubId; 
-    chatId?: ___ChatId; 
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    name?: string; 
-    person?: ____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
   } 
 
   export type ____Person = {
-    gitHubId?: ____GitHubId; 
-    chatId?: ____ChatId; 
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
   } 
 
   export type ____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    timestamp?: string; 
-    message?: string; 
-    tags?: Tags[]; 
-    statuses?: Statuses[]; 
-    author?: _Author; 
+    sha?: string | null; 
+    timestamp?: string | null; 
+    message?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
-    timestamp?: string; 
+    name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    description?: string; 
-    context?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type _Author = {
-    login?: string; 
-    name?: string; 
-    person?: _____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
   } 
 
   export type _____Person = {
-    gitHubId?: _____GitHubId; 
-    chatId?: _____ChatId; 
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
   } 
 
   export type _____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Builds = {
-    name?: string; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    provider?: string; 
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    allowRebaseMerge?: boolean; 
-    allowSquashMerge?: boolean; 
-    allowMergeCommit?: boolean; 
-    defaultBranch?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace BuildToPushLifecycle {
@@ -1427,165 +1423,165 @@ export namespace BuildToPushLifecycle {
   }
 
   export type Subscription = {
-    Build?: Build[]; 
+    Build?: Build[] | null; 
   } 
 
   export type Build = {
-    _id?: Long; 
-    push?: Push; 
-    timestamp?: string; 
+    _id?: Long | null; 
+    push?: Push | null; 
+    timestamp?: string | null; 
   } 
 
   export type Push = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace CommentToIssueCommentLifecycle {
@@ -1593,106 +1589,106 @@ export namespace CommentToIssueCommentLifecycle {
   }
 
   export type Subscription = {
-    Comment?: Comment[]; 
+    Comment?: Comment[] | null; 
   } 
 
   export type Comment = {
-    _id?: Long; 
-    gitHubId?: string; 
-    timestamp?: string; 
-    body?: string; 
-    by?: By; 
-    issue?: Issue; 
+    _id?: Long | null; 
+    gitHubId?: string | null; 
+    timestamp?: string | null; 
+    body?: string | null; 
+    by?: By | null; 
+    issue?: Issue | null; 
   } 
 
   export type By = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
-    gitHubId?: GitHubId; 
+    chatId?: ChatId | null; 
+    gitHubId?: GitHubId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Issue = {
-    title?: string; 
-    number?: number; 
-    state?: IssueState; 
+    title?: string | null; 
+    number?: number | null; 
+    state?: IssueState | null; 
     repo: Repo; 
-    openedBy?: OpenedBy; 
-    closedBy?: ClosedBy; 
-    assignees?: Assignees[]; 
-    resolvingCommits?: ResolvingCommits[]; 
-    labels?: _Labels[]; 
+    openedBy?: OpenedBy | null; 
+    closedBy?: ClosedBy | null; 
+    assignees?: Assignees[] | null; 
+    resolvingCommits?: ResolvingCommits[] | null; 
+    labels?: _Labels[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    org?: Org; 
-    labels?: Labels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+    labels?: Labels[] | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    url?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type OpenedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ClosedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ResolvingCommits = {
-    sha?: string; 
-    message?: string; 
-    author?: Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
   } 
 
   export type Author = {
-    person?: _Person; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    chatId?: _ChatId; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type _Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace CommentToPullRequestLifecycle {
@@ -1700,245 +1696,245 @@ export namespace CommentToPullRequestLifecycle {
   }
 
   export type Subscription = {
-    Comment?: Comment[]; 
+    Comment?: Comment[] | null; 
   } 
 
   export type Comment = {
-    _id?: Long; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type PullRequest = {
-    number?: number; 
-    name?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    title?: string; 
-    createdAt?: string; 
-    mergedAt?: string; 
-    baseBranchName?: string; 
-    branchName?: string; 
-    head?: Head; 
-    lastAssignedBy?: LastAssignedBy; 
-    closedAt?: string; 
-    branch?: Branch; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    comments?: Comments[]; 
-    commits?: Commits[]; 
-    builds?: Builds[]; 
-    reviews?: Reviews[]; 
-    repo?: Repo; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    gitHubId?: GitHubId; 
-    chatId?: ChatId; 
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Branch = {
-    name?: string; 
-    deleted?: boolean; 
-    timestamp?: string; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    timestamp?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    gitHubId?: _GitHubId; 
-    chatId?: _ChatId; 
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    name?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    gitHubId?: __GitHubId; 
-    chatId?: __ChatId; 
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    name?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    gitHubId?: ___GitHubId; 
-    chatId?: ___ChatId; 
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    name?: string; 
-    person?: ____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
   } 
 
   export type ____Person = {
-    gitHubId?: ____GitHubId; 
-    chatId?: ____ChatId; 
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
   } 
 
   export type ____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    timestamp?: string; 
-    tags?: Tags[]; 
-    statuses?: Statuses[]; 
-    author?: _Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
-    timestamp?: string; 
+    name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    description?: string; 
-    context?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type _Author = {
-    login?: string; 
-    name?: string; 
-    person?: _____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
   } 
 
   export type _____Person = {
-    gitHubId?: _____GitHubId; 
-    chatId?: _____ChatId; 
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
   } 
 
   export type _____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Builds = {
-    name?: string; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    provider?: string; 
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    allowRebaseMerge?: boolean; 
-    allowSquashMerge?: boolean; 
-    allowMergeCommit?: boolean; 
-    defaultBranch?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace CommentToPullRequestCommentLifecycle {
@@ -1946,101 +1942,101 @@ export namespace CommentToPullRequestCommentLifecycle {
   }
 
   export type Subscription = {
-    Comment?: Comment[]; 
+    Comment?: Comment[] | null; 
   } 
 
   export type Comment = {
-    _id?: Long; 
-    gitHubId?: string; 
-    timestamp?: string; 
-    body?: string; 
-    by?: By; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    gitHubId?: string | null; 
+    timestamp?: string | null; 
+    body?: string | null; 
+    by?: By | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type By = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
-    gitHubId?: GitHubId; 
+    chatId?: ChatId | null; 
+    gitHubId?: GitHubId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type PullRequest = {
-    title?: string; 
-    number?: number; 
-    state?: string; 
-    merged?: boolean; 
-    repo?: Repo; 
-    author?: Author; 
-    assignees?: Assignees[]; 
-    labels?: _Labels[]; 
+    title?: string | null; 
+    number?: number | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    repo?: Repo | null; 
+    author?: Author | null; 
+    assignees?: Assignees[] | null; 
+    labels?: _Labels[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    org?: Org; 
-    labels?: Labels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+    labels?: Labels[] | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    url?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    chatId?: _ChatId; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    chatId?: __ChatId; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type _Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace CommitToPullRequestLifecycle {
@@ -2048,245 +2044,245 @@ export namespace CommitToPullRequestLifecycle {
   }
 
   export type Subscription = {
-    Commit?: Commit[]; 
+    Commit?: Commit[] | null; 
   } 
 
   export type Commit = {
-    _id?: Long; 
-    pullRequests?: PullRequests[]; 
+    _id?: Long | null; 
+    pullRequests?: PullRequests[] | null; 
   } 
 
   export type PullRequests = {
-    number?: number; 
-    name?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    title?: string; 
-    createdAt?: string; 
-    mergedAt?: string; 
-    baseBranchName?: string; 
-    branchName?: string; 
-    head?: Head; 
-    lastAssignedBy?: LastAssignedBy; 
-    closedAt?: string; 
-    branch?: Branch; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    comments?: Comments[]; 
-    commits?: Commits[]; 
-    builds?: Builds[]; 
-    reviews?: Reviews[]; 
-    repo?: Repo; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    gitHubId?: GitHubId; 
-    chatId?: ChatId; 
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Branch = {
-    name?: string; 
-    deleted?: boolean; 
-    timestamp?: string; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    timestamp?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    gitHubId?: _GitHubId; 
-    chatId?: _ChatId; 
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    name?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    gitHubId?: __GitHubId; 
-    chatId?: __ChatId; 
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    name?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    gitHubId?: ___GitHubId; 
-    chatId?: ___ChatId; 
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    name?: string; 
-    person?: ____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
   } 
 
   export type ____Person = {
-    gitHubId?: ____GitHubId; 
-    chatId?: ____ChatId; 
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
   } 
 
   export type ____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    timestamp?: string; 
-    tags?: Tags[]; 
-    statuses?: Statuses[]; 
-    author?: _Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
-    timestamp?: string; 
+    name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    description?: string; 
-    context?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type _Author = {
-    login?: string; 
-    name?: string; 
-    person?: _____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
   } 
 
   export type _____Person = {
-    gitHubId?: _____GitHubId; 
-    chatId?: _____ChatId; 
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
   } 
 
   export type _____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Builds = {
-    name?: string; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    provider?: string; 
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    allowRebaseMerge?: boolean; 
-    allowSquashMerge?: boolean; 
-    allowMergeCommit?: boolean; 
-    defaultBranch?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace IssueToIssueLifecycle {
@@ -2294,84 +2290,84 @@ export namespace IssueToIssueLifecycle {
   }
 
   export type Subscription = {
-    Issue?: Issue[]; 
+    Issue?: Issue[] | null; 
   } 
 
   export type Issue = {
-    _id?: Long; 
-    name?: string; 
-    title?: string; 
-    body?: string; 
-    state?: IssueState; 
-    number?: number; 
-    createdAt?: string; 
-    updatedAt?: string; 
-    closedAt?: string; 
-    resolvingCommits?: ResolvingCommits[]; 
-    openedBy?: OpenedBy; 
-    closedBy?: ClosedBy; 
-    assignees?: Assignees[]; 
+    _id?: Long | null; 
+    name?: string | null; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: IssueState | null; 
+    number?: number | null; 
+    createdAt?: string | null; 
+    updatedAt?: string | null; 
+    closedAt?: string | null; 
+    resolvingCommits?: ResolvingCommits[] | null; 
+    openedBy?: OpenedBy | null; 
+    closedBy?: ClosedBy | null; 
+    assignees?: Assignees[] | null; 
     repo: Repo; 
-    labels?: _Labels[]; 
-    timestamp?: string; 
+    labels?: _Labels[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type ResolvingCommits = {
-    author?: Author; 
+    author?: Author | null; 
   } 
 
   export type Author = {
-    person?: Person; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type OpenedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ClosedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    labels?: Labels[]; 
-    channels?: Channels[]; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    labels?: Labels[] | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    gitUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+    url?: string | null; 
   } 
 
   export type _Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace IssueToIssueCommentLifecycle {
@@ -2379,113 +2375,113 @@ export namespace IssueToIssueCommentLifecycle {
   }
 
   export type Subscription = {
-    Issue?: Issue[]; 
+    Issue?: Issue[] | null; 
   } 
 
   export type Issue = {
-    _id?: Long; 
-    title?: string; 
-    number?: number; 
-    state?: IssueState; 
+    _id?: Long | null; 
+    title?: string | null; 
+    number?: number | null; 
+    state?: IssueState | null; 
     repo: Repo; 
-    openedBy?: OpenedBy; 
-    closedBy?: ClosedBy; 
-    assignees?: Assignees[]; 
-    resolvingCommits?: ResolvingCommits[]; 
-    labels?: _Labels[]; 
-    comments?: Comments[]; 
+    openedBy?: OpenedBy | null; 
+    closedBy?: ClosedBy | null; 
+    assignees?: Assignees[] | null; 
+    resolvingCommits?: ResolvingCommits[] | null; 
+    labels?: _Labels[] | null; 
+    comments?: Comments[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    org?: Org; 
-    labels?: Labels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+    labels?: Labels[] | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    url?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type OpenedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ClosedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ResolvingCommits = {
-    sha?: string; 
-    message?: string; 
-    author?: Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
   } 
 
   export type Author = {
-    person?: Person; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type _Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    gitHubId?: string; 
-    timestamp?: string; 
-    body?: string; 
-    by?: By; 
-    issue?: _Issue; 
+    gitHubId?: string | null; 
+    timestamp?: string | null; 
+    body?: string | null; 
+    by?: By | null; 
+    issue?: _Issue | null; 
   } 
 
   export type By = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    chatId?: _ChatId; 
-    gitHubId?: GitHubId; 
+    chatId?: _ChatId | null; 
+    gitHubId?: GitHubId | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _Issue = {
-    number?: number; 
-    state?: IssueState; 
-    title?: string; 
+    number?: number | null; 
+    state?: IssueState | null; 
+    title?: string | null; 
   } 
 }
 export namespace IssueToPushLifecycle {
@@ -2493,170 +2489,170 @@ export namespace IssueToPushLifecycle {
   }
 
   export type Subscription = {
-    Issue?: Issue[]; 
+    Issue?: Issue[] | null; 
   } 
 
   export type Issue = {
-    _id?: Long; 
-    resolvingCommits?: ResolvingCommits[]; 
-    timestamp?: string; 
+    _id?: Long | null; 
+    resolvingCommits?: ResolvingCommits[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type ResolvingCommits = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace K8PodToPushLifecycle {
@@ -2664,181 +2660,181 @@ export namespace K8PodToPushLifecycle {
   }
 
   export type Subscription = {
-    K8Pod?: K8Pod[]; 
+    K8Pod?: K8Pod[] | null; 
   } 
 
   export type K8Pod = {
-    _id?: Long; 
-    name?: string; 
-    state?: string; 
-    images?: Images[]; 
-    timestamp?: string; 
+    _id?: Long | null; 
+    name?: string | null; 
+    state?: string | null; 
+    images?: Images[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Images = {
-    tag?: Tag; 
+    tag?: Tag | null; 
   } 
 
   export type Tag = {
-    commit?: Commit; 
-    timestamp?: string; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commit = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    id?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: _Commit; 
-    timestamp?: string; 
+    id?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: _Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace NotifyAuthorOnReview {
@@ -2846,78 +2842,78 @@ export namespace NotifyAuthorOnReview {
   }
 
   export type Subscription = {
-    Review?: Review[]; 
+    Review?: Review[] | null; 
   } 
 
   export type Review = {
-    _id?: Long; 
-    body?: string; 
-    state?: ReviewState; 
-    htmlUrl?: string; 
-    by?: By[]; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    body?: string | null; 
+    state?: ReviewState | null; 
+    htmlUrl?: string | null; 
+    by?: By[] | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type PullRequest = {
-    head?: Head; 
-    author?: Author; 
-    number?: number; 
-    title?: string; 
-    state?: string; 
-    merged?: boolean; 
-    labels?: Labels[]; 
-    repo?: Repo; 
+    head?: Head | null; 
+    author?: Author | null; 
+    number?: number | null; 
+    title?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    labels?: Labels[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
+    url?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
-    channelId?: string; 
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 }
 export namespace NotifyBotOwnerOnPush {
@@ -2925,29 +2921,29 @@ export namespace NotifyBotOwnerOnPush {
   }
 
   export type Subscription = {
-    Push?: Push[]; 
+    Push?: Push[] | null; 
   } 
 
   export type Push = {
-    id?: string; 
-    repo?: Repo; 
+    id?: string | null; 
+    repo?: Repo | null; 
   } 
 
   export type Repo = {
-    org?: Org; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    chatTeam?: ChatTeam; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace NotifyMentionedOnIssue {
@@ -2955,109 +2951,109 @@ export namespace NotifyMentionedOnIssue {
   }
 
   export type Subscription = {
-    Issue?: Issue[]; 
+    Issue?: Issue[] | null; 
   } 
 
   export type Issue = {
-    _id?: Long; 
-    name?: string; 
-    number?: number; 
-    title?: string; 
-    body?: string; 
-    state?: IssueState; 
-    lastAssignedBy?: LastAssignedBy; 
-    openedBy?: OpenedBy; 
-    closedBy?: ClosedBy; 
-    assignees?: Assignees[]; 
+    _id?: Long | null; 
+    name?: string | null; 
+    number?: number | null; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: IssueState | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    openedBy?: OpenedBy | null; 
+    closedBy?: ClosedBy | null; 
+    assignees?: Assignees[] | null; 
     repo: Repo; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type OpenedBy = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type ClosedBy = {
-    login?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    chatId?: _ChatId; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    preferences?: _Preferences[]; 
+    screenName?: string | null; 
+    preferences?: _Preferences[] | null; 
   } 
 
   export type _Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    chatId?: __ChatId; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    preferences?: __Preferences[]; 
+    screenName?: string | null; 
+    preferences?: __Preferences[] | null; 
   } 
 
   export type __Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    labels?: Labels[]; 
-    channels?: Channels[]; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    labels?: Labels[] | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
-    channelId?: string; 
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    gitUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+    url?: string | null; 
   } 
 }
 export namespace NotifyMentionedOnIssueComment {
@@ -3065,73 +3061,73 @@ export namespace NotifyMentionedOnIssueComment {
   }
 
   export type Subscription = {
-    Comment?: Comment[]; 
+    Comment?: Comment[] | null; 
   } 
 
   export type Comment = {
-    _id?: Long; 
-    gitHubId?: string; 
-    body?: string; 
-    by?: By; 
-    issue?: Issue; 
+    _id?: Long | null; 
+    gitHubId?: string | null; 
+    body?: string | null; 
+    by?: By | null; 
+    issue?: Issue | null; 
   } 
 
   export type By = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Issue = {
-    title?: string; 
-    body?: string; 
-    state?: IssueState; 
-    timestamp?: string; 
-    number?: number; 
-    lastAssignedBy?: LastAssignedBy; 
-    openedBy?: OpenedBy; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: IssueState | null; 
+    timestamp?: string | null; 
+    number?: number | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    openedBy?: OpenedBy | null; 
     repo: Repo; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type OpenedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
+    url?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
-    channelId?: string; 
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 }
 export namespace NotifyMentionedOnPullRequest {
@@ -3139,130 +3135,130 @@ export namespace NotifyMentionedOnPullRequest {
   }
 
   export type Subscription = {
-    PullRequest?: PullRequest[]; 
+    PullRequest?: PullRequest[] | null; 
   } 
 
   export type PullRequest = {
-    _id?: Long; 
-    name?: string; 
-    number?: number; 
-    title?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    lastAssignedBy?: LastAssignedBy; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    repo?: Repo; 
+    _id?: Long | null; 
+    name?: string | null; 
+    number?: number | null; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    chatId?: _ChatId; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    preferences?: _Preferences[]; 
+    screenName?: string | null; 
+    preferences?: _Preferences[] | null; 
   } 
 
   export type _Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    chatId?: __ChatId; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    preferences?: __Preferences[]; 
+    screenName?: string | null; 
+    preferences?: __Preferences[] | null; 
   } 
 
   export type __Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    chatId?: ___ChatId; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    preferences?: ___Preferences[]; 
+    screenName?: string | null; 
+    preferences?: ___Preferences[] | null; 
   } 
 
   export type ___Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    labels?: Labels[]; 
-    channels?: Channels[]; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    labels?: Labels[] | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
-    channelId?: string; 
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    gitUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+    url?: string | null; 
   } 
 }
 export namespace NotifyMentionedOnPullRequestComment {
@@ -3270,74 +3266,74 @@ export namespace NotifyMentionedOnPullRequestComment {
   }
 
   export type Subscription = {
-    Comment?: Comment[]; 
+    Comment?: Comment[] | null; 
   } 
 
   export type Comment = {
-    _id?: Long; 
-    gitHubId?: string; 
-    body?: string; 
-    by?: By; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    gitHubId?: string | null; 
+    body?: string | null; 
+    by?: By | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type By = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type PullRequest = {
-    title?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    number?: number; 
-    lastAssignedBy?: LastAssignedBy; 
-    author?: Author; 
-    repo?: Repo; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    number?: number | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    author?: Author | null; 
+    repo?: Repo | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
+    url?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
-    channelId?: string; 
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 }
 export namespace NotifyPusherOnBuild {
@@ -3345,62 +3341,62 @@ export namespace NotifyPusherOnBuild {
   }
 
   export type Subscription = {
-    Build?: Build[]; 
+    Build?: Build[] | null; 
   } 
 
   export type Build = {
-    _id?: Long; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    name?: string; 
-    commit?: Commit; 
-    repo?: Repo; 
+    _id?: Long | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    commit?: Commit | null; 
+    repo?: Repo | null; 
   } 
 
   export type Commit = {
-    sha?: string; 
-    message?: string; 
-    author?: Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: Preferences[]; 
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
-    channelId?: string; 
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 }
 export namespace ParentImpactToPushLifecycle {
@@ -3408,169 +3404,169 @@ export namespace ParentImpactToPushLifecycle {
   }
 
   export type Subscription = {
-    ParentImpact?: ParentImpact[]; 
+    ParentImpact?: ParentImpact[] | null; 
   } 
 
   export type ParentImpact = {
-    _id?: Long; 
-    commit?: Commit; 
+    _id?: Long | null; 
+    commit?: Commit | null; 
   } 
 
   export type Commit = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: _Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: _Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace PullRequestToPullRequestLifecycle {
@@ -3578,241 +3574,241 @@ export namespace PullRequestToPullRequestLifecycle {
   }
 
   export type Subscription = {
-    PullRequest?: PullRequest[]; 
+    PullRequest?: PullRequest[] | null; 
   } 
 
   export type PullRequest = {
-    _id?: Long; 
-    number?: number; 
-    name?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    title?: string; 
-    createdAt?: string; 
-    mergedAt?: string; 
-    baseBranchName?: string; 
-    branchName?: string; 
-    head?: Head; 
-    lastAssignedBy?: LastAssignedBy; 
-    closedAt?: string; 
-    branch?: Branch; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    comments?: Comments[]; 
-    commits?: Commits[]; 
-    builds?: Builds[]; 
-    reviews?: Reviews[]; 
-    repo?: Repo; 
+    _id?: Long | null; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    gitHubId?: GitHubId; 
-    chatId?: ChatId; 
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Branch = {
-    name?: string; 
-    deleted?: boolean; 
-    timestamp?: string; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    timestamp?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    gitHubId?: _GitHubId; 
-    chatId?: _ChatId; 
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    name?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    gitHubId?: __GitHubId; 
-    chatId?: __ChatId; 
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    name?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    gitHubId?: ___GitHubId; 
-    chatId?: ___ChatId; 
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    name?: string; 
-    person?: ____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
   } 
 
   export type ____Person = {
-    gitHubId?: ____GitHubId; 
-    chatId?: ____ChatId; 
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
   } 
 
   export type ____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    timestamp?: string; 
-    tags?: Tags[]; 
-    statuses?: Statuses[]; 
-    author?: _Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
-    timestamp?: string; 
+    name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    description?: string; 
-    context?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type _Author = {
-    login?: string; 
-    name?: string; 
-    person?: _____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
   } 
 
   export type _____Person = {
-    gitHubId?: _____GitHubId; 
-    chatId?: _____ChatId; 
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
   } 
 
   export type _____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Builds = {
-    name?: string; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    provider?: string; 
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    allowRebaseMerge?: boolean; 
-    allowSquashMerge?: boolean; 
-    allowMergeCommit?: boolean; 
-    defaultBranch?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace PullRequestToPullRequestCommentLifecycle {
@@ -3820,94 +3816,94 @@ export namespace PullRequestToPullRequestCommentLifecycle {
   }
 
   export type Subscription = {
-    PullRequest?: PullRequest[]; 
+    PullRequest?: PullRequest[] | null; 
   } 
 
   export type PullRequest = {
-    _id?: Long; 
-    title?: string; 
-    number?: number; 
-    state?: string; 
-    merged?: boolean; 
-    repo?: Repo; 
-    assignees?: Assignees[]; 
-    labels?: _Labels[]; 
-    comments?: Comments[]; 
+    _id?: Long | null; 
+    title?: string | null; 
+    number?: number | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    repo?: Repo | null; 
+    assignees?: Assignees[] | null; 
+    labels?: _Labels[] | null; 
+    comments?: Comments[] | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    org?: Org; 
-    labels?: Labels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+    labels?: Labels[] | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
-    url?: string; 
+    apiUrl?: string | null; 
+    url?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type _Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    gitHubId?: string; 
-    timestamp?: string; 
-    body?: string; 
-    by?: By; 
-    pullRequest?: _PullRequest; 
+    gitHubId?: string | null; 
+    timestamp?: string | null; 
+    body?: string | null; 
+    by?: By | null; 
+    pullRequest?: _PullRequest | null; 
   } 
 
   export type By = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    chatId?: _ChatId; 
-    gitHubId?: GitHubId; 
+    chatId?: _ChatId | null; 
+    gitHubId?: GitHubId | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _PullRequest = {
-    number?: number; 
-    state?: string; 
-    title?: string; 
+    number?: number | null; 
+    state?: string | null; 
+    title?: string | null; 
   } 
 }
 export namespace PullRequestToReviewLifecycle {
@@ -3915,67 +3911,67 @@ export namespace PullRequestToReviewLifecycle {
   }
 
   export type Subscription = {
-    PullRequest?: PullRequest[]; 
+    PullRequest?: PullRequest[] | null; 
   } 
 
   export type PullRequest = {
-    _id?: Long; 
-    reviews?: Reviews[]; 
+    _id?: Long | null; 
+    reviews?: Reviews[] | null; 
   } 
 
   export type Reviews = {
-    _id?: Long; 
-    body?: string; 
-    state?: ReviewState; 
-    htmlUrl?: string; 
-    by?: By[]; 
-    pullRequest?: _PullRequest; 
+    _id?: Long | null; 
+    body?: string | null; 
+    state?: ReviewState | null; 
+    htmlUrl?: string | null; 
+    by?: By[] | null; 
+    pullRequest?: _PullRequest | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _PullRequest = {
-    head?: Head; 
-    number?: number; 
-    title?: string; 
-    state?: string; 
-    merged?: boolean; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    repo?: Repo; 
+    head?: Head | null; 
+    number?: number | null; 
+    title?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
+    url?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace PushToPushLifecycle {
@@ -3983,160 +3979,160 @@ export namespace PushToPushLifecycle {
   }
 
   export type Subscription = {
-    Push?: Push[]; 
+    Push?: Push[] | null; 
   } 
 
   export type Push = {
-    _id?: Long; 
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    _id?: Long | null; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace PushToUnmappedRepo {
@@ -4144,75 +4140,75 @@ export namespace PushToUnmappedRepo {
   }
 
   export type Subscription = {
-    Push?: Push[]; 
+    Push?: Push[] | null; 
   } 
 
   export type Push = {
-    repo?: Repo; 
-    commits?: Commits[]; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    org?: Org; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    providerId?: string; 
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    providerId?: string | null; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    channels?: _Channels[]; 
-    preferences?: Preferences[]; 
+    channels?: _Channels[] | null; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type _Channels = {
-    channelId?: string; 
-    name?: string; 
+    channelId?: string | null; 
+    name?: string | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    author?: Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    preferences?: _Preferences[]; 
+    screenName?: string | null; 
+    preferences?: _Preferences[] | null; 
   } 
 
   export type _Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace ReleaseToPushLifecycle {
@@ -4220,174 +4216,174 @@ export namespace ReleaseToPushLifecycle {
   }
 
   export type Subscription = {
-    Release?: Release[]; 
+    Release?: Release[] | null; 
   } 
 
   export type Release = {
-    _id?: Long; 
-    tag?: Tag; 
-    timestamp?: string; 
+    _id?: Long | null; 
+    tag?: Tag | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tag = {
-    commit?: Commit; 
+    commit?: Commit | null; 
   } 
 
   export type Commit = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: _Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: _Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: _Release; 
+    name?: string | null; 
+    release?: _Release | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: __Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: __Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type __Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace ReviewToPullRequestLifecycle {
@@ -4395,245 +4391,245 @@ export namespace ReviewToPullRequestLifecycle {
   }
 
   export type Subscription = {
-    Review?: Review[]; 
+    Review?: Review[] | null; 
   } 
 
   export type Review = {
-    _id?: Long; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type PullRequest = {
-    number?: number; 
-    name?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    title?: string; 
-    createdAt?: string; 
-    mergedAt?: string; 
-    baseBranchName?: string; 
-    branchName?: string; 
-    head?: Head; 
-    lastAssignedBy?: LastAssignedBy; 
-    closedAt?: string; 
-    branch?: Branch; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    comments?: Comments[]; 
-    commits?: Commits[]; 
-    builds?: Builds[]; 
-    reviews?: Reviews[]; 
-    repo?: Repo; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    gitHubId?: GitHubId; 
-    chatId?: ChatId; 
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Branch = {
-    name?: string; 
-    deleted?: boolean; 
-    timestamp?: string; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    timestamp?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    gitHubId?: _GitHubId; 
-    chatId?: _ChatId; 
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    name?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    gitHubId?: __GitHubId; 
-    chatId?: __ChatId; 
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    name?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    gitHubId?: ___GitHubId; 
-    chatId?: ___ChatId; 
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    name?: string; 
-    person?: ____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
   } 
 
   export type ____Person = {
-    gitHubId?: ____GitHubId; 
-    chatId?: ____ChatId; 
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
   } 
 
   export type ____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    timestamp?: string; 
-    tags?: Tags[]; 
-    statuses?: Statuses[]; 
-    author?: _Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
-    timestamp?: string; 
+    name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    description?: string; 
-    context?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type _Author = {
-    login?: string; 
-    name?: string; 
-    person?: _____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
   } 
 
   export type _____Person = {
-    gitHubId?: _____GitHubId; 
-    chatId?: _____ChatId; 
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
   } 
 
   export type _____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Builds = {
-    name?: string; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    provider?: string; 
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    allowRebaseMerge?: boolean; 
-    allowSquashMerge?: boolean; 
-    allowMergeCommit?: boolean; 
-    defaultBranch?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace ReviewToReviewLifecycle {
@@ -4641,62 +4637,62 @@ export namespace ReviewToReviewLifecycle {
   }
 
   export type Subscription = {
-    Review?: Review[]; 
+    Review?: Review[] | null; 
   } 
 
   export type Review = {
-    _id?: Long; 
-    body?: string; 
-    state?: ReviewState; 
-    htmlUrl?: string; 
-    by?: By[]; 
-    pullRequest?: PullRequest; 
+    _id?: Long | null; 
+    body?: string | null; 
+    state?: ReviewState | null; 
+    htmlUrl?: string | null; 
+    by?: By[] | null; 
+    pullRequest?: PullRequest | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type PullRequest = {
-    head?: Head; 
-    number?: number; 
-    title?: string; 
-    state?: string; 
-    merged?: boolean; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    repo?: Repo; 
+    head?: Head | null; 
+    number?: number | null; 
+    title?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
-    channels?: Channels[]; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+    channels?: Channels[] | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
+    url?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 }
 export namespace StatusOnParentImpact {
@@ -4704,33 +4700,33 @@ export namespace StatusOnParentImpact {
   }
 
   export type Subscription = {
-    ParentImpact?: ParentImpact[]; 
+    ParentImpact?: ParentImpact[] | null; 
   } 
 
   export type ParentImpact = {
-    _id?: Long; 
-    data?: string; 
-    url?: string; 
-    commit?: Commit; 
+    _id?: Long | null; 
+    data?: string | null; 
+    url?: string | null; 
+    commit?: Commit | null; 
   } 
 
   export type Commit = {
-    sha?: string; 
-    repo?: Repo; 
+    sha?: string | null; 
+    repo?: Repo | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    apiUrl?: string; 
+    apiUrl?: string | null; 
   } 
 }
 export namespace StatusToPullRequestLifecycle {
@@ -4738,249 +4734,249 @@ export namespace StatusToPullRequestLifecycle {
   }
 
   export type Subscription = {
-    Status?: Status[]; 
+    Status?: Status[] | null; 
   } 
 
   export type Status = {
-    _id?: Long; 
-    commit?: Commit; 
+    _id?: Long | null; 
+    commit?: Commit | null; 
   } 
 
   export type Commit = {
-    pullRequests?: PullRequests[]; 
+    pullRequests?: PullRequests[] | null; 
   } 
 
   export type PullRequests = {
-    number?: number; 
-    name?: string; 
-    body?: string; 
-    state?: string; 
-    merged?: boolean; 
-    timestamp?: string; 
-    title?: string; 
-    createdAt?: string; 
-    mergedAt?: string; 
-    baseBranchName?: string; 
-    branchName?: string; 
-    head?: Head; 
-    lastAssignedBy?: LastAssignedBy; 
-    closedAt?: string; 
-    branch?: Branch; 
-    author?: Author; 
-    merger?: Merger; 
-    assignees?: Assignees[]; 
-    reviewers?: Reviewers[]; 
-    labels?: Labels[]; 
-    comments?: Comments[]; 
-    commits?: Commits[]; 
-    builds?: Builds[]; 
-    reviews?: Reviews[]; 
-    repo?: Repo; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
   } 
 
   export type Head = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type LastAssignedBy = {
-    login?: string; 
-    name?: string; 
-    person?: Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    gitHubId?: GitHubId; 
-    chatId?: ChatId; 
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
   } 
 
   export type GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Branch = {
-    name?: string; 
-    deleted?: boolean; 
-    timestamp?: string; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    timestamp?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    name?: string; 
-    person?: _Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
   } 
 
   export type _Person = {
-    gitHubId?: _GitHubId; 
-    chatId?: _ChatId; 
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
   } 
 
   export type _GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Merger = {
-    login?: string; 
-    name?: string; 
-    person?: __Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
   } 
 
   export type __Person = {
-    gitHubId?: __GitHubId; 
-    chatId?: __ChatId; 
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
   } 
 
   export type __GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type __ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Assignees = {
-    login?: string; 
-    name?: string; 
-    person?: ___Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
   } 
 
   export type ___Person = {
-    gitHubId?: ___GitHubId; 
-    chatId?: ___ChatId; 
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
   } 
 
   export type ___GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ___ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Reviewers = {
-    login?: string; 
-    name?: string; 
-    person?: ____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
   } 
 
   export type ____Person = {
-    gitHubId?: ____GitHubId; 
-    chatId?: ____ChatId; 
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
   } 
 
   export type ____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type ____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Comments = {
-    body?: string; 
+    body?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    timestamp?: string; 
-    tags?: Tags[]; 
-    statuses?: Statuses[]; 
-    author?: _Author; 
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
-    timestamp?: string; 
+    name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type Statuses = {
-    state?: StatusState; 
-    description?: string; 
-    context?: string; 
-    targetUrl?: string; 
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
   } 
 
   export type _Author = {
-    login?: string; 
-    name?: string; 
-    person?: _____Person; 
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
   } 
 
   export type _____Person = {
-    gitHubId?: _____GitHubId; 
-    chatId?: _____ChatId; 
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
   } 
 
   export type _____GitHubId = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type _____ChatId = {
-    screenName?: string; 
-    id?: string; 
+    screenName?: string | null; 
+    id?: string | null; 
   } 
 
   export type Builds = {
-    name?: string; 
-    status?: BuildStatus; 
-    buildUrl?: string; 
-    provider?: string; 
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
   } 
 
   export type Reviews = {
-    state?: ReviewState; 
-    by?: By[]; 
+    state?: ReviewState | null; 
+    by?: By[] | null; 
   } 
 
   export type By = {
-    login?: string; 
+    login?: string | null; 
   } 
 
   export type Repo = {
-    name?: string; 
-    owner?: string; 
-    channels?: Channels[]; 
-    allowRebaseMerge?: boolean; 
-    allowSquashMerge?: boolean; 
-    allowMergeCommit?: boolean; 
-    defaultBranch?: string; 
-    org?: Org; 
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
+    provider?: Provider | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 }
 export namespace StatusToPushLifecycle {
@@ -4988,169 +4984,169 @@ export namespace StatusToPushLifecycle {
   }
 
   export type Subscription = {
-    Status?: Status[]; 
+    Status?: Status[] | null; 
   } 
 
   export type Status = {
-    _id?: Long; 
-    commit?: Commit; 
+    _id?: Long | null; 
+    commit?: Commit | null; 
   } 
 
   export type Commit = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: _Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: _Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
 export namespace TagToPushLifecycle {
@@ -5158,169 +5154,169 @@ export namespace TagToPushLifecycle {
   }
 
   export type Subscription = {
-    Tag?: Tag[]; 
+    Tag?: Tag[] | null; 
   } 
 
   export type Tag = {
-    _id?: Long; 
-    commit?: Commit; 
-    timestamp?: string; 
+    _id?: Long | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type Commit = {
-    pushes?: Pushes[]; 
-    timestamp?: string; 
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Pushes = {
-    builds?: Builds[]; 
-    before?: Before; 
-    after?: After; 
-    repo?: Repo; 
-    commits?: Commits[]; 
-    timestamp?: string; 
-    branch?: string; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
   } 
 
   export type Builds = {
-    buildId?: string; 
-    buildUrl?: string; 
-    name?: string; 
-    provider?: string; 
-    status?: BuildStatus; 
-    commit?: _Commit; 
-    timestamp?: string; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: _Commit | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Commit = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type Before = {
-    sha?: string; 
+    sha?: string | null; 
   } 
 
   export type After = {
-    sha?: string; 
-    message?: string; 
-    statuses?: Statuses[]; 
-    tags?: Tags[]; 
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
   } 
 
   export type Statuses = {
-    context?: string; 
-    description?: string; 
-    targetUrl?: string; 
-    state?: StatusState; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
   } 
 
   export type Tags = {
-    name?: string; 
-    release?: Release; 
+    name?: string | null; 
+    release?: Release | null; 
   } 
 
   export type Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Repo = {
-    owner?: string; 
-    name?: string; 
-    channels?: Channels[]; 
-    labels?: Labels[]; 
-    org?: Org; 
-    defaultBranch?: string; 
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Channels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Labels = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Org = {
-    provider?: Provider; 
-    chatTeam?: ChatTeam; 
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
-    url?: string; 
-    apiUrl?: string; 
-    gitUrl?: string; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
   } 
 
   export type ChatTeam = {
-    preferences?: Preferences[]; 
+    preferences?: Preferences[] | null; 
   } 
 
   export type Preferences = {
-    name?: string; 
-    value?: string; 
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Commits = {
-    sha?: string; 
-    message?: string; 
-    resolves?: Resolves[]; 
-    impact?: Impact; 
-    apps?: Apps[]; 
-    tags?: _Tags[]; 
-    author?: Author; 
-    timestamp?: string; 
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
   } 
 
   export type Resolves = {
-    number?: number; 
-    name?: string; 
-    title?: string; 
-    state?: IssueState; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
   } 
 
   export type Impact = {
-    data?: string; 
-    url?: string; 
+    data?: string | null; 
+    url?: string | null; 
   } 
 
   export type Apps = {
-    state?: string; 
-    host?: string; 
-    domain?: string; 
-    data?: string; 
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
   } 
 
   export type _Tags = {
-    name?: string; 
-    release?: _Release; 
-    containers?: Containers[]; 
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
-    name?: string; 
+    name?: string | null; 
   } 
 
   export type Containers = {
-    pods?: Pods[]; 
-    image?: string; 
+    pods?: Pods[] | null; 
+    image?: string | null; 
   } 
 
   export type Pods = {
-    host?: string; 
-    state?: string; 
-    name?: string; 
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
   } 
 
   export type Author = {
-    login?: string; 
-    person?: Person; 
+    login?: string | null; 
+    person?: Person | null; 
   } 
 
   export type Person = {
-    chatId?: ChatId; 
+    chatId?: ChatId | null; 
   } 
 
   export type ChatId = {
-    screenName?: string; 
+    screenName?: string | null; 
   } 
 }
