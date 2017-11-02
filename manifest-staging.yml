@@ -5,8 +5,8 @@ applications:
   routes:
   - route: lifecycle.a-staging.atomist.com
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-  health-check-type: http
-  health-check-http-endpoint: /health
+  #health-check-type: http
+  #health-check-http-endpoint: /health
   env:
     NODE_ENV: staging
     SUPPRESS_NO_CONFIG_WARNING: true
