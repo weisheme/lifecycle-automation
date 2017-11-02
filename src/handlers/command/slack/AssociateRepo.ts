@@ -14,7 +14,11 @@ import {
 } from "@atomist/automation-client/Handlers";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 
-import { AddBotToSlackChannel, LinkSlackChannelToRepo } from "../../../typings/types";
+import {
+    AddBotToSlackChannel,
+    InviteUserToSlackChannel,
+    LinkSlackChannelToRepo,
+} from "../../../typings/types";
 import * as github from "../github/gitHubApi";
 
 /**
@@ -32,6 +36,9 @@ export class AssociateRepo implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
+
+    @MappedParameter(MappedParameters.SlackUser)
+    public userId: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
@@ -57,12 +64,16 @@ export class AssociateRepo implements HandleCommand {
                     AddBotToSlackChannel.Variables>(
                     "graphql/mutation/addBotToSlackChannel",
                     { channelId: this.channelId })
-                    .then(_ => ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation,
+                    .then(x => ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation,
                         LinkSlackChannelToRepo.Variables>(
                         "graphql/mutation/linkSlackChannelToRepo",
-                        { channelId: this.channelId, repo: this.repo, owner: this.owner }));
+                        { channelId: this.channelId, repo: this.repo, owner: this.owner }))
+                    .then(x => ctx.graphClient.executeMutationFromFile<InviteUserToSlackChannel.Mutation,
+                        InviteUserToSlackChannel.Variables>(
+                        "graphql/mutation/inviteUserToSlackChannel",
+                        { channelId: this.channelId, userId: this.userId }));
             })
-            .then(() => Success)
+            .then(x => Success)
             .catch(e => failure(e));
     }
 
