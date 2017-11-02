@@ -41,5 +41,5 @@ deploy:
   on:
     tags: true
     condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(-(m|rc)\\.[0-9]+)?$"
-after_deploy:
+after_success:
 - bash scripts/cf-push.bash lifecycle-automation
