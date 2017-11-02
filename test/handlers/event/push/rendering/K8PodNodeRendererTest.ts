@@ -128,13 +128,12 @@ describe("K8PodNodeRenderer", () => {
 }`;
     /* tslint:enable */
 
-    it("no container attachement", done => {
+    it("no container attachement", () => {
         const event = JSON.parse(payload) as EventFired<graphql.StatusToPushLifecycle.Subscription>;
         const status = event.data.Status[0];
         const push = status.commit.pushes[0];
         const renderer = new K8PodNodeRenderer();
         assert(!renderer.supports(push));
-        done();
-    }).timeout(5000);
+    });
 
 });

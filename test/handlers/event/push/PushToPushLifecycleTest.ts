@@ -104,10 +104,10 @@ describe("PushToPushLifecycle", () => {
         handler.handle(JSON.parse(payload.replace("%%CONFIG%%", config)) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(result.code === 0);
-                done();
-            });
+            })
+            .then(done, done);
 
-    }).timeout(5000);
+    });
 
     it("correctly show pushes on included but also excluded branch", done => {
         class MockMessageClient extends MessageClientSupport {
@@ -124,7 +124,7 @@ describe("PushToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-            executeQueryFromFile(name: string, variables?: any): Promise<any> {
+                executeQueryFromFile(name: string, variables?: any): Promise<any> {
                     return Promise.resolve();
                 },
             },
@@ -136,10 +136,10 @@ describe("PushToPushLifecycle", () => {
         handler.handle(JSON.parse(payload.replace("%%CONFIG%%", config)) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(result.code === 0);
-                done();
-            });
+            })
+            .then(done, done);
 
-    }).timeout(5000);
+    });
 
     it("correctly filter pushes that aren't included", done => {
         class MockMessageClient extends MessageClientSupport {
@@ -169,10 +169,9 @@ describe("PushToPushLifecycle", () => {
         handler.handle(JSON.parse(payload.replace("%%CONFIG%%", config)) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(result.code === 0);
-                done();
-            });
-
-    }).timeout(5000);
+            })
+            .then(done, done);
+    });
 
     const payloadWithPr = `
     {
@@ -299,23 +298,25 @@ describe("PushToPushLifecycle", () => {
             graphClient: {
                 executeQueryFromFile(name: string, variables?: any): Promise<any> {
                     assert(variables.branchName === "cdupuis-patch-37");
-                    return Promise.resolve({ Repo: [
-                        {
-                            name: "handlers",
-                            branches: [
-                                {
-                                    name: "cdupuis-patch-37",
-                                    pullRequests: [
-                                        {
-                                            state: "open",
-                                            number: 128,
-                                            title: "Simplify filter. Add a note",
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    ]});
+                    return Promise.resolve({
+                        Repo: [
+                            {
+                                name: "handlers",
+                                branches: [
+                                    {
+                                        name: "cdupuis-patch-37",
+                                        pullRequests: [
+                                            {
+                                                state: "open",
+                                                number: 128,
+                                                title: "Simplify filter. Add a note",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    });
                 },
             },
             messageClient: new MockMessageClient(),
@@ -325,9 +326,8 @@ describe("PushToPushLifecycle", () => {
         handler.handle(JSON.parse(payloadWithPr) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(result.code === 0);
-                done();
-            });
-
-    }).timeout(5000);
+            })
+            .then(done, done);
+    });
 
 });

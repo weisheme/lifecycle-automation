@@ -18,9 +18,9 @@ describe("AutoMergeOnStatus", () => {
             amos.handle(event, {} as any)
                 .then(result => {
                     assert(result === Success);
-                    done();
-                });
-        }).timeout(1000);
+                })
+                .then(done, done);
+        });
 
     });
 

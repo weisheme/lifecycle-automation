@@ -182,10 +182,10 @@ describe("StatusToPushLifecycle", () => {
         handler.handle(JSON.parse(payloadRaisePr) as EventFired<any>, ctx)
             .then(result => {
                 console.log(result);
-                done();
-            });
+            })
+            .then(done, done);
 
-    }).timeout(5000);
+    });
 
     /* tslint:disable */
     const payloadNoChannel = `{
@@ -303,9 +303,9 @@ describe("StatusToPushLifecycle", () => {
         handler.handle(JSON.parse(payloadNoChannel) as EventFired<any>, ctx)
             .then(result => {
                 console.log(result);
-                done();
-            });
+            })
+            .then(done, done);
 
-    }).timeout(5000);
+    });
 
 });
