@@ -21,48 +21,58 @@ function err() {
 # usage: push [APP_NAME ORG]
 function push() {
     local app_name=$1
-    local org=$2
+    if [[ ! $app_name ]]; then
+        err "missing required argument: APP_NAME"
+        return 10
+    fi
+    shift
+    local org=$1
+    if [[ ! $org ]]; then
+        err "missing required argument: ORG"
+        return 10
+    fi
+    shift
 
     msg "pushing '$app_name' to Cloud Foundry space '$org'"
 
-    if ! cf login -u $CLOUDFOUNDRY_USER -p $CLOUDFOUNDRY_PASSWORD -s $org -a https://api.run.pivotal.io; then
+    if ! cf login -u "$CLOUDFOUNDRY_USER" -p "$CLOUDFOUNDRY_PASSWORD" -s "$org" -a https://api.run.pivotal.io; then
         err "failed to login to Cloud Foundry"
         return 1
     fi
 
-    if ! cf delete $app_name-old -f; then
+    if ! cf delete "$app_name-old" -f; then
         err "failed to delete old application"
         return 1
     fi
 
-    if ! cf push -f manifest-$org.yml $app_name-new; then
+    if ! cf push -f "manifest-$org.yml" "$app_name-new"; then
         err "failed to push new application"
         return 1
     fi
 
-    if ! cf rename $app_name $app_name-old; then
+    if ! cf rename "$app_name" "$app_name-old"; then
         err "failed to rename current application"
         return 1
     fi
 
-    if ! cf rename $app_name-new $app_name; then
+    if ! cf rename "$app_name-new" "$app_name"; then
         err "failed to rename new application"
         return 1
     fi
 
-    if ! cf unmap-route $app_name cfapps.io --hostname $app_name-new; then
+    if ! cf unmap-route "$app_name" cfapps.io --hostname "$app_name-new"; then
         err "failed to unmap route"
         return 1
     fi
 
-    if ! cf map-route $app_name cfapps.io --hostname $app_name; then
+    if ! cf map-route "$app_name" cfapps.io --hostname "$app_name"; then
         err "failed to map route"
         return 1
     fi
 
     sleep 10
 
-    if ! cf stop $app_name-old; then
+    if ! cf stop "$app_name-old"; then
         err "failed to stop old application"
         return 1
     fi
@@ -76,16 +86,19 @@ function push() {
 # usage: main [APP_NAME]
 function main() {
     local app_name=$1
+    if [[ ! $app_name ]]; then
+        app_name=${TRAVIS_REPO_SLUG##*/}
+    fi
 
     if [[ $TRAVIS_PULL_REQUEST != false ]] ; then
         return 0
     elif [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(m|rc)\.[0-9]+)?$ ]]; then
-        if ! push $app_name "production"; then
+        if ! push "$app_name" production; then
             err "failed to cf push tag build"
             return 1
         fi
     elif [[ $TRAVIS_BRANCH == master ]]; then
-        if ! push $app_name-staging "development"; then
+        if ! push "$app_name-staging" development; then
             err "failed to cf push master build"
             return 1
         fi
