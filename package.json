@@ -74,7 +74,7 @@
     "clean:dist": "npm-run-all clean clean:npm",
     "clean:js": "rimraf '{src,test}/**/*.js'",
     "clean:npm": "rimraf node_modules",
-    "compile": "npm-run-all gql:gen compile:ts",
+    "compile": "npm-run-all git:info gql:gen compile:ts",
     "compile:ts": "tsc --project .",
     "debug": "node $NODE_DEBUG_OPTION --expose_gc --trace-warnings --optimize_for_size --always_compact --max_old_space_size=256 node_modules/.bin/atomist-client",
     "fmt": "tsfmt --replace",
