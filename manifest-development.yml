@@ -1,12 +1,10 @@
 applications:
 - name: lifecycle-automation-staging
-  command: npm run start:server
+  command: node --trace-warnings --expose_gc --optimize_for_size --always_compact --max_old_space_size=128 node_modules/.bin/atomist-client
   memory: 256M
   routes:
   - route: lifecycle.a-staging.atomist.com
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-  #health-check-type: http
-  #health-check-http-endpoint: /health
   env:
     NODE_ENV: staging
     SUPPRESS_NO_CONFIG_WARNING: true
