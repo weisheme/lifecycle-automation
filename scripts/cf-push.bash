@@ -25,7 +25,7 @@ function push() {
 
     msg "pushing '$app_name' to Cloud Foundry space '$org'"
 
-    if ! cf login -u $CLOUDFOUNDRY_USER -p $CLOUDFOUNDRY_PASSWORD -s $org; then
+    if ! cf login -u $CLOUDFOUNDRY_USER -p $CLOUDFOUNDRY_PASSWORD -s $org -a https://api.run.pivotal.io; then
         err "failed to login to Cloud Foundry"
         return 1
     fi
