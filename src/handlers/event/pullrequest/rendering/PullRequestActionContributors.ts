@@ -92,7 +92,6 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
             }
         });
 
-
         return buttons;
     }
 
