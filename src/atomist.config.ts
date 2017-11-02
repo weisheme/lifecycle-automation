@@ -231,12 +231,9 @@ export const configuration = {
     },
     applicationEvents: {
         enabled: true,
-        teamId: "T095SFFBK",
+        teamId: "T29E48P34",
     },
 };
-
-// Register Application events for this automation client
-registerApplicationEvents("T29E48P34");
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
 initMemoryMonitoring(`${appRoot.path}/node_modules/@atomist/automation-client/public/heap`);
