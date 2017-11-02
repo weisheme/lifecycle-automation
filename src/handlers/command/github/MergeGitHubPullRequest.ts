@@ -62,7 +62,7 @@ export class MergeGitHubPullRequest implements HandleCommand {
     public message: string;
 
     @Parameter({
-        displayName: "Sha",
+        displayName: "SHA",
         pattern: /.*$/,
         required: true,
     })
