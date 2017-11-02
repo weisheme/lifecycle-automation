@@ -1,6 +1,6 @@
 applications:
 - name: lifecycle-automation-staging
-  command: node --trace-warnings --expose_gc --optimize_for_size --always_compact --max_old_space_size=128 node_modules/.bin/atomist-client
+  command: node $NODE_DEBUG_OPTION --trace-warnings --expose_gc --optimize_for_size --always_compact --max_old_space_size=128 node_modules/.bin/atomist-client
   memory: 256M
   routes:
   - route: lifecycle.a-staging.atomist.com
