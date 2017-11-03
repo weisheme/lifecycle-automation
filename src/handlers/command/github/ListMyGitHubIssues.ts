@@ -24,7 +24,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 
-@CommandHandler("List user's GitHub issues", "my issues")
+@CommandHandler("List user's GitHub issues", "my issues", "my github issues")
 @Tags("github", "issue")
 export class ListMyGitHubIssues implements HandleCommand {
 

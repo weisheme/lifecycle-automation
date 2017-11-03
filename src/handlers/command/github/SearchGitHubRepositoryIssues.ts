@@ -21,7 +21,7 @@ import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 import { ListMyGitHubIssues } from "./ListMyGitHubIssues";
 
-@CommandHandler("Search issues and pull requests in GitHub repositories", "search issues")
+@CommandHandler("Search issues and pull requests in GitHub repositories", "search issues", "search github issues")
 @Tags("github", "issue")
 export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements HandleCommand {
 

@@ -1,6 +1,7 @@
 import {
     CommandHandler,
-    failure, HandleCommand,
+    failure,
+    HandleCommand,
     HandlerContext,
     HandlerResult,
     MappedParameter,

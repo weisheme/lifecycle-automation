@@ -13,7 +13,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("React to a GitHub issue", "react issue")
+@CommandHandler("React to a GitHub issue", "react issue", "react github issue")
 @Tags("github", "issue", "reaction")
 export class ReactGitHubIssue implements HandleCommand {
 

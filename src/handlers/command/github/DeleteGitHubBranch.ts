@@ -13,7 +13,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Deletes a GitHub branch", "delete branch")
+@CommandHandler("Deletes a GitHub branch", "delete branch", "delete github branch")
 @Tags("github", "branch")
 export class DeleteGitHubBranch implements HandleCommand {
 

@@ -18,7 +18,7 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Install webhook for a whole organization", "install org-webhook")
+@CommandHandler("Install webhook for a whole organization", "install org-webhook", "install github org-webhook")
 @Tags("github", "webhook")
 export class InstallGitHubOrgWebhook implements HandleCommand {
 
@@ -61,7 +61,7 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     }
 }
 
-@CommandHandler("Install webhook for a repository", "install webhook")
+@CommandHandler("Install webhook for a repository", "install webhook", "install github webhook")
 @Tags("github", "webhook")
 export class InstallGitHubRepoWebhook implements HandleCommand {
 

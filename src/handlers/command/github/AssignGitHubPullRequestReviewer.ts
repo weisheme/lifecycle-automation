@@ -17,7 +17,7 @@ import * as github from "./gitHubApi";
 /**
  * Approve GitHub status on commit.
  */
-@CommandHandler("Assign GitHub pull request reviewer", "assign reviewer")
+@CommandHandler("Assign GitHub pull request reviewer", "assign reviewer", "assign github reviewer")
 @Tags("github", "review")
 export class AssignGitHubPullRequestReviewer implements HandleCommand {
 

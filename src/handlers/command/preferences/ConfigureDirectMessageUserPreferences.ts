@@ -23,7 +23,7 @@ import { DirectMessagePreferences } from "./preferences";
 /**
  * Configure DM preferences for the invoking user.
  */
-@CommandHandler("Displays DM preferences for the invoking user", ["configure dm preferences", "configure dms"])
+@CommandHandler("Displays DM preferences for the invoking user", "configure dm preferences", "configure dms")
 @Tags("preferences", "configure")
 export class ConfigureDirectMessageUserPreferences implements HandleCommand {
 

@@ -13,7 +13,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Close a GitHub issue", "close issue")
+@CommandHandler("Close a GitHub issue", "close issue", "close github issue")
 @Tags("github", "issue")
 export class CloseGitHubIssue implements HandleCommand {
 

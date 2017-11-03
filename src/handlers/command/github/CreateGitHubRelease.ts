@@ -13,7 +13,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Create a release of a repo on GitHub", "create release")
+@CommandHandler("Create a release of a repo on GitHub", "create release", "create github release")
 @Tags("github", "issue")
 export class CreateGitHubRelease implements HandleCommand {
 

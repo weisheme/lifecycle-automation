@@ -15,7 +15,7 @@ import { logger } from "@atomist/automation-client/internal/util/logger";
 import { loadGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Assign a GitHub issue to the invoking user", "assign issue to me")
+@CommandHandler("Assign a GitHub issue to the invoking user", "assign issue to me", "assign github issue to me")
 @Tags("github", "issue")
 export class AssignToMeGitHubIssue implements HandleCommand {
 

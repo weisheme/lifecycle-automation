@@ -17,7 +17,7 @@ const buildIdParameter = {
     pattern: /^\d+$/,
 };
 
-@CommandHandler("Restart a Travis CI build", "restart travis build")
+@CommandHandler("Restart a Travis CI build", "restart build", "restart travis build")
 @Tags("travis", "ci", "restart")
 export class RestartTravisBuild implements HandleCommand {
 

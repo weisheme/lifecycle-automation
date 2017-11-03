@@ -14,7 +14,8 @@ import {
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Raise a GitHub pull request", ["raise pr", "raise pullrequest"])
+@CommandHandler("Raise a GitHub pull request", "raise pr", "raise pullrequest",
+    "raise github pr", "raise github pullrequest")
 @Tags("github", "pr")
 export class RaiseGitHubPullRequest implements HandleCommand {
 

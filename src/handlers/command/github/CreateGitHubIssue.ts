@@ -17,7 +17,7 @@ import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import { IssueToIssueLifecycle } from "../../event/issue/IssueToIssueLifecycle";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Create an issue on GitHub", "create issue")
+@CommandHandler("Create an issue on GitHub", "create issue", "create github issue")
 @Tags("github", "issue")
 export class CreateGitHubIssue implements HandleCommand {
 

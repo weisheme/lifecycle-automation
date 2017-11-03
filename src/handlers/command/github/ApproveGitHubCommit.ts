@@ -17,7 +17,7 @@ import * as github from "./gitHubApi";
 /**
  * Approve GitHub status on commit.
  */
-@CommandHandler("Approve GitHub status on commit", "approve commit")
+@CommandHandler("Approve GitHub status on commit", "approve commit", "approve github commit")
 @Tags("fingerprint", "approve")
 export class ApproveGitHubCommit implements HandleCommand {
 

@@ -17,7 +17,7 @@ import * as graphql from "../../../typings/types";
 import { IssueToIssueLifecycle } from "../../event/issue/IssueToIssueLifecycle";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Display an issue on GitHub", "show issue")
+@CommandHandler("Display an issue on GitHub", "show issue", "show github issue")
 @Tags("github", "issue")
 export class DisplayGitHubIssue implements HandleCommand {
 

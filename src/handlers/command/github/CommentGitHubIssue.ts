@@ -14,7 +14,7 @@ import {
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Comment on a GitHub issue", "comment issue")
+@CommandHandler("Comment on a GitHub issue", "comment issue", "comment github issue")
 @Tags("github", "issue")
 export class CommentGitHubIssue implements HandleCommand {
 

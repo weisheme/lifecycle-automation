@@ -16,7 +16,8 @@ import * as github from "./gitHubApi";
 /**
  * Merge a GitHub Pull Request.
  */
-@CommandHandler("Merge a GitHub Pull Request", ["merge pr", "merge pullrequest"])
+@CommandHandler("Merge a GitHub Pull Request", "merge pr", "merge pullrequest",
+    "merge github pr", "merge gihub pullrequest")
 @Tags("github", "pr")
 export class MergeGitHubPullRequest implements HandleCommand {
 

@@ -13,7 +13,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Add label to or remove a label from a GitHub issue", "toggle issue label")
+@CommandHandler("Add label to or remove a label from a GitHub issue", "toggle issue label", "toggle github issue label")
 @Tags("github", "issue")
 export class ToggleLabelGitHubIssue implements HandleCommand {
 

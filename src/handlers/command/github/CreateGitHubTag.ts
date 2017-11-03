@@ -15,7 +15,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Create a tag on GitHub", "create tag")
+@CommandHandler("Create a tag on GitHub", "create tag", "create github tag")
 @Tags("github", "tag")
 export class CreateGitHubTag implements HandleCommand {
 
