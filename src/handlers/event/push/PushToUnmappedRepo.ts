@@ -67,7 +67,7 @@ export function sendUnMappedRepoMessage(chatIds: graphql.PushToUnmappedRepo.Chat
     }
 
     return Promise.all(enabledChatIds.map(chatId => {
-        const id = `push_lifecycle/${repo.owner}/${repo.name}/unmapped_repo/${chatId.screenName}`;
+        const id = `user_message/unmapped_repo/${chatId.screenName}/${repo.owner}/${repo.name}`;
         const ttl = 14 * 24 * 60 * 60;
         return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId), chatId.screenName, { id, ttl });
     }))
@@ -179,7 +179,7 @@ ${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
     stopAllParams.name = `disable_for_${DirectMessagePreferences.mapRepo.id}`;
     stopAllParams.value = "true";
     stopAllParams.label = `${DirectMessagePreferences.mapRepo.id} direct messages disabled`;
-    const stopAllButton = buttonForCommand({ text: "All Repos" }, SetUserPreference, stopAllParams);
+    const stopAllButton = buttonForCommand({ text: "All Repositories" }, SetUserPreference, stopAllParams);
     const stopAttachment: slack.Attachment = {
         text: stopText,
         fallback: stopText,

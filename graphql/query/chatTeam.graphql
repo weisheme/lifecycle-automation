@@ -1,0 +1,9 @@
+query ChatTeam {
+    ChatTeam {
+        channels {
+            name
+            channelId
+        }
+    }
+}
+

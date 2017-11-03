@@ -356,6 +356,23 @@ export namespace ChatId {
     address?: string | null; 
   } 
 }
+export namespace ChatTeam {
+  export type Variables = {
+  }
+
+  export type Query = {
+    ChatTeam?: ChatTeam[] | null; 
+  } 
+
+  export type ChatTeam = {
+    channels?: Channels[] | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    channelId?: string | null; 
+  } 
+}
 export namespace Commit {
   export type Variables = {
     sha: string;

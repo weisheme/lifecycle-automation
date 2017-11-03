@@ -17,7 +17,11 @@ import {
     codeLine,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
-import { loadChatIdByChatId, loadRepoyNameAndOwner } from "../../../util/helpers";
+import * as graphql from "../../../typings/types";
+import {
+    loadChatIdByChatId,
+    loadChatTeam,
+} from "../../../util/helpers";
 import { sendUnMappedRepoMessage } from "../../event/push/PushToUnmappedRepo";
 import * as github from "./gitHubApi";
 
@@ -127,11 +131,21 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                 return ctx.messageClient.respond(msg)
                     .then(() => Promise.all([
                         loadChatIdByChatId(ctx, this.requester),
-                        loadRepoyNameAndOwner(ctx, this.repo, this.owner),
+                        loadChatTeam(ctx),
                     ]))
                     .then(results => {
-                        if (results[0] && results[1] && results[1]) {
-                            return sendUnMappedRepoMessage([results[0]], results[1], ctx);
+                        if (results[0] && results[1]) {
+                            const repo: graphql.PushToUnmappedRepo.Repo = {
+                               owner: this.owner,
+                               name: this.repo,
+                               org: {
+                                   chatTeam: {
+                                       channels: results[1].channels,
+                                   },
+                                   provider: {},
+                               },
+                            };
+                            return sendUnMappedRepoMessage([results[0]], repo, ctx);
                         } else {
                             return Success;
                         }
