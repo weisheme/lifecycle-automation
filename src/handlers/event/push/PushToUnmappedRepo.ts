@@ -45,8 +45,7 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
             }
             return sendUnMappedRepoMessage(p.commits.map(c => c.author.person.chatId), p.repo, ctx);
         }))
-        .then(() => Success)
-        .catch(err => failure(err));
+            .then(x => Success, err => failure(err));
     }
 
 }
@@ -54,9 +53,12 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
 const repoMappingConfigKey = "repo_mapping_flow";
 const disabledReposConfigKey = "disabled_repos";
 
-export function sendUnMappedRepoMessage(chatIds: graphql.PushToUnmappedRepo.ChatId[],
-                                        repo: graphql.PushToUnmappedRepo.Repo,
-                                        ctx: HandlerContext): Promise<HandlerResult> {
+export function sendUnMappedRepoMessage(
+    chatIds: graphql.PushToUnmappedRepo.ChatId[],
+    repo: graphql.PushToUnmappedRepo.Repo,
+    ctx: HandlerContext,
+): Promise<HandlerResult> {
+
     const enabledChatIds = chatIds.filter(c => {
         return !isDmDisabled(c, DirectMessagePreferences.mapRepo.id) &&
             !leaveRepoUnmapped(repo, c);
@@ -67,11 +69,32 @@ export function sendUnMappedRepoMessage(chatIds: graphql.PushToUnmappedRepo.Chat
     }
 
     return Promise.all(enabledChatIds.map(chatId => {
-        const id = `user_message/unmapped_repo/${chatId.screenName}/${repo.owner}/${repo.name}`;
-        const ttl = 14 * 24 * 60 * 60;
-        return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId), chatId.screenName, { id, ttl });
+        const id = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
+        return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId), chatId.screenName, { id });
     }))
-    .then(_ => Success);
+        .then(_ => Success);
+}
+
+/**
+ * Create consistent message ID for unmapped repo push updatable message.
+ *
+ * @param owner org/user that owns repository being linked
+ * @param repo name of repository being linked
+ * @param screenName chat screen name of person being sent message
+ * @return message ID string
+ */
+export function mapRepoMessageId(owner: string, repo: string, screenName: string): string {
+    return `user_message/unmapped_repo/${screenName}/${owner}/${repo}`;
+}
+
+/**
+ * Extract screen name of user sent message from message ID.
+ *
+ * @param msgId ID of message
+ * @return screen name
+ */
+export function extractScreenNameFromMapRepoMessageId(msgId: string): string {
+    return msgId.split("/")[2];
 }
 
 function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]): string[] {
@@ -100,7 +123,8 @@ export function repoString(repo: graphql.PushToUnmappedRepo.Repo): string {
     if (!repo) {
         return "!";
     }
-    const provider = (repo.org && repo.org.provider) ? `${repo.org.provider.providerId}:` : "";
+    const provider = (repo.org && repo.org.provider && repo.org.provider.providerId) ?
+        `${repo.org.provider.providerId}:` : "";
     return `${provider}${repo.owner}:${repo.name}`;
 }
 
@@ -121,6 +145,7 @@ export function mapRepoMessage(
     const channelName = channelNameForRepo(repo.name);
     const slug = `${repo.owner}/${repo.name}`;
     const slugText = slack.url(repoUrl(repo), slug);
+    const msgId = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
 
     let channelText: string;
     let mapCommand: any;
@@ -140,6 +165,7 @@ export function mapRepoMessage(
     mapParameters.apiUrl = (repo.org.provider) ? repo.org.provider.apiUrl : undefined;
     mapParameters.owner = repo.owner;
     mapParameters.repo = repo.name;
+    mapParameters.msgId = msgId;
 
     const disabledRepos = getDisabledRepos(chatId.preferences);
 
@@ -165,25 +191,23 @@ ${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
         mrkdwn_in: ["text"],
     };
 
-    const stopText = `Stop receiving similar suggestions for`;
-    disabledRepos.push(repoString(repo));
-    const stopParams = new SetUserPreference();
-    stopParams.key = repoMappingConfigKey;
-    stopParams.name = disabledReposConfigKey;
-    stopParams.value = JSON.stringify(disabledRepos);
-    stopParams.label = `Disable direct messages about mapping ${slug}`;
-    const stopButton = buttonForCommand({ text: slug }, SetUserPreference, stopParams);
-
+    const stopText = `This is the last time I will ask you about ${slack.bold(slug)}. You can stop receiving ` +
+        `similar suggestions for all repositories by clicking the button below.`;
+    const stopFallback = `This is the last time I will ask you about ${slug}. You can stop receiving ` +
+        `similar suggestions for all repositories by clicking the button below.`;
     const stopAllParams = new SetUserPreference();
     stopAllParams.key = "dm";
     stopAllParams.name = `disable_for_${DirectMessagePreferences.mapRepo.id}`;
     stopAllParams.value = "true";
     stopAllParams.label = `${DirectMessagePreferences.mapRepo.id} direct messages disabled`;
+    stopAllParams.id = msgId;
     const stopAllButton = buttonForCommand({ text: "All Repositories" }, SetUserPreference, stopAllParams);
+
     const stopAttachment: slack.Attachment = {
         text: stopText,
-        fallback: stopText,
-        actions: [stopButton, stopAllButton],
+        fallback: stopFallback,
+        mrkdwn_in: ["text"],
+        actions: [stopAllButton],
     };
 
     const msg: slack.SlackMessage = {

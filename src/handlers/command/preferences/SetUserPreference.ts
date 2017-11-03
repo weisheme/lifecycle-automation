@@ -26,19 +26,53 @@ export class SetUserPreference implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
-    @Parameter({ description: "preference key to set", pattern: /^.*$/ })
+    @Parameter({
+        displayName: "Preference Category",
+        description: "category of preferences under which you want to set a preference",
+        pattern: /^\S+$/,
+        validInput: "non-whitespace characters, 1 to 100 characters in length",
+        minLength: 1,
+        maxLength: 100,
+        required: true,
+    })
     public key: string;
 
-    @Parameter({ description: "preference name to set", pattern: /^.*$/ })
+    @Parameter({
+        displayName: "Preference Name",
+        description: "key of preference to set",
+        pattern: /^\S+$/,
+        validInput: "non-whitespace characters, 1 to 100 characters in length",
+        minLength: 1,
+        maxLength: 100,
+        required: true,
+    })
     public name: string;
 
-    @Parameter({ description: "value to set the preference to", pattern: /^.*$/ })
+    @Parameter({
+        displayName: "Preference Value",
+        description: "value to set the preference to, typically stringified JSON but can be just a string",
+        pattern: /^[\S\s]*$/,
+        validInput: "a string 1000 characters or less",
+        minLength: 0,
+        maxLength: 1000,
+        required: true,
+    })
     public value: string;
 
-    @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/, required: false })
+    @Parameter({
+        displayable: false,
+        description: "id of the message to use for confirmation",
+        pattern: /^\S*$/,
+        required: false,
+    })
     public id: string;
 
-    @Parameter({ description: "label to show in confirmation message", pattern: /^.*$/, required: false })
+    @Parameter({
+        displayable: false,
+        description: "label to show in confirmation message",
+        pattern: /^.*$/,
+        required: false,
+    })
     public label: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
@@ -87,7 +121,6 @@ export class SetUserPreference implements HandleCommand {
                 };
                 return ctx.messageClient.respond(msg, { id: this.id });
             })
-            .then(() => Success)
-            .catch(err => failure(err));
+            .then(() => Success, err => failure(err));
     }
 }

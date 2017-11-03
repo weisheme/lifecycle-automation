@@ -55,6 +55,9 @@ export class CreateChannel implements HandleCommand {
     })
     public repo: string;
 
+    @Parameter({ pattern: /^\S*$/, displayable: false, required: false })
+    public msgId: string;
+
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
             "graphql/mutation/createSlackChannel", { name: this.channel })
@@ -66,6 +69,7 @@ export class CreateChannel implements HandleCommand {
                 associateRepo.userId = this.userId;
                 associateRepo.githubToken = this.githubToken;
                 associateRepo.repo = this.repo;
+                associateRepo.msgId = this.msgId;
                 return associateRepo.handle(ctx);
             })
             .catch(e => failure(e));
