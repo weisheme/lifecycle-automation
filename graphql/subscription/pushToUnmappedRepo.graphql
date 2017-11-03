@@ -1,4 +1,4 @@
-subscription pushToUnmappedRepo
+subscription PushToUnmappedRepo
 {
   Push {
     repo {
