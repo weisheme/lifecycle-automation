@@ -12,13 +12,14 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
-import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
+import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import {
     AddBotToSlackChannel,
     InviteUserToSlackChannel,
     LinkSlackChannelToRepo,
 } from "../../../typings/types";
+import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
 import * as github from "../github/gitHubApi";
 
 /**
@@ -53,6 +54,9 @@ export class AssociateRepo implements HandleCommand {
     })
     public repo: string;
 
+    @Parameter({ pattern: /^\S*$/, displayable: false, required: false })
+    public msgId: string;
+
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return this.checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
             .then(repoExists => {
@@ -71,10 +75,18 @@ export class AssociateRepo implements HandleCommand {
                     .then(x => ctx.graphClient.executeMutationFromFile<InviteUserToSlackChannel.Mutation,
                         InviteUserToSlackChannel.Variables>(
                         "graphql/mutation/inviteUserToSlackChannel",
-                        { channelId: this.channelId, userId: this.userId }));
+                        { channelId: this.channelId, userId: this.userId }))
+                    .then(x => {
+                        if (this.msgId) {
+                            const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
+                            const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
+                                `${slack.channel(this.channelId)} and invited you to the channel.`;
+                            ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
+                        }
+                        return Success;
+                    });
             })
-            .then(x => Success)
-            .catch(e => failure(e));
+            .then(x => Success, e => failure(e));
     }
 
     private checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
@@ -83,7 +95,7 @@ export class AssociateRepo implements HandleCommand {
             .catch(e => false);
     }
 
-    private noRepoMessage(repo: string, owner: string): SlackMessage {
+    private noRepoMessage(repo: string, owner: string): slack.SlackMessage {
         return { text: `The repository ${owner}/${repo} either does not exist or you do not have access to it.` };
 
     }

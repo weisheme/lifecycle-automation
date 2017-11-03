@@ -2,8 +2,10 @@ import "mocha";
 import * as assert from "power-assert";
 
 import {
+    extractScreenNameFromMapRepoMessageId,
     leaveRepoUnmapped,
     mapRepoMessage,
+    mapRepoMessageId,
     repoString,
 } from "../../../../src/handlers/event/push/PushToUnmappedRepo";
 
@@ -77,6 +79,24 @@ describe("PushToUnmappedRepo", () => {
 
     });
 
+    describe("mapRepoMessageId", () => {
+        const owner = "alicia-keys";
+        const repo = "girl-on-fire";
+        const screenName = "augello";
+
+        it("should provide a message ID with repo and screen name", () => {
+            const id = mapRepoMessageId(owner, repo, screenName);
+            assert(id.includes(owner));
+            assert(id.includes(repo));
+            assert(id.includes(screenName));
+        });
+
+        it("should return a message ID from which we can get a screen name", () => {
+            assert(extractScreenNameFromMapRepoMessageId(mapRepoMessageId(owner, repo, screenName)) === screenName);
+        });
+
+    });
+
     describe("mapRepoMessage", () => {
 
         it("should send a message offering to create channel and link a repo to it", () => {
@@ -123,20 +143,13 @@ describe("PushToUnmappedRepo", () => {
             const hintFallBack = `or '/invite @atomist' me to a relevant channel and type
 '@atomist repo owner=grievous-angel repo=sin-city'`;
             assert(hintMsg.fallback === hintFallBack);
-            const stopText = "Stop receiving similar suggestions for";
-            assert(stopMsg.text === stopText);
-            assert(stopMsg.fallback === stopText);
-            assert(stopMsg.actions.length === 2);
-            assert(stopMsg.actions[0].text === "grievous-angel/sin-city");
+            const stopText = "stop receiving similar suggestions for all repositories";
+            assert(stopMsg.text.includes(stopText));
+            assert(stopMsg.fallback.includes(stopText));
+            assert(stopMsg.actions.length === 1);
+            assert(stopMsg.actions[0].text === "All Repositories");
             assert(stopMsg.actions[0].type === "button");
-            const repoStopCmd = (stopMsg.actions[0] as any).command;
-            assert(repoStopCmd.name === "SetUserPreference");
-            assert(repoStopCmd.parameters.key === "repo_mapping_flow");
-            assert(repoStopCmd.parameters.name === "disabled_repos");
-            assert(repoStopCmd.parameters.value === `["grievous-angel:sin-city"]`);
-            assert(stopMsg.actions[1].text === "All Repositories");
-            assert(stopMsg.actions[1].type === "button");
-            const allStopCmd = (stopMsg.actions[1] as any).command;
+            const allStopCmd = (stopMsg.actions[0] as any).command;
             assert(allStopCmd.name === "SetUserPreference");
             assert(allStopCmd.parameters.key === "dm");
             assert(allStopCmd.parameters.name === "disable_for_mapRepo");
@@ -202,21 +215,13 @@ describe("PushToUnmappedRepo", () => {
             const hintFallBack = `or '/invite @atomist' me to a relevant channel and type
 '@atomist repo owner=grievous-angel repo=sin-city'`;
             assert(hintMsg.fallback === hintFallBack);
-            const stopText = "Stop receiving similar suggestions for";
-            assert(stopMsg.text === stopText);
-            assert(stopMsg.fallback === stopText);
-            assert(stopMsg.actions.length === 2);
-            assert(stopMsg.actions[0].text === "grievous-angel/sin-city");
+            const stopText = "stop receiving similar suggestions for all repositories";
+            assert(stopMsg.text.includes(stopText));
+            assert(stopMsg.fallback.includes(stopText));
+            assert(stopMsg.actions.length === 1);
+            assert(stopMsg.actions[0].text === "All Repositories");
             assert(stopMsg.actions[0].type === "button");
-            const repoStopCmd = (stopMsg.actions[0] as any).command;
-            assert(repoStopCmd.name === "SetUserPreference");
-            assert(repoStopCmd.parameters.key === "repo_mapping_flow");
-            assert(repoStopCmd.parameters.name === "disabled_repos");
-            // tslint:disable-next-line:max-line-length
-            assert(repoStopCmd.parameters.value === `["sierra_records:grievous-angel:a-song-for-you","sierra_records:grievous-angel:in-my-hour-of-darkness","sierra_records:grievous-angel:return-of-the-grievous-angel","sierra_records:grievous-angel:sin-city"]`);
-            assert(stopMsg.actions[1].text === "All Repositories");
-            assert(stopMsg.actions[1].type === "button");
-            const allStopCmd = (stopMsg.actions[1] as any).command;
+            const allStopCmd = (stopMsg.actions[0] as any).command;
             assert(allStopCmd.name === "SetUserPreference");
             assert(allStopCmd.parameters.key === "dm");
             assert(allStopCmd.parameters.name === "disable_for_mapRepo");
