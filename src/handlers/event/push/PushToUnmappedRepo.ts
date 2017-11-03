@@ -43,32 +43,36 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 // not on initial push
                 return Success;
             }
-
-            const commitsWithChatIds = p.commits.filter(c => {
-                return c.author && c.author.person && c.author.person.chatId &&
-                    !isDmDisabled(c.author.person.chatId, DirectMessagePreferences.mapRepo.id) &&
-                    !leaveRepoUnmapped(p.repo, c.author.person.chatId);
-            });
-            if (commitsWithChatIds.length < 1) {
-                return Success;
-            }
-            const chatIds = commitsWithChatIds.map(c => c.author.person.chatId);
-
-            return Promise.all(chatIds.map(chatId => {
-                const id = `push_lifecycle/${p.repo.owner}/${p.repo.name}/unmapped_repo/${chatId.screenName}`;
-                const ttl = 14 * 24 * 60 * 60;
-                return ctx.messageClient.addressUsers(mapRepoMessage(p.repo, chatId), chatId.screenName, { id, ttl });
-            }))
-                .then(_ => Success);
+            return sendUnMappedRepoMessage(p.commits.map(c => c.author.person.chatId), p.repo, ctx);
         }))
-            .then(() => Success)
-            .catch(err => failure(err));
+        .then(() => Success)
+        .catch(err => failure(err));
     }
 
 }
 
 const repoMappingConfigKey = "repo_mapping_flow";
 const disabledReposConfigKey = "disabled_repos";
+
+export function sendUnMappedRepoMessage(chatIds: graphql.PushToUnmappedRepo.ChatId[],
+                                        repo: graphql.PushToUnmappedRepo.Repo,
+                                        ctx: HandlerContext): Promise<HandlerResult> {
+    const enabledChatIds = chatIds.filter(c => {
+        return !isDmDisabled(c, DirectMessagePreferences.mapRepo.id) &&
+            !leaveRepoUnmapped(repo, c);
+    });
+
+    if (enabledChatIds.length < 1) {
+        return Promise.resolve(Success);
+    }
+
+    return Promise.all(enabledChatIds.map(chatId => {
+        const id = `push_lifecycle/${repo.owner}/${repo.name}/unmapped_repo/${chatId.screenName}`;
+        const ttl = 14 * 24 * 60 * 60;
+        return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId), chatId.screenName, { id, ttl });
+    }))
+    .then(_ => Success);
+}
 
 function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]): string[] {
     if (!preferences) {

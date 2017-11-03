@@ -11,7 +11,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
-import { loadGitHubId } from "../../../util/helpers";
+import { loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 /**
@@ -47,7 +47,7 @@ export class ApproveGitHubCommit implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
-        return loadGitHubId(ctx, this.requester)
+        return loadGitHubIdByChatId(ctx, this.requester)
             .then(chatId => {
                 const api = github.api(this.githubToken, this.apiUrl);
                 return Promise.all(this.shas.split(",").map(sha => {

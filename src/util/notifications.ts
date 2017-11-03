@@ -17,7 +17,7 @@ import {
     issueUrl,
     linkGitHubUsers,
     linkIssues,
-    loadChatId,
+    loadChatIdByGitHubId,
     prUrl,
     repoAndChannelFooter,
     repoSlug,
@@ -36,7 +36,7 @@ export function issueNotification(
         .then(b => {
             if (matches != null) {
                 return Promise.all(matches.map(m => {
-                    return loadChatId(ctx, m)
+                    return loadChatIdByGitHubId(ctx, m)
                         .then(notifier => {
                             if (m !== login
                                 && notifier
@@ -85,7 +85,7 @@ export function prNotification(
         .then(b => {
             if (matches != null) {
                 return Promise.all(matches.map(m => {
-                    return loadChatId(ctx, m)
+                    return loadChatIdByGitHubId(ctx, m)
                         .then(notifier => {
                             if (m !== login
                                 && notifier

@@ -263,10 +263,10 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
     return new RegExp(`(^|\\W)(?:@|＠)(${userRegExp})(?![-\\w]|\\.\\w)`, "g");
 }
 
-export function loadChatId(ctx: HandlerContext, id: string): Promise<ChatId> {
+export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubId: string): Promise<ChatId> {
     return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
         "graphql/query/gitHubId",
-        { teamId: ctx.teamId, gitHubId: id })
+        { teamId: ctx.teamId, gitHubId })
         .then(result => {
             if (result) {
                 if (result.GitHubId && result.GitHubId.length > 0) {
@@ -286,10 +286,10 @@ export function loadChatId(ctx: HandlerContext, id: string): Promise<ChatId> {
         });
 }
 
-export function loadGitHubId(ctx: HandlerContext, id: string): Promise<string> {
+export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promise<string> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
         "graphql/query/chatId",
-        { teamId: ctx.teamId, chatId: id })
+        { teamId: ctx.teamId, chatId })
         .then(result => {
             if (result) {
                 if (result.ChatTeam && result.ChatTeam.length > 0) {
@@ -302,6 +302,40 @@ export function loadGitHubId(ctx: HandlerContext, id: string): Promise<string> {
                 }
             }
             return null;
+        })
+        .catch(err => {
+            return null;
+        });
+}
+
+export function loadChatIdByChatId(ctx: HandlerContext, chatId: string): Promise<graphql.ChatId.ChatId> {
+    return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
+        "graphql/query/chatId",
+        { teamId: ctx.teamId, chatId })
+        .then(result => {
+            if (result) {
+                if (result.ChatTeam && result.ChatTeam.length > 0) {
+                    if (result.ChatTeam[0].members && result.ChatTeam[0].members
+                        && result.ChatTeam[0].members.length > 0
+                        && result.ChatTeam[0].members[0].person
+                        && result.ChatTeam[0].members[0].person.chatId) {
+                        return result.ChatTeam[0].members[0].person.chatId;
+                    }
+                }
+            }
+            return null;
+        })
+        .catch(err => {
+            return null;
+        });
+}
+
+export function loadRepoyNameAndOwner(ctx: HandlerContext, name: string, owner: string): Promise<graphql.Repo.Repo> {
+    return ctx.graphClient.executeQueryFromFile<graphql.Repo.Query, graphql.Repo.Variables>(
+        "graphql/query/repo",
+        { name, owner })
+        .then(result => {
+            return _.get(result, "Repo[0]");
         })
         .catch(err => {
             return null;
@@ -386,7 +420,7 @@ export function linkGitHubUsers(body: string = "", context: HandlerContext): Pro
     }
     const mentions = getGitHubUsers(body);
     return Promise.all(mentions.map(m => {
-        return loadChatId(context, m)
+        return loadChatIdByGitHubId(context, m)
             .then(notifier => {
                 if (notifier) {
                     const mentionRegExp = gitHubUserMentionRegExp(m);

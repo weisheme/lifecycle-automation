@@ -11,7 +11,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
-import { getChatIds, loadGitHubId } from "../../../util/helpers";
+import { getChatIds, loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 /**
@@ -61,7 +61,7 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
             this.reviewer = chatIds[0];
         }
 
-        return loadGitHubId(ctx, this.reviewer)
+        return loadGitHubIdByChatId(ctx, this.reviewer)
             .then(chatId => {
                 return github.api(this.githubToken, this.apiUrl).pullRequests.createReviewRequest({
                     owner: this.owner,

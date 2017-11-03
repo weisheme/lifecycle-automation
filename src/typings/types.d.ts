@@ -292,7 +292,7 @@ export namespace Channels {
     name?: string | null; 
   } 
 }
-export namespace Repo {
+export namespace ChatChannel {
   export type Variables = {
     channelName: string;
     repoOwner: string;
@@ -711,6 +711,54 @@ export namespace Pr {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+}
+export namespace Repo {
+  export type Variables = {
+    name: string;
+    owner: string;
+  }
+
+  export type Query = {
+    Repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
+  } 
+
+  export type Provider = {
+    providerId?: string | null; 
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    channels?: _Channels[] | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type _Channels = {
+    channelId?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace ApplicationToPushLifecycle {

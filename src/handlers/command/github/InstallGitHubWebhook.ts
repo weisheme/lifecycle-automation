@@ -11,11 +11,14 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
+import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     Attachment,
     codeLine,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
+import { loadChatIdByChatId, loadRepoyNameAndOwner } from "../../../util/helpers";
+import { sendUnMappedRepoMessage } from "../../event/push/PushToUnmappedRepo";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Install webhook for a whole organization", "install org-webhook", "install github org-webhook")
@@ -49,7 +52,17 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
 
         return (github.api(this.githubToken, this.apiUrl).orgs as any).createHook(payload)
             .then(() => {
-                return ctx.messageClient.respond(`Organization webhook installed for ${codeLine(this.url)}`)
+
+                const msg: SlackMessage = {
+                    attachments: [{
+                        author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
+                        author_name: `Successfully installed webhook for ${codeLine(this.owner)}`,
+                        fallback: `Successfully installed  webhook for ${codeLine(this.owner)}`,
+                        color: "#45B254",
+                    }],
+                };
+
+                return ctx.messageClient.respond(msg)
                     .then(() => Success)
                     .catch(err => failure(err));
             })
@@ -77,6 +90,9 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
 
+    @MappedParameter(MappedParameters.SlackUser)
+    public requester: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -96,8 +112,30 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
 
         return (github.api(this.githubToken, this.apiUrl).repos as any).createHook(payload)
             .then(() => {
-                return ctx.messageClient.respond(`Repository webhook installed for ${codeLine(this.url)}`)
-                    .then(() => Success)
+                const text = `Successfully installed repository webhook`;
+                const msg: SlackMessage = {
+                    attachments: [{
+                        text: `${codeLine(`${this.owner}/${this.repo}`)}`,
+                        author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
+                        author_name: text,
+                        fallback: text,
+                        mrkdwn_in: ["text"],
+                        color: "#45B254",
+                    }],
+                };
+
+                return ctx.messageClient.respond(msg)
+                    .then(() => Promise.all([
+                        loadChatIdByChatId(ctx, this.requester),
+                        loadRepoyNameAndOwner(ctx, this.repo, this.owner),
+                    ]))
+                    .then(results => {
+                        if (results[0] && results[1] && results[1]) {
+                            return sendUnMappedRepoMessage([results[0]], results[1], ctx);
+                        } else {
+                            return Success;
+                        }
+                    })
                     .catch(err => failure(err));
             })
             .catch(result => {

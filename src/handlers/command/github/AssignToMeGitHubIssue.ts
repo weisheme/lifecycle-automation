@@ -12,7 +12,7 @@ import {
     Tags,
 } from "@atomist/automation-client/Handlers";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { loadGitHubId } from "../../../util/helpers";
+import { loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Assign a GitHub issue to the invoking user", "assign issue to me", "assign github issue to me")
@@ -46,7 +46,7 @@ export class AssignToMeGitHubIssue implements HandleCommand {
             number: this.issue,
         })
             .then(issue => {
-                return loadGitHubId(ctx, this.requester)
+                return loadGitHubIdByChatId(ctx, this.requester)
                     .then(gitHubId => {
                         if (gitHubId) {
                             logger.debug(`Resolved Slack user '${this.requester}' to GitHub user '${gitHubId}'`);
