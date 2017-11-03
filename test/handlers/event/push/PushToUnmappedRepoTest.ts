@@ -134,7 +134,7 @@ describe("PushToUnmappedRepo", () => {
             assert(repoStopCmd.parameters.key === "repo_mapping_flow");
             assert(repoStopCmd.parameters.name === "disabled_repos");
             assert(repoStopCmd.parameters.value === `["grievous-angel:sin-city"]`);
-            assert(stopMsg.actions[1].text === "All Repos");
+            assert(stopMsg.actions[1].text === "All Repositories");
             assert(stopMsg.actions[1].type === "button");
             const allStopCmd = (stopMsg.actions[1] as any).command;
             assert(allStopCmd.name === "SetUserPreference");
@@ -214,7 +214,7 @@ describe("PushToUnmappedRepo", () => {
             assert(repoStopCmd.parameters.name === "disabled_repos");
             // tslint:disable-next-line:max-line-length
             assert(repoStopCmd.parameters.value === `["sierra_records:grievous-angel:a-song-for-you","sierra_records:grievous-angel:in-my-hour-of-darkness","sierra_records:grievous-angel:return-of-the-grievous-angel","sierra_records:grievous-angel:sin-city"]`);
-            assert(stopMsg.actions[1].text === "All Repos");
+            assert(stopMsg.actions[1].text === "All Repositories");
             assert(stopMsg.actions[1].type === "button");
             const allStopCmd = (stopMsg.actions[1] as any).command;
             assert(allStopCmd.name === "SetUserPreference");
