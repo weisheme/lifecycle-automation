@@ -30,7 +30,6 @@
     "base64-js": "^1.2.1",
     "cf-nodejs-client": "^0.13.0",
     "cfenv": "^1.0.4",
-    "current-week-number": "^1.0.7",
     "deepmerge": "^2.0.0",
     "format-date": "^1.0.0",
     "github": "^12.0.1",

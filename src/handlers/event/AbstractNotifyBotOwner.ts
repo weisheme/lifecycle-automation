@@ -59,7 +59,7 @@ function handleResult(mappedRepo: boolean, ctx: HandlerContext): Promise<Handler
             .then(owners => {
                 console.log(`Notifying '${owners.join(", ")}' about GitHub activity`);
                 return ctx.messageClient.addressUsers(Message, owners,
-                    { id: `bot_owner/github/notification/${require("current-week-number")()}` });
+                    { id: `bot_owner/github/notification`, ttl: 1000 * 60 * 60 * 24 * 7});
             })
             .catch(err => failure(err));
     } else {
