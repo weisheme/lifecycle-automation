@@ -11,7 +11,7 @@ import * as graphql from "../../typings/types";
 
 const PageSize = 50;
 const Message = "GitHub events are flowing for your organizations but they're not visible in any Slack channels yet. " +
-    "To enable this, go to a channel and invite me by typing `@atomist`";
+    "To enable this, go to a channel and invite me by typing `/invite @atomist`";
 const PreferenceKey = "disable_bot_owner_on_github_activity_notification";
 
 export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
