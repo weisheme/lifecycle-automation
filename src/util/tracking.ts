@@ -22,8 +22,8 @@ export function wrapLinks(message: SlackMessage, event: string):
     clonedMessage.text = wrapLinksInText(clonedMessage.text, `${event}/text`, hashToUrl);
     if (clonedMessage.attachments) {
         clonedMessage.attachments.forEach(a => {
-            a.author_link = trackableLink(a.author_link, `${event}/attachment/author_link`, hashToUrl);
-            a.title_link = trackableLink(a.title_link, `${event}/attachment/title_link`, hashToUrl);
+            a.author_link = trackableAndShortenedLink(a.author_link, `${event}/attachment/author_link`, hashToUrl);
+            a.title_link = trackableAndShortenedLink(a.title_link, `${event}/attachment/title_link`, hashToUrl);
 
             a.footer = wrapLinksInText(a.footer, `${event}/attachment/footer`, hashToUrl);
             a.title = wrapLinksInText(a.title, `${event}/attachment/title`, hashToUrl);
@@ -67,17 +67,19 @@ export function encodePayload(url: string, event: string): string {
  * @param messageId
  * @returns {string}
  */
-export function trackableLink(url: string, event: string, hashToUrl: Array<[string, string]>): string {
-    if (!url || !secret("mixpanel.token")) {
+export function trackableAndShortenedLink(url: string, event: string, hashToUrl: Array<[string, string]>): string {
+    if (!url) {
         return url;
     }
 
-    const data = encodePayload(url, event);
-    const encodedUrl = encodeURIComponent(url);
-    const mixpanelUrl = `https://api.mixpanel.com/track/?data=${data}&ip=1&redirect=${encodedUrl}`;
+    if (secret("mixpanel.token")) {
+        const data = encodePayload(url, event);
+        const encodedUrl = encodeURIComponent(url);
+        url = `https://api.mixpanel.com/track/?data=${data}&ip=1&redirect=${encodedUrl}`;
+    }
 
-    const [hash, shortUrl] = shortenUrl();
-    hashToUrl.push([hash, mixpanelUrl]);
+    const [hash, shortUrl] = generateHash();
+    hashToUrl.push([hash, url]);
 
     return shortUrl;
 }
@@ -91,12 +93,12 @@ export function wrapLinksInText(text: string, event: string, hashToUrl: Array<[s
     const regex = /<(https?:\/\/\S+?)(\|.+?)?>/g;
     return text.replace(regex, (m, u, n) => {
         const name = (n) ? n : `|${u}`;
-        const tracker = trackableLink(u, event, hashToUrl);
+        const tracker = trackableAndShortenedLink(u, event, hashToUrl);
         return `<${tracker}${name}>`;
     });
 }
 
-function shortenUrl(): [string, string] {
+function generateHash(): [string, string] {
     const hash = shortId.generate();
     return [hash, `https://r.atomist.com/${hash}`];
 }

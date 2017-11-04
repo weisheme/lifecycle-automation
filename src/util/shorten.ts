@@ -9,7 +9,7 @@ import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import axios from "axios";
 import { wrapLinks } from "./tracking";
 
-export function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Promise<SlackMessage> {
+function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Promise<SlackMessage> {
     const nsp = namespace.get();
 
     if (!nsp) {
