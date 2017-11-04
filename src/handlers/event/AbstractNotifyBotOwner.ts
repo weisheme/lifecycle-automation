@@ -22,7 +22,6 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
         if (preferences) {
             const preference = preferences.find(p => p.name === PreferenceKey);
             if (preference && preference.value === "true") {
-                console.log(`Team preferences '${PreferenceKey}' indicate team has disabled notifications`);
                 return Promise.resolve(Success);
             }
         }
