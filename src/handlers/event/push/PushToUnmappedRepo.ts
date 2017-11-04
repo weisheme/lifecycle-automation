@@ -45,7 +45,7 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
             }
             return sendUnMappedRepoMessage(p.commits.map(c => c.author.person.chatId), p.repo, ctx);
         }))
-            .then(x => Success, err => failure(err));
+            .then(() => Success, failure);
     }
 
 }
@@ -72,7 +72,7 @@ export function sendUnMappedRepoMessage(
         const id = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
         return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId), chatId.screenName, { id });
     }))
-        .then(_ => Success);
+        .then(() => Success);
 }
 
 /**
@@ -166,8 +166,6 @@ export function mapRepoMessage(
     mapParameters.owner = repo.owner;
     mapParameters.repo = repo.name;
     mapParameters.msgId = msgId;
-
-    const disabledRepos = getDisabledRepos(chatId.preferences);
 
     const mapFallback = `Want to put me to work on ${slug} in #${channelName}?`;
     const mapText = `Want to put me to work on ${slugText} in ${channelText}?`;
