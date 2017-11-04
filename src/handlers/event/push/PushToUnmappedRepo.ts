@@ -43,7 +43,9 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 // not on initial push
                 return Success;
             }
-            return sendUnMappedRepoMessage(p.commits.map(c => c.author.person.chatId), p.repo, ctx);
+            return sendUnMappedRepoMessage(
+                p.commits.filter(c => c.author && c.author.person)
+                    .map(c => c.author.person.chatId), p.repo, ctx);
         }))
             .then(() => Success, failure);
     }
