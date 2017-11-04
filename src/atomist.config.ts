@@ -84,6 +84,7 @@ import {
     MemoryUsageCommand,
 } from "./util/men";
 import { appEnv, secret } from "./util/secrets";
+import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
@@ -201,7 +202,10 @@ export const configuration = {
         // () => new PullRequestToReviewLifecycle(),
         // () => new ReviewToReviewLifecycle(),
     ],
-    listeners: logzioOptions.token ? [new LogzioAutomationEventListener(logzioOptions)] : [],
+    listeners: logzioOptions.token ? [
+        new ShortenUrlAutomationEventListener(),
+        new LogzioAutomationEventListener(logzioOptions),
+    ] : [new ShortenUrlAutomationEventListener()],
     token,
     http: {
         enabled: true,

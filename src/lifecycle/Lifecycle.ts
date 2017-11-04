@@ -8,9 +8,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import { HandlerContext } from "@atomist/automation-client/Handlers";
 import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
-import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     MessageClient,
     MessageOptions,
@@ -19,10 +17,8 @@ import {
     Action,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
-import axios from "axios";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
-import { wrapLinks } from "../util/tracking";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -141,10 +137,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return {} as LifecycleConfiguration;
     }
 
-    private createMessage(slackMessage: SlackMessage, lifecycle: Lifecycle,
+    private createMessage(message: SlackMessage, lifecycle: Lifecycle,
                           messageClient: MessageClient): Promise<any> {
-        slackMessage.unfurl_links = false;
-        slackMessage.unfurl_media = false;
+        message.unfurl_links = false;
+        message.unfurl_media = false;
 
         let ts = this.normalizeTimestamp(lifecycle.timestamp);
         if (ts == null) {
@@ -164,11 +160,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
-        return this.shortenUrls(slackMessage, lifecycle)
-            .then(message => {
-                return this.sendMessage(message, options, lifecycle, messageClient);
-            })
-            .catch(err => failure(err));
+        return this.sendMessage(message, options, lifecycle, messageClient);
     }
 
     private sendMessage(slackMessage: SlackMessage, options: MessageOptions, lifecycle: Lifecycle,
@@ -201,35 +193,6 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 .catch(err => failure(err)));
         }
         return Promise.all(msgs);
-    }
-
-    private shortenUrls(slackMessage: SlackMessage, lifecycle: Lifecycle): Promise<SlackMessage> {
-        const nsp = namespace.get();
-        if (!nsp) {
-            return Promise.resolve(slackMessage);
-        }
-
-        logger.debug("Starting url shortening");
-        const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, lifecycle.name);
-
-        return axios.put("https://r.atomist.com/v2/shorten", {
-                teamId: nsp.teamId,
-                teamName: nsp.teamName,
-                group: "atomist",
-                artifact: nsp.name,
-                version: nsp.version,
-                name: nsp.operation,
-                messageId: lifecycle.id ? lifecycle.id : guid(),
-                redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
-            }, { timeout: 2000 })
-            .then(() => {
-                logger.debug("Finished url shortening");
-                return wrappedSlackMessage;
-            })
-            .catch(err => {
-                console.warn(`Error shortening urls: '${err.message}'`);
-                return slackMessage;
-            });
     }
 
     private validate(lifecycle: Lifecycle): boolean {
