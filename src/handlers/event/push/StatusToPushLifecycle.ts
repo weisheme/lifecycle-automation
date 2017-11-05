@@ -18,10 +18,8 @@ import { PushLifecycleHandler } from "./PushLifecycle";
 export class StatusToPushLifecycle extends PushLifecycleHandler<graphql.StatusToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.StatusToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], string] {
-
-        const pushes = event.data.Status[0].commit.pushes;
-        return [pushes, new Date().getTime().toString()];
+        graphql.PushToPushLifecycle.Push[] {
+        return event.data.Status[0].commit.pushes;
     }
 
     protected extractPreferences(event: EventFired<graphql.StatusToPushLifecycle.Subscription>): Preferences[] {

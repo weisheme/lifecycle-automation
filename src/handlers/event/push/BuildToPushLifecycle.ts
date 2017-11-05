@@ -18,9 +18,9 @@ import { PushLifecycleHandler } from "./PushLifecycle";
 export class BuildToPushLifecycle extends PushLifecycleHandler<graphql.BuildToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.BuildToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], string] {
+        graphql.PushToPushLifecycle.Push[] {
 
-        return [[event.data.Build[0].push], event.data.Build[0].timestamp];
+        return [event.data.Build[0].push];
     }
 
     protected extractPreferences(event: EventFired<graphql.BuildToPushLifecycle.Subscription>): Preferences[] {

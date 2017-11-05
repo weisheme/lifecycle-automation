@@ -18,9 +18,8 @@ import { PushLifecycleHandler } from "./PushLifecycle";
 export class PushToPushLifecycle extends PushLifecycleHandler<graphql.PushToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.PushToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], string] {
-
-        return [event.data.Push, event.data.Push[0].timestamp];
+        graphql.PushToPushLifecycle.Push[] {
+        return event.data.Push;
     }
 
     protected extractPreferences(event: EventFired<graphql.PushToPushLifecycle.Subscription>): Preferences[] {

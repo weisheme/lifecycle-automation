@@ -25,7 +25,7 @@ import { StatusesNodeRenderer } from "./rendering/StatusesNodeRenderer";
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
-        const [pushes, timestamp] = this.extractNodes(event);
+        const pushes = this.extractNodes(event);
         const preferences = this.extractPreferences(event);
 
         return pushes.filter(p => p).map(push => {
@@ -84,7 +84,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new ApplicationActionContributor(),
                 ],
                 id: `push_lifecycle/${push.repo.owner}/${push.repo.name}/${push.branch}/${push.after.sha}`,
-                timestamp,
+                timestamp: Date.now().toString(),
                 // #47 remove issue rewrite
                 // ttl: (1000 * 60 * 60 * 8).toString(),
                 channels,
@@ -103,7 +103,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
         });
     }
 
-    protected abstract extractNodes(event: EventFired<R>): [PushToPushLifecycle.Push[], string];
+    protected abstract extractNodes(event: EventFired<R>): PushToPushLifecycle.Push[];
 
     private extractDomains(push: graphql.PushToPushLifecycle.Push): Domain[] {
         const domains = {};
