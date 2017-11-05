@@ -81,7 +81,7 @@ export function userUrl(repo: any, login: string): string {
 }
 
 export function avatarUrl(repo: any, login: string): string {
-    if (repo.org != null && repo.org.provider != null) {
+    if (repo.org != null && repo.org.provider != null && repo.org.provider.url != null) {
         return `${htmlUrl(repo)}/avatars/${login}`;
     } else {
         return `https://avatars.githubusercontent.com/${login}`;
