@@ -18,8 +18,8 @@ import {
 } from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
-import { LinkRepo } from "../../command/slack/LinkRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
+import { LinkRepo } from "../../command/slack/LinkRepo";
 
 /**
  * Suggest mapping a repo to committer on unmapped repo.

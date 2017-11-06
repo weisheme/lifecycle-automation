@@ -34,8 +34,9 @@ import {
     ConfigureDirectMessageUserPreferences,
 } from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
-import { LinkRepo } from "./handlers/command/slack/LinkRepo";
 import { CreateChannel } from "./handlers/command/slack/CreateChannel";
+import { LinkRepo } from "./handlers/command/slack/LinkRepo";
+import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
@@ -86,7 +87,6 @@ import {
 } from "./util/men";
 import { appEnv, secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
-import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
