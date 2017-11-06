@@ -1,8 +1,22 @@
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
-import { Action, Attachment, bold, SlackMessage, url } from "@atomist/slack-messages/SlackMessages";
-import { AbstractIdentifiableContribution, NodeRenderer, RendererContext } from "../../../../lifecycle/Lifecycle";
 import {
-    avatarUrl, issueUrl, linkGitHubUsers, linkIssues, repoAndlabelsAndAssigneesFooter,
+    Action,
+    Attachment,
+    bold,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages/SlackMessages";
+import {
+    AbstractIdentifiableContribution,
+    NodeRenderer,
+    RendererContext,
+} from "../../../../lifecycle/Lifecycle";
+import {
+    avatarUrl,
+    issueUrl,
+    linkGitHubUsers,
+    linkIssues,
+    repoAndlabelsAndAssigneesFooter,
     userUrl,
 } from "../../../../util/helpers";
 
