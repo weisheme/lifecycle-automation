@@ -207,7 +207,7 @@ describe("PushToUnmappedRepo", () => {
             assert(linkMsg.actions[0].text === "Go ahead");
             assert(linkMsg.actions[0].type === "button");
             const command = (linkMsg.actions[0] as any).command;
-            assert(command.name === "AssociateRepo");
+            assert(command.name === "LinkRepo");
             assert(command.parameters.apiUrl === "https://ghe.gram-parsons.com/v3/");
             assert(command.parameters.channelId === "C51NC1TY");
             assert(command.parameters.owner === "grievous-angel");

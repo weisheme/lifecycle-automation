@@ -27,7 +27,7 @@ import * as github from "../github/gitHubApi";
  */
 @CommandHandler("Link a repository and channel", "repo")
 @Tags("slack", "repo")
-export class AssociateRepo implements HandleCommand {
+export class LinkRepo implements HandleCommand {
 
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;

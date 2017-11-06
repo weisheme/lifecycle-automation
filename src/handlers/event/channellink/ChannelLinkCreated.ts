@@ -17,7 +17,7 @@ import * as graphql from "../../../typings/types";
 import { repoUrl } from "../../../util/helpers";
 
 @EventHandler("Display an unlink message when a channel is linked",
-    GraqhQL.subscriptionFromFile("./channelLinkCreated", __dirname))
+    GraqhQL.subscriptionFromFile("graphql/subscription/channelLinkCreated"))
 export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreated.Subscription> {
 
     public handle(event: EventFired<graphql.ChannelLinkCreated.Subscription>,

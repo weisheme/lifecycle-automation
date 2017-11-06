@@ -12,13 +12,13 @@ import { buttonForCommand } from "@atomist/automation-client/spi/message/Message
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
-import { AssociateRepo } from "../../command/slack/AssociateRepo";
+import { LinkRepo } from "../../command/slack/LinkRepo";
 
 // list of channels we look for to create buttons
 const Channels = ["dev", "engineering", "development", "devops"];
 
 @EventHandler("Displays a welcome message when a new org webhook is installed",
-    GraqhQL.subscriptionFromFile("./githubOrgWebhook", __dirname))
+    GraqhQL.subscriptionFromFile("graphql/subscription/githubOrgWebhook"))
 export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCreated.Subscription> {
 
     public handle(event: EventFired<graphql.GitHubWebhookCreated.Subscription>,
@@ -68,7 +68,7 @@ Invite me to any channel where your team works with \`/invite @atomist\`.`;
 }
 
 function createAssociateRepoButton(channel: graphql.GitHubWebhookCreated.Channels) {
-    const handler = new AssociateRepo();
+    const handler = new LinkRepo();
     handler.repo = channel.name;
     handler.channelId = channel.channelId;
     return buttonForCommand({text: `#${channel.name}`}, handler);

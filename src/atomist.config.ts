@@ -34,7 +34,7 @@ import {
     ConfigureDirectMessageUserPreferences,
 } from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
-import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
+import { LinkRepo } from "./handlers/command/slack/LinkRepo";
 import { CreateChannel } from "./handlers/command/slack/CreateChannel";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
@@ -86,6 +86,7 @@ import {
 } from "./util/men";
 import { appEnv, secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
+import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
@@ -142,8 +143,9 @@ export const configuration = {
         () => new SetUserPreference(),
 
         // slack
-        () => new AssociateRepo(),
+        () => new LinkRepo(),
         () => new CreateChannel(),
+        // () => new ListRepoLinks(),
 
         // travis
         () => new RestartTravisBuild(),

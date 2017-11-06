@@ -18,7 +18,7 @@ import {
 } from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
-import { AssociateRepo } from "../../command/slack/AssociateRepo";
+import { LinkRepo } from "../../command/slack/LinkRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
 
 /**
@@ -151,12 +151,12 @@ export function mapRepoMessage(
 
     let channelText: string;
     let mapCommand: any;
-    let mapParameters: AssociateRepo | CreateChannel;
+    let mapParameters: LinkRepo | CreateChannel;
     const channel = repo.org.chatTeam.channels.find(c => c.name === channelName);
     if (channel) {
         channelText = slack.channel(channel.channelId);
-        mapCommand = AssociateRepo;
-        mapParameters = new AssociateRepo();
+        mapCommand = LinkRepo;
+        mapParameters = new LinkRepo();
         mapParameters.channelId = channel.channelId;
     } else {
         channelText = slack.bold(`#${channelName}`);
