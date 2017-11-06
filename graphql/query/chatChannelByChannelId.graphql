@@ -1,0 +1,14 @@
+query ChatChannelByChannelId($channelName: String!) {
+    ChatChannel(name: $channelName) {
+        name
+        repos {
+            name
+            owner
+            org {
+                provider {
+                    url
+                }
+            }
+        }
+    }
+}
