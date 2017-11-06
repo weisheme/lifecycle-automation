@@ -1,0 +1,21 @@
+subscription ChannelLinkCreated
+{
+    ChannelLink {
+        channel {
+            name
+            normalizedName
+        }
+        repo {
+            name
+            owner
+            org {
+                provider {
+                    apiUrl
+                    url
+                    providerId
+                }
+            }
+        }
+    }
+}
+

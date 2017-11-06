@@ -31,7 +31,7 @@ function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Prom
         artifact: nsp.name,
         version: nsp.version,
         name: nsp.operation,
-        messageId: options.id ? options.id : guid(),
+        messageId: options && options.id ? options.id : guid(),
         redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
     }, { timeout: 2000 })
         .then(() => {
