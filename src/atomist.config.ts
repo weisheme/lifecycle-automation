@@ -73,6 +73,7 @@ import { ReleaseToPushLifecycle } from "./handlers/event/push/ReleaseToPushLifec
 import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecycle";
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
+import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
 import {
     LogzioAutomationEventListener,
     LogzioOptions,
@@ -201,6 +202,9 @@ export const configuration = {
         () => new NotifyAuthorOnReview(),
         // () => new PullRequestToReviewLifecycle(),
         // () => new ReviewToReviewLifecycle(),
+
+        // webhook
+        () => new GitHubWebhookCreated(),
     ],
     listeners: logzioOptions.token ? [
         new ShortenUrlAutomationEventListener(),
