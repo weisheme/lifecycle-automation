@@ -15,9 +15,9 @@ export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
 
     const durationPlaceholder = _.round((longestDuration * .02) / scale);
 
-    const longestDurations = [];
-    const remainingDurations = [];
-    const failureDurations = [];
+    const longestDurations: number[] = [];
+    const remainingDurations: number[] = [];
+    const failureDurations: number[] = [];
     stages.forEach(s => {
         let longestDurationForStage = 0;
         let remainingDuration = 0;
