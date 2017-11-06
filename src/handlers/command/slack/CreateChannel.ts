@@ -9,7 +9,6 @@ import {
     Parameter,
     Secret,
     Secrets,
-    Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
 
