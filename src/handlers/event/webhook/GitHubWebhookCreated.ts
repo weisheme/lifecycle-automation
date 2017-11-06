@@ -1,7 +1,7 @@
-import { EventHandler } from "@atomist/automation-client/decorators";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
+    EventHandler,
     failure,
     HandleEvent,
     HandlerContext,
@@ -37,7 +37,7 @@ export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCr
         if (channels.length > 0) {
             const msg = `I can now tell you about GitHub events like pushes, PRs, and issues. \
 Invite me to any channel where your team works with \`/invite @atomist\`, or \
-click one of the buttons below`;
+click one of the buttons below.`;
             const welcomeMsg: SlackMessage = {
                 attachments: [
                     {
@@ -51,7 +51,7 @@ click one of the buttons below`;
                 .then(() => Success, failure);
         } else {
             const msg = `I can now tell you about GitHub events like pushes, PRs, and issues.
-Invite me to any channel where your team works with \`/invite @atomist\``;
+Invite me to any channel where your team works with \`/invite @atomist\`.`;
             const welcomeMsg: SlackMessage = {
                 attachments: [
                     {

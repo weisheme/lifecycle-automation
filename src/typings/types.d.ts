@@ -131,6 +131,70 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
+export namespace ChannelLinkCreated {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    ChannelLink?: ChannelLink[] | null; 
+  } 
+
+  export type ChannelLink = {
+    channel?: Channel | null; 
+    repo?: Repo | null; 
+  } 
+
+  export type Channel = {
+    name?: string | null; 
+    normalizedName?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    apiUrl?: string | null; 
+    url?: string | null; 
+    providerId?: string | null; 
+  } 
+}
+export namespace GitHubWebhookCreated {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
+  } 
+
+  export type GitHubOrgWebhook = {
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+  } 
+
+  export type ChatTeam = {
+    members?: Members[] | null; 
+    channels?: Channels[] | null; 
+  } 
+
+  export type Members = {
+    screenName?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    channelId?: string | null; 
+  } 
+}
 export namespace AddBotToSlackChannel {
   export type Variables = {
     channelId: string;
@@ -5383,35 +5447,5 @@ export namespace TagToPushLifecycle {
 
   export type ChatId = {
     screenName?: string | null; 
-  } 
-}
-export namespace GitHubWebhookCreated {
-  export type Variables = {
-  }
-
-  export type Subscription = {
-    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
-  } 
-
-  export type GitHubOrgWebhook = {
-    org?: Org | null; 
-  } 
-
-  export type Org = {
-    chatTeam?: ChatTeam | null; 
-  } 
-
-  export type ChatTeam = {
-    members?: Members[] | null; 
-    channels?: Channels[] | null; 
-  } 
-
-  export type Members = {
-    screenName?: string | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    channelId?: string | null; 
   } 
 }

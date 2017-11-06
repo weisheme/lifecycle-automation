@@ -4,7 +4,7 @@ import assert = require("power-assert");
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import { GitHubWebhookCreated } from "../../../../src/handlers/event/webhook/GitHubWebhookCreated";
 
-describe("GitHubWebhookCreatedTest", () => {
+describe("GitHubWebhookCreated", () => {
 
     const handler = new GitHubWebhookCreated();
 

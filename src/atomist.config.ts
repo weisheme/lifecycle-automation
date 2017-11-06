@@ -1,5 +1,4 @@
 import { HandleCommand } from "@atomist/automation-client/Handlers";
-import { registerApplicationEvents } from "@atomist/automation-client/internal/env/applicationEvent";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";
@@ -39,6 +38,7 @@ import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
 import { CreateChannel } from "./handlers/command/slack/CreateChannel";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
+import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
 import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
 import { CommentToPullRequestCommentLifecycle } from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
 import { IssueToIssueCommentLifecycle } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
@@ -156,6 +156,9 @@ export const configuration = {
     events: [
         // build
         () => new NotifyPusherOnBuild(),
+
+        // channellink
+        () => new ChannelLinkCreated(),
 
         // parentimpact
         () => new StatusOnParentImpact(),
