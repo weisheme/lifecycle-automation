@@ -14,13 +14,13 @@ describe("ChannelLinkCreated", () => {
                 ChannelLink: [{
                     channel: {
                         name: "automation-clj",
-                        normalizedName: "automation-clj"
+                        normalizedName: "automation-clj",
                     },
                     repo: {
                         name: "automation-clj",
                         owner: "atomisthq",
                         org: {
-                            "provider": null
+                            provider: null,
                         },
                     },
                 }],
