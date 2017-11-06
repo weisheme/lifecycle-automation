@@ -5385,3 +5385,33 @@ export namespace TagToPushLifecycle {
     screenName?: string | null; 
   } 
 }
+export namespace GitHubWebhookCreated {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
+  } 
+
+  export type GitHubOrgWebhook = {
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+  } 
+
+  export type ChatTeam = {
+    members?: Members[] | null; 
+    channels?: Channels[] | null; 
+  } 
+
+  export type Members = {
+    screenName?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    channelId?: string | null; 
+  } 
+}
