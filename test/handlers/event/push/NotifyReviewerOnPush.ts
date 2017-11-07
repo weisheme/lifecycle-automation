@@ -1,13 +1,11 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import { guid } from "@atomist/automation-client/internal/util/string";
 import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
-import { NotifyReviewerOnPush } from "../../../../build/src/handlers/event/push/NotifyReviewerOnPush";
-import { PushToPushLifecycle } from "../../../../src/handlers/event/push/PushToPushLifecycle";
+import { NotifyReviewerOnPush } from "../../../../src/handlers/event/push/NotifyReviewerOnPush";
 
 describe("NotifyReviewerOnPush", () => {
 
