@@ -53,11 +53,15 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                 }
             }
 
-            // Add Build node
+            // Add Build nodes
             if (push.builds != null && push.builds.length > 0) {
                 // Sort the builds in descending order; newest first
                 push.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp))
                     .forEach(b => nodes.push(b));
+
+                // Add Workflow nodes
+                _.uniqBy(push.builds.filter(b => b.workflow),
+                        b => b.workflow.id).forEach(b => nodes.push(b.workflow));
             }
 
             // Add Domain -> App nodes

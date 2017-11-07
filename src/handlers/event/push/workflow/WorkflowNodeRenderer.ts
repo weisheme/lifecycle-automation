@@ -19,22 +19,21 @@ export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.workflow;
+        return node.config && node.provider === "circle";
     }
 
-    public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
+    public render(workflow: graphql.PushToPushLifecycle.Workflow, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
-        if (build.workflow && build.workflow.provider === "circle") {
-            const chartUrl = chartUrlFromWorkflow(circleWorkflowtoStages(build.workflow));
-            if (chartUrl) {
-                const attachment: Attachment = {
-                    author_name: "Workflow",
-                    author_icon: "https://images.atomist.com/rug/flow.png",
-                    fallback: "Workflow",
-                    image_url: chartUrl,
-                };
-                msg.attachments.push(attachment);
-            }
+        const chartUrl = chartUrlFromWorkflow(circleWorkflowtoStages(workflow));
+        if (chartUrl) {
+            const attachment: Attachment = {
+                author_name: "Workflow",
+                author_icon: "https://images.atomist.com/rug/flow.png",
+                author_link: `https://circle-ci.com/workflow-run/${workflow.id.slice(10)}`,
+                fallback: "Workflow",
+                image_url: chartUrl,
+            };
+            msg.attachments.push(attachment);
         }
         return Promise.resolve(msg);
     }

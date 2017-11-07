@@ -29,6 +29,7 @@ export function wrapLinks(message: SlackMessage, event: string):
             a.title = wrapLinksInText(a.title, `${event}/attachment/title`, hashToUrl);
             a.text = wrapLinksInText(a.text, `${event}/attachment/text`, hashToUrl);
             a.pretext = wrapLinksInText(a.pretext, `${event}/attachment/pretext`, hashToUrl);
+            a.fallback = wrapLinksInText(a.fallback, `${event}/attachment/fallback`, hashToUrl);
         });
     }
     return [clonedMessage, hashToUrl];
