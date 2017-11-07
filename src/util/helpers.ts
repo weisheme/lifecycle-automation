@@ -40,8 +40,24 @@ export function truncateCommitMessage(message: string, repo: any): string {
     return titleParts.slice(0, i + addNext).join("");
 }
 
+/**
+ * Generate GitHub repository "slug", i.e., owner/repo.
+ *
+ * @param repo repository with .owner and .name
+ * @return owner/name string
+ */
 export function repoSlug(repo: any): string {
     return `${repo.owner}/${repo.name}`;
+}
+
+/**
+ * Generate valid Slack channel name for a repository name.
+ *
+ * @param repoName valid GitHub repository name
+ * @return valid Slack channel name based on repository name
+ */
+export function repoChannelName(repoName: string): string {
+    return (repoName) ? repoName.substring(0, 21).replace(/\./g, "_").toLowerCase() : repoName;
 }
 
 export function branchUrl(repo: any, branch: string): string {
@@ -49,7 +65,7 @@ export function branchUrl(repo: any, branch: string): string {
 }
 
 export function htmlUrl(repo: any): string {
-    if (repo.org != null && repo.org.provider != null && repo.org.provider.url != null) {
+    if (repo.org && repo.org.provider && repo.org.provider.url) {
         let providerUrl = repo.org.provider.url;
         if (providerUrl.slice(-1) === "/") {
             providerUrl = providerUrl.slice(0, -1);
@@ -61,7 +77,7 @@ export function htmlUrl(repo: any): string {
 }
 
 export function apiUrl(repo: any): string {
-    if (repo.org != null && repo.org.provider != null && repo.org.provider.url != null) {
+    if (repo.org && repo.org.provider && repo.org.provider.url) {
         let providerUrl = repo.org.provider.apiUrl;
         if (providerUrl.slice(-1) === "/") {
             providerUrl = providerUrl.slice(0, -1);
@@ -74,6 +90,10 @@ export function apiUrl(repo: any): string {
 
 export function repoUrl(repo: any): string {
     return `${htmlUrl(repo)}/${repoSlug(repo)}`;
+}
+
+export function repoSlackLink(repo: any): string {
+    return url(repoUrl(repo), repoSlug(repo));
 }
 
 export function userUrl(repo: any, login: string): string {
@@ -345,7 +365,7 @@ export function loadRepoByNameAndOwner(ctx: HandlerContext, name: string, owner:
 export function loadChatTeam(ctx: HandlerContext): Promise<graphql.ChatTeam.ChatTeam> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatTeam.Query, graphql.ChatTeam.Variables>(
         "graphql/query/chatTeam",
-        { })
+        {})
         .then(result => {
             return _.get(result, "ChatTeam[0]");
         })

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   Link repository to channel command and event handlers
+-   Send message when bot joins a channel
 
 ### Changed
 

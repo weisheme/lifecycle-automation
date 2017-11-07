@@ -1,6 +1,7 @@
 import "mocha";
 import * as assert from "power-assert";
 
+import { DefaultBotName } from "../../../../src/handlers/command/slack/LinkRepo";
 import {
     extractScreenNameFromMapRepoMessageId,
     leaveRepoUnmapped,
@@ -124,7 +125,7 @@ describe("PushToUnmappedRepo", () => {
             };
             const repoLink = "<https://github.com/grievous-angel/sin-city|grievous-angel/sin-city>";
             const channelText = "*#sin-city*";
-            const msg = mapRepoMessage(repo, chatId);
+            const msg = mapRepoMessage(repo, chatId, DefaultBotName);
             assert(msg.attachments.length === 3);
             const linkMsg = msg.attachments[0];
             const hintMsg = msg.attachments[1];
@@ -141,7 +142,7 @@ describe("PushToUnmappedRepo", () => {
             assert(command.parameters.owner === "grievous-angel");
             assert(command.parameters.repo === "sin-city");
             const hintFallBack = `or '/invite @atomist' me to a relevant channel and type
-'@atomist repo owner=grievous-angel repo=sin-city'`;
+'@atomist repo owner=grievous-angel name=sin-city'`;
             assert(hintMsg.fallback === hintFallBack);
             const stopText = "stop receiving similar suggestions for all repositories";
             assert(stopMsg.text.includes(stopText));
@@ -196,7 +197,8 @@ describe("PushToUnmappedRepo", () => {
             };
             const repoLink = "<https://ghe.gram-parsons.com/grievous-angel/sin-city|grievous-angel/sin-city>";
             const channelText = "<#C51NC1TY>";
-            const msg = mapRepoMessage(repo, chatId);
+            const bot = "hillman";
+            const msg = mapRepoMessage(repo, chatId, bot);
             assert(msg.attachments.length === 3);
             const linkMsg = msg.attachments[0];
             const hintMsg = msg.attachments[1];
@@ -207,13 +209,13 @@ describe("PushToUnmappedRepo", () => {
             assert(linkMsg.actions[0].text === "Go ahead");
             assert(linkMsg.actions[0].type === "button");
             const command = (linkMsg.actions[0] as any).command;
-            assert(command.name === "LinkRepo");
+            assert(command.name === "AssociateRepo");
             assert(command.parameters.apiUrl === "https://ghe.gram-parsons.com/v3/");
             assert(command.parameters.channelId === "C51NC1TY");
             assert(command.parameters.owner === "grievous-angel");
             assert(command.parameters.repo === "sin-city");
-            const hintFallBack = `or '/invite @atomist' me to a relevant channel and type
-'@atomist repo owner=grievous-angel repo=sin-city'`;
+            const hintFallBack = `or '/invite @${bot}' me to a relevant channel and type
+'@${bot} repo owner=grievous-angel name=sin-city'`;
             assert(hintMsg.fallback === hintFallBack);
             const stopText = "stop receiving similar suggestions for all repositories";
             assert(stopMsg.text.includes(stopText));

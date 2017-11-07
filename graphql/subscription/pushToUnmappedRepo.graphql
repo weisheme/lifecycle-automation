@@ -19,6 +19,10 @@ subscription PushToUnmappedRepo
             channelId
             name
           }
+          members(isAtomistBot: "true") {
+            isAtomistBot
+            screenName
+          }
           preferences {
             name
             value
