@@ -1,7 +1,7 @@
 import {
     buttonForCommand,
     menuForCommand,
-    SelectSpec,
+    MenuSpecification,
 } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import {
@@ -92,7 +92,7 @@ export class LabelActionContributor extends AbstractIssueActionContributor
             sort((l1, l2) => l1.name.localeCompare(l2.name)).map(l => l.name) : []);
         const unusedLabels = options.filter(l => existingLabels.indexOf(l.text) < 0);
 
-        const menu: SelectSpec = {
+        const menu: MenuSpecification = {
             text: "Label",
             options: [{
                 text: "\u2611", options: existingLabels.map(l => {

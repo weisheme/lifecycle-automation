@@ -12,6 +12,21 @@ subscription PushToPushLifecycle
                 sha
             }
             timestamp
+            workflow {
+                id
+                name
+                provider
+                config
+                builds {
+                    jobId
+                    jobName
+                    finishedAt
+                    startedAt
+                    status
+                    id
+                    buildUrl
+                }
+            }
         }
         before {
             sha

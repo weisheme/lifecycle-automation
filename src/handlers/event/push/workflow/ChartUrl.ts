@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {WorkflowStage} from "./WorkflowStage";
+import { WorkflowStage } from "./WorkflowStage";
 
 export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
     const stageNames = stages.map(s => s.name);
