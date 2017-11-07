@@ -67,6 +67,7 @@ import { BuildToPushLifecycle } from "./handlers/event/push/BuildToPushLifecycle
 import { IssueToPushLifecycle } from "./handlers/event/push/IssueToPushLifecycle";
 import { K8PodToPushLifecycle } from "./handlers/event/push/K8PodToPushLifecycle";
 import { NotifyBotOwnerOnPush } from "./handlers/event/push/NotifiyBotOwnerOnPush";
+import { NotifyReviewerOnPush } from "./handlers/event/push/NotifyReviewerOnPush";
 import { ParentImpactToPushLifecycle } from "./handlers/event/push/ParentImpactToPushLifecycle";
 import { PushToPushLifecycle } from "./handlers/event/push/PushToPushLifecycle";
 import { PushToUnmappedRepo } from "./handlers/event/push/PushToUnmappedRepo";
@@ -171,6 +172,7 @@ export const configuration = {
         () => new IssueToPushLifecycle(),
         () => new K8PodToPushLifecycle(),
         () => new NotifyBotOwnerOnPush(),
+        () => new NotifyReviewerOnPush(),
         () => new ParentImpactToPushLifecycle(),
         () => new PushToPushLifecycle(),
         () => new PushToUnmappedRepo(),

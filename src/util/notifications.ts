@@ -27,9 +27,13 @@ import {
     userUrl,
 } from "./helpers";
 
-export function issueNotification(
-    id: string, prefix: string, body: string, login: string, issue: graphql.NotifyMentionedOnIssue.Issue,
-    repo: graphql.NotifyMentionedOnIssue.Repo, ctx: HandlerContext): Promise<any[]> {
+export function issueNotification(id: string,
+                                  prefix: string,
+                                  body: string,
+                                  login: string,
+                                  issue: graphql.NotifyMentionedOnIssue.Issue,
+                                  repo: graphql.NotifyMentionedOnIssue.Repo,
+                                  ctx: HandlerContext): Promise<any[]> {
 
     const matches = getGitHubUsers(body);
     return linkGitHubUsers(githubToSlack(body), ctx)
@@ -74,9 +78,13 @@ export function issueNotification(
         });
 }
 
-export function prNotification(
-    id: string, prefix: string, body: string, login: string, pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
-    repo: graphql.NotifyMentionedOnPullRequest.Repo, ctx: HandlerContext): Promise<any[]> {
+export function prNotification(id: string,
+                               prefix: string,
+                               body: string,
+                               login: string,
+                               pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
+                               repo: graphql.NotifyMentionedOnPullRequest.Repo,
+                               ctx: HandlerContext): Promise<any[]> {
 
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
@@ -123,10 +131,13 @@ export function prNotification(
         });
 }
 
-export function issueAssigneeNotification(
-    id: string, prefix: string, body: string, assignee: graphql.NotifyMentionedOnIssue.Assignees,
-    issue: graphql.NotifyMentionedOnIssue.Issue, repo: graphql.NotifyMentionedOnIssue.Repo,
-    ctx: HandlerContext): Promise<any> {
+export function issueAssigneeNotification(id: string,
+                                          prefix: string,
+                                          body: string,
+                                          assignee: graphql.NotifyMentionedOnIssue.Assignees,
+                                          issue: graphql.NotifyMentionedOnIssue.Issue,
+                                          repo: graphql.NotifyMentionedOnIssue.Repo,
+                                          ctx: HandlerContext): Promise<any> {
 
     return linkGitHubUsers(githubToSlack(body), ctx)
         .then(b => {
@@ -163,10 +174,13 @@ export function issueAssigneeNotification(
         });
 }
 
-export function prAssigneeNotification(
-    id: string, prefix: string, body: string, assignee: graphql.NotifyMentionedOnPullRequest.Assignees,
-    pr: graphql.NotifyMentionedOnPullRequest.PullRequest, repo: graphql.NotifyMentionedOnIssue.Repo,
-    ctx: HandlerContext): Promise<any> {
+export function prAssigneeNotification(id: string,
+                                       prefix: string,
+                                       body: string,
+                                       assignee: graphql.NotifyMentionedOnPullRequest.Assignees,
+                                       pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
+                                       repo: graphql.NotifyMentionedOnIssue.Repo,
+                                       ctx: HandlerContext): Promise<any> {
 
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
@@ -205,10 +219,13 @@ export function prAssigneeNotification(
         });
 }
 
-export function prRevieweeNotification(
-    id: string, prefix: string, body: string, review: graphql.NotifyMentionedOnPullRequest.Reviewers,
-    pr: graphql.NotifyMentionedOnPullRequest.PullRequest, repo: graphql.NotifyMentionedOnIssue.Repo,
-    ctx: HandlerContext): Promise<any> {
+export function prRevieweeNotification(id: string,
+                                       prefix: string,
+                                       body: string,
+                                       review: graphql.NotifyMentionedOnPullRequest.Reviewers,
+                                       pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
+                                       repo: graphql.NotifyMentionedOnIssue.Repo,
+                                       ctx: HandlerContext): Promise<any> {
 
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
@@ -246,9 +263,10 @@ export function prRevieweeNotification(
         });
 }
 
-export function prAuthorMergeNotification(
-    id: string, pr: graphql.NotifyMentionedOnPullRequest.PullRequest, repo: graphql.NotifyMentionedOnPullRequest.Repo,
-    ctx: HandlerContext): Promise<any> {
+export function prAuthorMergeNotification(id: string,
+                                          pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
+                                          repo: graphql.NotifyMentionedOnPullRequest.Repo,
+                                          ctx: HandlerContext): Promise<any> {
 
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
@@ -288,10 +306,11 @@ export function prAuthorMergeNotification(
         });
 }
 
-export function prAuthorReviewNotification(
-    id: string, review: graphql.NotifyAuthorOnReview.Review,
-    pr: graphql.NotifyAuthorOnReview.PullRequest, repo: graphql.NotifyAuthorOnReview.Repo,
-    ctx: HandlerContext): Promise<any> {
+export function prAuthorReviewNotification(id: string,
+                                           review: graphql.NotifyAuthorOnReview.Review,
+                                           pr: graphql.NotifyAuthorOnReview.PullRequest,
+                                           repo: graphql.NotifyAuthorOnReview.Repo,
+                                           ctx: HandlerContext): Promise<any> {
 
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
@@ -346,7 +365,8 @@ export function prAuthorReviewNotification(
         });
 }
 
-export function buildNotification(build: graphql.NotifyPusherOnBuild.Build, repo: graphql.NotifyPusherOnBuild.Repo,
+export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
+                                  repo: graphql.NotifyPusherOnBuild.Repo,
                                   ctx: HandlerContext): Promise<any> {
 
     const login = _.get(build, "commit.author.person.chatId.screenName");
@@ -378,4 +398,49 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build, repo
     const msgId =
         `user_message/build/${login}/${repo.owner}/${repo.name}/${build._id}`;
     return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+}
+
+export function reviewerNotification(push: graphql.NotifyReviewerOnPush.Push,
+                                     pr: graphql.NotifyReviewerOnPush.PullRequests,
+                                     repo: graphql.NotifyReviewerOnPush.Repo,
+                                     review: graphql.NotifyReviewerOnPush.Reviews,
+                                     ctx: HandlerContext): Promise<any> {
+
+    const login = _.get(review, "by[0].person.chatId.screenName");
+    if (!login || isDmDisabled(_.get(review, "by[0].person.chatId"), DirectMessagePreferences.prUpdates.id)) {
+        return Promise.resolve(null);
+    }
+
+    const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
+    const author = _.get(push, "commits[0].author.login");
+    const count = push.commits.length;
+
+    const body = pr.body ? githubToSlack(pr.body) : undefined;
+    return linkGitHubUsers(body, ctx)
+        .then(b => {
+            // tslint:disable-next-line:variable-name
+            const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
+            // tslint:disable-next-line:max-line-length
+            const text = `${url(userUrl(repo, author), `@${author}`)} added ${count} new ${count > 1 ? "commits" : "commit"} to ${state} pull request ${url(prUrl(repo, pr),
+                bold(`#${pr.number} ${pr.title}`))}`;
+            const slackMessage: SlackMessage = {
+                text,
+                attachments: [
+                    {
+                        author_name: `@${pr.author.login}`,
+                        author_link: userUrl(repo, pr.author.login),
+                        author_icon: avatarUrl(repo, pr.author.login),
+                        text: linkIssues(b, repo),
+                        mrkdwn_in: ["text"],
+                        fallback: `New commits to #${pr.number}: ${pr.title}`,
+                        footer: repoAndChannelFooter(repo),
+                        footer_icon,
+                        ts: Math.floor(new Date().getTime() / 1000),
+                    },
+                ],
+            };
+            const msgId =
+                `user_message/pullrequest/reviewee/commits/${login}/${repo.owner}/${repo.name}/${pr.number}`;
+            return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+        });
 }

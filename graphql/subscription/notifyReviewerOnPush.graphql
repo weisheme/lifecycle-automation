@@ -1,0 +1,57 @@
+subscription NotifyReviewerOnPush
+{
+    Push {
+        branch
+        repo {
+            name
+            owner
+            org {
+                owner
+                provider {
+                    apiUrl
+                    url
+                    providerId
+                }
+            }
+        }
+        commits {
+            author {
+                login
+            }
+            sha
+            pullRequests {
+                author {
+                    login
+                }
+                name
+                number
+                title
+                body
+                state
+                merged
+                reviews {
+                    state
+                    by {
+                        login
+                        person {
+                            chatId {
+                                screenName
+                                preferences {
+                                    name
+                                    value
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+

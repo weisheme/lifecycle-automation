@@ -147,15 +147,9 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             ts = new Date().getTime().toString();
         }
 
-        let ttl;
-        if (lifecycle.ttl != null) {
-            ttl = this.normalizeTimestamp(lifecycle.ttl);
-            ttl = (+ttl + +ts).toString();
-        }
-
         const options: MessageOptions = {
             id: lifecycle.id,
-            ttl,
+            ttl: +lifecycle.ttl,
             ts: +ts,
             post: lifecycle.post,
         };

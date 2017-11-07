@@ -25,6 +25,11 @@ export const DirectMessagePreferences = {
         name: "Review Requests",
         description: "DM me when I'm asked to review a pull request",
     },
+    prUpdates: {
+        id: "prUpdates",
+        name: "Commits to reviewed Pull Requests",
+        description: "DM me when a commit is pushed to a pull request that I'm reviewing",
+    },
     merge: {
         id: "merge",
         name: "Pull Request Merges",

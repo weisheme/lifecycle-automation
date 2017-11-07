@@ -131,70 +131,6 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
-export namespace ChannelLinkCreated {
-  export type Variables = {
-  }
-
-  export type Subscription = {
-    ChannelLink?: ChannelLink[] | null; 
-  } 
-
-  export type ChannelLink = {
-    channel?: Channel | null; 
-    repo?: Repo | null; 
-  } 
-
-  export type Channel = {
-    name?: string | null; 
-    normalizedName?: string | null; 
-  } 
-
-  export type Repo = {
-    name?: string | null; 
-    owner?: string | null; 
-    org?: Org | null; 
-  } 
-
-  export type Org = {
-    provider?: Provider | null; 
-  } 
-
-  export type Provider = {
-    apiUrl?: string | null; 
-    url?: string | null; 
-    providerId?: string | null; 
-  } 
-}
-export namespace GitHubWebhookCreated {
-  export type Variables = {
-  }
-
-  export type Subscription = {
-    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
-  } 
-
-  export type GitHubOrgWebhook = {
-    org?: Org | null; 
-  } 
-
-  export type Org = {
-    chatTeam?: ChatTeam | null; 
-  } 
-
-  export type ChatTeam = {
-    members?: Members[] | null; 
-    channels?: Channels[] | null; 
-  } 
-
-  export type Members = {
-    screenName?: string | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    channelId?: string | null; 
-  } 
-}
 export namespace AddBotToSlackChannel {
   export type Variables = {
     channelId: string;
@@ -375,6 +311,34 @@ export namespace ChatChannel {
   export type Repos = {
     name?: string | null; 
     owner?: string | null; 
+  } 
+}
+export namespace ChatChannelByChannelId {
+  export type Variables = {
+    channelName: string;
+  }
+
+  export type Query = {
+    ChatChannel?: ChatChannel[] | null; 
+  } 
+
+  export type ChatChannel = {
+    name?: string | null; 
+    repos?: Repos[] | null; 
+  } 
+
+  export type Repos = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
   } 
 }
 export namespace ChatId {
@@ -1713,6 +1677,40 @@ export namespace BuildToPushLifecycle {
     screenName?: string | null; 
   } 
 }
+export namespace ChannelLinkCreated {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    ChannelLink?: ChannelLink[] | null; 
+  } 
+
+  export type ChannelLink = {
+    channel?: Channel | null; 
+    repo?: Repo | null; 
+  } 
+
+  export type Channel = {
+    name?: string | null; 
+    normalizedName?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    apiUrl?: string | null; 
+    url?: string | null; 
+    providerId?: string | null; 
+  } 
+}
 export namespace CommentToIssueCommentLifecycle {
   export type Variables = {
   }
@@ -2412,6 +2410,36 @@ export namespace CommitToPullRequestLifecycle {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+}
+export namespace GitHubWebhookCreated {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
+  } 
+
+  export type GitHubOrgWebhook = {
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+  } 
+
+  export type ChatTeam = {
+    members?: Members[] | null; 
+    channels?: Channels[] | null; 
+  } 
+
+  export type Members = {
+    screenName?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 }
 export namespace IssueToIssueLifecycle {
@@ -3526,6 +3554,86 @@ export namespace NotifyPusherOnBuild {
   export type Channels = {
     name?: string | null; 
     channelId?: string | null; 
+  } 
+}
+export namespace NotifyReviewerOnPush {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Push?: Push[] | null; 
+  } 
+
+  export type Push = {
+    branch?: string | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    owner?: string | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    apiUrl?: string | null; 
+    url?: string | null; 
+    providerId?: string | null; 
+  } 
+
+  export type Commits = {
+    author?: Author | null; 
+    sha?: string | null; 
+    pullRequests?: PullRequests[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+  } 
+
+  export type PullRequests = {
+    author?: _Author | null; 
+    name?: string | null; 
+    number?: number | null; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    reviews?: Reviews[] | null; 
+  } 
+
+  export type _Author = {
+    login?: string | null; 
+  } 
+
+  export type Reviews = {
+    state?: ReviewState | null; 
+    by?: By[] | null; 
+  } 
+
+  export type By = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace ParentImpactToPushLifecycle {
