@@ -1293,6 +1293,66 @@ export namespace AutoMergeOnStatus {
     body?: string | null; 
   } 
 }
+export namespace BotJoinedChannel {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    UserJoinedChannel?: UserJoinedChannel[] | null; 
+  } 
+
+  export type UserJoinedChannel = {
+    user?: User | null; 
+    channel?: Channel | null; 
+  } 
+
+  export type User = {
+    isAtomistBot?: string | null; 
+    screenName?: string | null; 
+    userId?: string | null; 
+  } 
+
+  export type Channel = {
+    botInvitedSelf?: boolean | null; 
+    channelId?: string | null; 
+    name?: string | null; 
+    repos?: Repos[] | null; 
+    team?: Team | null; 
+  } 
+
+  export type Repos = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+  } 
+
+  export type Team = {
+    orgs?: Orgs[] | null; 
+  } 
+
+  export type Orgs = {
+    owner?: string | null; 
+    provider?: _Provider | null; 
+    repo?: Repo[] | null; 
+  } 
+
+  export type _Provider = {
+    apiUrl?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+  } 
+}
 export namespace BranchToPullRequestLifecycle {
   export type Variables = {
   }
@@ -2481,6 +2541,8 @@ export namespace GitHubWebhookCreated {
   } 
 
   export type Members = {
+    isAtomistBot?: string | null; 
+    isOwner?: string | null; 
     screenName?: string | null; 
   } 
 
@@ -4533,12 +4595,18 @@ export namespace PushToUnmappedRepo {
 
   export type ChatTeam = {
     channels?: _Channels[] | null; 
+    members?: Members[] | null; 
     preferences?: Preferences[] | null; 
   } 
 
   export type _Channels = {
     channelId?: string | null; 
     name?: string | null; 
+  } 
+
+  export type Members = {
+    isAtomistBot?: string | null; 
+    screenName?: string | null; 
   } 
 
   export type Preferences = {

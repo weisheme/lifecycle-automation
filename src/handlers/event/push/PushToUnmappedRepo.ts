@@ -14,12 +14,14 @@ import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as graphql from "../../../typings/types";
 import {
     isDmDisabled,
-    repoUrl,
+    repoChannelName,
+    repoSlackLink,
 } from "../../../util/helpers";
 import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
+import { AssociateRepo } from "../../command/slack/AssociateRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
-import { LinkRepo } from "../../command/slack/LinkRepo";
+import { DefaultBotName, LinkRepo } from "../../command/slack/LinkRepo";
 
 /**
  * Suggest mapping a repo to committer on unmapped repo.
@@ -43,9 +45,15 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 // not on initial push
                 return Success;
             }
-            return sendUnMappedRepoMessage(
-                p.commits.filter(c => c.author && c.author.person)
-                    .map(c => c.author.person.chatId), p.repo, ctx);
+
+            const botName = (p.repo.org && p.repo.org.chatTeam && p.repo.org.chatTeam.members &&
+                p.repo.org.chatTeam.members.length > 0 &&
+                p.repo.org.chatTeam.members.some(m => m.isAtomistBot === "true")) ?
+                p.repo.org.chatTeam.members.find(m => m.isAtomistBot === "true").screenName : DefaultBotName;
+
+            const chatIds = p.commits.filter(c => c.author && c.author.person).map(c => c.author.person.chatId);
+
+            return sendUnMappedRepoMessage(chatIds, p.repo, ctx, botName);
         }))
             .then(() => Success, failure);
     }
@@ -59,6 +67,7 @@ export function sendUnMappedRepoMessage(
     chatIds: graphql.PushToUnmappedRepo.ChatId[],
     repo: graphql.PushToUnmappedRepo.Repo,
     ctx: HandlerContext,
+    botName: string,
 ): Promise<HandlerResult> {
 
     const enabledChatIds = chatIds.filter(c => {
@@ -72,7 +81,7 @@ export function sendUnMappedRepoMessage(
 
     return Promise.all(enabledChatIds.map(chatId => {
         const id = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
-        return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId), chatId.screenName, { id });
+        return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId, botName), chatId.screenName, { id });
     }))
         .then(() => Success);
 }
@@ -142,37 +151,35 @@ export function leaveRepoUnmapped(
 export function mapRepoMessage(
     repo: graphql.PushToUnmappedRepo.Repo,
     chatId: graphql.PushToUnmappedRepo.ChatId,
+    botName: string,
 ): slack.SlackMessage {
 
-    const channelName = channelNameForRepo(repo.name);
+    const channelName = repoChannelName(repo.name);
     const slug = `${repo.owner}/${repo.name}`;
-    const slugText = slack.url(repoUrl(repo), slug);
+    const slugText = repoSlackLink(repo);
     const msgId = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
 
     let channelText: string;
-    let mapCommand: any;
-    let mapParameters: LinkRepo | CreateChannel;
+    let mapCommand: AssociateRepo | CreateChannel;
     const channel = repo.org.chatTeam.channels.find(c => c.name === channelName);
     if (channel) {
         channelText = slack.channel(channel.channelId);
-        mapCommand = LinkRepo;
-        mapParameters = new LinkRepo();
-        mapParameters.channelId = channel.channelId;
+        mapCommand = new AssociateRepo();
+        mapCommand.channelId = channel.channelId;
     } else {
         channelText = slack.bold(`#${channelName}`);
-        mapCommand = CreateChannel;
-        mapParameters = new CreateChannel();
-        mapParameters.channel = channelName;
+        mapCommand = new CreateChannel();
+        mapCommand.channel = channelName;
     }
-    mapParameters.apiUrl = (repo.org.provider) ? repo.org.provider.apiUrl : undefined;
-    mapParameters.owner = repo.owner;
-    mapParameters.repo = repo.name;
-    mapParameters.msgId = msgId;
+    mapCommand.apiUrl = (repo.org.provider) ? repo.org.provider.apiUrl : undefined;
+    mapCommand.owner = repo.owner;
+    mapCommand.repo = repo.name;
+    mapCommand.msgId = msgId;
 
     const mapFallback = `Want to put me to work on ${slug} in #${channelName}?`;
     const mapText = `Want to put me to work on ${slugText} in ${channelText}?`;
 
-    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, mapCommand, mapParameters);
+    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, mapCommand);
     const mapAttachment: slack.Attachment = {
         pretext: mapText,
         fallback: mapFallback,
@@ -181,10 +188,10 @@ export function mapRepoMessage(
         actions: [mapRepoButton],
     };
 
-    const hintText = `or ${slack.codeLine("/invite @atomist")} me to a relevant channel and type
-${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
-    const hintFallback = `or '/invite @atomist' me to a relevant channel and type
-'@atomist repo owner=${repo.owner} repo=${repo.name}'`;
+    const linkRepoCmd = LinkRepo.linkRepoCommand(botName, repo.owner, repo.name);
+    const hintText = `or ${slack.codeLine("/invite @" + botName)} me to a relevant channel and type
+${slack.codeLine(linkRepoCmd)}`;
+    const hintFallback = `or '/invite @${botName}' me to a relevant channel and type\n'${linkRepoCmd}'`;
     const hintAttachment: slack.Attachment = {
         fallback: hintFallback,
         text: hintText,
@@ -218,12 +225,4 @@ ${slack.codeLine(`@atomist repo owner=${repo.owner} repo=${repo.name}`)}`;
         ],
     };
     return msg;
-}
-
-/**
- * Generate valid Slack channel name for a repository name
- * @param repoName
- */
-export function channelNameForRepo(repoName: string): string {
-    return repoName != null ? repoName.substring(0, 21).replace(/\./g, "_").toLowerCase() : repoName;
 }

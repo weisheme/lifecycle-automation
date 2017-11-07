@@ -9,6 +9,7 @@ import {
     isDmDisabled,
     linkGitHubUsers,
     linkIssues,
+    repoSlackLink,
     truncateCommitMessage,
 } from "../../src/util/helpers";
 
@@ -190,6 +191,34 @@ Fixes #1950.
             const e = `Changed &lt;some things&gt; so &amp; issue identified by ` +
                 `<https://github.com/elvis/presley/issues/1929|elv...>`;
             assert(truncateCommitMessage(m, repo) === e);
+        });
+
+    });
+
+    describe("repoSlackLink", () => {
+
+        it("should return a github.com link", () => {
+            const r = {
+                name: "music",
+                owner: "palace",
+                org: {},
+            };
+            const e = `<https://github.com/palace/music|palace/music>`;
+            assert(repoSlackLink(r) === e);
+        });
+
+        it("should return a github provider link", () => {
+            const r = {
+                name: "music",
+                owner: "palace",
+                org: {
+                    provider: {
+                        url: "http://bonnie.prince.billy/github/",
+                    },
+                },
+            };
+            const e = `<http://bonnie.prince.billy/github/palace/music|palace/music>`;
+            assert(repoSlackLink(r) === e);
         });
 
     });

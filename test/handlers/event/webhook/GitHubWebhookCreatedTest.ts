@@ -16,6 +16,7 @@ describe("GitHubWebhookCreated", () => {
                         chatTeam: {
                             members: [
                                 {
+                                    isOwner: "true",
                                     screenName: "cd",
                                 },
                             ],
@@ -51,11 +52,9 @@ describe("GitHubWebhookCreated", () => {
                     assert(sm.attachments[0].actions.length === 2);
                     assert(sm.attachments[0].actions[0].text === "#dev");
                     assert((sm.attachments[0].actions[0] as any).command.parameters.channelId === "C7UR196MB");
-                    assert((sm.attachments[0].actions[0] as any).command.parameters.repo === "dev");
 
                     assert(sm.attachments[0].actions[1].text === "#engineering");
                     assert((sm.attachments[0].actions[1] as any).command.parameters.channelId === "D18G4L88J");
-                    assert((sm.attachments[0].actions[1] as any).command.parameters.repo === "engineering");
                     messageSend = true;
                     return Promise.resolve();
                 },
@@ -66,8 +65,8 @@ describe("GitHubWebhookCreated", () => {
             .then(result => {
                 assert(result.code === 0);
                 assert(messageSend);
-                done();
-            });
+            })
+            .then(done, done);
     });
 
     it("should generate a message if there are no channels", done => {
@@ -78,6 +77,7 @@ describe("GitHubWebhookCreated", () => {
                         chatTeam: {
                             members: [
                                 {
+                                    isOwner: "true",
                                     screenName: "cd",
                                 },
                             ],
@@ -121,8 +121,8 @@ describe("GitHubWebhookCreated", () => {
             .then(result => {
                 assert(result.code === 0);
                 assert(messageSend);
-                done();
-            });
+            })
+            .then(done, done);
     });
 
     it("should generate a message if there are null channels", done => {
@@ -133,6 +133,7 @@ describe("GitHubWebhookCreated", () => {
                         chatTeam: {
                             members: [
                                 {
+                                    isOwner: "true",
                                     screenName: "cd",
                                 },
                             ],
@@ -163,7 +164,50 @@ describe("GitHubWebhookCreated", () => {
             .then(result => {
                 assert(result.code === 0);
                 assert(messageSend);
-                done();
-            });
+            })
+            .then(done, done);
+    });
+
+    it("should generate a message if channels is undefined", done => {
+        const event = {
+            data: {
+                GitHubOrgWebhook: [{
+                    org: {
+                        chatTeam: {
+                            members: [
+                                {
+                                    isOwner: "true",
+                                    screenName: "cd",
+                                },
+                            ],
+                            channels: undefined,
+                        },
+                    },
+                }],
+            },
+            extensions: {
+                operationName: "GitHubWebhookCreated",
+            },
+        };
+
+        let messageSend = false;
+        const ctx: any = {
+            messageClient: {
+                addressUsers(msg: string | SlackMessage, userNames: string | string[]): Promise<any> {
+                    assert(userNames === "cd");
+                    const sm = msg as SlackMessage;
+                    assert(!sm.attachments[0].actions);
+                    messageSend = true;
+                    return Promise.resolve();
+                },
+            },
+        };
+
+        handler.handle(event, ctx)
+            .then(result => {
+                assert(result.code === 0);
+                assert(messageSend);
+            })
+            .then(done, done);
     });
 });
