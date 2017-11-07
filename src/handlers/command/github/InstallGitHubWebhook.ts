@@ -23,6 +23,7 @@ import {
     loadChatTeam,
 } from "../../../util/helpers";
 import { sendUnMappedRepoMessage } from "../../event/push/PushToUnmappedRepo";
+import { DefaultBotName } from "../slack/LinkRepo";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Install webhook for a whole organization", "install org-webhook", "install github org-webhook")
@@ -136,16 +137,16 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                     .then(results => {
                         if (results[0] && results[1]) {
                             const repo: graphql.PushToUnmappedRepo.Repo = {
-                               owner: this.owner,
-                               name: this.repo,
-                               org: {
-                                   chatTeam: {
-                                       channels: results[1].channels,
-                                   },
-                                   provider: {},
-                               },
+                                owner: this.owner,
+                                name: this.repo,
+                                org: {
+                                    chatTeam: {
+                                        channels: results[1].channels,
+                                    },
+                                    provider: {},
+                                },
                             };
-                            return sendUnMappedRepoMessage([results[0]], repo, ctx);
+                            return sendUnMappedRepoMessage([results[0]], repo, ctx, DefaultBotName);
                         } else {
                             return Success;
                         }

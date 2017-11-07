@@ -1,0 +1,39 @@
+subscription BotJoinedChannel {
+  UserJoinedChannel {
+    user(isAtomistBot: "true") {
+      isAtomistBot
+      screenName
+      userId
+    }
+    channel(botInvitedSelf: false) {
+      botInvitedSelf
+      channelId
+      name
+      repos {
+        name
+        owner
+        org {
+          provider {
+            apiUrl
+            gitUrl
+            url
+          }
+        }
+      }
+      team {
+        orgs {
+          owner
+          provider {
+            apiUrl
+            gitUrl
+            url
+          }
+          repo {
+            name
+            owner
+          }
+        }
+      }
+    }
+  }
+}
