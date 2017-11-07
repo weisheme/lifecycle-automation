@@ -62,8 +62,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
             ],
             id: `pullrequest_lifecycle/${repo.owner}/${repo.name}/${pullrequest.number}`,
             timestamp,
-            // #47 remove issue rewrite
-            // ttl: (1000 * 60 * 60 * 8).toString(),
+            ttl: (1000 * 60 * 60 * 8).toString(),
             channels: pullrequest.repo.channels.map(c => c.name),
             extract: (type: string) => {
                 if (type === "repo") {
