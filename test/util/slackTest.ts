@@ -3,7 +3,7 @@ import * as assert from "power-assert";
 
 import { isChannelPublic } from "../../src/util/slack";
 
-describe("LinkRepo", () => {
+describe("slack", () => {
 
     describe("checkChannelId", () => {
 
