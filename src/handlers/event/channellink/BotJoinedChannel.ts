@@ -20,7 +20,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { repoChannelName, repoSlackLink, repoSlug } from "../../../util/helpers";
 import { LinkOwnerRepo } from "../../command/slack/LinkOwnerRepo";
-import { LinkRepo } from "../../command/slack/LinkRepo";
+import { DefaultBotName, LinkRepo } from "../../command/slack/LinkRepo";
 import { NoLinkRepo } from "../../command/slack/NoLinkRepo";
 
 @EventHandler("Display a helpful message when the bot joins a channel",
@@ -34,7 +34,7 @@ export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Su
                 console.log(`UserJoinedChannel.user is false, probably not the bot joining a channel`);
                 return Success;
             }
-            if (j.user.isAtomistBot === "true") {
+            if (j.user.isAtomistBot !== "true") {
                 console.log(`user joining the channel is not the bot: ${j.user.screenName}`);
                 return Success;
             }
@@ -42,16 +42,16 @@ export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Su
                 console.log(`UserJoinedChannel.channel is false, strange`);
                 return Success;
             }
-            if (j.channel.botInvitedSelf) {
-                console.log(`bot invited self to channel, not sending message`);
-                return Success;
-            }
             if (!j.channel.name) {
                 console.log(`the channel has no name, odd`);
                 return Success;
             }
             const channelName = j.channel.name;
-            const botName = (j.user.screenName) ? j.user.screenName : "atomist";
+            if (j.channel.botInvitedSelf) {
+                console.log(`bot invited self to #${channelName}, not sending message`);
+                return Success;
+            }
+            const botName = (j.user.screenName) ? j.user.screenName : DefaultBotName;
 
             const helloText = `Hello! Now I can respond to messages beginning with @${botName}. ` +
                 `To see some options, try \`@${botName} help\``;
@@ -71,7 +71,7 @@ I won't be able to do much without GitHub integration, though. Run \`@atomist en
             const orgs = j.channel.team.orgs;
             const apiUrls = _.uniq(orgs.filter(o => o && o.provider && o.provider.apiUrl).map(o => o.provider.apiUrl));
             if (apiUrls && apiUrls.length > 1) {
-                console.warn(`multiple GitHub providers found, ${JSON.stringify(apiUrls}, using the first`);
+                console.warn(`multiple GitHub providers found, ${JSON.stringify(apiUrls)}, using the first`);
             }
             const apiUrl = (apiUrls && apiUrls[0]) ? apiUrls[0] : undefined;
 
@@ -115,13 +115,13 @@ I don't see any repositories in GitHub${ownerText}.`;
                 text: "repository...",
                 options: repoOptions(orgs),
             };
-            const linkRepoSlug = new LinkRepoSlug();
+            const linkRepoSlug = new LinkOwnerRepo();
             linkRepoSlug.apiUrl = apiUrl;
             linkRepoSlug.channelId = j.channel.channelId;
             linkRepoSlug.channelName = channelName;
             linkRepoSlug.msgId = msgId;
             linkRepoSlug.msg = helloText;
-            const repoMenu = menuForCommand(menu, linkRepoSlug, "slug");
+            actions.push(menuForCommand(menu, linkRepoSlug, "slug"));
 
             const noLinkRepo = new NoLinkRepo();
             noLinkRepo.channelName = channelName;
@@ -149,6 +149,13 @@ OK. If you want to link a repository later, type \`${linkCmd}\``;
     }
 }
 
-function repoOptions(orgs: graphql.BotJoinedChannel.Orgs[]): OptionGroup[] {
-    return [];
+export function repoOptions(orgs: graphql.BotJoinedChannel.Orgs[]): OptionGroup[] {
+    return orgs.map(o => {
+        return {
+            text: `${o.owner}/`,
+            options: o.repo.map(r => {
+                return { text: r.name, value: repoSlug(r) };
+            }),
+        };
+    });
 }

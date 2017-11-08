@@ -1,11 +1,11 @@
 subscription BotJoinedChannel {
   UserJoinedChannel {
-    user(isAtomistBot: "true") {
+    user {
       isAtomistBot
       screenName
       userId
     }
-    channel(botInvitedSelf: false) {
+    channel {
       botInvitedSelf
       channelId
       name
@@ -14,8 +14,6 @@ subscription BotJoinedChannel {
         owner
         org {
           provider {
-            apiUrl
-            gitUrl
             url
           }
         }
@@ -25,8 +23,6 @@ subscription BotJoinedChannel {
           owner
           provider {
             apiUrl
-            gitUrl
-            url
           }
           repo {
             name

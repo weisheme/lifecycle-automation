@@ -65,7 +65,7 @@ export function branchUrl(repo: any, branch: string): string {
 }
 
 export function htmlUrl(repo: any): string {
-    if (repo.org != null && repo.org.provider != null && repo.org.provider.url != null) {
+    if (repo.org && repo.org.provider && repo.org.provider.url) {
         let providerUrl = repo.org.provider.url;
         if (providerUrl.slice(-1) === "/") {
             providerUrl = providerUrl.slice(0, -1);
@@ -77,7 +77,7 @@ export function htmlUrl(repo: any): string {
 }
 
 export function apiUrl(repo: any): string {
-    if (repo.org != null && repo.org.provider != null && repo.org.provider.url != null) {
+    if (repo.org && repo.org.provider && repo.org.provider.url) {
         let providerUrl = repo.org.provider.apiUrl;
         if (providerUrl.slice(-1) === "/") {
             providerUrl = providerUrl.slice(0, -1);

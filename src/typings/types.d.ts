@@ -1331,8 +1331,6 @@ export namespace BotJoinedChannel {
   } 
 
   export type Provider = {
-    apiUrl?: string | null; 
-    gitUrl?: string | null; 
     url?: string | null; 
   } 
 
@@ -1348,8 +1346,6 @@ export namespace BotJoinedChannel {
 
   export type _Provider = {
     apiUrl?: string | null; 
-    gitUrl?: string | null; 
-    url?: string | null; 
   } 
 
   export type Repo = {

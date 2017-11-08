@@ -37,6 +37,7 @@ import { SetUserPreference } from "./handlers/command/preferences/SetUserPrefere
 import { AddBotToChannel } from "./handlers/command/slack/AddBotToChannel";
 import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
 import { CreateChannel } from "./handlers/command/slack/CreateChannel";
+import { LinkOwnerRepo } from "./handlers/command/slack/LinkOwnerRepo";
 import { LinkRepo } from "./handlers/command/slack/LinkRepo";
 import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
@@ -151,6 +152,7 @@ export const configuration = {
         () => new AddBotToChannel(),
         () => new AssociateRepo(),
         () => new CreateChannel(),
+        () => new LinkOwnerRepo(),
         () => new LinkRepo(),
         // () => new ListRepoLinks(),
         () => new NoLinkRepo(),
