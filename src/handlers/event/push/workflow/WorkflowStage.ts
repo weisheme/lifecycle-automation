@@ -1,4 +1,4 @@
-import {BuildStatus} from "../../../../typings/types";
+import { BuildStatus } from "../../../../typings/types";
 
 export interface WorkflowStage {
     name: string;

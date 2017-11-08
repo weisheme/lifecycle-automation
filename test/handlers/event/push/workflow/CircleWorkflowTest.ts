@@ -1,8 +1,8 @@
 import "mocha";
 import * as assert from "power-assert";
-
-import {CircleWorkflow, circleWorkflowtoStages} from "../../../../../src/handlers/event/build/workflow/CircleWorkflow";
-import {WorkflowStage} from "../../../../../src/handlers/event/build/workflow/WorkflowStage";
+import { circleWorkflowtoStages } from "../../../../../src/handlers/event/push/workflow/CircleWorkflow";
+import { WorkflowStage } from "../../../../../src/handlers/event/push/workflow/WorkflowStage";
+import * as graphql from "../../../../../src/typings/types";
 
 describe("CircleWorkflow", () => {
     const workflowConfig = "version: 2\njobs:\n  build:\n    docker:\n      - image: circleci/node:8.4\n    " +
@@ -34,14 +34,12 @@ describe("CircleWorkflow", () => {
 
     it("construct completed workflow stages", () => {
         const workflow = {
-            teamId: "TEAM1",
             id: "workflow id",
             name: "pipelineDooling",
             provider: "circle",
             config: workflowConfig,
             builds: [
                 {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl1",
@@ -50,7 +48,6 @@ describe("CircleWorkflow", () => {
                     jobName: "build",
                     jobId: "job id 1",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl2",
@@ -59,7 +56,6 @@ describe("CircleWorkflow", () => {
                     jobName: "one2",
                     jobId: "job id 2",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl3",
@@ -68,7 +64,6 @@ describe("CircleWorkflow", () => {
                     jobName: "one1",
                     jobId: "job id 3",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl4",
@@ -77,7 +72,6 @@ describe("CircleWorkflow", () => {
                     jobName: "one3",
                     jobId: "job id 4",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl5",
@@ -86,7 +80,6 @@ describe("CircleWorkflow", () => {
                     jobName: "one0",
                     jobId: "job id 5",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl6",
@@ -95,7 +88,6 @@ describe("CircleWorkflow", () => {
                     jobName: "test",
                     jobId: "job id 6",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl7",
@@ -104,7 +96,6 @@ describe("CircleWorkflow", () => {
                     jobName: "two1",
                     jobId: "job id 7",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl8",
@@ -113,7 +104,6 @@ describe("CircleWorkflow", () => {
                     jobName: "two0",
                     jobId: "job id 8",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl9",
@@ -122,7 +112,6 @@ describe("CircleWorkflow", () => {
                     jobName: "publish",
                     jobId: "job id 9",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl10",
@@ -131,7 +120,6 @@ describe("CircleWorkflow", () => {
                     jobName: "three0",
                     jobId: "job id 10",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl11",
@@ -140,7 +128,6 @@ describe("CircleWorkflow", () => {
                     jobName: "three1",
                     jobId: "job id 11",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl12",
@@ -149,7 +136,6 @@ describe("CircleWorkflow", () => {
                     jobName: "four0",
                     jobId: "job id 12",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl13",
@@ -158,7 +144,6 @@ describe("CircleWorkflow", () => {
                     jobName: "staging",
                     jobId: "job id 13",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl14",
@@ -168,7 +153,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 14",
                 },
             ],
-        } as CircleWorkflow;
+        } as graphql.PushToPushLifecycle.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -241,14 +226,12 @@ describe("CircleWorkflow", () => {
 
     it("construct failed workflow", () => {
         const workflow = {
-            teamId: "TEAM1",
             id: "workflow id",
             name: "pipelineDooling",
             provider: "circle",
             config: workflowConfig,
             builds: [
                 {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl1",
@@ -257,7 +240,6 @@ describe("CircleWorkflow", () => {
                     jobName: "build",
                     jobId: "job id 1",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl2",
@@ -266,7 +248,6 @@ describe("CircleWorkflow", () => {
                     jobName: "one2",
                     jobId: "job id 2",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "failed",
                     buildUrl: "buildUrl3",
@@ -275,7 +256,6 @@ describe("CircleWorkflow", () => {
                     jobName: "one1",
                     jobId: "job id 3",
                 }, {
-                    teamId: "TEAM1",
                     id: "build id 1",
                     status: "passed",
                     buildUrl: "buildUrl4",
@@ -285,7 +265,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 4",
                 },
             ],
-        } as CircleWorkflow;
+        } as graphql.PushToPushLifecycle.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
