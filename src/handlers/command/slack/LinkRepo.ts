@@ -16,8 +16,10 @@ import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { LinkSlackChannelToRepo } from "../../../typings/types";
 import { isChannelPublic } from "../../../util/slack";
-import * as github from "../github/gitHubApi";
-import { checkRepo, noRepoMessage } from "./AssociateRepo";
+import {
+    checkRepo,
+    noRepoMessage,
+} from "./AssociateRepo";
 
 export const DefaultBotName = "atomist";
 
@@ -34,7 +36,7 @@ export function linkSlackChannelToRepo(
     );
 }
 
-@CommandHandler("Link a repository and channel")
+@CommandHandler("Link a repository and channel", "repo", "link repo", "link repository")
 @Tags("slack", "repo")
 export class LinkRepo implements HandleCommand {
 

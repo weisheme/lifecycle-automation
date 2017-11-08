@@ -9,6 +9,8 @@ import {
     Success,
 } from "@atomist/automation-client/Handlers";
 import {
+    bold,
+    codeLine,
     escape,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
@@ -24,7 +26,7 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
         const channelName = event.data.ChannelLink[0].channel.name || event.data.ChannelLink[0].channel.normalizedName;
         const repo = event.data.ChannelLink[0].repo;
         const msg = `${repoSlackLink(repo)} is now linked to this channel. I will send activity from that \
-repository here. To turn this off, type \`@atomist repos\` and click the "unlink ${repo.name}" button.`;
+repository here. To turn this off, type ${codeLine("@atomist repos")} and click the ${bold("Unlink")} button.`;
 
         const repoMsg: SlackMessage = {
             attachments: [{

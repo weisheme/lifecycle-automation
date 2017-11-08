@@ -9,7 +9,11 @@ import {
     Success,
 } from "@atomist/automation-client/Handlers";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
-import { Attachment, codeLine, SlackMessage } from "@atomist/slack-messages/SlackMessages";
+import {
+    Attachment,
+    codeLine,
+    SlackMessage,
+} from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 
 import * as graphql from "../../../typings/types";

@@ -41,6 +41,7 @@ import { LinkOwnerRepo } from "./handlers/command/slack/LinkOwnerRepo";
 import { LinkRepo } from "./handlers/command/slack/LinkRepo";
 import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
+import { UnlinkRepo } from "./handlers/command/slack/UnlinkRepo";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
@@ -154,8 +155,9 @@ export const configuration = {
         () => new CreateChannel(),
         () => new LinkOwnerRepo(),
         () => new LinkRepo(),
-        // () => new ListRepoLinks(),
+        () => new ListRepoLinks(),
         () => new NoLinkRepo(),
+        () => new UnlinkRepo(),
 
         // travis
         () => new RestartTravisBuild(),

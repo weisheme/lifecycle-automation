@@ -7,23 +7,12 @@ import {
     MappedParameter,
     MappedParameters,
     Parameter,
-    Secret,
-    Secrets,
     Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
-import {
-    AddBotToSlackChannel,
-    InviteUserToSlackChannel,
-    LinkSlackChannelToRepo,
-} from "../../../typings/types";
-import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
-import * as github from "../github/gitHubApi";
-import { checkRepo, noRepoMessage } from "./AssociateRepo";
-
-@CommandHandler("replace repo channel linking prompt with instructions")
+@CommandHandler("Replace repo channel linking prompt with instructions")
 @Tags("slack", "repo")
 export class NoLinkRepo implements HandleCommand {
 

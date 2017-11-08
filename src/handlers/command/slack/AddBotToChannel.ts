@@ -6,18 +6,12 @@ import {
     HandlerResult,
     MappedParameter,
     MappedParameters,
-    Parameter,
-    Secret,
-    Secrets,
     Success,
     Tags,
 } from "@atomist/automation-client/Handlers";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { AddBotToSlackChannel } from "../../../typings/types";
-import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
-import * as github from "../github/gitHubApi";
-import { checkRepo, noRepoMessage } from "./AssociateRepo";
 
 export function addBotToSlackChannel(ctx: HandlerContext, channelId: string): Promise<AddBotToSlackChannel.Mutation> {
     return ctx.graphClient.executeMutationFromFile<AddBotToSlackChannel.Mutation, AddBotToSlackChannel.Variables>(

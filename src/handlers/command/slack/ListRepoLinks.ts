@@ -6,8 +6,10 @@ import {
     HandlerResult,
     MappedParameter,
     MappedParameters,
+    Parameter,
     Success,
 } from "@atomist/automation-client/Handlers";
+import { guid } from "@atomist/automation-client/internal/util/string";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import {
     Attachment,
@@ -18,6 +20,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { repoUrl } from "../../../util/helpers";
 import { LinkRepo } from "./LinkRepo";
+import { UnlinkRepo } from "./UnlinkRepo";
 
 @CommandHandler("View repos linked to this channel and optionally unlink them", "repos", "repositories")
 export class ListRepoLinks implements HandleCommand {
@@ -25,7 +28,14 @@ export class ListRepoLinks implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
+    @Parameter({ pattern: /^\S*$/, displayable: false, required: false })
+    public msgId: string;
+
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        if (!this.msgId) {
+            this.msgId = guid();
+        }
+
         return ctx.graphClient.executeQueryFromFile<graphql.ChatChannelByChannelId.Query,
             graphql.ChatChannelByChannelId.Variables>(
                 "graphql/query/chatChannelByChannelId",
@@ -40,16 +50,22 @@ export class ListRepoLinks implements HandleCommand {
                     };
 
                     repos.forEach(r => {
+                        const handler = new UnlinkRepo();
+                        handler.msgId = this.msgId;
+                        handler.name = r.name;
+
                         const slug = `${r.owner}/${r.name}`;
                         const attachment: Attachment = {
                             fallback: slug,
                             text: `${url(repoUrl(r), slug)}`,
-                            actions: null, // TODO add missing unlink action
+                            actions: [
+                                buttonForCommand({ text: "Unlink", style: "danger" }, handler),
+                            ],
                         };
                         msg.attachments.push(attachment);
                     });
 
-                    return ctx.messageClient.respond(linkRepoAttachment(msg));
+                    return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId });
                 } else {
 
                     const text = "There are no repositories linked to this channel." +
@@ -63,7 +79,7 @@ export class ListRepoLinks implements HandleCommand {
                         }],
                     };
 
-                    return ctx.messageClient.respond(linkRepoAttachment(msg));
+                    return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId });
                 }
             })
             .then(() => Success, failure);

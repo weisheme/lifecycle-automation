@@ -226,6 +226,21 @@ export namespace SetUserPreference {
     value?: string | null; 
   } 
 }
+export namespace UnlinkSlackChannelFromRepo {
+  export type Variables = {
+    channelId: string;
+    repo: string;
+    owner: string;
+  }
+
+  export type Mutation = {
+    unlinkSlackChannelFromRepo?: UnlinkSlackChannelFromRepo | null; 
+  } 
+
+  export type UnlinkSlackChannelFromRepo = {
+    id?: string | null; 
+  } 
+}
 export namespace BotOwner {
   export type Variables = {
   }

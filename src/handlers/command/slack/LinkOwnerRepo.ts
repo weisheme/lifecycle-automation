@@ -14,7 +14,6 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
-import * as github from "../github/gitHubApi";
 import { LinkRepo } from "./LinkRepo";
 
 @CommandHandler("Link a repository, provided as an owner/repo slug, and channel")
@@ -73,5 +72,4 @@ export class LinkOwnerRepo implements HandleCommand {
         return linkRepo.handle(ctx)
             .then(() => Success, failure);
     }
-
 }

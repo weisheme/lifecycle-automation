@@ -1,0 +1,5 @@
+mutation UnlinkSlackChannelFromRepo($channelId: String!, $repo: String!, $owner: String!) {
+    unlinkSlackChannelFromRepo(channelId: $channelId, repo: $repo, owner: $owner)  {
+   id
+ }
+}

@@ -14,7 +14,7 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
-import { AddBotToSlackChannel, InviteUserToSlackChannel } from "../../../typings/types";
+import { InviteUserToSlackChannel } from "../../../typings/types";
 import { isChannelPublic } from "../../../util/slack";
 import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
 import * as github from "../github/gitHubApi";
@@ -23,7 +23,7 @@ import { linkSlackChannelToRepo } from "./LinkRepo";
 
 export function checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
     return github.api(token, url).repos.get({ owner, repo })
-        .then(x => true, e => false);
+        .then(() => true, () => false);
 }
 
 export function noRepoMessage(repo: string, owner: string): slack.SlackMessage {
