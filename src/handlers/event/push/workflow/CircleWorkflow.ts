@@ -1,31 +1,9 @@
-import * as _ from "lodash";
-
-import {BuildStatus} from "../../../../typings/types";
-import {WorkflowStage} from "./WorkflowStage";
-
 import * as yaml from "js-yaml";
+import * as _ from "lodash";
+import * as graphql from "../../../../typings/types";
+import { WorkflowStage } from "./WorkflowStage";
 
-export interface CircleWorkflow {
-    teamId: string;
-    id: string;
-    builds: Build[];
-    name: string;
-    provider: string;
-    config: string;
-}
-
-export interface Build {
-    teamId: string;
-    id: string;
-    status: BuildStatus;
-    buildUrl: string;
-    startedAt: string;
-    finishedAt: string;
-    jobName: string;
-    jobId: string;
-}
-
-export function circleWorkflowtoStages(workflow: CircleWorkflow): WorkflowStage[] {
+export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Workflow): WorkflowStage[] {
 
     const doc = yaml.load(workflow.config);
     const jobsConfig = _.find(_.values(doc.workflows), v => v.jobs).jobs;

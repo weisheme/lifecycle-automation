@@ -140,7 +140,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private createMessage(message: SlackMessage, lifecycle: Lifecycle,
                           messageClient: MessageClient): Promise<any> {
         message.unfurl_links = false;
-        message.unfurl_media = false;
+        message.unfurl_media = true;
 
         let ts = this.normalizeTimestamp(lifecycle.timestamp);
         if (ts == null) {
