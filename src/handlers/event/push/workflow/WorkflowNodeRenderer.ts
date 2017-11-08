@@ -29,7 +29,8 @@ export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
             const attachment: Attachment = {
                 author_name: "Workflow",
                 author_icon: "https://images.atomist.com/rug/flow.png",
-                author_link: `https://circle-ci.com/workflow-run/${workflow.id.slice(10)}`,
+                title: "Circle CI",
+                title_link: `https://circleci.com/workflow-run/${workflow.id.slice(10)}`,
                 fallback: "Workflow",
                 image_url: chartUrl,
             };
