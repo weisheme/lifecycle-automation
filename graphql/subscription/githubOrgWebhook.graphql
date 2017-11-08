@@ -1,17 +1,18 @@
 subscription GitHubWebhookCreated
 {
-    GitHubOrgWebhook {
-        org {
-            chatTeam {
-                members(isOwner: "true") {
-                    screenName
-                }
-                channels {
-                    name
-                    channelId
-                }
-            }
+  GitHubOrgWebhook {
+    org {
+      chatTeam {
+        members {
+          isAtomistBot
+          isOwner
+          screenName
         }
+        channels {
+          name
+          channelId
+        }
+      }
     }
+  }
 }
-
