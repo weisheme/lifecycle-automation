@@ -90,7 +90,7 @@ import {
     HeapDumpCommand,
     initMemoryMonitoring,
     MemoryUsageCommand,
-} from "./util/men";
+} from "./util/mem";
 import { appEnv, secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
