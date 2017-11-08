@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Updated package scripts to have standard names and be platform
     agnostic
 
+### Fixed
+
+-   Provide warning when someone tries to link a repo to a non-public
+    channel [#34][34]
+
+[34]: https://github.com/atomist/lifecycle-automation/issues/34
+
 ## [0.1.0][] - 2017-10-11
 
 [0.1.0]: https://github.com/atomist/lifecycle-automation/tree/0.1.0
