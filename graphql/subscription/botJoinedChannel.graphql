@@ -1,0 +1,35 @@
+subscription BotJoinedChannel {
+  UserJoinedChannel {
+    user {
+      isAtomistBot
+      screenName
+      userId
+    }
+    channel {
+      botInvitedSelf
+      channelId
+      name
+      repos {
+        name
+        owner
+        org {
+          provider {
+            url
+          }
+        }
+      }
+      team {
+        orgs {
+          owner
+          provider {
+            apiUrl
+          }
+          repo {
+            name
+            owner
+          }
+        }
+      }
+    }
+  }
+}
