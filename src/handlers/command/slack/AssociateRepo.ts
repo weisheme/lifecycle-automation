@@ -15,6 +15,7 @@ import {
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { AddBotToSlackChannel, InviteUserToSlackChannel } from "../../../typings/types";
+import { isChannelPublic } from "../../../util/slack";
 import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
 import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
@@ -75,6 +76,13 @@ export class AssociateRepo implements HandleCommand {
     public msgId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
+        if (!isChannelPublic(this.channelId)) {
+            const err = "The Atomist Bot can only link repositories to public channels. " +
+                "Please try again with a public channel.";
+            return ctx.messageClient.addressUsers(err, screenName)
+                .then(() => Success, failure);
+        }
         return checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
@@ -86,7 +94,6 @@ export class AssociateRepo implements HandleCommand {
                     .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
                     .then(() => {
                         if (this.msgId) {
-                            const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
                             const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
                                 `${slack.channel(this.channelId)} and invited you to the channel.`;
                             ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });

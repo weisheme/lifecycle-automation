@@ -15,6 +15,7 @@ import {
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { LinkSlackChannelToRepo } from "../../../typings/types";
+import { isChannelPublic } from "../../../util/slack";
 import * as github from "../github/gitHubApi";
 import { checkRepo, noRepoMessage } from "./AssociateRepo";
 
@@ -78,6 +79,12 @@ export class LinkRepo implements HandleCommand {
     public msg: string = "";
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        if (!isChannelPublic(this.channelId)) {
+            const err = "The Atomist Bot can only link repositories to public channels. " +
+                "Please try again in a public channel.";
+            return ctx.messageClient.addressChannels(err, this.channelName)
+                .then(() => Success, failure);
+        }
         return checkRepo(this.githubToken, this.apiUrl, this.name, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
