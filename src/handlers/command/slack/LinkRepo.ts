@@ -14,32 +14,49 @@ import {
 } from "@atomist/automation-client/Handlers";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
-import {
-    AddBotToSlackChannel,
-    InviteUserToSlackChannel,
-    LinkSlackChannelToRepo,
-} from "../../../typings/types";
-import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
+import { LinkSlackChannelToRepo } from "../../../typings/types";
 import * as github from "../github/gitHubApi";
+import { checkRepo, noRepoMessage } from "./AssociateRepo";
 
-/**
- * Link a repository and channel.
- */
-@CommandHandler("Link a repository and channel", "repo")
+export const DefaultBotName = "atomist";
+
+export function linkSlackChannelToRepo(
+    ctx: HandlerContext,
+    channelId: string,
+    repo: string,
+    owner: string,
+): Promise<LinkSlackChannelToRepo.Mutation> {
+
+    return ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation, LinkSlackChannelToRepo.Variables>(
+        "graphql/mutation/linkSlackChannelToRepo",
+        { channelId, repo, owner },
+    );
+}
+
+@CommandHandler("Link a repository and channel")
 @Tags("slack", "repo")
 export class LinkRepo implements HandleCommand {
 
+    public static linkRepoCommand(
+        botName: string = DefaultBotName,
+        owner: string = "OWNER",
+        repo: string = "REPO",
+    ): string {
+
+        return `@${botName} repo owner=${owner} name=${repo}`;
+    }
+
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;
+
+    @MappedParameter(MappedParameters.SlackChannelName)
+    public channelName: string;
 
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
-
-    @MappedParameter(MappedParameters.SlackUser)
-    public userId: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
@@ -52,52 +69,30 @@ export class LinkRepo implements HandleCommand {
         maxLength: 100,
         required: true,
     })
-    public repo: string;
+    public name: string;
 
     @Parameter({ pattern: /^\S*$/, displayable: false, required: false })
     public msgId: string;
 
+    @Parameter({ pattern: /^[\S\s]*$/, displayable: false, required: false })
+    public msg: string = "";
+
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return this.checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
+        return checkRepo(this.githubToken, this.apiUrl, this.name, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
-                    ctx.messageClient.respond(this.noRepoMessage(this.repo, this.owner));
+                    ctx.messageClient.respond(noRepoMessage(this.name, this.owner));
                     return;
                 }
-                return ctx.graphClient.executeMutationFromFile<AddBotToSlackChannel.Mutation,
-                    AddBotToSlackChannel.Variables>(
-                    "graphql/mutation/addBotToSlackChannel",
-                    { channelId: this.channelId })
-                    .then(x => ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation,
-                        LinkSlackChannelToRepo.Variables>(
-                        "graphql/mutation/linkSlackChannelToRepo",
-                        { channelId: this.channelId, repo: this.repo, owner: this.owner }))
-                    .then(x => ctx.graphClient.executeMutationFromFile<InviteUserToSlackChannel.Mutation,
-                        InviteUserToSlackChannel.Variables>(
-                        "graphql/mutation/inviteUserToSlackChannel",
-                        { channelId: this.channelId, userId: this.userId }))
-                    .then(x => {
+                return linkSlackChannelToRepo(ctx, this.channelId, this.name, this.owner)
+                    .then(() => {
                         if (this.msgId) {
-                            const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
-                            const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
-                                `${slack.channel(this.channelId)} and invited you to the channel.`;
-                            ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
+                            ctx.messageClient.addressChannels(this.msg, this.channelName, { id: this.msgId });
                         }
                         return Success;
                     });
             })
-            .then(x => Success, e => failure(e));
-    }
-
-    private checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
-        return github.api(token, url).repos.get({ owner, repo })
-            .then(x => true)
-            .catch(e => false);
-    }
-
-    private noRepoMessage(repo: string, owner: string): slack.SlackMessage {
-        return { text: `The repository ${owner}/${repo} either does not exist or you do not have access to it.` };
-
+            .then(x => Success, failure);
     }
 
 }

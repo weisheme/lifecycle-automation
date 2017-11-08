@@ -13,7 +13,14 @@ import {
 } from "@atomist/automation-client/Handlers";
 
 import { CreateSlackChannel } from "../../../typings/types";
-import { LinkRepo } from "./LinkRepo";
+import { AssociateRepo } from "./AssociateRepo";
+
+export function createChannel(ctx: HandlerContext, channelName: string): Promise<CreateSlackChannel.Mutation> {
+    return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
+        "graphql/mutation/createSlackChannel",
+        { name: channelName },
+    );
+}
 
 /**
  * Create a channel and link it to a repository.
@@ -58,10 +65,9 @@ export class CreateChannel implements HandleCommand {
     public msgId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
-            "graphql/mutation/createSlackChannel", { name: this.channel })
+        return createChannel(ctx, this.channel)
             .then(channel => {
-                const associateRepo = new LinkRepo();
+                const associateRepo = new AssociateRepo();
                 associateRepo.channelId = channel.createSlackChannel[0].id;
                 associateRepo.owner = this.owner;
                 associateRepo.apiUrl = this.apiUrl;
