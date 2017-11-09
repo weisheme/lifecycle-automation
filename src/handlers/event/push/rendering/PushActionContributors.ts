@@ -2,6 +2,7 @@ import { buttonForCommand } from "@atomist/automation-client/spi/message/Message
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
+import * as semver from "semver";
 import {
     AbstractIdentifiableContribution,
     ActionContributor,
@@ -9,6 +10,8 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
+import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
+import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { Domain } from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
@@ -57,11 +60,25 @@ export class TagActionContributor extends AbstractIdentifiableContribution
     }
 
     public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo");
-        const push = context.lifecycle.extract("push");
+        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const buttons = [];
 
-        let commitMessage = "Release created by Atomist Lifecycle Rugs";
+        this.createReleaseButton(push, tag, repo, buttons);
+        this.createTagButton(tag, push, repo, buttons);
+
+        return Promise.resolve(buttons);
+    }
+
+    public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
+        return Promise.resolve([]);
+    }
+
+    private createReleaseButton(push: graphql.PushToPushLifecycle.Push,
+                                tag: graphql.PushToPushLifecycle.Tags,
+                                repo: graphql.PushToPushLifecycle.Repo,
+                                buttons: any[]) {
+        let commitMessage = "Release created by Atomist Lifecycle Automation";
 
         // We do not have a tag message in our model so let's fallback onto
         // commits by locating the commit for that particular tag
@@ -76,19 +93,41 @@ export class TagActionContributor extends AbstractIdentifiableContribution
                 githubToSlack(commits[0].message), repo);
         }
 
-        buttons.push(buttonForCommand({ text: "Release", confirm: { title: "Create Release",
-            text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel" } },
-            "CreateGitHubRelease", {
-                org: repo.owner,
-                repo: repo.name,
-                tag: tag.name,
-                message: commitMessage,
-            }));
-        return Promise.resolve(buttons);
+        const releaseHandler = new CreateGitHubRelease();
+        releaseHandler.tag = tag.name;
+        releaseHandler.message = commitMessage;
+        releaseHandler.owner = repo.owner;
+        releaseHandler.repo = repo.name;
+
+        buttons.push(buttonForCommand({
+            text: "Release", confirm: {
+                title: "Create Release",
+                text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel",
+            },
+        }, releaseHandler));
     }
 
-    public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
-        return Promise.resolve([]);
+    private createTagButton(tag: graphql.PushToPushLifecycle.Tags,
+                            push: graphql.PushToPushLifecycle.Push,
+                            repo: graphql.PushToPushLifecycle.Repo,
+                            buttons: any[]) {
+        // Add the create tag button
+        if (semver.valid(tag.name)) {
+            const version = `${semver.major(tag.name)}.${semver.minor(tag.name)}.${semver.patch(tag.name)}`;
+
+            if (!push.commits.some(c => c.tags && c.tags.some(t => t.name === version))) {
+
+                const tagHandler = new CreateGitHubTag();
+                tagHandler.tag = version;
+                tagHandler.message = push.after.message || "Tag created by Atomist Lifecycle Automation";
+                tagHandler.sha = push.after.sha;
+                tagHandler.repo = repo.name;
+                tagHandler.owner = repo.owner;
+
+                buttons.push(buttonForCommand({ text: `Tag ${version}` }, tagHandler));
+
+            }
+        }
     }
 }
 
