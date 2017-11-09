@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.1.37...HEAD
+
+## [0.1.37][] - 2017-11-09
+
+[0.1.37]: https://github.com/atomist/lifecycle-automation/compare/0.1.36...0.1.37
+
+Replacement release
 
 ### Added
 
