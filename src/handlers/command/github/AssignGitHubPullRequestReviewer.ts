@@ -10,7 +10,9 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
+import { failure } from "@atomist/automation-client/HandlerResult";
+import { user } from "@atomist/slack-messages/SlackMessages";
 import { getChatIds, loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
@@ -71,6 +73,14 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
                 });
             })
             .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(err => {
+                if (err.message && err.message.indexOf("Review cannot be requested from pull request author.") >= 0) {
+                    return ctx.messageClient
+                        .respond(`Sorry ${user(this.reviewer)}, you can't review your own pull request.`)
+                        .then(() => Success, failure);
+                } else {
+                    return failure(err);
+                }
+            });
     }
 }

@@ -9,7 +9,7 @@ import {
     Parameter,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 @CommandHandler("Replace repo channel linking prompt with instructions")

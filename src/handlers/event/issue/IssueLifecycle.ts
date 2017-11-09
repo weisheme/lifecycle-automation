@@ -1,4 +1,4 @@
-import { EventFired } from "@atomist/automation-client/Handlers";
+import { EventFired } from "@atomist/automation-client";
 import { Lifecycle, LifecycleHandler } from "../../../lifecycle/Lifecycle";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";

@@ -759,6 +759,7 @@ export namespace Pr {
 
   export type PullRequest = {
     state?: string | null; 
+    merged?: boolean | null; 
     number?: number | null; 
     name?: string | null; 
     title?: string | null; 

@@ -11,7 +11,7 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { InviteUserToSlackChannel } from "../../../typings/types";

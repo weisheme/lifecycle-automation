@@ -2,7 +2,7 @@ import {
     failure,
     HandlerResult,
     Success,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as graphql from "../../../typings/types";
 import { apiUrl } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";

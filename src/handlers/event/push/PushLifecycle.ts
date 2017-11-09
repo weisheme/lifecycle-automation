@@ -1,4 +1,4 @@
-import { EventFired } from "@atomist/automation-client/Handlers";
+import { EventFired } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import * as _ from "lodash";
 import { Lifecycle, LifecycleHandler, Preferences } from "../../../lifecycle/Lifecycle";

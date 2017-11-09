@@ -5,8 +5,8 @@ import {
     HandleEvent,
     HandlerResult,
     Success,
-} from "@atomist/automation-client/Handlers";
-import { HandlerContext } from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
+import { HandlerContext } from "@atomist/automation-client";
 import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import {

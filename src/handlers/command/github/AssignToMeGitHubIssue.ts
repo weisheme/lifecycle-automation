@@ -10,7 +10,7 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";

@@ -11,7 +11,7 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import { AutoMergeTag } from "../../event/pullrequest/autoMerge";
 import * as github from "./gitHubApi";
 

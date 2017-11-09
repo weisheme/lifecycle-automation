@@ -10,7 +10,7 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Add label to or remove a label from a GitHub issue", "toggle issue label", "toggle github issue label")

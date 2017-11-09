@@ -1,12 +1,12 @@
 import {
-    eventStore,
-    setEventStore,
-} from "@atomist/automation-client/globals";
-import {
     EventFired,
     HandlerContext,
     HandlerResult,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
+import {
+    eventStore,
+    setEventStore,
+} from "@atomist/automation-client/globals";
 import { CommandInvocation } from "@atomist/automation-client/internal/invoker/Payload";
 import {
     CommandIncoming,

@@ -1,4 +1,4 @@
-import { EventFired } from "@atomist/automation-client/Handlers";
+import { EventFired } from "@atomist/automation-client";
 import {
     Lifecycle,
     LifecycleHandler,

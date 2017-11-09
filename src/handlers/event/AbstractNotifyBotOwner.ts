@@ -5,7 +5,7 @@ import {
     HandlerContext,
     HandlerResult,
     Success,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import { Preferences } from "../../lifecycle/Lifecycle";
 import * as graphql from "../../typings/types";
 

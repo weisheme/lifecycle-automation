@@ -1,4 +1,3 @@
-import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
     EventHandler,
@@ -7,7 +6,8 @@ import {
     HandlerContext,
     HandlerResult,
     Success,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
+import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import {
     Attachment,

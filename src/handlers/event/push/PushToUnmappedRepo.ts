@@ -1,4 +1,3 @@
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
     EventHandler,
@@ -8,7 +7,8 @@ import {
     HandlerResult,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
+import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as graphql from "../../../typings/types";

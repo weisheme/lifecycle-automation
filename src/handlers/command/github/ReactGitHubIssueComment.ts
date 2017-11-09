@@ -10,7 +10,7 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
 @CommandHandler("React to a GitHub comment", "react issue comment", "react github issue comment")

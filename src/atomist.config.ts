@@ -1,4 +1,4 @@
-import { HandleCommand } from "@atomist/automation-client/Handlers";
+import { HandleCommand } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";

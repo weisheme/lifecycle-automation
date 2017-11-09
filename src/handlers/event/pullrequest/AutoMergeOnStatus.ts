@@ -1,4 +1,3 @@
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
     EventFired,
     EventHandler,
@@ -10,7 +9,8 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
+import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { autoMerge } from "./autoMerge";

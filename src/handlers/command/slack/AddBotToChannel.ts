@@ -8,7 +8,7 @@ import {
     MappedParameters,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { AddBotToSlackChannel } from "../../../typings/types";

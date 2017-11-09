@@ -10,7 +10,7 @@ import {
     Secrets,
     Success,
     Tags,
-} from "@atomist/automation-client/Handlers";
+} from "@atomist/automation-client";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";

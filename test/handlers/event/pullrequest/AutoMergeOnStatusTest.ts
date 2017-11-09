@@ -1,7 +1,7 @@
 import "mocha";
 import * as assert from "power-assert";
 
-import { Success } from "@atomist/automation-client/Handlers";
+import { Success } from "@atomist/automation-client";
 
 import { AutoMergeOnStatus } from "../../../../src/handlers/event/pullrequest/AutoMergeOnStatus";
 
