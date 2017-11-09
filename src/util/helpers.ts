@@ -1,4 +1,4 @@
-import { HandlerContext } from "@atomist/automation-client/Handlers";
+import { HandlerContext } from "@atomist/automation-client";
 import { channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as graphql from "../typings/types";
@@ -140,41 +140,52 @@ export function labelUrl(repo: any, label: string): string {
 }
 
 export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext): Promise<ReferencedIssues> {
-    const issues: any[] = [];
-    const prs: any[] = [];
-
     const promises = [];
 
     let match;
+    let counter = 0;
+    let showMore = false;
     // tslint:disable-next-line:no-conditional-assignment
     while (match = issueMentionRegExp.exec(body)) {
+        if (counter > 2) {
+            showMore = true;
+            break;
+        }
+
         const o = match[1] || repo.owner;
         const r = match[2] || repo.name;
         const no = match[3];
 
         promises.push(loadIssue(o, r, no, ctx)
-            .then(repoIssue => {
-                if (repoIssue) {
-                    issues.push(repoIssue);
+            .then(result => {
+                if (result) {
+                    return { type: "issue", result };
                 }
-            })
-            .then(() => {
-                return loadPullRequest(o, r, no, ctx);
-            })
-            .then(repoPr => {
-                if (repoPr) {
-                    prs.push(repoPr);
-                }
+                return result;
             }));
+        promises.push(loadPullRequest(o, r, no, ctx)
+            .then(result => {
+                if (result) {
+                    return { type: "pr", result };
+                }
+                return result;
+            }));
+        counter++;
     }
 
     return Promise.all(promises)
-        .then(() => {
-            return new ReferencedIssues(issues, prs);
+        .then(results => {
+            const all = results.filter(r => r != null);
+            const issues = all.filter(r => r.type === "issue").map(r => r.result);
+            const prs = all.filter(r => r.type === "pr").map(r => r.result);
+            return new ReferencedIssues(issues, prs, showMore);
         });
 }
 
-export function loadIssue(owner: string, repo: string, name: string, ctx: HandlerContext): Promise<any> {
+export function loadIssue(owner: string,
+                          repo: string,
+                          name: string,
+                          ctx: HandlerContext): Promise<graphql.Issue.Issue> {
 
     return ctx.graphClient.executeQueryFromFile<graphql.Issue.Query, graphql.Issue.Variables>(
         "graphql/query/issue",
@@ -196,7 +207,10 @@ export function loadIssue(owner: string, repo: string, name: string, ctx: Handle
         });
 }
 
-export function loadPullRequest(owner: string, repo: string, name: string, ctx: HandlerContext): any {
+export function loadPullRequest(owner: string,
+                                repo: string,
+                                name: string,
+                                ctx: HandlerContext): Promise<graphql.Pr.PullRequest> {
 
     return ctx.graphClient.executeQueryFromFile<graphql.Pr.Query, graphql.Pr.Variables>(
         "graphql/query/pr",
@@ -558,5 +572,7 @@ export function repoAndlabelsAndAssigneesFooter(repo: any, labels: any, assignee
 
 export class ReferencedIssues {
 
-    constructor(public issues: any[], public prs: any[]) { }
+    constructor(public issues: graphql.Issue.Issue[],
+                public prs: graphql.Pr.PullRequest[],
+                public showMore: boolean) { }
 }

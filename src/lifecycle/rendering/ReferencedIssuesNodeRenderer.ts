@@ -62,6 +62,14 @@ export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContributi
                         issues.push(pr.number);
                     }
                 });
+                /* if (ri.showMore) {
+                    const attachment: Attachment = {
+                        author_name: "Show more...",
+                        author_link: issueUrl(repo, node),
+                        fallback: "Show more..."
+                    }
+                    msg.attachments.push(attachment);
+                } */
                 return Promise.resolve(msg);
             });
     }

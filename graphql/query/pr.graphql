@@ -6,6 +6,7 @@ query PR($teamId: ID!, $orgOwner: String!, $repoName: String!, $prName: String!)
         owner
         pullRequest(name: $prName) {
           state
+          merged
           number
           name
           title
