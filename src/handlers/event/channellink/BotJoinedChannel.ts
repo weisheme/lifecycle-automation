@@ -5,7 +5,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
-    Success,
+    Success, Tags,
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
@@ -25,6 +25,7 @@ import { NoLinkRepo } from "../../command/slack/NoLinkRepo";
 
 @EventHandler("Display a helpful message when the bot joins a channel",
     GraphQL.subscriptionFromFile("graphql/subscription/botJoinedChannel"))
+@Tags("enrollment")
 export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Subscription> {
 
     public handle(e: EventFired<graphql.BotJoinedChannel.Subscription>, ctx: HandlerContext): Promise<HandlerResult> {

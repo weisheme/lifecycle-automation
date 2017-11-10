@@ -5,7 +5,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
-    Success,
+    Success, Tags,
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
@@ -25,6 +25,7 @@ const Channels = ["dev", "engineering", "development", "devops"];
 
 @EventHandler("Displays a welcome message when a new org webhook is installed",
     GraqhQL.subscriptionFromFile("graphql/subscription/githubOrgWebhook"))
+@Tags("enrollment")
 export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCreated.Subscription> {
 
     public handle(

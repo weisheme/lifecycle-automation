@@ -5,7 +5,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
-    Success,
+    Success, Tags,
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
 import {
@@ -19,6 +19,7 @@ import { repoSlackLink } from "../../../util/helpers";
 
 @EventHandler("Display an unlink message when a channel is linked",
     GraqhQL.subscriptionFromFile("graphql/subscription/channelLinkCreated"))
+@Tags("enrollment")
 export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreated.Subscription> {
 
     public handle(event: EventFired<graphql.ChannelLinkCreated.Subscription>,

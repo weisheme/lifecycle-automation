@@ -7,7 +7,7 @@ import {
     MappedParameter,
     MappedParameters,
     Parameter,
-    Success,
+    Success, Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
@@ -23,6 +23,7 @@ import { LinkRepo } from "./LinkRepo";
 import { UnlinkRepo } from "./UnlinkRepo";
 
 @CommandHandler("View repos linked to this channel and optionally unlink them", "repos", "repositories")
+@Tags("slack", "repo")
 export class ListRepoLinks implements HandleCommand {
 
     @MappedParameter(MappedParameters.SlackChannelName)
