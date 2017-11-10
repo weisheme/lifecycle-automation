@@ -61,7 +61,8 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                     color: "#45B254",
                 }],
             };
-            return ctx.messageClient.respond(msg);
+            return ctx.messageClient.respond(msg)
+                .then(() => Success, failure);
         } else if (!this.lifecycle) {
             return this.loadPreferences(ctx, LifecyclePreferences.key)
                 .then(preferences => {
