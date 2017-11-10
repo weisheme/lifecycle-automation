@@ -57,6 +57,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 attachments: [{
                     author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
                     author_name: "Cancelled configuration",
+                    title: "Lifecycle",
                     fallback: "Cancelled configuration",
                     color: "#45B254",
                 }],
