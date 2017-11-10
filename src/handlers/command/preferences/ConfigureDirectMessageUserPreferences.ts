@@ -79,7 +79,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                             key: DirectMessagePreferences.key,
                             name: `disable_for_${dmType.id}`,
                             value: "false",
-                            label: `'${dmType.name}' direct messages enabled`
+                            label: `'${dmType.name}' direct messages enabled`,
                         }));
                 } else {
                     actions.push(buttonForCommand({text: "Disable", style: "danger" }, "SetUserPreference",
@@ -88,7 +88,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                             key: DirectMessagePreferences.key,
                             name: `disable_for_${dmType.id}`,
                             value: "true",
-                            label: `'${dmType.name}' direct messages disabled`
+                            label: `'${dmType.name}' direct messages disabled`,
                         }));
                 }
 
@@ -135,7 +135,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                         key: DirectMessagePreferences.key,
                         name: `disable_for_all`,
                         value: enable,
-                        label: message
+                        label: message,
                     }),
             ],
         };

@@ -1,8 +1,8 @@
 import { HandlerContext } from "@atomist/automation-client";
 import { channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
-import * as graphql from "../typings/types";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
+import * as graphql from "../typings/types";
 
 export function truncateCommitMessage(message: string, repo: any): string {
     const title = message.split("\n")[0];
