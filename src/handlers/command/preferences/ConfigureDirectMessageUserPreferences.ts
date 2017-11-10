@@ -18,7 +18,7 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
-import { DirectMessagePreferences } from "./preferences";
+import { DirectMessagePreferences } from "../../event/preferences";
 
 /**
  * Configure DM preferences for the invoking user.
@@ -48,7 +48,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                 const preferences =
                     _.get(result, "ChatTeam[0].members[0].person.chatId.preferences") as graphql.ChatId.Preferences[];
                 if (preferences) {
-                    const dmPreferences = preferences.find(p => p.name === "dm");
+                    const dmPreferences = preferences.find(p => p.name === DirectMessagePreferences.key);
                     if (dmPreferences) {
                         return JSON.parse(dmPreferences.value);
                     }
@@ -68,18 +68,28 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
         };
 
         for (const type in DirectMessagePreferences) {
-            if (DirectMessagePreferences.hasOwnProperty(type)) {
+            if (DirectMessagePreferences.hasOwnProperty(type) && type !== "key") {
                 const dmType = DirectMessagePreferences[type];
                 const actions: Action[] = [];
 
                 if (this.isDirectMessageDisabled(preferences, dmType.id)) {
                     actions.push(buttonForCommand({text: "Enable", style: "primary" }, "SetUserPreference",
-                        { id, key: "dm", name: `disable_for_${dmType.id}`,
-                            value: "false", label: `'${dmType.name}' direct messages enabled` }));
+                        {
+                            id,
+                            key: DirectMessagePreferences.key,
+                            name: `disable_for_${dmType.id}`,
+                            value: "false",
+                            label: `'${dmType.name}' direct messages enabled`
+                        }));
                 } else {
                     actions.push(buttonForCommand({text: "Disable", style: "danger" }, "SetUserPreference",
-                        { id, key: "dm", name: `disable_for_${dmType.id}`,
-                            value: "true", label: `'${dmType.name}' direct messages disabled` }));
+                        {
+                            id,
+                            key: DirectMessagePreferences.key,
+                            name: `disable_for_${dmType.id}`,
+                            value: "true",
+                            label: `'${dmType.name}' direct messages disabled`
+                        }));
                 }
 
                 const attachment: Attachment = {
@@ -120,7 +130,13 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
             mrkdwn_in: ["text"],
             actions: [
                 buttonForCommand({ text: label }, "SetUserPreference",
-                    { id, key: "dm", name: `disable_for_all`, value: enable, label: message }),
+                    {
+                        id,
+                        key: DirectMessagePreferences.key,
+                        name: `disable_for_all`,
+                        value: enable,
+                        label: message
+                    }),
             ],
         };
         return attachment;

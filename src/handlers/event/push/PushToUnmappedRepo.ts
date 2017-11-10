@@ -17,11 +17,11 @@ import {
     repoChannelName,
     repoSlackLink,
 } from "../../../util/helpers";
-import { DirectMessagePreferences } from "../../command/preferences/preferences";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
 import { AssociateRepo } from "../../command/slack/AssociateRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
 import { DefaultBotName, LinkRepo } from "../../command/slack/LinkRepo";
+import { DirectMessagePreferences } from "../preferences";
 
 /**
  * Suggest mapping a repo to committer on unmapped repo.

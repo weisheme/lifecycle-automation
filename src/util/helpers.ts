@@ -2,6 +2,7 @@ import { HandlerContext } from "@atomist/automation-client";
 import { channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as graphql from "../typings/types";
+import { DirectMessagePreferences } from "../handlers/event/preferences";
 
 export function truncateCommitMessage(message: string, repo: any): string {
     const title = message.split("\n")[0];
@@ -543,7 +544,7 @@ export function isAssigner(assignable: any, assigneeLogin: string): boolean {
 
 export function isDmDisabled(chatId: ChatId, type?: string): boolean {
     if (chatId.preferences) {
-        const preferences = chatId.preferences.find(p => p.name === "dm");
+        const preferences = chatId.preferences.find(p => p.name === DirectMessagePreferences.key);
         if (preferences) {
             const json = JSON.parse(preferences.value);
             if (json.disable_for_all === true) {

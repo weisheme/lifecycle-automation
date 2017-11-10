@@ -6,7 +6,6 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
-import { DirectMessagePreferences } from "../handlers/command/preferences/preferences";
 import * as graphql from "../typings/types";
 import {
     avatarUrl,
@@ -26,6 +25,7 @@ import {
     truncateCommitMessage,
     userUrl,
 } from "./helpers";
+import { DirectMessagePreferences } from "../handlers/event/preferences";
 
 export function issueNotification(id: string,
                                   prefix: string,
