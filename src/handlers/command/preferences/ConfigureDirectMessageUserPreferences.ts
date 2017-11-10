@@ -19,6 +19,7 @@ import {
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { DirectMessagePreferences } from "../../event/preferences";
+import { SetUserPreference } from "./SetUserPreference";
 
 /**
  * Configure DM preferences for the invoking user.
@@ -35,30 +36,49 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
         required: false, displayable: false })
     public msgId: string;
 
+    @Parameter({ description: "cancel configuration", pattern: /^.*$/,
+        required: false, displayable: false })
+    public cancel: string;
+
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
         if (!this.msgId) {
             this.msgId = guid();
         }
 
-        return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
-            graphql.ChatId.Variables>("graphql/query/chatId",
-            { teamId: ctx.teamId, chatId: this.requester })
-            .then(result => {
-                const preferences =
-                    _.get(result, "ChatTeam[0].members[0].person.chatId.preferences") as graphql.ChatId.Preferences[];
-                if (preferences) {
-                    const dmPreferences = preferences.find(p => p.name === DirectMessagePreferences.key);
-                    if (dmPreferences) {
-                        return JSON.parse(dmPreferences.value);
+        if (this.cancel) {
+            const msg: SlackMessage = {
+                attachments: [{
+                    author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
+                    author_name: "Cancelled configuration",
+                    title: "Lifecycle",
+                    fallback: "Cancelled configuration",
+                    color: "#45B254",
+                }],
+            };
+            return ctx.messageClient.respond(msg, { id: this.msgId })
+                .then(() => Success, failure);
+
+        } else {
+            return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
+                graphql.ChatId.Variables>("graphql/query/chatId",
+                { teamId: ctx.teamId, chatId: this.requester })
+                .then(result => {
+                    const preferences =
+                        _.get(result, "ChatTeam[0].members[0].person.chatId.preferences");
+                    if (preferences) {
+                        const dmPreferences = preferences.find(p => p.name === DirectMessagePreferences.key);
+                        if (dmPreferences) {
+                            return JSON.parse(dmPreferences.value);
+                        }
                     }
-                }
-                return {};
-            })
-            .then(preferences => {
-                return ctx.messageClient.respond(this.createMessage(preferences, this.msgId), { id: this.msgId });
-            })
-            .then(() => Success, failure);
+                    return {};
+                })
+                .then(preferences => {
+                    return ctx.messageClient.respond(this.createMessage(preferences, this.msgId), { id: this.msgId });
+                })
+                .then(() => Success, failure);
+        }
     }
 
     private createMessage(preferences: any, id: string): SlackMessage {
@@ -123,20 +143,26 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
     }
 
     private toogleAllAttachment(enable: string, label: string, message: string, id: string): Attachment {
+        // Add the cancel option
+        const cancelHandler = new ConfigureDirectMessageUserPreferences();
+        cancelHandler.msgId = this.msgId;
+        cancelHandler.cancel = "true";
+
+        const setHandler = new SetUserPreference();
+        setHandler.id = id;
+        setHandler.key = DirectMessagePreferences.key;
+        setHandler.name = "disable_for_all";
+        setHandler.value = enable;
+        setHandler.label = message;
+
         const attachment: Attachment = {
             fallback: label,
             text: "Alternatively you can disable or enable *all* direct messages:",
             color: "#00a5ff",
             mrkdwn_in: ["text"],
             actions: [
-                buttonForCommand({ text: label }, "SetUserPreference",
-                    {
-                        id,
-                        key: DirectMessagePreferences.key,
-                        name: `disable_for_all`,
-                        value: enable,
-                        label: message,
-                    }),
+                buttonForCommand({ text: label }, setHandler),
+                buttonForCommand({ text: "Cancel" }, cancelHandler),
             ],
         };
         return attachment;
