@@ -5,6 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
+import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 
@@ -22,5 +23,10 @@ export class CommentToPullRequestLifecycle
 
         const pr = _.get(event, "data.Comment[0].pullRequest");
         return [pr, _.get(pr, "repo"), new Date().getTime().toString()];
+    }
+
+    protected extractPreferences(event: EventFired<graphql.CommentToPullRequestLifecycle.Subscription>)
+        : Preferences[] {
+        return _.get(event, "data.Comment[0].pullRequest.repo.org.chatTeam.preferences");
     }
 }

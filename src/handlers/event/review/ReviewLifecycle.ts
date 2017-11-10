@@ -5,6 +5,7 @@ import {
 } from "../../../lifecycle/Lifecycle";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import * as graphql from "../../../typings/types";
+import { LifecyclePreferences } from "../preferences";
 import { CommentActionContributor } from "./rendering/ReviewActionContributors";
 import {
     ReviewDetailNodeRenderer,
@@ -38,7 +39,7 @@ export abstract class ReviewLifecycleHandler<R> extends LifecycleHandler<R> {
                 }
 
                 const configuration: Lifecycle = {
-                    name: "review",
+                    name: LifecyclePreferences.review.id,
                     nodes,
                     renderers: [
                         new ReviewNodeRenderer(),

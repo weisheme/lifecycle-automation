@@ -45,7 +45,7 @@ export class DisplayGitHubIssue implements HandleCommand {
             .then(result => {
                 const issue = _.get(result, "ChatTeam[0].orgs[0].repo[0].issue");
                 if (issue) {
-                    const handler = new ResponseIssueToIssueLifecycle();
+                    const handler = new ResponseIssueToIssueLifecycle(this.channelName);
                     return handler.handle({
                         data: { Issue: issue as any },
                         extensions: { operationName: "DisplayGitHubIssue" },
@@ -61,11 +61,14 @@ export class DisplayGitHubIssue implements HandleCommand {
 
 class ResponseIssueToIssueLifecycle extends IssueToIssueLifecycle {
 
+    constructor(private channelName: string) {
+        super();
+    }
+
     protected processLifecycle(lifecycle: Lifecycle): Lifecycle {
         // Don't send to the channel and make sure we display the message each time
-        lifecycle.channels = [];
+        lifecycle.channels = [this.channelName];
         lifecycle.id = `${lifecycle.id}/${guid()}`;
-        lifecycle.respond = true;
         return lifecycle;
     }
 }

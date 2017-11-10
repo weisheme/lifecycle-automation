@@ -831,6 +831,23 @@ export namespace Repo {
     value?: string | null; 
   } 
 }
+export namespace TeamPreferences {
+  export type Variables = {
+  }
+
+  export type Query = {
+    ChatTeam?: ChatTeam[] | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+}
 export namespace ApplicationToPushLifecycle {
   export type Variables = {
   }
@@ -1607,12 +1624,22 @@ export namespace BranchToPullRequestLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace BuildToPushLifecycle {
@@ -1896,11 +1923,21 @@ export namespace CommentToIssueCommentLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Labels = {
@@ -2179,12 +2216,22 @@ export namespace CommentToPullRequestLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace CommentToPullRequestCommentLifecycle {
@@ -2248,11 +2295,21 @@ export namespace CommentToPullRequestCommentLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Labels = {
@@ -2527,12 +2584,22 @@ export namespace CommitToPullRequestLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace GitHubWebhookCreated {
@@ -2640,12 +2707,22 @@ export namespace IssueToIssueLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     apiUrl?: string | null; 
     gitUrl?: string | null; 
     url?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type _Labels = {
@@ -2688,11 +2765,21 @@ export namespace IssueToIssueCommentLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Labels = {
@@ -4222,12 +4309,22 @@ export namespace PullRequestToPullRequestLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace PullRequestToPullRequestCommentLifecycle {
@@ -4264,11 +4361,21 @@ export namespace PullRequestToPullRequestCommentLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Labels = {
@@ -4383,10 +4490,20 @@ export namespace PullRequestToReviewLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Channels = {
@@ -5087,12 +5204,22 @@ export namespace ReviewToPullRequestLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace ReviewToReviewLifecycle {
@@ -5148,10 +5275,21 @@ export namespace ReviewToReviewLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
+    apiUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Channels = {
@@ -5434,12 +5572,22 @@ export namespace StatusToPullRequestLifecycle {
 
   export type Org = {
     provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
   } 
 
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace StatusToPushLifecycle {

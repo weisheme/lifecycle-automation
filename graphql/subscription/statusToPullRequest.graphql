@@ -154,6 +154,12 @@ subscription StatusToPullRequestLifecycle
               apiUrl
               gitUrl
             }
+            chatTeam {
+              preferences {
+               name
+               value
+              }
+            }
           }
         }
       }

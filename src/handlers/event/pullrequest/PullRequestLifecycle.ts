@@ -6,6 +6,7 @@ import {
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
+import { LifecyclePreferences } from "../preferences";
 import {
     ApproveActionContributor, AssignReviewerActionContributor, AutoMergeActionContributor,
     CommentActionContributor,
@@ -42,7 +43,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
         }
 
         const configuration: Lifecycle = {
-            name: "pullrequest",
+            name: LifecyclePreferences.pull_request.id,
             nodes,
             renderers: [
                 new PullRequestNodeRenderer(),

@@ -4,6 +4,8 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import * as _ from "lodash";
+import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { IssueLifecycleHandler } from "./IssueLifecycle";
 
@@ -21,5 +23,10 @@ export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueTo
         const issue = event.data.Issue[0];
         const repo = event.data.Issue[0].repo;
         return [issue, repo, new Date().getTime().toString()];
+    }
+
+    protected extractPreferences(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>)
+        : Preferences[] {
+        return _.get(event, "data.Issue[0].repo.org.chatTeam.preferences");
     }
 }

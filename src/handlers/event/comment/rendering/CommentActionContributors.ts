@@ -9,6 +9,7 @@ import {
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractCommentActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<any> {
@@ -36,7 +37,7 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
 
         const buttons = [];
 
-        if (context.rendererId === "issuecomment" || context.rendererId === "pullrequestcomment") {
+        if (context.rendererId === "issue_comment" || context.rendererId === "pullrequest_comment") {
             let button;
 
             if (this.forIssue && issue != null) {
@@ -60,7 +61,7 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
 
         const menues = [];
 
-        if (context.rendererId === "issuecomment" || context.rendererId === "pullrequestcomment") {
+        if (context.rendererId === "issue_comment" || context.rendererId === "pullrequest_comment") {
             let menu;
 
             if (this.forIssue && issue != null) {
@@ -88,7 +89,7 @@ export class AssignActionContributor extends AbstractCommentActionContributor
     implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
-        super("assign", true, false);
+        super(LifecycleActionPreferences.comment.assign.id, true, false);
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
@@ -111,7 +112,7 @@ export class LabelActionContributor extends AbstractCommentActionContributor
     implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
-        super("label", true, false);
+        super(LifecycleActionPreferences.comment.label.id, true, false);
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
@@ -160,7 +161,7 @@ export class CloseActionContributor extends AbstractCommentActionContributor
     implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
-        super("close", true, false);
+        super(LifecycleActionPreferences.comment.close.id, true, false);
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
@@ -183,7 +184,7 @@ export class CommentActionContributor extends AbstractCommentActionContributor
     implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
-        super("comment", true, true);
+        super(LifecycleActionPreferences.comment.comment.id, true, true);
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
@@ -206,7 +207,7 @@ export class ReactionActionContributor extends AbstractCommentActionContributor
     implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
-        super("reaction", true, true);
+        super(LifecycleActionPreferences.comment.thumps_up.id, true, true);
     }
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,

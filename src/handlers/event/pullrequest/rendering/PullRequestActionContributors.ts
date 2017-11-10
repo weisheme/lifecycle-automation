@@ -7,13 +7,14 @@ import {
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import { LifecycleActionPreferences } from "../../preferences";
 import { isPrTagged } from "../autoMerge";
 
 export class MergeActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("merge");
+        super(LifecycleActionPreferences.pull_request.merge.id);
     }
 
     public supports(node: any): boolean {
@@ -101,7 +102,7 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("automerge");
+        super(LifecycleActionPreferences.pull_request.auto_merge.id);
     }
 
     public supports(node: any): boolean {
@@ -118,7 +119,7 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
-        if (context.rendererId === "pullrequest") {
+        if (context.rendererId === "pull_request") {
             buttons.push(buttonForCommand({ text: "Enable Auto Merge" }, "EnableGitHubPullRequestAutoMerge",
                 {
                     repo: repo.name,
@@ -140,7 +141,7 @@ export class ApproveActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("approve");
+        super(LifecycleActionPreferences.pull_request.approve.id);
     }
 
     public supports(node: any): boolean {
@@ -190,7 +191,7 @@ export class DeleteActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("delete");
+        super(LifecycleActionPreferences.pull_request.delete.id);
     }
 
     public supports(node: any): boolean {
@@ -209,7 +210,7 @@ export class DeleteActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
-        if (context.rendererId === "pullrequest") {
+        if (context.rendererId === "pull_request") {
             buttons.push(buttonForCommand({ text: "Delete Branch" }, "DeleteGitHubBranch",
                 { branch: pr.branch.name, repo: repo.name, owner: repo.owner }));
         }
@@ -227,7 +228,7 @@ export class CommentActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("comment");
+        super(LifecycleActionPreferences.pull_request.comment.id);
     }
 
     public supports(node: any): boolean {
@@ -257,7 +258,7 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("thumpsup");
+        super(LifecycleActionPreferences.pull_request.thumps_up.id);
     }
 
     public supports(node: any): boolean {
@@ -269,7 +270,7 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
-        if (context.rendererId === "pullrequest") {
+        if (context.rendererId === "pull_request") {
             buttons.push(buttonForCommand({ text: ":+1:" }, "ReactGitHubIssue",
                 { reaction: "+1", issue: pr.number, repo: repo.name, owner: repo.owner }));
         }
@@ -287,7 +288,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
     implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("assignreviewer");
+        super(LifecycleActionPreferences.pull_request.assign_reviewer.id);
     }
 
     public supports(node: any): boolean {

@@ -25,7 +25,7 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.IssueToIssueCommentLifecycle.Comments> {
 
     constructor() {
-        super("issuecomment");
+        super("issue_comment");
     }
 
     public supports(node: any): boolean {
@@ -70,7 +70,7 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
     implements NodeRenderer<graphql.PullRequestToPullRequestCommentLifecycle.Comments> {
 
     constructor() {
-        super("pullrequestcomment");
+        super("pullrequest_comment");
     }
 
     public supports(node: any): boolean {

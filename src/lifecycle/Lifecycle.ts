@@ -19,7 +19,8 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as config from "config";
 import * as deepmerge from "deepmerge";
-
+import * as _ from "lodash";
+import { LifecycleActionPreferences, LifecyclePreferences } from "../handlers/event/preferences";
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
  */
@@ -30,6 +31,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     public handle(event: EventFired<R>, ctx: HandlerContext): Promise<HandlerResult> {
         // Let the concrete handler configure the lifecycle message
         const lifecycles = this.prepareLifecycle(event);
+        const preferences = this.extractPreferences(event);
 
         // Bail out if something isn't correctly linked up
         if (lifecycles == null || lifecycles.length === 0) {
@@ -38,62 +40,70 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
         const results = lifecycles.filter(l => this.validate(l)).map(lifecycle => {
 
-            // Merge default and handler provided configuration
-            const configuration = deepmerge(
-                this.defaultConfigurations[lifecycle.name] as LifecycleConfiguration,
-                this.prepareConfiguration(event, lifecycle.name));
+            const channelResults = lifecycle.channels.filter(
+                channel => this.validateChannel(lifecycle, channel, preferences)).map(channel => {
 
-            if (configuration) {
-                lifecycle.renderers = this.configureRenderers(lifecycle.renderers, configuration);
-                lifecycle.contributors = this.configureContributors(lifecycle.contributors, configuration);
-            }
+                // Merge default and handler provided configuration
+                const configuration = deepmerge(
+                    this.defaultConfigurations[lifecycle.name] as LifecycleConfiguration,
+                    this.prepareConfiguration(lifecycle.name, preferences));
 
-            const renderers: any[] = [];
+                if (configuration) {
+                    lifecycle.renderers = this.configureRenderers(lifecycle.renderers, configuration,
+                        lifecycle.name, channel, preferences);
+                    lifecycle.contributors = this.configureContributors(lifecycle.contributors, configuration,
+                        lifecycle.name, channel, preferences);
+                }
 
-            // Call all NodeRenderers and ButtonContributors
-            lifecycle.renderers.forEach(r => {
-                lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
-                    // First collect all buttons/actions for the given node
-                    const context = new RendererContext(r.id(), lifecycle, configuration, ctx);
+                const renderers: any[] = [];
 
-                    const contributors: any[] = [];
-                    lifecycle.contributors.filter(c => c.supports(n)).forEach(c => {
+                // Call all NodeRenderers and ButtonContributors
+                lifecycle.renderers.forEach(r => {
+                    lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
+                        // First collect all buttons/actions for the given node
+                        const context = new RendererContext(r.id(), lifecycle, configuration, ctx);
 
-                        contributors.push(
-                            c.buttonsFor(n, context).then(buttons => {
-                                return buttons;
-                            }));
+                        const contributors: any[] = [];
+                        lifecycle.contributors.filter(c => c.supports(n)).forEach(c => {
 
-                        contributors.push(
-                            c.menusFor(n, context).then(selects => {
-                                return selects;
-                            }));
-                    });
+                            contributors.push(
+                                c.buttonsFor(n, context).then(buttons => {
+                                    return buttons;
+                                }));
 
-                    // Secondly trigger rendering
-                    renderers.push(msg => {
-                        return Promise.all(contributors)
-                            .then(contributorResults => {
-                                const actions = [];
-                                contributorResults.filter(cr => cr && cr.length > 0)
-                                    .forEach(cr => actions.push(...cr));
-                                return r.render(n, actions, msg, context);
-                            });
+                            contributors.push(
+                                c.menusFor(n, context).then(selects => {
+                                    return selects;
+                                }));
+                        });
+
+                        // Secondly trigger rendering
+                        renderers.push(msg => {
+                            return Promise.all(contributors)
+                                .then(contributorResults => {
+                                    const actions = [];
+                                    contributorResults.filter(cr => cr && cr.length > 0)
+                                        .forEach(cr => actions.push(...cr));
+                                    return r.render(n, actions, msg, context);
+                                });
+                        });
                     });
                 });
+
+                // Prepare message and instructions
+                const message: SlackMessage = {
+                    text: null,
+                    attachments: [],
+                };
+
+                return renderers.reduce((p, f) => p.then(f), Promise.resolve(message))
+                    .then(msg => {
+                        // Finally create the UpdatableMessage from the populated SlackMessage
+                        return this.createAndSendMessage(msg, lifecycle, channel, ctx.messageClient);
+                    });
             });
 
-            // Prepare message and instructions
-            const message: SlackMessage = {
-                text: null,
-                attachments: [],
-            };
-
-            return renderers.reduce((p, f) => p.then(f), Promise.resolve(message))
-                .then(msg => {
-                    // Finally create the UpdatableMessage from the populated SlackMessage
-                    return this.createMessage(msg, lifecycle, ctx.messageClient);
-                });
+            return Promise.all(channelResults);
 
         });
 
@@ -115,14 +125,11 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
      * @param {EventFired<R>} event
      * @returns {Preferences[]}
      */
-    protected extractPreferences(event: EventFired<R>): Preferences[] {
-        return [];
-    }
+    protected abstract extractPreferences(event: EventFired<R>): Preferences[];
 
-    private prepareConfiguration(event: EventFired<R>, name: string): LifecycleConfiguration {
-        const preferences = this.extractPreferences(event);
+    private prepareConfiguration(name: string, preferences: Preferences[]): LifecycleConfiguration {
         if (preferences) {
-            const lifecycles = preferences.find(p => p.name === "lifecycles");
+            const lifecycles = preferences.find(p => p.name === "lifecycle_preferences");
             if (lifecycles && lifecycles.value) {
                 try {
                     const configuration = JSON.parse(lifecycles.value)[name] as LifecycleConfiguration;
@@ -137,8 +144,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return {} as LifecycleConfiguration;
     }
 
-    private createMessage(message: SlackMessage, lifecycle: Lifecycle,
-                          messageClient: MessageClient): Promise<any> {
+    private createAndSendMessage(message: SlackMessage,
+                                 lifecycle: Lifecycle,
+                                 channel: string,
+                                 messageClient: MessageClient): Promise<any> {
         message.unfurl_links = false;
         message.unfurl_media = true;
 
@@ -154,39 +163,17 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
-        return this.sendMessage(message, options, lifecycle, messageClient);
+        return this.sendMessage(message, options, channel, messageClient);
     }
 
-    private sendMessage(slackMessage: SlackMessage, options: MessageOptions, lifecycle: Lifecycle,
+    private sendMessage(slackMessage: SlackMessage, options: MessageOptions, channel: string,
                         messageClient: MessageClient): Promise<any> {
-        const msgs: Array<Promise<any>> = [];
-        if (lifecycle.channels && lifecycle.channels.length > 0) {
-            msgs.push(messageClient.addressChannels(slackMessage, lifecycle.channels, options)
-                .then(() => {
-                    logger.info("Sending lifecycle message '%s' to channels '%s'", lifecycle.id,
-                        lifecycle.channels.join(", "));
-                    return Success;
-                })
-                .catch(err => failure(err)));
-        }
-        if (lifecycle.users && lifecycle.users.length > 0) {
-            msgs.push(messageClient.addressUsers(slackMessage, lifecycle.users, options)
-                .then(() => {
-                    logger.info("Sending lifecycle message '%s' to users '%s'", lifecycle.id,
-                        lifecycle.users.join(", "));
-                    return Success;
-                })
-                .catch(err => failure(err)));
-        }
-        if (lifecycle.respond && lifecycle.respond === true) {
-            msgs.push(messageClient.respond(slackMessage, options)
-                .then(() => {
-                    logger.info("Sending lifecycle response message '%s'", lifecycle.id);
-                    return Success;
-                })
-                .catch(err => failure(err)));
-        }
-        return Promise.all(msgs);
+        return messageClient.addressChannels(slackMessage, channel, options)
+            .then(() => {
+                logger.info("Sending lifecycle message '%s' to channel '%s'", options.id, channel);
+                return Success;
+            })
+            .catch(failure);
     }
 
     private validate(lifecycle: Lifecycle): boolean {
@@ -196,12 +183,22 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         }
 
         lifecycle.channels = clean(lifecycle.channels);
-        lifecycle.users = clean(lifecycle.users);
 
-        // Verify that lifecycle has channels, users or is a response message
-        return (lifecycle.channels && lifecycle.channels.length > 0)
-            || (lifecycle.users && lifecycle.users.length > 0)
-            || (lifecycle.respond && lifecycle.respond === true);
+        // Verify that lifecycle has channels
+        return (lifecycle.channels && lifecycle.channels.length > 0);
+    }
+
+    private validateChannel(lifecycle: Lifecycle, channel: string, preferences: Preferences[]): boolean {
+        if (preferences) {
+            const preference = preferences.find(p => p.name ===  LifecyclePreferences.key);
+            if (preference) {
+                const preferenceValue = JSON.parse(preference.value) || {};
+                if (preferenceValue[channel]) {
+                    return preferenceValue[channel][lifecycle.name] as boolean;
+                }
+            }
+        }
+        return true;
     }
 
     private normalizeTimestamp(timestamp: string): string {
@@ -219,15 +216,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     }
 
     private configureContributors(contributors: Array<ActionContributor<any>>,
-                                  configuration: LifecycleConfiguration) {
-        if (configuration) {
-            if (configuration.contributors) {
-                contributors = this.filterAndSort(contributors,
-                    configuration.contributors) as Array<ActionContributor<any>>;
-            }
-        } else {
-            configuration = {} as LifecycleConfiguration;
-        }
+                                  configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
+                                  name: string,
+                                  channel: string,
+                                  preferences: Preferences[]) {
+        contributors = this.filterAndSort("action", contributors, configuration.contributors,
+            name, channel, preferences) as Array<ActionContributor<any>>;
         contributors.forEach(c => {
            if (c.configure) {
                c.configure(configuration);
@@ -237,14 +231,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     }
 
     private configureRenderers(renderers: Array<NodeRenderer<any>>,
-                               configuration: LifecycleConfiguration): Array<NodeRenderer<any>> {
-        if (configuration) {
-            if (configuration.renderers) {
-                renderers = this.filterAndSort(renderers, configuration.renderers) as Array<NodeRenderer<any>>;
-            }
-        } else {
-            configuration = {} as LifecycleConfiguration;
-        }
+                               configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
+                               name: string,
+                               channel: string,
+                               preferences: Preferences[]): Array<NodeRenderer<any>> {
+        renderers = this.filterAndSort("renderer", renderers, configuration.renderers,
+            name, channel, preferences) as Array<NodeRenderer<any>>;
         renderers.forEach(c => {
             if (c.configure) {
                 c.configure(configuration);
@@ -253,15 +245,44 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return renderers;
     }
 
-    private filterAndSort(sortable: IdentifiableContribution[], configuration: string[]): IdentifiableContribution[] {
-        let sorted = sortable.filter(r => configuration.indexOf(r.id()) >= 0);
-        // Sort based on configuration
-        sorted = sorted.sort((r1, r2) => {
-            const i1 = configuration.indexOf(r1.id());
-            const i2 = configuration.indexOf(r2.id());
-            return i1 - i2;
-        });
-        return sorted;
+    private filterAndSort(kind: "action" | "renderer",
+                          contributions: IdentifiableContribution[],
+                          configuration: string[],
+                          name: string,
+                          channel: string,
+                          preferences: Preferences[] = []): IdentifiableContribution[] {
+        let preference;
+        if (kind === "action") {
+            preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
+        }
+        if (preference) {
+            try {
+                const preferenceValue = JSON.parse(preference.value) || {};
+                if (preferenceValue[channel]) {
+                    const channelPreferences = preferenceValue[channel];
+                    contributions = contributions.filter(c => {
+                        const channelPreference = _.get(channelPreferences, `${name}.${c.id()}`);
+                        if (channelPreference != null) {
+                            return channelPreference === true;
+                        }
+                        return true;
+                    });
+                }
+            } catch (e) {
+                console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
+            }
+        }
+        if (configuration) {
+            contributions = contributions.filter(r => configuration.indexOf(r.id()) >= 0);
+
+            // Sort based on configuration
+            contributions = contributions.sort((r1, r2) => {
+                const i1 = configuration.indexOf(r1.id());
+                const i2 = configuration.indexOf(r2.id());
+                return i1 - i2;
+            });
+        }
+        return contributions;
     }
 }
 
@@ -313,16 +334,6 @@ export interface Lifecycle {
      * The channels the lifecycle message should be send to.
      */
     channels: string[];
-
-    /**
-     * The name of users to send this lifecycle message to.
-     */
-    users?: string[];
-
-    /**
-     * If this lifecycle is in response to a user invoking a command.
-     */
-    respond?: boolean;
 
     /**
      * The cortex nodes that should be rendered.

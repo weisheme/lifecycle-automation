@@ -12,13 +12,14 @@ import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
+import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PushToPushLifecycle.Builds> {
 
     constructor() {
-        super("build");
+        super(LifecycleActionPreferences.push.restart_build.id);
     }
 
     public supports(node: any): boolean {
@@ -48,11 +49,11 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
     }
 }
 
-export class TagActionContributor extends AbstractIdentifiableContribution
+export class ReleaseActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
 
     constructor() {
-        super("tag");
+        super(LifecycleActionPreferences.push.release.id);
     }
 
     public supports(node: any): boolean {
@@ -65,7 +66,6 @@ export class TagActionContributor extends AbstractIdentifiableContribution
         const buttons = [];
 
         this.createReleaseButton(push, tag, repo, buttons);
-        this.createTagButton(tag, push, repo, buttons);
 
         return Promise.resolve(buttons);
     }
@@ -106,6 +106,32 @@ export class TagActionContributor extends AbstractIdentifiableContribution
             },
         }, releaseHandler));
     }
+}
+
+export class TagActionContributor extends AbstractIdentifiableContribution
+    implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
+
+    constructor() {
+        super(LifecycleActionPreferences.push.tag.id);
+    }
+
+    public supports(node: any): boolean {
+        return node.release === null;
+    }
+
+    public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
+        const buttons = [];
+
+        this.createTagButton(tag, push, repo, buttons);
+
+        return Promise.resolve(buttons);
+    }
+
+    public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
+        return Promise.resolve([]);
+    }
 
     private createTagButton(tag: graphql.PushToPushLifecycle.Tags,
                             push: graphql.PushToPushLifecycle.Push,
@@ -135,7 +161,7 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
     implements ActionContributor<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
-        super("pullrequest");
+        super(LifecycleActionPreferences.push.raise_pullrequest.id);
     }
 
     public supports(node: any): boolean {
@@ -209,7 +235,7 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
     implements ActionContributor<Domain> {
 
     constructor() {
-        super("application");
+        super(LifecycleActionPreferences.push.cf_application.id);
     }
 
     public supports(node: any): boolean {

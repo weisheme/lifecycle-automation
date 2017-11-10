@@ -153,6 +153,12 @@ subscription CommitToPullRequestLifecycle
             apiUrl
             gitUrl
           }
+          chatTeam {
+            preferences {
+              name
+              value
+            }
+          }
         }
       }
     }

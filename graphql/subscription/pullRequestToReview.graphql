@@ -31,6 +31,12 @@ subscription PullRequestToReviewLifecycle
             provider {
               url
             }
+            chatTeam {
+              preferences {
+                name
+                value
+              }
+            }
           }
           channels {
             name

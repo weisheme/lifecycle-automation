@@ -28,6 +28,13 @@ subscription ReviewToReviewLifecycle
         org {
           provider {
             url
+            apiUrl
+          }
+          chatTeam {
+            preferences {
+              name
+              value
+            }
           }
         }
         channels {

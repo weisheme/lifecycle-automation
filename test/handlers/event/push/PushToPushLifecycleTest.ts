@@ -41,7 +41,7 @@ describe("PushToPushLifecycle", () => {
                     "provider": null,
                     "chatTeam": {
                         "preferences": [{
-                            "name": "branch_configuration",
+                            "name": "lifecycle_branches",
                             "value": "[{\\"name\\":\\"^some-ch.*el1$\\",\\"repositories\\":[{\\"owner\\":\\"some-owner\\",\\"name\\":\\"some-repo\\",%%CONFIG%%}]}]"
                           }]
                     }
@@ -80,11 +80,9 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 1);
-                assert(channelNames[0] === "some-channel2");
+                assert(channelNames === "some-channel2");
                 return Promise.resolve();
             }
-
         }
 
         const ctx: any = {
@@ -112,9 +110,12 @@ describe("PushToPushLifecycle", () => {
     it("correctly show pushes on included but also excluded branch", done => {
         class MockMessageClient extends MessageClientSupport {
 
+            public counter = 0;
+
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 2);
+                assert(channelNames);
+                this.counter++;
                 return Promise.resolve();
             }
         }
@@ -136,6 +137,7 @@ describe("PushToPushLifecycle", () => {
         handler.handle(JSON.parse(payload.replace("%%CONFIG%%", config)) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(result.code === 0);
+                assert(ctx.messageClient.counter === 2);
             })
             .then(done, done);
 
@@ -146,8 +148,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 1);
-                assert(channelNames[0] === "some-channel2");
+                assert(channelNames === "some-channel2");
                 return Promise.resolve();
             }
         }
@@ -283,8 +284,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 1);
-                assert(channelNames[0] === "handlers");
+                assert(channelNames === "handlers");
                 const sm = msg as SlackMessage;
                 assert(sm.attachments[1].author_name === "#128: Simplify filter. Add a note");
                 return Promise.resolve();

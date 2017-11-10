@@ -3,6 +3,7 @@ import { Lifecycle, LifecycleHandler } from "../../../lifecycle/Lifecycle";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
+import { LifecyclePreferences } from "../preferences";
 import {
     AssignActionContributor, CloseActionContributor,
     CommentActionContributor, LabelActionContributor,
@@ -27,7 +28,7 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
         }
 
         const configuration: Lifecycle = {
-            name: "issue",
+            name: LifecyclePreferences.issue.id,
             nodes,
             renderers: [
                 new IssueNodeRenderer(),

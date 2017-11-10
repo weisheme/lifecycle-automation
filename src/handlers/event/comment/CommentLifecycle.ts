@@ -6,6 +6,7 @@ import {
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
+import { LifecyclePreferences } from "../preferences";
 import {
     AssignActionContributor,
     CloseActionContributor,
@@ -50,7 +51,7 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
                 const id = issue != null ? issue.number : pullRequest.number;
 
                 const configuration: Lifecycle = {
-                    name: "comment",
+                    name: LifecyclePreferences.comment.id,
                     nodes,
                     renderers: [
                         new IssueCommentNodeRenderer(),

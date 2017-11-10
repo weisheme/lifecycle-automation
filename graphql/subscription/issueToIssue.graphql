@@ -42,6 +42,12 @@ subscription IssueToIssueLifecycle {
             gitUrl
             url
         }
+        chatTeam {
+          preferences {
+            name
+            value
+          }
+        }
       }
     }
     labels {

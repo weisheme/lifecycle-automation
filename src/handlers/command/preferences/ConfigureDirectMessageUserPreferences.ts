@@ -23,7 +23,8 @@ import { DirectMessagePreferences } from "./preferences";
 /**
  * Configure DM preferences for the invoking user.
  */
-@CommandHandler("Displays DM preferences for the invoking user", "configure dm preferences", "configure dms")
+@CommandHandler("Configure DM preferences for the invoking user", "configure direct messages",
+    "configure dms", "configure dm preferences" )
 @Tags("preferences", "configure")
 export class ConfigureDirectMessageUserPreferences implements HandleCommand {
 
@@ -32,12 +33,12 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
 
     @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/,
         required: false, displayable: false })
-    public id: string;
+    public msgId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
-        if (!this.id) {
-            this.id = guid();
+        if (!this.msgId) {
+            this.msgId = guid();
         }
 
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
@@ -55,10 +56,9 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                 return {};
             })
             .then(preferences => {
-                return ctx.messageClient.respond(this.createMessage(preferences, this.id), { id: this.id });
+                return ctx.messageClient.respond(this.createMessage(preferences, this.msgId), { id: this.msgId });
             })
-            .then(() => Success)
-            .catch(err => failure(err));
+            .then(() => Success, failure);
     }
 
     private createMessage(preferences: any, id: string): SlackMessage {

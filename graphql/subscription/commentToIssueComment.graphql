@@ -32,6 +32,12 @@ subscription CommentToIssueCommentLifecycle
             apiUrl
             url
           }
+          chatTeam {
+            preferences {
+              name
+              value
+              }
+            }
         }
         labels {
           name

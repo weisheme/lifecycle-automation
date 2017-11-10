@@ -33,6 +33,8 @@ import { ToggleLabelGitHubIssue } from "./handlers/command/github/ToggleLabelGit
 import {
     ConfigureDirectMessageUserPreferences,
 } from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
+import { ConfigureLifecyclePreferences } from "./handlers/command/preferences/ConfigureLifecyclePreferences";
+import { SetTeamPreference } from "./handlers/command/preferences/SetTeamPreference";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
 import { AddBotToChannel } from "./handlers/command/slack/AddBotToChannel";
 import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
@@ -147,6 +149,8 @@ export const configuration = {
 
         // preferences
         () => new ConfigureDirectMessageUserPreferences(),
+        () => new ConfigureLifecyclePreferences(),
+        () => new SetTeamPreference(),
         () => new SetUserPreference(),
 
         // slack

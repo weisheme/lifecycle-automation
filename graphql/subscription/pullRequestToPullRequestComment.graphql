@@ -17,6 +17,12 @@ subscription PullRequestToPullRequestCommentLifecycle
           apiUrl
           url
         }
+        chatTeam {
+          preferences {
+            name
+            value
+          }
+        }
       }
       labels {
         name

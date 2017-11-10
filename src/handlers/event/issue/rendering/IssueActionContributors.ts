@@ -10,6 +10,7 @@ import {
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractIssueActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
@@ -59,7 +60,7 @@ export class AssignActionContributor extends AbstractIssueActionContributor
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("assign");
+        super(LifecycleActionPreferences.issue.assign.id);
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue, repo: any): Action {
@@ -72,7 +73,7 @@ export class LabelActionContributor extends AbstractIssueActionContributor
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("label");
+        super(LifecycleActionPreferences.issue.label.id);
     }
 
     protected createMenu(issue: graphql.IssueToIssueLifecycle.Issue, repo: graphql.IssueToIssueLifecycle.Repo): Action {
@@ -113,7 +114,7 @@ export class CloseActionContributor extends AbstractIssueActionContributor
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("close");
+        super(LifecycleActionPreferences.issue.close.id);
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
@@ -127,7 +128,7 @@ export class CommentActionContributor extends AbstractIssueActionContributor
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("comment");
+        super(LifecycleActionPreferences.issue.comment.id);
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
@@ -141,7 +142,7 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("reaction");
+        super(LifecycleActionPreferences.issue.thumps_up.id);
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
@@ -155,7 +156,7 @@ export class ReopenActionContributor extends AbstractIssueActionContributor
     implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("reopen");
+        super(LifecycleActionPreferences.issue.reopen.id);
     }
 
     public supports(node: any): boolean {

@@ -1,14 +1,20 @@
 import { EventFired } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import * as _ from "lodash";
-import { Lifecycle, LifecycleHandler, Preferences } from "../../../lifecycle/Lifecycle";
+import {
+    Lifecycle, LifecycleConfiguration,
+    LifecycleHandler,
+    Preferences,
+} from "../../../lifecycle/Lifecycle";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { PushToPushLifecycle } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
+import { LifecyclePreferences } from "../preferences";
 import {
     ApplicationActionContributor,
     BuildActionContributor,
     PullRequestActionContributor,
+    ReleaseActionContributor,
     TagActionContributor,
 } from "./rendering/PushActionContributors";
 import {
@@ -16,7 +22,8 @@ import {
     BuildNodeRenderer,
     CommitNodeRenderer,
     IssueNodeRenderer,
-    K8PodNodeRenderer, PullRequestNodeRenderer,
+    K8PodNodeRenderer,
+    PullRequestNodeRenderer,
     PushNodeRenderer,
     TagNodeRenderer,
 } from "./rendering/PushNodeRenderers";
@@ -69,7 +76,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
             domains.forEach(d => nodes.push(d));
 
             const configuration: Lifecycle = {
-                name: "push",
+                name: LifecyclePreferences.push.id,
                 nodes,
                 renderers: [
                     new PushNodeRenderer(),
@@ -85,6 +92,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new FooterNodeRenderer((node: any) => node.after)],
                 contributors: [
                     new TagActionContributor(),
+                    new ReleaseActionContributor(),
                     new BuildActionContributor(),
                     new PullRequestActionContributor(),
                     new ApplicationActionContributor(),
@@ -138,7 +146,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
             return [];
         }
 
-        const branchConfiguration = preferences.find(p => p.name === "branch_configuration");
+        const branchConfiguration = preferences.find(p => p.name === "lifecycle_branches");
         if (branchConfiguration) {
             const channelNames: string[] = [];
             try {

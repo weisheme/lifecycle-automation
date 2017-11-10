@@ -5,6 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
+import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { CommentLifecycleHandler } from "./CommentLifecycle";
 
@@ -23,5 +24,10 @@ export class CommentToIssueCommentLifecycle
 
         const comment = _.get(event, "data.Comment[0]");
         return [[comment], _.get(comment, "issue"), null, _.get(comment, "issue.repo"), false];
+    }
+
+    protected extractPreferences(event: EventFired<graphql.CommentToIssueCommentLifecycle.Subscription>)
+        : Preferences[] {
+        return _.get(event, "data.Comment[0].issue.repo.org.chatTeam.preferences");
     }
 }

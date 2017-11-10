@@ -30,7 +30,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
-        super("pullrequest");
+        super("pull_request");
     }
 
     public supports(node: any): boolean {
