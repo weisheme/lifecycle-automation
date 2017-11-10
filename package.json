@@ -30,6 +30,7 @@
     "base64-js": "^1.2.1",
     "cf-nodejs-client": "^0.13.0",
     "cfenv": "^1.0.4",
+    "config": "^1.28.1",
     "copyfiles": "^1.2.0",
     "deepmerge": "^2.0.0",
     "format-date": "^1.0.0",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
     "@types/async": "2.0.45",
+    "@types/config": "0.0.33",
     "@types/lodash": "^4.14.80",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.46",
