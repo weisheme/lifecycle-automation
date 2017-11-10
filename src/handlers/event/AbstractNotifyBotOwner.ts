@@ -42,7 +42,8 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
                     { first: PageSize, offset })
                     .then(innerResult => page(innerResult, offset));
                 },
-            );
+            )
+            .then(() => Success, failure);
     }
 
     protected abstract extractPreferences(event: EventFired<R>): Preferences[];
@@ -61,13 +62,12 @@ function handleResult(mappedRepo: boolean, ctx: HandlerContext): Promise<Handler
                 return ctx.messageClient.addressUsers(Message, owners,
                     { id: `bot_owner/github/notification`, ttl: 1000 * 60 * 60 * 24 * 7});
             })
-            .catch(err => failure(err));
+            .then(() => Success, failure);
     } else {
         console.log(`Setting team preferences '${PreferenceKey}' to 'true'`);
         return ctx.graphClient.executeMutationFromFile<graphql.SetTeamPreference.Mutation,
                 graphql.SetTeamPreference.Variables>("graphql/mutation/setTeamPreference",
                 {name: PreferenceKey, value: "true"})
-            .then(() => Success)
-            .catch(err => failure(err));
+            .then(() => Success, failure);
     }
 }

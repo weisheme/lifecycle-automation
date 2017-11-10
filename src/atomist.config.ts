@@ -74,7 +74,7 @@ import { ApplicationToPushLifecycle } from "./handlers/event/push/ApplicationToP
 import { BuildToPushLifecycle } from "./handlers/event/push/BuildToPushLifecycle";
 import { IssueToPushLifecycle } from "./handlers/event/push/IssueToPushLifecycle";
 import { K8PodToPushLifecycle } from "./handlers/event/push/K8PodToPushLifecycle";
-import { NotifyBotOwnerOnPush } from "./handlers/event/push/NotifiyBotOwnerOnPush";
+import { NotifyBotOwnerOnPush } from "./handlers/event/push/NotifyBotOwnerOnPush";
 import { NotifyReviewerOnPush } from "./handlers/event/push/NotifyReviewerOnPush";
 import { ParentImpactToPushLifecycle } from "./handlers/event/push/ParentImpactToPushLifecycle";
 import { PushToPushLifecycle } from "./handlers/event/push/PushToPushLifecycle";
