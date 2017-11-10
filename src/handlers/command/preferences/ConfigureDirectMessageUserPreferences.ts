@@ -51,7 +51,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                 attachments: [{
                     author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
                     author_name: "Cancelled configuration",
-                    title: "Lifecycle",
+                    title: "Direct Message",
                     fallback: "Cancelled configuration",
                     color: "#45B254",
                 }],
