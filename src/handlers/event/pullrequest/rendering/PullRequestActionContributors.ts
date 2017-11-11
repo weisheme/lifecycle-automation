@@ -240,7 +240,7 @@ export class CommentActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
-        if (context.rendererId === "pullrequest") {
+        if (context.rendererId === "pull_request") {
             buttons.push(buttonForCommand({ text: "Comment" }, "CommentGitHubIssue",
                 { issue: pr.number, repo: repo.name, owner: repo.owner }));
         }
@@ -300,7 +300,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
 
-        if (context.rendererId === "pullrequest") {
+        if (context.rendererId === "pull_request") {
             buttons.push(buttonForCommand({ text: "Request Review" }, "AssignGitHubPullRequestReviewer",
                 { issue: pr.number, repo: repo.name, owner: repo.owner }));
         }
