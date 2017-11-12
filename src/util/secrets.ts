@@ -2,6 +2,7 @@ import { guid } from "@atomist/automation-client/internal/util/string";
 import axios from "axios";
 import * as cfenv from "cfenv";
 import * as _ from "lodash";
+import { logger } from "@atomist/automation-client/internal/util/logger";
 
 export const appEnv = cfenv.getAppEnv();
 
@@ -45,14 +46,21 @@ export const loadSecretsFromConfigServer = () => {
     if (configUrl) {
         return axios.get(configUrl)
             .then(result => {
-                console.log(result.data);
+                const data = JSON.parse(result.data)["secret/automation"];
+                secrets.github = data.github
+                secrets.dashboard = data.dashboard;
+                secrets.logzio = data.logzio;
+                secrets.mixpanel = data.mixpanel;
+                secrets.oauth = data.oauth;
+                secrets.teams = data.teams;
+                secrets.applicationId = process.env.HOSTNAME;
+                secrets.environmentId = data.environmentId;
                 return Promise.resolve();
             })
             .catch(err => {
-                console.log(err.message);
+                logger.error("Error occurred fetching secrets from config server: %s", err);
                 return Promise.resolve();
             });
-
     } else {
         return Promise.resolve();
     }
