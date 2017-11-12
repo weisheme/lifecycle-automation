@@ -7,7 +7,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.2...HEAD
+
+## [0.2.2][] - 2017-11-12
+
+[0.2.2]: https://github.com/atomist/lifecycle-automation/compare/0.2.1...0.2.2
+
+Kube release
+
+### Changed
+
+-   Deploy to internal Kube clusters
+
+## [0.2.1][] - 2017-11-11
+
+[0.2.1]: https://github.com/atomist/lifecycle-automation/compare/0.2.0...0.2.1
+
+Remove workflow rendering
+
+### Removed
+
+-   Due to endless loop removed circle workflow rendering
 
 ## [0.2.0][] - 2017-11-10
 
