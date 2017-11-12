@@ -1,8 +1,8 @@
+import { logger } from "@atomist/automation-client/internal/util/logger";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import axios from "axios";
 import * as cfenv from "cfenv";
 import * as _ from "lodash";
-import { logger } from "@atomist/automation-client/internal/util/logger";
 
 export const appEnv = cfenv.getAppEnv();
 
@@ -47,7 +47,7 @@ export const loadSecretsFromConfigServer = () => {
         return axios.get(configUrl)
             .then(result => {
                 const data = JSON.parse(result.data)["secret/automation"];
-                secrets.github = data.github
+                secrets.github = data.github;
                 secrets.dashboard = data.dashboard;
                 secrets.logzio = data.logzio;
                 secrets.mixpanel = data.mixpanel;
