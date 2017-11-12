@@ -49,7 +49,6 @@ export const loadSecretsFromConfigServer = () => {
         return axios.get(configUrl)
             .then(result => {
                 const data = result.data["secret/automation"];
-                console.log(JSON.stringify(data));
                 secrets.github = data.github;
                 secrets.dashboard = data.dashboard;
                 secrets.logzio = data.logzio;
@@ -59,7 +58,6 @@ export const loadSecretsFromConfigServer = () => {
                 secrets.applicationId = `k8.${process.env.HOSTNAME}`;
                 secrets.environmentId = `k8.${data.environmentId}`;
                 process.env.DOMAIN = `k8.${data.environmentId}`;
-                console.log(JSON.stringify(secrets));
                 return Promise.resolve();
             })
             .catch(err => {
