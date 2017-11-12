@@ -5,6 +5,6 @@
     "api": "https://automation.atomist.com/registration",
     "graphql": "https://automation.atomist.com/graphql/team"
   },
-  "groups": [],
-  "teamIds": ["T0CG5J074"],
+  "groups": ["all"],
+  "teamIds": [],
 }
