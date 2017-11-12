@@ -127,6 +127,10 @@ function npm-publish-timestamp () {
         return 1
     fi
 
+    if ! docker-push "$project_version"; then
+        return 1
+    fi
+
     local sha
     if [[ $TRAVIS_PULL_REQUEST_SHA ]]; then
         sha=$TRAVIS_PULL_REQUEST_SHA
@@ -153,6 +157,29 @@ function npm-publish-timestamp () {
         return 1
     fi
     msg "posted module URL $module_url to commit status $status_url"
+}
+
+# create and push a Docker image
+# usage: docker-push [VERSION]
+function docker-push () {
+    local project_version=$1
+    repo_name=`echo $TRAVIS_REPO_SLUG | sed -E 's/.*\/(.*)/\1/'`
+
+    if ! docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD" sforzando-dockerv2-local.jfrog.io; then
+        err "failed to login to docker registry"
+        return 1
+    fi
+
+    if ! docker build . -t sforzando-dockerv2-local.jfrog.io/$repo_name:$project_version; then
+        err "failed to build docker image"
+        return 1
+    fi
+
+    if ! docker push sforzando-dockerv2-local.jfrog.io/$repo_name:$project_version; then
+        err "failed to push docker image"
+        return 1
+    fi
+    msg "built and pushed docker image"
 }
 
 # usage: main "$@"

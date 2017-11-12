@@ -1,4 +1,4 @@
-import { MappedParameters } from "@atomist/automation-client";
+import { MappedParameters, RedirectResult } from "@atomist/automation-client";
 import { CommandHandler, MappedParameter, Tags } from "@atomist/automation-client/decorators";
 import { HandleCommand } from "@atomist/automation-client/HandleCommand";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
@@ -69,30 +69,23 @@ export function gc() {
     }
 }
 
-@CommandHandler("Trigger heap dump and GC", "lifecycle heap")
+@CommandHandler("Trigger heap dump and GC")
 @Tags("memory", "gc", "dump")
 export class HeapDumpCommand implements HandleCommand {
-
-    @MappedParameter(MappedParameters.SlackUser)
-    public slackUser: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         const name = heapDump();
         gc();
-
+        const downloadUrl = "https://lifecycle.atomist.io/heap/" + name;
         return ctx.messageClient
-            .addressUsers(`Heap dump available at ${url("https://lifecycle.atomist.io/heap/" + name,
-                name)}`, "cd")
-            .then(() => ({code: 0, filename: name}));
+            .addressUsers(`Heap dump available at ${url(downloadUrl, name)}`, "cd")
+            .then(() => ({code: 0, redirect: downloadUrl} as RedirectResult));
     }
 }
 
-@CommandHandler("Get memory usage", "lifecycle stats")
+@CommandHandler("Get memory usage")
 @Tags("memory", "usage")
 export class MemoryUsageCommand implements HandleCommand {
-
-    @MappedParameter(MappedParameters.SlackUser)
-    public slackUser: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.messageClient
@@ -101,15 +94,12 @@ export class MemoryUsageCommand implements HandleCommand {
     }
 }
 
-@CommandHandler("Run GC", "lifecycle gc")
+@CommandHandler("Run GC")
 @Tags("memory", "usage")
 export class GcCommand implements HandleCommand {
 
-    @MappedParameter(MappedParameters.SlackUser)
-    public slackUser: string;
-
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         gc();
-        return Promise.resolve(Success);
+        return new MemoryUsageCommand().handle(ctx);
     }
 }

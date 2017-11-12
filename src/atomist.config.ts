@@ -1,5 +1,4 @@
 import { HandleCommand } from "@atomist/automation-client";
-import { guid } from "@atomist/automation-client/internal/util/string";
 import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";
 import * as config from "config";
@@ -94,7 +93,7 @@ import {
     initMemoryMonitoring,
     MemoryUsageCommand,
 } from "./util/mem";
-import { appEnv, secret } from "./util/secrets";
+import { loadSecretsFromCloudFoundryEnvironment, loadSecretsFromConfigServer, secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
 // tslint:disable-next-line:no-var-requires
@@ -102,11 +101,11 @@ const pj = require(`${appRoot.path}/package.json`);
 
 const token = secret("github.token", process.env.GITHUB_TOKEN);
 
-const authEnabled = !appEnv.isLocal;
+const authEnabled = process.env.NODE_ENV === "production";
 
 const logzioOptions: LogzioOptions = {
-    applicationId: appEnv.app ? `cf.${appEnv.app.application_id}` : guid(),
-    environmentId: appEnv.app ? `cf.${appEnv.app.space_name}` : "local",
+    applicationId: secret("applicationId"),
+    environmentId: secret("environmentId"),
     token: secret("logzio.token", process.env.LOGZIO_TOKEN),
 };
 
@@ -167,9 +166,9 @@ export const configuration = {
         () => new RestartTravisBuild(),
 
         // gc
-        secured.githubTeam(() => new HeapDumpCommand(), AdminTeam),
-        secured.githubTeam(() => new MemoryUsageCommand(), AdminTeam),
-        secured.githubTeam(() => new GcCommand(), AdminTeam),
+        () => new HeapDumpCommand(),
+        () => new MemoryUsageCommand(),
+        () => new GcCommand(),
     ],
     events: [
         // build
@@ -239,7 +238,7 @@ export const configuration = {
         forceSecure: authEnabled,
         auth: {
             basic: {
-                enabled: process.env.NODE_ENV === "staging",
+                enabled: !authEnabled,
                 username: secret("dashboard.user"),
                 password: secret("dashboard.password"),
             },
@@ -248,7 +247,7 @@ export const configuration = {
                 token,
             },
             github: {
-                enabled: authEnabled && process.env.NODE_ENV === "production",
+                enabled: authEnabled,
                 clientId: secret("oauth.clientId"),
                 clientSecret: secret("oauth.clientSecret"),
                 callbackUrl: secret("oauth.callbackUrl"),
@@ -263,6 +262,12 @@ export const configuration = {
     applicationEvents: {
         enabled: true,
         teamId: "T29E48P34",
+    },
+    callbacks: {
+        beforeStart: [
+            loadSecretsFromCloudFoundryEnvironment,
+            loadSecretsFromConfigServer,
+        ],
     },
 };
 

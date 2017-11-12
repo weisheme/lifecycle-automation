@@ -17,7 +17,7 @@ function err() {
     msg "$*" 1>&2
 }
 
-# push site to github pages branch, default branch=gh-pages
+# push app to Cloud Foundry
 # usage: push [APP_NAME ORG]
 function push() {
     local app_name=$1
