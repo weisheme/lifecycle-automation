@@ -1,7 +1,7 @@
+import { guid } from "@atomist/automation-client/internal/util/string";
+import axios from "axios";
 import * as cfenv from "cfenv";
 import * as _ from "lodash";
-import axios from "axios";
-import { guid } from "@atomist/automation-client/internal/util/string";
 
 export const appEnv = cfenv.getAppEnv();
 
@@ -38,7 +38,7 @@ export const loadSecretsFromCloudFoundryEnvironment = () => {
         secrets.environmentId = `cf.${appEnv.app.space_name}`;
     }
     return Promise.resolve();
-}
+};
 
 export const loadSecretsFromConfigServer = () => {
     const configUrl = process.env.CONFIG_URL;
@@ -51,9 +51,9 @@ export const loadSecretsFromConfigServer = () => {
             .catch(err => {
                 console.log(err.message);
                 return Promise.resolve();
-            })
+            });
 
     } else {
         return Promise.resolve();
     }
-}
+};
