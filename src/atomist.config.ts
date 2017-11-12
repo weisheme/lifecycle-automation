@@ -101,7 +101,7 @@ const pj = require(`${appRoot.path}/package.json`);
 
 const token = secret("github.token", process.env.GITHUB_TOKEN);
 
-const authEnabled = process.env.NODE_ENV === "production";
+const authEnabled = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 
 const logzioOptions: LogzioOptions = {
     applicationId: secret("applicationId"),
