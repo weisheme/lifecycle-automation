@@ -48,6 +48,7 @@ export const loadSecretsFromConfigServer = () => {
         logger.debug("Fetching secrets from config server at '%s'", configUrl);
         return axios.get(configUrl)
             .then(result => {
+                console.log(JSON.stringify(result));
                 const data = JSON.parse(result.data)["secret/automation"];
                 secrets.github = data.github;
                 secrets.dashboard = data.dashboard;
@@ -55,8 +56,8 @@ export const loadSecretsFromConfigServer = () => {
                 secrets.mixpanel = data.mixpanel;
                 secrets.oauth = data.oauth;
                 secrets.teams = data.teams;
-                secrets.applicationId = process.env.HOSTNAME;
-                secrets.environmentId = data.environmentId;
+                secrets.applicationId = `k8.${process.env.HOSTNAME}`;
+                secrets.environmentId = `k8.${data.environmentId}`;
                 console.log(JSON.stringify(secrets));
                 return Promise.resolve();
             })
