@@ -4,7 +4,7 @@ import { logger } from "@atomist/automation-client/internal/util/logger";
 import { enableDefaultScanning } from "@atomist/automation-client/scan";
 import {
     loadSecretsFromCloudFoundryEnvironment,
-    loadSecretsFromConfigServer
+    loadSecretsFromConfigServer,
 } from "./util/secrets";
 
 loadSecretsFromConfigServer()
