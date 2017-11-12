@@ -48,8 +48,8 @@ export const loadSecretsFromConfigServer = () => {
         logger.debug("Fetching secrets from config server at '%s'", configUrl);
         return axios.get(configUrl)
             .then(result => {
-                console.log(JSON.stringify(result));
-                const data = JSON.parse(result.data)["secret/automation"];
+                console.log(JSON.stringify(result.data));
+                const data = result.data["secret/automation"];
                 secrets.github = data.github;
                 secrets.dashboard = data.dashboard;
                 secrets.logzio = data.logzio;
