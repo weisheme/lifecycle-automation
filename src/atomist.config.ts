@@ -235,7 +235,6 @@ export const configuration = {
     token,
     http: {
         enabled: true,
-        forceSecure: authEnabled,
         auth: {
             basic: {
                 enabled: !authEnabled,
@@ -251,7 +250,7 @@ export const configuration = {
                 clientId: secret("oauth.clientId"),
                 clientSecret: secret("oauth.clientSecret"),
                 callbackUrl: secret("oauth.callbackUrl"),
-                org: "atomisthqa",
+                org: secret("oauth.org"),
             },
         },
     },
