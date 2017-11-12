@@ -18,5 +18,5 @@ ENV SUPPRESS_NO_CONFIG_WARNING true
 
 EXPOSE 2866
 
-CMD [ "node", "--trace-warnings", "--expose_gc", "--optimize_for_size", "--always_compact", "--max_old_space_size=384", "node_modules/.bin/atomist-client" ]
+CMD [ "node", "--trace-warnings", "--expose_gc", "--optimize_for_size", "--always_compact", "--max_old_space_size=512", "node_modules/.bin/atomist-client" ]
 

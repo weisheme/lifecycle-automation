@@ -55,6 +55,7 @@ export const loadSecretsFromConfigServer = () => {
                 secrets.teams = data.teams;
                 secrets.applicationId = process.env.HOSTNAME;
                 secrets.environmentId = data.environmentId;
+                console.log(JSON.stringify(secrets));
                 return Promise.resolve();
             })
             .catch(err => {
