@@ -58,7 +58,7 @@ export const loadSecretsFromConfigServer = () => {
                 secrets.teams = data.teams;
                 secrets.applicationId = `k8.${process.env.HOSTNAME}`;
                 secrets.environmentId = `k8.${data.environmentId}`;
-                process.env["DOMAIN"] = `k8.${data.environmentId}`;
+                process.env.DOMAIN = `k8.${data.environmentId}`;
                 console.log(JSON.stringify(secrets));
                 return Promise.resolve();
             })
