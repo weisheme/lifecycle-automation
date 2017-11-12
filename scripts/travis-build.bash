@@ -179,6 +179,11 @@ function docker-push () {
         err "failed to push docker image"
         return 1
     fi
+
+    if ! git-tag "$project_version"; then
+        return 1
+    fi
+
     msg "built and pushed docker image"
 }
 
