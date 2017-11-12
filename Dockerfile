@@ -1,7 +1,6 @@
 FROM node:9
 
 ENV NPM_CONFIG_LOGLEVEL warn
-ENV NODE_ENV production
 
 # Create app directory
 RUN mkdir -p /app
