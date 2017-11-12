@@ -29,6 +29,7 @@ export function secret(path: string, defaultValue?: string): string {
 
 export const loadSecretsFromCloudFoundryEnvironment = () => {
     if (process.env.VCAP_SERVICES) {
+        logger.debug("Fetching secrets from Cloud Foundry environment");
         secrets.github = appEnv.getServiceCreds("github-token");
         secrets.dashboard = appEnv.getServiceCreds("dashboard-credentials");
         secrets.logzio = appEnv.getServiceCreds("logzio-credentials");
@@ -44,6 +45,7 @@ export const loadSecretsFromCloudFoundryEnvironment = () => {
 export const loadSecretsFromConfigServer = () => {
     const configUrl = process.env.CONFIG_URL;
     if (configUrl) {
+        logger.debug("Fetching secrets from config server at '%s'", configUrl);
         return axios.get(configUrl)
             .then(result => {
                 const data = JSON.parse(result.data)["secret/automation"];
