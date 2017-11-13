@@ -540,4 +540,66 @@ describe("CircleWorkflow", () => {
         assert.deepEqual(stages, expectedStages);
     });
 
+    it("should handle multiple initial jobs", () => {
+        const workflow = {
+            id: "workflow id",
+            name: "pipelineDooling",
+            provider: "circle",
+            config: `workflows:
+  version: 2
+  wf1:
+    jobs:
+    - init1
+    - init2
+    - start_build:
+        requires:
+        - init1
+        - init2
+    - fanout1:
+        requires:
+        - start_build
+    - fanout2:
+        requires:
+        - start_build
+    - fanout3:
+        requires:
+        - start_build
+    - deploy:
+        requires:
+        - fanout1
+        - fanout2
+        - fanout3
+`,
+            builds: [
+                {
+                    id: "build id 1",
+                    status: "passed",
+                    buildUrl: "buildUrl1",
+                    startedAt: "2017-10-30T17:38:31.564Z",
+                    finishedAt: "2017-10-30T17:38:33.516Z",
+                    jobName: "init1",
+                    jobId: "job id 1",
+                },
+            ],
+        } as graphql.PushToPushLifecycle.Workflow;
+        const stages = circleWorkflowtoStages(workflow);
+        const expectedStages: WorkflowStage[] = [
+            {
+                name: "init1",
+                status: {
+                    state: "started",
+                    totalDuration: 1952,
+                    longestJobDuration: 1952,
+                },
+            }, {
+                name: "start_build",
+            }, {
+                name: "fanout1",
+            }, {
+                name: "deploy",
+            },
+        ];
+        assert.deepEqual(stages, expectedStages);
+    });
+
 });
