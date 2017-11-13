@@ -18,10 +18,12 @@ export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
     const longestDurations: number[] = [];
     const remainingDurations: number[] = [];
     const failureDurations: number[] = [];
+    const progressDurations: number[] = [];
     stages.forEach(s => {
         let longestDurationForStage = 0;
         let remainingDuration = 0;
         let failureDuration = 0;
+        let progressDuration = 0;
         if (s.status) {
             if (s.status.state === "passed") {
                 longestDurationForStage = _.round(s.status.longestJobDuration / scale);
@@ -34,15 +36,20 @@ export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
             if (s.status.state === "failed") {
                 failureDuration = _.max([durationPlaceholder, _.round(s.status.totalDuration / scale)]);
             }
+            if (s.status.state === "started") {
+                progressDuration = _.max([durationPlaceholder, _.round(s.status.totalDuration / scale)]);
+            }
         }
         longestDurations.push(longestDurationForStage);
         remainingDurations.push(remainingDuration);
         failureDurations.push(failureDuration);
+        progressDurations.push(progressDuration);
     });
     const stageNamesString = `|${stageNames.join("|")}|`;
     const url = `https://image-charts.com/chart?chs=400x${chartHeight}&cht=bhs&` +
-        `chd=t:${longestDurations.join(",")}|${remainingDurations.join(",")}|${failureDurations.join(",")}&` +
-        `chds=a&chco=0FA215,86DB95,DD5B6A&chxr=200&chxt=x,y&chxl=0:${stageNamesString}&` +
+        `chd=t:${longestDurations.join(",")}|${remainingDurations.join(",")}` +
+        `|${failureDurations.join(",")}|${progressDurations.join(",")}&` +
+        `chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxr=200&chxt=x,y&chxl=0:${stageNamesString}&` +
         `chtt=Workflow%20Stage%20Durations%20(${scaleText})&chts=000000,10&chof=.png`;
     return _.replace(url, new RegExp(" ", "g"), "%20");
 }

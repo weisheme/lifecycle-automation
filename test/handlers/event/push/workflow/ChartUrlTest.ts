@@ -48,9 +48,10 @@ describe("ChartUrl", () => {
         ];
         const chartUrl = chartUrlFromWorkflow(workflow);
         const expectedChartUrl = "https://image-charts.com/chart?chs=400x160&cht=bhs&" +
-        "chd=t:35,15,253,620,0,0|7,0,3,150,0,0|0,0,0,0,15,0&chds=a&chco=0FA215,86DB95,DD5B6A&chxr=200&" +
-        "chxt=x,y&chxl=0:|build|unit%20test|integration%20test|canary%20test|staging|prod|&" +
-        "chtt=Workflow%20Stage%20Durations%20(in%20minutes)&chts=000000,10&chof=.png";
+            "chd=t:35,15,253,620,0,0|7,0,3,150,0,0|0,0,0,0,15,0|0,0,0,0,0,0&" +
+            "chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxr=200&chxt=x,y&" +
+            "chxl=0:|build|unit%20test|integration%20test|canary%20test|staging|prod|&" +
+            "chtt=Workflow%20Stage%20Durations%20(in%20minutes)&chts=000000,10&chof=.png";
         assert.deepEqual(chartUrl, expectedChartUrl);
     });
 
@@ -123,9 +124,10 @@ describe("ChartUrl", () => {
         ];
         const chartUrl = chartUrlFromWorkflow(workflow);
         const expectedChartUrl = "https://image-charts.com/chart?chs=400x190&cht=bhs&" +
-        "chd=t:2,23,6,29,1,1,22,1,2|0,1,0,5,0,1,0,0,0|0,0,0,0,0,0,0,0,0&chds=a&chco=0FA215,86DB95,DD5B6A&" +
-        "chxr=200&chxt=x,y&chxl=0:|build|one0|test|two0|publish|three1|four0|staging|promote|&" +
-        "chtt=Workflow%20Stage%20Durations%20(in%20seconds)&chts=000000,10&chof=.png";
+            "chd=t:2,23,6,29,1,1,22,1,2|0,1,0,5,0,1,0,0,0|0,0,0,0,0,0,0,0,0|0,0,0,0,0,0,0,0,0&" +
+            "chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxr=200&chxt=x,y&" +
+            "chxl=0:|build|one0|test|two0|publish|three1|four0|staging|promote|&" +
+            "chtt=Workflow%20Stage%20Durations%20(in%20seconds)&chts=000000,10&chof=.png";
         assert.deepEqual(chartUrl, expectedChartUrl);
     });
 
@@ -163,9 +165,51 @@ describe("ChartUrl", () => {
         ];
         const chartUrl = chartUrlFromWorkflow(workflow);
         const expectedChartUrl = "https://image-charts.com/chart?chs=400x190&cht=bhs&" +
-        "chd=t:2,0,0,0,0,0,0,0,0|0,0,0,0,0,0,0,0,0|0,7,0,0,0,0,0,0,0&chds=a&chco=0FA215,86DB95,DD5B6A&chxr=200&" +
-        "chxt=x,y&chxl=0:|build|one1|test|two0|publish|three0|four0|staging|promote|&" +
-        "chtt=Workflow%20Stage%20Durations%20(in%20seconds)&chts=000000,10&chof=.png";
+            "chd=t:2,0,0,0,0,0,0,0,0|0,0,0,0,0,0,0,0,0|0,7,0,0,0,0,0,0,0|0,0,0,0,0,0,0,0,0&" +
+            "chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxr=200&" +
+            "chxt=x,y&chxl=0:|build|one1|test|two0|publish|three0|four0|staging|promote|&" +
+            "chtt=Workflow%20Stage%20Durations%20(in%20seconds)&chts=000000,10&chof=.png";
+        assert.deepEqual(chartUrl, expectedChartUrl);
+    });
+
+    it("construct chart url with in progress workflow stage", () => {
+        const workflow: WorkflowStage[] = [
+            {
+                name: "build",
+                status: {
+                    state: "passed",
+                    totalDuration: 1952,
+                    longestJobDuration: 1952,
+                },
+            }, {
+                name: "one1",
+                status: {
+                    state: "started",
+                    totalDuration: 6569,
+                    longestJobDuration: 2357,
+                },
+            }, {
+                name: "test",
+            }, {
+                name: "two0",
+            }, {
+                name: "publish",
+            }, {
+                name: "three0",
+            }, {
+                name: "four0",
+            }, {
+                name: "staging",
+            }, {
+                name: "promote",
+            },
+        ];
+        const chartUrl = chartUrlFromWorkflow(workflow);
+        const expectedChartUrl = "https://image-charts.com/chart?chs=400x190&cht=bhs&" +
+            "chd=t:2,0,0,0,0,0,0,0,0|0,0,0,0,0,0,0,0,0|0,0,0,0,0,0,0,0,0|0,7,0,0,0,0,0,0,0&" +
+            "chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxr=200&" +
+            "chxt=x,y&chxl=0:|build|one1|test|two0|publish|three0|four0|staging|promote|&" +
+            "chtt=Workflow%20Stage%20Durations%20(in%20seconds)&chts=000000,10&chof=.png";
         assert.deepEqual(chartUrl, expectedChartUrl);
     });
 
