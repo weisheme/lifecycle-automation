@@ -346,4 +346,140 @@ describe("CircleWorkflow", () => {
         assert.deepEqual(stages, expectedStages);
     });
 
+    it("should order stages in config order when stage order is ambiguous", () => {
+        const workflow = {
+            id: "workflow id",
+            name: "pipelineDooling",
+            provider: "circle",
+            config: `workflows:
+  version: 2
+  cd_pipeline:
+    jobs:
+      - build
+      - one:
+          requires:
+            - build
+      - two:
+          requires:
+            - build
+      - afterOne:
+          requires:
+            - one
+      - afterTwo:
+          requires:
+            - two
+`,
+            builds: [
+                {
+                    id: "build id 1",
+                    status: "passed",
+                    buildUrl: "buildUrl1",
+                    startedAt: "2017-10-30T17:38:31.564Z",
+                    finishedAt: "2017-10-30T17:38:33.516Z",
+                    jobName: "build",
+                    jobId: "job id 1",
+                },
+            ],
+        } as graphql.PushToPushLifecycle.Workflow;
+        const stages = circleWorkflowtoStages(workflow);
+        const expectedStages: WorkflowStage[] = [
+            {
+                name: "build",
+                completed: {
+                    status: "passed",
+                    totalDuration: 1952,
+                    longestJobDuration: 1952,
+                },
+            }, {
+                name: "one",
+            }, {
+                name: "afterOne",
+            }, {
+                name: "afterTwo",
+            },
+        ];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should order executed stages first when stage order is ambiguous", () => {
+        const workflow = {
+            id: "workflow id",
+            name: "pipelineDooling",
+            provider: "circle",
+            config: `workflows:
+  version: 2
+  cd_pipeline:
+    jobs:
+      - build
+      - one:
+          requires:
+            - build
+      - two:
+          requires:
+            - build
+      - afterOne:
+          requires:
+            - one
+      - afterTwo:
+          requires:
+            - two
+`,
+            builds: [
+                {
+                    id: "build id 1",
+                    status: "passed",
+                    buildUrl: "buildUrl1",
+                    startedAt: "2017-10-30T17:38:31.564Z",
+                    finishedAt: "2017-10-30T17:38:33.516Z",
+                    jobName: "build",
+                    jobId: "job id 1",
+                }, {
+                    id: "build id 2",
+                    status: "passed",
+                    buildUrl: "buildUrl9",
+                    startedAt: "2017-10-30T17:40:00.066Z",
+                    finishedAt: "2017-10-30T17:40:01.048Z",
+                    jobName: "two",
+                    jobId: "job id 2",
+                }, {
+                    id: "build id 3",
+                    status: "passed",
+                    buildUrl: "buildUrl2",
+                    startedAt: "2017-10-30T17:38:40.329Z",
+                    finishedAt: "2017-10-30T17:38:41.362Z",
+                    jobName: "afterTwo",
+                    jobId: "job id 3",
+                },
+            ],
+        } as graphql.PushToPushLifecycle.Workflow;
+        const stages = circleWorkflowtoStages(workflow);
+        const expectedStages: WorkflowStage[] = [
+            {
+                name: "build",
+                completed: {
+                    status: "passed",
+                    totalDuration: 1952,
+                    longestJobDuration: 1952,
+                },
+            }, {
+                name: "two",
+                completed: {
+                    status: "passed",
+                    totalDuration: 982,
+                    longestJobDuration: 982,
+                },
+            }, {
+                name: "afterTwo",
+                completed: {
+                    status: "passed",
+                    totalDuration: 1033,
+                    longestJobDuration: 1033,
+                },
+            }, {
+                name: "afterOne",
+            },
+        ];
+        assert.deepEqual(stages, expectedStages);
+    });
+
 });
