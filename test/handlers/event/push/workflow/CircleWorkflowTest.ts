@@ -158,64 +158,64 @@ describe("CircleWorkflow", () => {
         const expectedStages: WorkflowStage[] = [
             {
                 name: "build",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one0",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 24445,
                     longestJobDuration: 23005,
                 },
             }, {
                 name: "test",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 6476,
                     longestJobDuration: 6476,
                 },
             }, {
                 name: "two0",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 33674,
                     longestJobDuration: 29347,
                 },
             }, {
                 name: "publish",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 982,
                     longestJobDuration: 982,
                 },
             }, {
                 name: "three1",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 2040,
                     longestJobDuration: 1216,
                 },
             }, {
                 name: "four0",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 21725,
                     longestJobDuration: 21725,
                 },
             }, {
                 name: "staging",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1049,
                     longestJobDuration: 1049,
                 },
             }, {
                 name: "promote",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1802,
                     longestJobDuration: 1802,
                 },
@@ -270,15 +270,15 @@ describe("CircleWorkflow", () => {
         const expectedStages: WorkflowStage[] = [
             {
                 name: "build",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one1",
-                completed: {
-                    status: "failed",
+                status: {
+                    state: "failed",
                     totalDuration: 6569,
                     longestJobDuration: 2357,
                 },
@@ -334,13 +334,71 @@ describe("CircleWorkflow", () => {
         const expectedStages: WorkflowStage[] = [
             {
                 name: "build",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "valid",
+            },
+        ];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should give stage a started status if all jobs have not completed", () => {
+        const workflow = {
+            id: "workflow id",
+            name: "pipelineDooling",
+            provider: "circle",
+            config: `workflows:
+  version: 2
+  cd_pipeline:
+    jobs:
+      - build
+      - one:
+          requires:
+            - build
+      - two:
+          requires:
+            - build
+`,
+            builds: [
+                {
+                    id: "build id 1",
+                    status: "passed",
+                    buildUrl: "buildUrl1",
+                    startedAt: "2017-10-30T17:38:31.564Z",
+                    finishedAt: "2017-10-30T17:38:33.516Z",
+                    jobName: "build",
+                    jobId: "job id 1",
+                }, {
+                    id: "build id 2",
+                    status: "passed",
+                    buildUrl: "buildUrl9",
+                    startedAt: "2017-10-30T17:40:00.066Z",
+                    finishedAt: "2017-10-30T17:40:01.048Z",
+                    jobName: "two",
+                    jobId: "job id 2",
+                },
+            ],
+        } as graphql.PushToPushLifecycle.Workflow;
+        const stages = circleWorkflowtoStages(workflow);
+        const expectedStages: WorkflowStage[] = [
+            {
+                name: "build",
+                status: {
+                    state: "passed",
+                    totalDuration: 1952,
+                    longestJobDuration: 1952,
+                },
+            }, {
+                name: "two",
+                status: {
+                    state: "started",
+                    totalDuration: 982,
+                    longestJobDuration: 982,
+                },
             },
         ];
         assert.deepEqual(stages, expectedStages);
@@ -385,8 +443,8 @@ describe("CircleWorkflow", () => {
         const expectedStages: WorkflowStage[] = [
             {
                 name: "build",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
@@ -456,22 +514,22 @@ describe("CircleWorkflow", () => {
         const expectedStages: WorkflowStage[] = [
             {
                 name: "build",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "two",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "started",
                     totalDuration: 982,
                     longestJobDuration: 982,
                 },
             }, {
                 name: "afterTwo",
-                completed: {
-                    status: "passed",
+                status: {
+                    state: "passed",
                     totalDuration: 1033,
                     longestJobDuration: 1033,
                 },

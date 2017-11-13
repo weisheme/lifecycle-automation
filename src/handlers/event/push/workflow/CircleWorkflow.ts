@@ -57,6 +57,9 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
         let earliestStart;
         let latestEnd = 0;
         let isFailure = false;
+        const executedJobNames: string[] = workflow.builds.map(build => build.jobName);
+        const unexecutedJobsInStage = _.without(s.jobs, ...executedJobNames);
+        const isComplete = unexecutedJobsInStage.length === 0 ? true : false;
         buildsInStage.forEach(b => {
             const startedAt = Date.parse(b.startedAt);
             const finishedAt = Date.parse(b.finishedAt);
@@ -74,16 +77,16 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
                 }
             }
         });
+        const state = isFailure ? "failed" : isComplete ? "passed" : "started";
         return {
             name: jobName,
-            completed: {
-                status: isFailure ? "failed" : "passed",
+            status: {
+                state,
                 totalDuration: latestEnd - earliestStart,
                 longestJobDuration,
             },
         } as WorkflowStage;
     });
-    // add times and statuses based on build events
     return workflowStages;
 }
 

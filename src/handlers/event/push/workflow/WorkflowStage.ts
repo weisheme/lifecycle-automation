@@ -2,11 +2,11 @@ import { BuildStatus } from "../../../../typings/types";
 
 export interface WorkflowStage {
     name: string;
-    completed?: WorkflowStageCompleted;
+    status?: WorkflowStageCompletedStatus;
 }
 
-export interface WorkflowStageCompleted {
-    status: BuildStatus;
+export interface WorkflowStageCompletedStatus {
+    state: BuildStatus;
     totalDuration: number;
     longestJobDuration: number;
 }
