@@ -3,13 +3,24 @@ import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { AutomationEventListenerSupport } from "@atomist/automation-client/server/AutomationEventListener";
-import { isSlackMessage, MessageClient, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    isSlackMessage,
+    MessageClient,
+    MessageOptions,
+} from "@atomist/automation-client/spi/message/MessageClient";
 import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import axios from "axios";
+import * as cluster from "cluster";
 import { wrapLinks } from "./tracking";
 
 function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Promise<SlackMessage> {
+
+    // Check if this message was already shortened
+    if (isShortened(slackMessage)) {
+        return Promise.resolve(slackMessage);
+    }
+
     const nsp = namespace.get();
 
     if (!nsp) {
@@ -36,12 +47,28 @@ function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Prom
     }, { timeout: 2000 })
         .then(() => {
             logger.debug("Finished url shortening");
-            return wrappedSlackMessage;
+            return markShortened(wrappedSlackMessage);
         })
         .catch(err => {
             console.warn(`Error shortening urls: '${err.message}'`);
-            return slackMessage;
+            return markShortened(slackMessage);
         });
+}
+
+function markShortened(slackMessage: SlackMessage): SlackMessage {
+    if (cluster.isWorker) {
+        (slackMessage as any).__shortened = true;
+    }
+    return slackMessage;
+}
+
+function isShortened(slackMessage: SlackMessage): boolean {
+    if ((slackMessage as any).__shortened === true) {
+        delete (slackMessage as any).__shortened;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 class ShortenUrlMessageClient extends MessageClientSupport {
