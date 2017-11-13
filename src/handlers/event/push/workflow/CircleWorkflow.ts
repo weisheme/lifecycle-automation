@@ -9,26 +9,22 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
     const jobsConfig = _.find(_.values(doc.workflows), v => v.jobs).jobs;
     const stages: Stage[] = [];
     jobsConfig.forEach(jc => {
-        const name = _.head(_.keys(jc));
-        if (jc[name].requires) {
-            let stage = _.find(stages, j => _.isEqual(j.require, jc[name].requires));
-            if (!stage) {
-                stage = {
-                    jobs: [name],
-                    require: jc[name].requires,
-                };
-                stages.push(stage);
-            } else {
-                stage.jobs.push(name);
-            }
+        const name = typeof jc === "string" ? jc : _.head(_.keys(jc));
+        const requires = typeof jc === "string" ? [] : jc[name].requires;
+        let stage = _.find(stages, j => _.isEqual(j.require, requires));
+        if (!stage) {
+            stage = {
+                jobs: [name],
+                require: requires,
+            };
+            stages.push(stage);
+        } else {
+            stage.jobs.push(name);
         }
     });
 
-    const orderedStages: Stage[] = [{
-        jobs: ["build"],
-        require: [],
-    }];
-    const visitedJobs = ["build"];
+    const orderedStages: Stage[] = [];
+    const visitedJobs = [];
 
     let stagesRequiringOnlyVisitedJobs: Stage[] = [];
     do {
