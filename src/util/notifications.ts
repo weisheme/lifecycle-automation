@@ -39,7 +39,7 @@ export function issueNotification(id: string,
     return linkGitHubUsers(githubToSlack(body), ctx)
         .then(b => {
             if (matches != null) {
-                return Promise.all(matches.map(m => {
+                return Promise.all(_.uniq(matches).map(m => {
                     return loadChatIdByGitHubId(ctx, m)
                         .then(notifier => {
                             if (m !== login
@@ -92,7 +92,7 @@ export function prNotification(id: string,
     return linkGitHubUsers(githubToSlack(body), ctx)
         .then(b => {
             if (matches != null) {
-                return Promise.all(matches.map(m => {
+                return Promise.all(_.uniq(matches).map(m => {
                     return loadChatIdByGitHubId(ctx, m)
                         .then(notifier => {
                             if (m !== login

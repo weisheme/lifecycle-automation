@@ -7,7 +7,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.2...HEAD
+[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.4...HEAD
+
+## [0.2.4][] - 2017-11-13
+
+[0.2.4]: https://github.com/atomist/lifecycle-automation/compare/0.2.3...0.2.4
+
+Caching release
+
+### Changed
+
+-   Properly cache graph client instances
+
+## [0.2.3][] - 2017-11-13
+
+[0.2.3]: https://github.com/atomist/lifecycle-automation/compare/0.2.2...0.2.3
+
+Cluster release
+
+### Changed
+
+-   Updated to new automation-client to use Cluster infrastructure
 
 ## [0.2.2][] - 2017-11-12
 
