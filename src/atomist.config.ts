@@ -264,7 +264,7 @@ export const configuration = {
     },
     cluster: {
         enabled: true,
-    }
+    },
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
