@@ -301,4 +301,49 @@ describe("CircleWorkflow", () => {
         assert.deepEqual(stages, expectedStages);
     });
 
+    it("should handle workflow config with unused stages", () => {
+        const workflow = {
+            id: "workflow id",
+            name: "pipelineDooling",
+            provider: "circle",
+            config: `workflows:
+  version: 2
+  cd_pipeline:
+    jobs:
+      - build
+      - valid:
+          requires:
+            - build
+      - invalid:
+          requires:
+            - dne
+`,
+            builds: [
+                {
+                    id: "build id 1",
+                    status: "passed",
+                    buildUrl: "buildUrl1",
+                    startedAt: "2017-10-30T17:38:31.564Z",
+                    finishedAt: "2017-10-30T17:38:33.516Z",
+                    jobName: "build",
+                    jobId: "job id 1",
+                },
+            ],
+        } as graphql.PushToPushLifecycle.Workflow;
+        const stages = circleWorkflowtoStages(workflow);
+        const expectedStages: WorkflowStage[] = [
+            {
+                name: "build",
+                completed: {
+                    status: "passed",
+                    totalDuration: 1952,
+                    longestJobDuration: 1952,
+                },
+            }, {
+                name: "valid",
+            },
+        ];
+        assert.deepEqual(stages, expectedStages);
+    });
+
 });

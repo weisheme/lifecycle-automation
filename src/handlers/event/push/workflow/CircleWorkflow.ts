@@ -30,15 +30,16 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
     }];
     const visitedJobs = ["build"];
 
-    while (orderedStages.length <= stages.length) {
+    let stagesRequiringOnlyVisitedJobs: Stage[] = [];
+    do {
         const remainingStages: Stage[] = _.clone(stages);
         _.remove(remainingStages, s => _.includes(orderedStages, s));
-        const stagesRequireOnlyVisitedJobs: Stage[] = remainingStages.
+        stagesRequiringOnlyVisitedJobs = remainingStages.
             filter(s => _.every(s.require, r => _.includes(visitedJobs, r)));
-        const newlyVisitedJobs: string[] = _.uniq(_.flatMap(stagesRequireOnlyVisitedJobs, s => s.jobs));
+        const newlyVisitedJobs: string[] = _.uniq(_.flatMap(stagesRequiringOnlyVisitedJobs, s => s.jobs));
         newlyVisitedJobs.forEach(j => visitedJobs.push(j));
-        stagesRequireOnlyVisitedJobs.forEach(s => orderedStages.push(s));
-    }
+        stagesRequiringOnlyVisitedJobs.forEach(s => orderedStages.push(s));
+    } while (stagesRequiringOnlyVisitedJobs.length > 0);
 
     const workflowStages: WorkflowStage[] = _.map(orderedStages, s => {
         const buildsInStage = workflow.builds.filter(b => _.includes(s.jobs, b.jobName));
