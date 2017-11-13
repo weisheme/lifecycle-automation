@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://r.atomist.com/SkB8bl9w1z",
+    "@atomist/automation-client": "https://r.atomist.com/r1C8rXqPyM",
     "@atomist/slack-messages": "^0.12.0",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
