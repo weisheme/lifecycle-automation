@@ -262,12 +262,9 @@ export const configuration = {
         enabled: true,
         teamId: "T29E48P34",
     },
-    callbacks: {
-        beforeStart: [
-            loadSecretsFromCloudFoundryEnvironment,
-            loadSecretsFromConfigServer,
-        ],
-    },
+    cluster: {
+        enabled: true,
+    }
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
