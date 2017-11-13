@@ -38,6 +38,12 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
             filter(s => _.every(s.require, r => _.includes(visitedJobs, r)));
         const newlyVisitedJobs: string[] = _.uniq(_.flatMap(stagesRequiringOnlyVisitedJobs, s => s.jobs));
         newlyVisitedJobs.forEach(j => visitedJobs.push(j));
+        stagesRequiringOnlyVisitedJobs.sort((stage1, stage2) => {
+            const executedJobNames: string[] = workflow.builds.map(build => build.jobName);
+            const unexecutedJobsInStage1 = _.without(stage1.jobs, ...executedJobNames);
+            const unexecutedJobsInStage2 = _.without(stage2.jobs, ...executedJobNames);
+            return unexecutedJobsInStage1.length - unexecutedJobsInStage2.length;
+        });
         stagesRequiringOnlyVisitedJobs.forEach(s => orderedStages.push(s));
     } while (stagesRequiringOnlyVisitedJobs.length > 0);
 
