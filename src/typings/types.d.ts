@@ -3855,10 +3855,15 @@ export namespace NotifyReviewerOnPush {
     body?: string | null; 
     state?: string | null; 
     merged?: boolean | null; 
+    reviewers?: Reviewers[] | null; 
     reviews?: Reviews[] | null; 
   } 
 
   export type _Author = {
+    login?: string | null; 
+  } 
+
+  export type Reviewers = {
     login?: string | null; 
   } 
 

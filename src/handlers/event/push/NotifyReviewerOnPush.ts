@@ -35,7 +35,10 @@ export class NotifyReviewerOnPush implements HandleEvent<graphql.NotifyReviewerO
                 c => c.pullRequests != null && c.pullRequests.length > 0);
             if (commitWithPr) {
                 const pr = commitWithPr.pullRequests[0];
-                const reviews = pr.reviews ? pr.reviews.filter(r => r.state !== "requested") : [];
+
+                const reviewers = pr.reviewers ? pr.reviewers.map(r => r.login) : [];
+                const reviews = pr.reviews ? pr.reviews.filter(r => r.state !== "requested")
+                    .filter(r => r.by && r.by.some(rr => reviewers.indexOf(rr.login) >= 0)) : [];
 
                 if (pr.state === "open" && reviews && reviews.length > 0) {
                     return Promise.all(reviews.map(r => reviewerNotification(push, pr, push.repo, r, ctx)))

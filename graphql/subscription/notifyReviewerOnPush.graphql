@@ -29,6 +29,9 @@ subscription NotifyReviewerOnPush
                 body
                 state
                 merged
+                reviewers {
+                    login
+                }
                 reviews {
                     state
                     by {
@@ -48,6 +51,8 @@ subscription NotifyReviewerOnPush
         }
     }
 }
+
+
 
 
 
