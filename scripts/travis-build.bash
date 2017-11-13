@@ -127,8 +127,10 @@ function npm-publish-timestamp () {
         return 1
     fi
 
-    if ! docker-push "$project_version"; then
-        return 1
+    if [[ $TRAVIS_BRANCH == master ]]; then
+        if ! docker-push "$project_version"; then
+                return 1
+        fi
     fi
 
     local sha
