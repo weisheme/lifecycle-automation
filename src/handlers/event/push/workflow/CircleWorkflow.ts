@@ -76,8 +76,8 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
         });
         return {
             name: jobName,
-            completed: {
-                status: isFailure ? "failed" : "passed",
+            status: {
+                state: isFailure ? "failed" : "passed",
                 totalDuration: latestEnd - earliestStart,
                 longestJobDuration,
             },

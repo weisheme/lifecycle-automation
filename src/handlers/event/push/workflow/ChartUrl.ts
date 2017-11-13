@@ -3,7 +3,7 @@ import { WorkflowStage } from "./WorkflowStage";
 
 export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
     const stageNames = stages.map(s => s.name);
-    const longestDuration = _.max(stages.filter(s => s.completed).map(s => s.completed.totalDuration));
+    const longestDuration = _.max(stages.filter(s => s.status).map(s => s.status.totalDuration));
 
     let scaleText = "in seconds";
     let scale = 1000;
@@ -22,17 +22,17 @@ export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
         let longestDurationForStage = 0;
         let remainingDuration = 0;
         let failureDuration = 0;
-        if (s.completed) {
-            if (s.completed.status === "passed") {
-                longestDurationForStage = _.round(s.completed.longestJobDuration / scale);
+        if (s.status) {
+            if (s.status.state === "passed") {
+                longestDurationForStage = _.round(s.status.longestJobDuration / scale);
                 if (longestDurationForStage < durationPlaceholder) {
                     longestDurationForStage = durationPlaceholder;
                 } else {
-                    remainingDuration = _.round(s.completed.totalDuration / scale) - longestDurationForStage;
+                    remainingDuration = _.round(s.status.totalDuration / scale) - longestDurationForStage;
                 }
             }
-            if (s.completed.status === "failed") {
-                failureDuration = _.max([durationPlaceholder, _.round(s.completed.totalDuration / scale)]);
+            if (s.status.state === "failed") {
+                failureDuration = _.max([durationPlaceholder, _.round(s.status.totalDuration / scale)]);
             }
         }
         longestDurations.push(longestDurationForStage);
