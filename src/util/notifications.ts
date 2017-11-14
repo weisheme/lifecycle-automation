@@ -38,13 +38,12 @@ export function issueNotification(id: string,
     const matches = getGitHubUsers(body);
     return linkGitHubUsers(githubToSlack(body), ctx)
         .then(b => {
-            if (matches != null) {
-                return Promise.all(_.uniq(matches).map(m => {
-                    return loadChatIdByGitHubId(ctx, m)
-                        .then(notifier => {
-                            if (m !== login
-                                && notifier
-                                && !isDmDisabled(notifier, DirectMessagePreferences.mention.id)) {
+            if (matches) {
+                return loadChatIdByGitHubId(ctx, _.uniq(matches))
+                    .then(notifiers => {
+                        return Promise.all(notifiers.map(n => {
+                            if (n.login !== login
+                                && !isDmDisabled(n.person.chatId, DirectMessagePreferences.mention.id)) {
                                 // tslint:disable-next-line:variable-name
                                 const footer_icon = `https://images.atomist.com/rug/issue-${issue.state}.png`;
                                 const text = `${prefix} ${url(issueUrl(repo, issue),
@@ -61,18 +60,20 @@ export function issueNotification(id: string,
                                             fallback: `${prefix} #${issue.number}: ${issue.title}`,
                                             footer: repoAndChannelFooter(repo),
                                             footer_icon,
-                                            ts: Math.floor(new Date().getTime() / 1000),
+                                            ts: Math.floor(Date.now() / 1000),
                                         },
                                     ],
                                 };
                                 const msgId =
                                     // tslint:disable-next-line:max-line-length
-                                    `user_message/issue/mention/${notifier.screenName}/${repo.owner}/${repo.name}/${id}`;
-                                return ctx.messageClient.addressUsers(slackMessage, notifier.screenName, { id: msgId });
+                                    `user_message/issue/mention/${n.person.chatId.screenName}/${repo.owner}/${repo.name}/${id}`;
+                                return ctx.messageClient.addressUsers(
+                                    slackMessage,
+                                    n.person.chatId.screenName,
+                                    { id: msgId });
                             }
-                            return Promise.resolve(null);
-                        });
-                }));
+                        }));
+                    });
             }
             return Promise.resolve(null);
         });
@@ -91,13 +92,12 @@ export function prNotification(id: string,
     const matches = getGitHubUsers(body);
     return linkGitHubUsers(githubToSlack(body), ctx)
         .then(b => {
-            if (matches != null) {
-                return Promise.all(_.uniq(matches).map(m => {
-                    return loadChatIdByGitHubId(ctx, m)
-                        .then(notifier => {
-                            if (m !== login
-                                && notifier
-                                && !isDmDisabled(notifier, DirectMessagePreferences.mention.id)) {
+            if (matches) {
+                return loadChatIdByGitHubId(ctx, _.uniq(matches))
+                    .then(notifiers => {
+                        return Promise.all(notifiers.map(n => {
+                            if (n.login !== login
+                                && !isDmDisabled(n.person.chatId, DirectMessagePreferences.mention.id)) {
                                 // tslint:disable-next-line:variable-name
                                 const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
                                 const text = `${prefix} ${url(prUrl(repo, pr),
@@ -114,18 +114,20 @@ export function prNotification(id: string,
                                             fallback: `${prefix} #${pr.number}: ${pr.title}`,
                                             footer: repoAndChannelFooter(repo),
                                             footer_icon,
-                                            ts: Math.floor(new Date().getTime() / 1000),
+                                            ts: Math.floor(Date.now() / 1000),
                                         },
                                     ],
                                 };
                                 const msgId =
                                     // tslint:disable-next-line:max-line-length
-                                    `user_message/pullrequest/mention/${notifier.screenName}/${repo.owner}/${repo.name}/${id}`;
-                                return ctx.messageClient.addressUsers(slackMessage, notifier.screenName, { id: msgId });
+                                    `user_message/pullrequest/mention/${n.person.chatId.screenName}/${repo.owner}/${repo.name}/${id}`;
+                                return ctx.messageClient.addressUsers(
+                                    slackMessage,
+                                    n.person.chatId.screenName,
+                                    { id: msgId });
                             }
-                            return Promise.resolve(null);
-                        });
-                }));
+                        }));
+                    });
             }
             return Promise.resolve(null);
         });
@@ -162,7 +164,7 @@ export function issueAssigneeNotification(id: string,
                             fallback: `${prefix} #${issue.number}: ${issue.title}`,
                             footer: repoAndChannelFooter(repo),
                             footer_icon,
-                            ts: Math.floor(new Date().getTime() / 1000),
+                            ts: Math.floor(Date.now() / 1000),
                         },
                     ],
                 };
@@ -207,7 +209,7 @@ export function prAssigneeNotification(id: string,
                             fallback: `${prefix} #${pr.number}: ${pr.title}`,
                             footer: repoAndChannelFooter(repo),
                             footer_icon,
-                            ts: Math.floor(new Date().getTime() / 1000),
+                            ts: Math.floor(Date.now() / 1000),
                         },
                     ],
                 };
@@ -251,7 +253,7 @@ export function prRevieweeNotification(id: string,
                             fallback: `${prefix} #${pr.number}: ${pr.title}`,
                             footer: repoAndChannelFooter(repo),
                             footer_icon,
-                            ts: Math.floor(new Date().getTime() / 1000),
+                            ts: Math.floor(Date.now() / 1000),
                         },
                     ],
                 };
@@ -294,7 +296,7 @@ export function prAuthorMergeNotification(id: string,
                             fallback: `Pull Request #${pr.number}: ${pr.title} ${state}`,
                             footer: repoAndChannelFooter(repo),
                             footer_icon,
-                            ts: Math.floor(new Date().getTime() / 1000),
+                            ts: Math.floor(Date.now() / 1000),
                         },
                     ],
                 };
@@ -353,7 +355,7 @@ export function prAuthorReviewNotification(id: string,
                             mrkdwn_in: ["text", "pretext"],
                             footer: repoAndChannelFooter(repo),
                             footer_icon,
-                            ts: Math.floor(new Date().getTime() / 1000),
+                            ts: Math.floor(Date.now() / 1000),
                         },
                     ],
                 };
@@ -391,7 +393,7 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
                 color: "#D94649",
                 footer: repoAndChannelFooter(repo),
                 footer_icon: "http://images.atomist.com/rug/commit.png",
-                ts: Math.floor(new Date().getTime() / 1000),
+                ts: Math.floor(Date.now() / 1000),
             },
         ],
     };
@@ -435,7 +437,7 @@ export function reviewerNotification(push: graphql.NotifyReviewerOnPush.Push,
                         fallback: `New commits to #${pr.number}: ${pr.title}`,
                         footer: repoAndChannelFooter(repo),
                         footer_icon,
-                        ts: Math.floor(new Date().getTime() / 1000),
+                        ts: Math.floor(Date.now() / 1000),
                     },
                 ],
             };

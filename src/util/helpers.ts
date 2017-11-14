@@ -298,26 +298,21 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
     return new RegExp(`(^|\\W)(?:@|＠)(${userRegExp})(?![-\\w]|\\.\\w)`, "g");
 }
 
-export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubId: string): Promise<ChatId> {
+export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): Promise<graphql.GitHubId.GitHubId[]> {
     return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
         "graphql/query/gitHubId",
-        { teamId: ctx.teamId, gitHubId })
+        { gitHubIds })
         .then(result => {
             if (result) {
                 if (result.GitHubId && result.GitHubId.length > 0) {
-                    if (result.GitHubId[0].person && result.GitHubId[0].person.chatId) {
-                        return {
-                            id: result.GitHubId[0].person.chatId.id,
-                            screenName: result.GitHubId[0].person.chatId.screenName,
-                            preferences: result.GitHubId[0].person.chatId.preferences,
-                        };
-                    }
+                    return result.GitHubId.filter(g =>
+                        g.person && g.person.chatId && g.person.chatId.chatTeam);
                 }
             }
-            return null;
+            return [];
         })
         .catch(err => {
-            return null;
+            return [];
         });
 }
 
@@ -465,18 +460,17 @@ export function linkGitHubUsers(body: string = "", context: HandlerContext): Pro
     if (!body || body.length === 0) {
         return Promise.resolve(body);
     }
+
     const mentions = getGitHubUsers(body);
-    return Promise.all(mentions.map(m => {
-        return loadChatIdByGitHubId(context, m)
-            .then(notifier => {
-                if (notifier) {
-                    const mentionRegExp = gitHubUserMentionRegExp(m);
-                    body = body.replace(mentionRegExp, "$1" + user(notifier.screenName));
-                }
-            });
-    }))
-        .then(() => {
-            return Promise.resolve(body);
+    return loadChatIdByGitHubId(context, mentions)
+        .then(notifier => {
+            if (notifier) {
+                notifier.forEach(n => {
+                    const mentionRegExp = gitHubUserMentionRegExp(n.login);
+                    body = body.replace(mentionRegExp, "$1" + user(n.person.chatId.screenName));
+                });
+            }
+            return body;
         });
 }
 

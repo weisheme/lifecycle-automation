@@ -1,5 +1,6 @@
-query GitHubId($teamId: ID!, $gitHubId: String!) {
-  GitHubId(login: $gitHubId) {
+query GitHubId($gitHubIds: [String]!) {
+  GitHubId(logins: $gitHubIds) {
+    login
     person {
       chatId {
         screenName
@@ -8,7 +9,7 @@ query GitHubId($teamId: ID!, $gitHubId: String!) {
             value
         }
         id
-        chatTeam(id: $teamId) {
+        chatTeam {
           name
         }
       }

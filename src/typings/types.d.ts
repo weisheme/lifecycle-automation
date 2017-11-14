@@ -568,8 +568,7 @@ export namespace Commit {
 }
 export namespace GitHubId {
   export type Variables = {
-    teamId: string;
-    gitHubId: string;
+    gitHubIds: string[];
   }
 
   export type Query = {
@@ -577,6 +576,7 @@ export namespace GitHubId {
   } 
 
   export type GitHubId = {
+    login?: string | null; 
     person?: Person | null; 
   } 
 
