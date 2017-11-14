@@ -263,8 +263,8 @@ export const configuration = {
         teamId: "T29E48P34",
     },
     cluster: {
-        enabled: false,
-        worker: 2,
+        enabled: true,
+        // worker: 2,
     },
 };
 

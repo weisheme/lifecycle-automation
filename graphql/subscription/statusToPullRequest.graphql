@@ -3,7 +3,7 @@ subscription StatusToPullRequestLifecycle
   Status {
     _id
     commit {
-      pullRequests {
+      pullRequests(first: 1) {
         number
         name
         body
@@ -92,10 +92,7 @@ subscription StatusToPullRequestLifecycle
         labels {
           name
         }
-        comments {
-          body
-        }
-        commits {
+        commits(first: 30) {
           sha
           message
           timestamp

@@ -90,10 +90,7 @@ subscription PullRequestToPullRequestLifecycle
     labels {
       name
     }
-    comments {
-      body
-    }
-    commits {
+    commits(first: 30) {
       sha
       message
       timestamp

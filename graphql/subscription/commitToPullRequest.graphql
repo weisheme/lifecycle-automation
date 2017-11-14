@@ -2,7 +2,7 @@ subscription CommitToPullRequestLifecycle
 {
   Commit {
     _id
-    pullRequests {
+    pullRequests(first: 1) {
       number
       name
       body
@@ -91,10 +91,7 @@ subscription CommitToPullRequestLifecycle
       labels {
         name
       }
-      comments {
-        body
-      }
-      commits {
+      commits(first: 30) {
         sha
         message
         timestamp

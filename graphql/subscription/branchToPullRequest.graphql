@@ -2,7 +2,7 @@ subscription BranchToPullRequestLifecycle
 {
   Branch {
     _id
-    pullRequests {
+    pullRequests(first: 1) {
       number
       name
       body
@@ -91,10 +91,7 @@ subscription BranchToPullRequestLifecycle
       labels {
         name
       }
-      comments {
-        body
-      }
-      commits {
+      commits(first: 30) {
         sha
         timestamp
         message
