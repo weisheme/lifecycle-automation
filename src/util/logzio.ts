@@ -73,6 +73,7 @@ function initLogzioLogging(options: LogzioOptions) {
                 "team-name": nsp.get().teamName,
                 "correlation-id": nsp.get().correlationId,
                 "invocation-id": nsp.get().invocationId,
+                "process-id": process.pid,
             });
         } else {
             _assign(msg, {
