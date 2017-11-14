@@ -2,7 +2,7 @@ subscription CommentToPullRequestLifecycle
 {
   Comment {
     _id
-    pullRequest(first: 1) {
+    pullRequest {
       number
       name
       body

@@ -2,7 +2,7 @@ subscription ReviewToPullRequestLifecycle
 {
   Review {
     _id
-    pullRequest(first: 1) {
+    pullRequest {
       number
       name
       body
