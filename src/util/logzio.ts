@@ -148,7 +148,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             "execution-time": new Date().getTime() - start,
             "correlation-id": nsp.get().correlationId,
             "invocation-id": nsp.get().invocationId,
-            "message": `${identifier} ${name} invocation ${status} for ${nsp.get().teamName} (${nsp.get().teamId})`,
+            "message": `${identifier} ${name} invocation ${status} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
         };
         if (err) {
             if (status === "failed") {
@@ -216,7 +216,7 @@ export class LogzioForwardingEventStore implements EventStore {
             "level": "info",
             "correlation-id": nsp.get().correlationId,
             "invocation-id": nsp.get().invocationId,
-            "message": `${identifier} of ${nsp.get().operation} for ${nsp.get().teamName} (${nsp.get().teamId})`,
+            "message": `${identifier} of ${nsp.get().operation} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
             "payload": JSON.stringify(payload),
         };
         if (logzio) {
