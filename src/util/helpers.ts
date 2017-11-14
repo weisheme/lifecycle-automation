@@ -306,7 +306,7 @@ export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): 
             if (result) {
                 if (result.GitHubId && result.GitHubId.length > 0) {
                     return result.GitHubId.filter(g =>
-                        g.person && g.person.chatId && g.person.chatId.chatTeam);
+                        g.person && g.person.chatId);
                 }
             }
             return [];

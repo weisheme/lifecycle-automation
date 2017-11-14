@@ -756,8 +756,9 @@ does it like something that looks like an @email.domain or a partial@email
             teamId: "T3434343",
             graphClient: {
                 executeQueryFromFile(path: string, params: any): Promise<any> {
-                    const ghid = (params.gitHubId === gitHubLogin) ? {
+                    const ghid = (params.gitHubIds[0] === gitHubLogin) ? {
                         GitHubId: [{
+                            login: gitHubLogin,
                             person: {
                                 chatId: {
                                     id: slackId,
