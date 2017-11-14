@@ -45,13 +45,15 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 
         let color;
         let ts;
-        const branchName = (pr as any).branchName;
-        const baseBranchName = (pr as any).baseBranchName;
+        const branchName = pr.branchName;
+        const baseBranchName = pr.baseBranchName;
+        const commits = pr.commits.length;
+        const commitText = commits === 10 ? "commits" : (commits > 1 ? `${commits} commits` : "1 commit");
+
         if (state === "open") {
             msg.text = `${url(userUrl(repo, pr.author.login),
-                `@${pr.author.login}`)} wants to merge ${pr.commits.length} ${pr.commits.length > 1 ? "commits"
-                    // tslint:disable-next-line:max-line-length
-                    : "commit"} from ${url(branchUrl(repo, branchName), branchName)} to ${url(branchUrl(repo, baseBranchName), baseBranchName)}`;
+                `@${pr.author.login}`)} wants to merge ${commitText} from ${url(branchUrl(repo, branchName),
+                branchName)} to ${url(branchUrl(repo, baseBranchName), baseBranchName)}`;
             color = "#6FC44C";
             ts = pr.createdAt;
         } else if (state === "closed") {
@@ -60,9 +62,8 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
             ts = pr.mergedAt;
         } else if (state === "merged") {
             msg.text = `${url(userUrl(repo, pr.merger.login),
-                `@${pr.merger.login}`)} merged ${pr.commits.length} ${pr.commits.length > 1 ? "commits"
-                    // tslint:disable-next-line:max-line-length
-                    : "commit"} from ${url(branchUrl(repo, branchName), branchName)} to ${url(branchUrl(repo, baseBranchName), baseBranchName)}`;
+                `@${pr.merger.login}`)} merged ${commitText} from ${url(branchUrl(repo, branchName),
+                branchName)} to ${url(branchUrl(repo, baseBranchName), baseBranchName)}`;
             color = "#6E5692";
             ts = pr.mergedAt;
         }

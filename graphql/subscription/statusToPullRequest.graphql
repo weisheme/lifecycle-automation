@@ -92,7 +92,7 @@ subscription StatusToPullRequestLifecycle
         labels {
           name
         }
-        commits(first: 30) {
+        commits(first: 10, orderBy: [timestamp_desc]) {
           sha
           message
           timestamp
