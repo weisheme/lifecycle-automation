@@ -159,18 +159,20 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
         promises.push(loadIsseOrPullRequest(o, r, [no], ctx)
             .then(result => {
                 const results = [];
-                result.repo.forEach(rr => {
-                    if (rr.issue) {
-                        rr.issue.forEach(i => {
-                            results.push({ type: "issue", result: i });
-                        });
-                    }
-                    if (rr.pullRequest) {
-                        rr.pullRequest.forEach(pr => {
-                            results.push({ type: "pr", result: pr });
-                        });
-                    }
-                });
+                if (result && result.repo) {
+                    result.repo.forEach(rr => {
+                        if (rr.issue) {
+                            rr.issue.forEach(i => {
+                                results.push({ type: "issue", result: i });
+                            });
+                        }
+                        if (rr.pullRequest) {
+                            rr.pullRequest.forEach(pr => {
+                                results.push({ type: "pr", result: pr });
+                            });
+                        }
+                    });
+                }
                 return results;
             }));
         counter++;
