@@ -145,11 +145,10 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
 
     let match;
     let counter = 0;
-    let showMore = false;
+
     // tslint:disable-next-line:no-conditional-assignment
     while (match = issueMentionRegExp.exec(body)) {
         if (counter > 2) {
-            showMore = true;
             break;
         }
 
@@ -157,80 +156,48 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
         const r = match[2] || repo.name;
         const no = match[3];
 
-        promises.push(loadIssue(o, r, no, ctx)
+        promises.push(loadIsseOrPullRequest(o, r, [no], ctx)
             .then(result => {
-                if (result) {
-                    return { type: "issue", result };
-                }
-                return result;
-            }));
-        promises.push(loadPullRequest(o, r, no, ctx)
-            .then(result => {
-                if (result) {
-                    return { type: "pr", result };
-                }
-                return result;
+                const results = [];
+                result.repo.forEach(rr => {
+                    if (rr.issue) {
+                        rr.issue.forEach(i => {
+                            results.push({ type: "issue", result: i });
+                        });
+                    }
+                    if (rr.pullRequest) {
+                        rr.pullRequest.forEach(pr => {
+                            results.push({ type: "pr", result: pr });
+                        });
+                    }
+                });
+                return results;
             }));
         counter++;
     }
 
     return Promise.all(promises)
         .then(results => {
-            const all = results.filter(r => r != null);
+            const all = _.flatten(results.filter(r => r && r.length > 0));
             const issues = all.filter(r => r.type === "issue").map(r => r.result);
             const prs = all.filter(r => r.type === "pr").map(r => r.result);
-            return new ReferencedIssues(issues, prs, showMore);
+            return new ReferencedIssues(issues, prs);
         });
 }
 
-export function loadIssue(owner: string,
-                          repo: string,
-                          name: string,
-                          ctx: HandlerContext): Promise<graphql.Issue.Issue> {
-
-    return ctx.graphClient.executeQueryFromFile<graphql.Issue.Query, graphql.Issue.Variables>(
-        "graphql/query/issue",
-        { teamId: ctx.teamId, orgOwner: owner, repoName: repo, issueName: name })
+export function loadIsseOrPullRequest(owner: string,
+                                      repo: string,
+                                      names: string[],
+                                      ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
+    return ctx.graphClient.executeQueryFromFile<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>(
+        "graphql/query/issueOrPr",
+        { orgOwner: owner, repoName: repo, names })
         .then(result => {
-            if (result) {
-                if (result.ChatTeam && result.ChatTeam.length > 0) {
-                    if (result.ChatTeam[0].orgs && result.ChatTeam[0].orgs.length > 0
-                        && result.ChatTeam[0].orgs[0].repo && result.ChatTeam[0].orgs[0].repo.length > 0
-                        && result.ChatTeam[0].orgs[0].repo[0] && result.ChatTeam[0].orgs[0].repo[0].issue.length > 0
-                        && result.ChatTeam[0].orgs[0].repo[0].issue[0]) {
-                        return result.ChatTeam[0].orgs[0].repo[0].issue[0];
-                    }
-                }
+            if (result && result.Org && result.Org.length > 0) {
+                return result.Org[0];
+            } else {
+                return Promise.resolve(null);
             }
-        })
-        .catch(err => {
-            return Promise.resolve(null);
-        });
-}
-
-export function loadPullRequest(owner: string,
-                                repo: string,
-                                name: string,
-                                ctx: HandlerContext): Promise<graphql.Pr.PullRequest> {
-
-    return ctx.graphClient.executeQueryFromFile<graphql.Pr.Query, graphql.Pr.Variables>(
-        "graphql/query/pr",
-        { teamId: ctx.teamId, orgOwner: owner, repoName: repo, prName: name })
-        .then(result => {
-            if (result) {
-                if (result.ChatTeam && result.ChatTeam.length > 0) {
-                    if (result.ChatTeam[0].orgs && result.ChatTeam[0].orgs.length > 0
-                        && result.ChatTeam[0].orgs[0].repo && result.ChatTeam[0].orgs[0].repo.length > 0
-                        && result.ChatTeam[0].orgs[0].repo[0]
-                        && result.ChatTeam[0].orgs[0].repo[0].pullRequest.length > 0
-                        && result.ChatTeam[0].orgs[0].repo[0].pullRequest[0]) {
-                        return result.ChatTeam[0].orgs[0].repo[0].pullRequest[0];
-                    }
-                }
-            }
-        })
-        .catch(err => {
-            return Promise.resolve(null);
         });
 }
 
@@ -299,21 +266,25 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
 }
 
 export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): Promise<graphql.GitHubId.GitHubId[]> {
-    return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
-        "graphql/query/gitHubId",
-        { gitHubIds })
-        .then(result => {
-            if (result) {
-                if (result.GitHubId && result.GitHubId.length > 0) {
-                    return result.GitHubId.filter(g =>
-                        g.person && g.person.chatId);
+    if (gitHubIds && gitHubIds.length > 0) {
+        return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
+            "graphql/query/gitHubId",
+            { gitHubIds })
+            .then(result => {
+                if (result) {
+                    if (result.GitHubId && result.GitHubId.length > 0) {
+                        return result.GitHubId.filter(g =>
+                            g.person && g.person.chatId);
+                    }
                 }
-            }
-            return [];
-        })
-        .catch(err => {
-            return [];
-        });
+                return [];
+            })
+            .catch(err => {
+                return [];
+            });
+    } else {
+        return Promise.resolve([]);
+    }
 }
 
 export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promise<string> {
@@ -567,7 +538,6 @@ export function repoAndlabelsAndAssigneesFooter(repo: any, labels: any, assignee
 
 export class ReferencedIssues {
 
-    constructor(public issues: graphql.Issue.Issue[],
-                public prs: graphql.Pr.PullRequest[],
-                public showMore: boolean) { }
+    constructor(public issues: graphql.IssueOrPr.Issue[],
+                public prs: graphql.IssueOrPr.PullRequest[]) { }
 }

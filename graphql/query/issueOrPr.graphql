@@ -1,0 +1,45 @@
+query IssueOrPr($orgOwner: String!, $repoName: String!, $names: [String]!) {
+  Org(owner: $orgOwner) {
+    repo(name: $repoName) {
+      name
+      owner
+      pullRequest(names: $names) {
+        state
+        merged
+        number
+        name
+        title
+        repo {
+          name
+          owner
+          org {
+            provider {
+              url
+              apiUrl
+              gitUrl
+            }
+          }
+        }
+      }
+      issue(names: $names) {
+        _id
+        name
+        title
+        state
+        number
+        repo {
+          name
+          owner
+          org {
+            provider {
+              url
+              apiUrl
+              gitUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

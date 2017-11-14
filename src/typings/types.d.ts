@@ -703,6 +703,78 @@ export namespace Issue {
     name?: string | null; 
   } 
 }
+export namespace IssueOrPr {
+  export type Variables = {
+    orgOwner: string;
+    repoName: string;
+    names: string[];
+  }
+
+  export type Query = {
+    Org?: Org[] | null; 
+  } 
+
+  export type Org = {
+    repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    pullRequest?: PullRequest[] | null; 
+    issue?: Issue[] | null; 
+  } 
+
+  export type PullRequest = {
+    state?: string | null; 
+    merged?: boolean | null; 
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    repo?: _Repo | null; 
+  } 
+
+  export type _Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: _Org | null; 
+  } 
+
+  export type _Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type Issue = {
+    _id?: Long | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
+    number?: number | null; 
+    repo: __Repo; 
+  } 
+
+  export type __Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: __Org | null; 
+  } 
+
+  export type __Org = {
+    provider?: _Provider | null; 
+  } 
+
+  export type _Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+}
 export namespace OpenPr {
   export type Variables = {
     repoName: string;
