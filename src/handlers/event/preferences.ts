@@ -146,12 +146,12 @@ export const LifecycleActionPreferences = {
         },
         comment: {
             id: "comment",
-            name: "Add Comment (on Pull Request)",
+            name: "Add Comment",
             description: "Add comment on GitHub pull request",
         },
         thumps_up: {
             id: "thumps_up",
-            name: "Add :+1: Reaction (on Pull Request)",
+            name: "Add :+1: Reaction",
             description: "Add reaction to GitHub issue",
         },
         assign_reviewer: {

@@ -199,7 +199,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             if (preference) {
                 const preferenceValue = JSON.parse(preference.value) || {};
                 if (preferenceValue[channel]) {
-                    return preferenceValue[channel][lifecycle.name] as boolean;
+                    return preferenceValue[channel][lifecycle.name] == null
+                        || preferenceValue[channel][lifecycle.name] as boolean;
                 }
             }
         }
