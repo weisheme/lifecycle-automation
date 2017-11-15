@@ -4,6 +4,8 @@ import {
     failure,
     HandleEvent,
     HandlerResult,
+    Secret,
+    Secrets,
     Success,
 } from "@atomist/automation-client";
 import { HandlerContext } from "@atomist/automation-client";
@@ -25,6 +27,9 @@ import { LifecycleActionPreferences, LifecyclePreferences } from "../handlers/ev
  * Base Event Handler implementation that handles rendering of lifecycle messages.
  */
 export abstract class LifecycleHandler<R> implements HandleEvent<R> {
+
+    @Secret(Secrets.OrgToken)
+    public orgToken: string;
 
     public defaultConfigurations = config.get("lifecycles") || {};
 
@@ -61,7 +66,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 lifecycle.renderers.forEach(r => {
                     lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
                         // First collect all buttons/actions for the given node
-                        const context = new RendererContext(r.id(), lifecycle, configuration, ctx);
+                        const context = new RendererContext(r.id(), lifecycle, configuration, this.orgToken, ctx);
 
                         const contributors: any[] = [];
                         lifecycle.contributors.filter(c => c.supports(n)).forEach(c => {
@@ -413,8 +418,11 @@ export interface ActionContributor<T> extends IdentifiableContribution {
 
 export class RendererContext {
 
-    constructor(public rendererId: string, public lifecycle: Lifecycle,
-                public configuration: LifecycleConfiguration, public context: HandlerContext) { }
+    constructor(public rendererId: string,
+                public lifecycle: Lifecycle,
+                public configuration: LifecycleConfiguration,
+                public orgToken: string,
+                public context: HandlerContext) { }
 }
 
 export abstract class AbstractIdentifiableContribution implements IdentifiableContribution {

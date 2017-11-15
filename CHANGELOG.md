@@ -19,6 +19,10 @@ Remove Auto-Merge button release
 
 -   Auto-Merge button now correctly disappears again once auto-merge is enabled
 
+### Added
+
+-   Request Review is now a drop-down if there are suggested reviewers on GitHub
+
 ## [0.2.4][] - 2017-11-13
 
 [0.2.4]: https://github.com/atomist/lifecycle-automation/compare/0.2.3...0.2.4

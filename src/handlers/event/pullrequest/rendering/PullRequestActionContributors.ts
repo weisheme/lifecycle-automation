@@ -1,4 +1,8 @@
-import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
+import {
+    buttonForCommand, menuForCommand,
+    MenuSpecification,
+} from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import {
@@ -297,19 +301,66 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):
         Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo");
-        const buttons = [];
+        const repo = context.lifecycle.extract("repo") as graphql.PullRequestToPullRequestLifecycle.Repo;
 
         if (context.rendererId === "pull_request") {
-            buttons.push(buttonForCommand({ text: "Request Review" }, "AssignGitHubPullRequestReviewer",
-                { issue: pr.number, repo: repo.name, owner: repo.owner }));
+            if (repo.org && repo.org.provider && repo.org.provider
+                && repo.org.provider.apiUrl == null && context.orgToken) {
+                return this.assiggnReviewMenu(pr, repo, context.orgToken);
+            } else {
+                return Promise.resolve(this.assignReviewrButton(pr, repo));
+            }
         }
-
-        return Promise.resolve(buttons);
+        return Promise.resolve([]);
     }
 
     public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
                     context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
+    }
+
+    private assiggnReviewMenu(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
+                              repo: graphql.PullRequestToPullRequestLifecycle.Repo,
+                              orgToken: string): Promise<Action[]> {
+
+        const client = new ApolloGraphClient("https://api.github.com/graphql",
+            { Authorization: `bearer ${orgToken}` });
+
+        return client.executeQueryFromFile("graphql/query/suggestedReviewers",
+            { owner: repo.owner, name: repo.name, number: pr.number })
+            .then(result => {
+                const reviewers = _.get(result, "repository.pullRequest.suggestedReviewers");
+
+                if (reviewers && reviewers.length > 0) {
+                    const logins = reviewers.filter(r => r.reviewer && r.reviewer.login)
+                        .map(r => r.reviewer.login);
+                    const menu: MenuSpecification = {
+                        text: "Request Review",
+                        options: [{
+                            text: "Suggestions", options: logins.map(l => {
+                                return { text: l, value: l };
+                            }),
+                        },
+                            { text: "Everybody", options: [{ text: "<request different reviewer>", value: "_"}]},
+                        ],
+                    };
+                    return [ menuForCommand(menu,
+                        "AssignGitHubPullRequestReviewer", "reviewer",
+                        { issue: pr.number, repo: repo.name, owner: repo.owner }) ];
+
+                } else {
+                    return this.assignReviewrButton(pr, repo);
+                }
+
+            })
+            .catch(() => {
+                return this.assignReviewrButton(pr, repo);
+            });
+    }
+
+    private assignReviewrButton(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
+                                repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
+        return [ buttonForCommand({ text: "Request Review" }, "AssignGitHubPullRequestReviewer",
+            { issue: pr.number, repo: repo.name, owner: repo.owner }) ];
     }
 }
