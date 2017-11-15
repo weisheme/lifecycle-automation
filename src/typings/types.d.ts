@@ -1492,6 +1492,7 @@ export namespace BranchToPullRequestLifecycle {
     assignees?: Assignees[] | null; 
     reviewers?: Reviewers[] | null; 
     labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
     commits?: Commits[] | null; 
     builds?: Builds[] | null; 
     reviews?: Reviews[] | null; 
@@ -1610,6 +1611,10 @@ export namespace BranchToPullRequestLifecycle {
 
   export type Labels = {
     name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
   } 
 
   export type Commits = {
@@ -2079,6 +2084,7 @@ export namespace CommentToPullRequestLifecycle {
     assignees?: Assignees[] | null; 
     reviewers?: Reviewers[] | null; 
     labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
     commits?: Commits[] | null; 
     builds?: Builds[] | null; 
     reviews?: Reviews[] | null; 
@@ -2197,6 +2203,10 @@ export namespace CommentToPullRequestLifecycle {
 
   export type Labels = {
     name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
   } 
 
   export type Commits = {
@@ -2442,6 +2452,7 @@ export namespace CommitToPullRequestLifecycle {
     assignees?: Assignees[] | null; 
     reviewers?: Reviewers[] | null; 
     labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
     commits?: Commits[] | null; 
     builds?: Builds[] | null; 
     reviews?: Reviews[] | null; 
@@ -2560,6 +2571,10 @@ export namespace CommitToPullRequestLifecycle {
 
   export type Labels = {
     name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
   } 
 
   export type Commits = {
@@ -4167,6 +4182,7 @@ export namespace PullRequestToPullRequestLifecycle {
     assignees?: Assignees[] | null; 
     reviewers?: Reviewers[] | null; 
     labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
     commits?: Commits[] | null; 
     builds?: Builds[] | null; 
     reviews?: Reviews[] | null; 
@@ -4285,6 +4301,10 @@ export namespace PullRequestToPullRequestLifecycle {
 
   export type Labels = {
     name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
   } 
 
   export type Commits = {
@@ -5057,6 +5077,7 @@ export namespace ReviewToPullRequestLifecycle {
     assignees?: Assignees[] | null; 
     reviewers?: Reviewers[] | null; 
     labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
     commits?: Commits[] | null; 
     builds?: Builds[] | null; 
     reviews?: Reviews[] | null; 
@@ -5175,6 +5196,10 @@ export namespace ReviewToPullRequestLifecycle {
 
   export type Labels = {
     name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
   } 
 
   export type Commits = {
@@ -5420,6 +5445,7 @@ export namespace StatusToPullRequestLifecycle {
     assignees?: Assignees[] | null; 
     reviewers?: Reviewers[] | null; 
     labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
     commits?: Commits[] | null; 
     builds?: Builds[] | null; 
     reviews?: Reviews[] | null; 
@@ -5538,6 +5564,10 @@ export namespace StatusToPullRequestLifecycle {
 
   export type Labels = {
     name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
   } 
 
   export type Commits = {

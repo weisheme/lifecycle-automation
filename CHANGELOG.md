@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.4...HEAD
+[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.5...HEAD
+
+## [0.2.5][] - 2017-11-15
+
+[0.2.5]: https://github.com/atomist/lifecycle-automation/compare/0.2.4...0.2.5
+
+Remove Auto-Merge button release
+
+### Fixed
+
+-   Auto-Merge button now correctly disappears again once auto-merge is enabled
 
 ## [0.2.4][] - 2017-11-13
 
