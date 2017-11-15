@@ -326,8 +326,9 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
         const client = new ApolloGraphClient("https://api.github.com/graphql",
             { Authorization: `bearer ${orgToken}` });
 
-        return client.executeQueryFromFile("graphql/query/suggestedReviewers",
-            { owner: repo.owner, name: repo.name, number: pr.number })
+        return client.executeQueryFromFile("suggestedReviewers",
+            { owner: repo.owner, name: repo.name, number: pr.number },
+            __dirname)
             .then(result => {
                 const reviewers = _.get(result, "repository.pullRequest.suggestedReviewers");
 
