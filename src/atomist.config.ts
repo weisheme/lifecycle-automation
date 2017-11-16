@@ -242,7 +242,6 @@ export const configuration = {
         new DatadogAutomationEventListener(datadogOptions),
     ] : [
         new ShortenUrlAutomationEventListener(),
-        new DatadogAutomationEventListener(datadogOptions)
     ],
     token,
     http: {
