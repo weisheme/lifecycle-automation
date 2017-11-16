@@ -94,7 +94,7 @@ import {
     initMemoryMonitoring,
     MemoryUsageCommand,
 } from "./util/mem";
-import { loadSecretsFromCloudFoundryEnvironment, loadSecretsFromConfigServer, secret } from "./util/secrets";
+import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
 // tslint:disable-next-line:no-var-requires
@@ -102,7 +102,7 @@ const pj = require(`${appRoot.path}/package.json`);
 
 const token = secret("github.token", process.env.GITHUB_TOKEN);
 
-const authEnabled = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
+const notLocal = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 
 const logzioOptions: LogzioOptions = {
     applicationId: secret("applicationId"),
@@ -116,6 +116,21 @@ const datadogOptions: DatadogOptions = {
     host: "dd-agent",
     port: 8125,
 };
+
+// Set uo automation event listeners
+const listeners = [
+    new ShortenUrlAutomationEventListener(),
+];
+
+// Logz.io will only work in certain environments
+if (logzioOptions.token) {
+    listeners.push(new LogzioAutomationEventListener(logzioOptions));
+}
+
+// StatsD/Datadog servers aren't available locally either
+if (!notLocal) {
+    listeners.push(new DatadogAutomationEventListener(datadogOptions));
+}
 
 const AdminTeam = "atomist-automation";
 
@@ -236,28 +251,22 @@ export const configuration = {
         // webhook
         () => new GitHubWebhookCreated(),
     ],
-    listeners: logzioOptions.token ? [
-        new ShortenUrlAutomationEventListener(),
-        new LogzioAutomationEventListener(logzioOptions),
-        new DatadogAutomationEventListener(datadogOptions),
-    ] : [
-        new ShortenUrlAutomationEventListener(),
-    ],
+    listeners,
     token,
     http: {
         enabled: true,
         auth: {
             basic: {
-                enabled: !authEnabled,
+                enabled: !notLocal,
                 username: secret("dashboard.user"),
                 password: secret("dashboard.password"),
             },
             bearer: {
-                enabled: authEnabled,
+                enabled: notLocal,
                 token,
             },
             github: {
-                enabled: authEnabled,
+                enabled: notLocal,
                 clientId: secret("oauth.clientId"),
                 clientSecret: secret("oauth.clientSecret"),
                 callbackUrl: secret("oauth.callbackUrl"),

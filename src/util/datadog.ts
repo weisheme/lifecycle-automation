@@ -12,11 +12,12 @@ import { AutomationEventListenerSupport } from "@atomist/automation-client/serve
 import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as appRoot from "app-root-path";
+import Timer = NodeJS.Timer;
+import * as cluster from "cluster";
 import {
     ClientOptions,
     StatsD,
 } from "hot-shots";
-import Timer = NodeJS.Timer;
 
 /* tslint:disable */
 const stripchar = require("stripchar").StripChar;
@@ -34,18 +35,18 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
     }
 
     public registrationSuccessful(handler: RequestProcessor) {
-        this.statsd.increment("counter.registration");
+        this.increment("counter.registration");
     }
 
     public commandSuccessful(payload: CommandInvocation, ctx: HandlerContext, result: HandlerResult) {
         const teamDetail = this.teamDetail();
-        this.statsd.increment("counter.operation.success", 1, 1,
+        this.increment("counter.operation.success", 1, 1,
             [
                 `atomist_operation:${payload.name}`,
                 `atomist_operation_type:command`,
                 ...teamDetail,
             ]);
-        this.statsd.timing("timer.operation", Date.now() - nsp.get().ts, 1,
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
             [
                 `atomist_operation:${payload.name}`,
                 `atomist_operation_type:command`,
@@ -55,13 +56,13 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     public commandFailed(payload: CommandInvocation, ctx: HandlerContext, err: any) {
         const teamDetail = this.teamDetail();
-        this.statsd.increment("counter.operation.failure", 1, 1,
+        this.increment("counter.operation.failure", 1, 1,
             [
                 `atomist_operation:${payload.name}`,
                 `atomist_operation_type:command`,
                 ...teamDetail,
             ]);
-        this.statsd.timing("timer.operation", Date.now() - nsp.get().ts, 1,
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
             [
                 `atomist_operation:${payload.name}`,
                 `atomist_operation_type:command`,
@@ -71,13 +72,13 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     public eventSuccessful(payload: EventFired<any>, ctx: HandlerContext, result: HandlerResult[]) {
         const teamDetail = this.teamDetail();
-        this.statsd.increment("counter.operation.success", 1, 1,
+        this.increment("counter.operation.success", 1, 1,
             [
                 `atomist_operation:${payload.extensions.operationName}`,
                 `atomist_operation_type:event`,
                 ...teamDetail,
             ]);
-        this.statsd.timing("timer.operation", Date.now() - nsp.get().ts, 1,
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
             [
                 `atomist_operation:${payload.extensions.operationName}`,
                 `atomist_operation_type:event`,
@@ -87,13 +88,13 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     public eventFailed(payload: EventFired<any>, ctx: HandlerContext, err: any) {
         const teamDetail = this.teamDetail();
-        this.statsd.increment("counter.operation.failed", 1, 1,
+        this.increment("counter.operation.failed", 1, 1,
             [
                 `atomist_operation:${payload.extensions.operationName}`,
                 `atomist_operation_type:event`,
                 ...teamDetail,
             ]);
-        this.statsd.timing("timer.operation", Date.now() - nsp.get().ts, 1,
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
             [
                 `atomist_operation:${payload.extensions.operationName}`,
                 `atomist_operation_type:event`,
@@ -113,7 +114,25 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         } else {
             type = "response";
         }
-        this.statsd.increment("counter.message", 1, 1, [ `atomist_message_type:${type}` ]);
+        this.increment("counter.message", 1, 1, [ `atomist_message_type:${type}` ]);
+    }
+
+    private increment(stat: string | string[],
+                      value?: number,
+                      sampleRate?: number,
+                      tags?: string[]) {
+        if (cluster.isMaster) {
+            this.statsd.increment(stat, value, sampleRate, tags);
+        }
+    }
+
+    private timing(stat: string | string[],
+                   value?: number,
+                   sampleRate?: number,
+                   tags?: string[]) {
+        if (cluster.isMaster) {
+            this.statsd.timing(stat, value, sampleRate, tags);
+        }
     }
 
     private initDatadog() {
