@@ -83,6 +83,7 @@ import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecyc
 import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
+import { DatadogAutomationEventListener, DatadogOptions } from "./util/datadog";
 import {
     LogzioAutomationEventListener,
     LogzioOptions,
@@ -107,6 +108,11 @@ const logzioOptions: LogzioOptions = {
     applicationId: secret("applicationId"),
     environmentId: secret("environmentId"),
     token: secret("logzio.token", process.env.LOGZIO_TOKEN),
+};
+
+const datadogOptions: DatadogOptions = {
+    applicationId: secret("applicationId"),
+    environmentId: secret("environmentId"),
 };
 
 const AdminTeam = "atomist-automation";
@@ -231,7 +237,10 @@ export const configuration = {
     listeners: logzioOptions.token ? [
         new ShortenUrlAutomationEventListener(),
         new LogzioAutomationEventListener(logzioOptions),
-    ] : [new ShortenUrlAutomationEventListener()],
+        new DatadogAutomationEventListener(datadogOptions),
+    ] : [
+        new ShortenUrlAutomationEventListener(),
+    ],
     token,
     http: {
         enabled: true,
@@ -263,7 +272,7 @@ export const configuration = {
         teamId: "T29E48P34",
     },
     cluster: {
-        enabled: true,
+        enabled: false,
         // worker: 2,
     },
 };
