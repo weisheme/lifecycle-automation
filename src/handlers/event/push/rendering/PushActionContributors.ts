@@ -128,7 +128,8 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
         const buttons = [];
 
-        if (context.rendererId === "commit" && push.branch === (repo.defaultBranch || "master")) {
+        const branch = repo.defaultBranch || "master";
+        if (context.rendererId === "commit" && push.branch === branch) {
             this.createTagButton(push, repo, buttons);
         }
 
