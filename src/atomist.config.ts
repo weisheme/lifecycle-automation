@@ -128,7 +128,7 @@ if (logzioOptions.token) {
 }
 
 // StatsD/Datadog servers aren't available locally either
-if (!notLocal) {
+if (notLocal) {
     listeners.push(new DatadogAutomationEventListener(datadogOptions));
 }
 
