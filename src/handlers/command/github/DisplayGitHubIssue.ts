@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -43,31 +44,59 @@ export class DisplayGitHubIssue implements HandleCommand {
         return ctx.graphClient.executeQueryFromFile<graphql.Issue.Query, graphql.Issue.Variables>("graphql/query/issue",
             { teamId: ctx.teamId, repoName: this.repo, issueName: this.issue.toString(), orgOwner: this.owner })
             .then(result => {
-                const issue = _.get(result, "ChatTeam[0].orgs[0].repo[0].issue");
-                if (issue) {
-                    const handler = new ResponseIssueToIssueLifecycle(this.channelName);
+                const issues: graphql.Issue.Issue[] = _.get(result, "ChatTeam[0].orgs[0].repo[0].issue");
+                const handler = new ResponseIssueToIssueLifecycle();
+
+                // Hopefully we can find the issue in Neo
+                if (issues && issues.length > 0) {
                     return handler.handle({
-                        data: { Issue: issue as any },
+                        data: { Issue: issues as any },
                         extensions: { operationName: "DisplayGitHubIssue" },
                     }, ctx);
                 } else {
-                    return { code: 1,
-                        message: `Issue #${this.issue} could not be found in ${this.owner}/${this.repo}` };
+                    // If not in Neo, let's get if from GitHub
+                    return github.api(this.githubToken, this.apiUrl).issues.get({
+                        number: this.issue,
+                        repo: this.repo,
+                        owner: this.owner,
+                    })
+                    .then(gis => {
+                        const gi = gis.data;
+                        const issue: graphql.Issue.Issue = {
+                            repo: {
+                                name: this.repo,
+                                owner: this.owner,
+                                channels: [{
+                                   name: this.channelName,
+                                }],
+                            },
+                            name: this.issue.toString(),
+                            number: this.issue,
+                            title: gi.title,
+                            body: gi.body,
+                            state: gi.state,
+                            labels: gi.labels.map(l => ({ name: l.name })) || [],
+                            createdAt: gi.created_at,
+                            updatedAt: gi.updated_at,
+                            closedAt: gi.closed_at,
+                            assignees: gi.assignees.map(a => ({ login: a.login })) || [],
+                            openedBy: gi.user.login,
+                            resolvingCommits: [],
+                        };
+                        return handler.handle({
+                            data: { Issue: [ issue ] as any },
+                            extensions: { operationName: "DisplayGitHubIssue" },
+                        }, ctx);
+                    });
                 }
             })
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(failure);
     }
 }
 
 class ResponseIssueToIssueLifecycle extends IssueToIssueLifecycle {
 
-    constructor(private channelName: string) {
-        super();
-    }
-
     protected processLifecycle(lifecycle: Lifecycle): Lifecycle {
-        // Don't send to the channel and make sure we display the message each time
-        lifecycle.channels = [this.channelName];
         lifecycle.id = `${lifecycle.id}/${guid()}`;
         return lifecycle;
     }
