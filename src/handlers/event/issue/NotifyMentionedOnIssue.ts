@@ -1,11 +1,11 @@
 import {
     EventFired,
     EventHandler,
-    Failure,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,
-    Success,
+    Success, SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
@@ -26,18 +26,21 @@ export class NotifyMentionedOnIssue implements HandleEvent<graphql.NotifyMention
         const repo = root.data.Issue[0].repo;
         const issue = root.data.Issue[0];
 
-        return issueNotification(issue.number.toString(), "New mention in issue",
-            issue.body, issue.openedBy.login, issue, repo, ctx)
-            .then(_ => {
-                if (issue.assignees != null) {
-                    return Promise.all(issue.assignees.map(a =>
-                        issueAssigneeNotification(issue.number.toString(), "New assignment of issue", issue.body,
-                            a, issue, repo, ctx)));
-                } else {
-                    return Promise.resolve(null);
-                }
-            })
-            .then(_ => Success)
-            .catch(() => Failure);
+        if (issue.number) {
+            return issueNotification(issue.number.toString(), "New mention in issue",
+                issue.body, issue.openedBy.login, issue, repo, ctx)
+                .then(_ => {
+                    if (issue.assignees != null) {
+                        return Promise.all(issue.assignees.map(a =>
+                            issueAssigneeNotification(issue.number.toString(), "New assignment of issue", issue.body,
+                                a, issue, repo, ctx)));
+                    } else {
+                        return Promise.resolve(null);
+                    }
+                })
+                .then(() => Success, failure);
+        } else {
+            return SuccessPromise;
+        }
     }
 }
