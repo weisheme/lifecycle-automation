@@ -78,7 +78,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
     private initDatadog() {
         const options: ClientOptions = {
             globalTags: [
-                `atomist_name:${pj.name}`,
+                `atomist_name:${pj.name.replace("@", "").replace("/", "_")}`,
                 `atomist_version:${pj.version}`,
                 `atomist_environment:${this.options.environmentId}`,
                 `atomist_application_id:${this.options.applicationId}`,
