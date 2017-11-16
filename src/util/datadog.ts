@@ -77,6 +77,8 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     private initDatadog() {
         const options: ClientOptions = {
+            host: this.options.host || "localhost",
+            port: this.options.port || 8125,
             globalTags: [
                 `atomist_name:${pj.name.replace("@", "").replace("/", "_")}`,
                 `atomist_version:${pj.version}`,
@@ -92,5 +94,7 @@ export interface DatadogOptions {
 
     environmentId: string;
     applicationId: string;
+    host?: string;
+    port?: number;
 
 }

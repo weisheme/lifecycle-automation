@@ -13,5 +13,5 @@ loadSecretsFromConfigServer()
         const configuration = enableDefaultScanning(findConfiguration());
         const node = automationClient(configuration);
         node.run()
-            .then(() => logger.info("Completed startup"));
+            .then(() => logger.info("Successfully completed startup of process '%s'", process.pid));
     });

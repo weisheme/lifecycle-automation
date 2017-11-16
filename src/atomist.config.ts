@@ -113,6 +113,8 @@ const logzioOptions: LogzioOptions = {
 const datadogOptions: DatadogOptions = {
     applicationId: secret("applicationId"),
     environmentId: secret("environmentId"),
+    host: "dd-agent",
+    port: 8125,
 };
 
 const AdminTeam = "atomist-automation";
@@ -240,7 +242,6 @@ export const configuration = {
         new DatadogAutomationEventListener(datadogOptions),
     ] : [
         new ShortenUrlAutomationEventListener(),
-        new DatadogAutomationEventListener(datadogOptions),
     ],
     token,
     http: {
