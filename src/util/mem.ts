@@ -38,11 +38,11 @@ export function memoryUsage() {
     const mem = process.memoryUsage();
     const usage = {
         rss: (mem.rss / 1024 / 1024).toFixed(2),
-        heapTotal: (mem.heapTotal / 1024 / 1024).toFixed(2),
-        heapUsed: (mem.heapUsed / 1024 / 1024 ).toFixed(2),
-        memFree: (os.freemem() / 1024 / 1024).toFixed(2),
-        memTotal: (os.totalmem() / 1024 / 1024).toFixed(2),
-        upTime: formatMillis(process.uptime() * 1000),
+        heap_total: (mem.heapTotal / 1024 / 1024).toFixed(2),
+        heap_used: (mem.heapUsed / 1024 / 1024 ).toFixed(2),
+        mem_free: (os.freemem() / 1024 / 1024).toFixed(2),
+        mem_total: (os.totalmem() / 1024 / 1024).toFixed(2),
+        up_time: formatMillis(process.uptime() * 1000),
     };
     return usage;
 }
