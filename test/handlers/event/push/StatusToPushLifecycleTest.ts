@@ -116,8 +116,9 @@ describe("StatusToPushLifecycle", () => {
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
-                assert(sm.attachments[0].actions.length === 1);
-                assert(sm.attachments[0].actions[0].text === "Raise PR");
+                assert(sm.attachments[0].actions.length === 2);
+                assert(sm.attachments[0].actions[0].text === "Tag");
+                assert(sm.attachments[0].actions[1].text === "Raise PR");
                 return Promise.resolve();
             }
 
@@ -418,7 +419,8 @@ describe("StatusToPushLifecycle", () => {
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
-                assert(sm.attachments[0].actions.length === 0);
+                assert(sm.attachments[0].actions.length === 1);
+                assert(sm.attachments[0].actions[0].text === "Tag");
                 return Promise.resolve();
             }
         }

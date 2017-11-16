@@ -14,8 +14,8 @@ import {
     ApplicationActionContributor,
     BuildActionContributor,
     PullRequestActionContributor,
-    ReleaseActionContributor,
-    TagActionContributor,
+    ReleaseActionContributor, TagPushActionContributor,
+    TagTagActionContributor,
 } from "./rendering/PushActionContributors";
 import {
     ApplicationNodeRenderer,
@@ -82,7 +82,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new PushNodeRenderer(),
                     new CommitNodeRenderer(),
                     new StatusesNodeRenderer(),
-                    // new WorkflowNodeRenderer(),
+                    new WorkflowNodeRenderer(),
                     new IssueNodeRenderer(),
                     new PullRequestNodeRenderer(),
                     new TagNodeRenderer(),
@@ -91,7 +91,8 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new K8PodNodeRenderer(),
                     new FooterNodeRenderer((node: any) => node.after)],
                 contributors: [
-                    new TagActionContributor(),
+                    new TagPushActionContributor(),
+                    new TagTagActionContributor(),
                     new ReleaseActionContributor(),
                     new BuildActionContributor(),
                     new PullRequestActionContributor(),

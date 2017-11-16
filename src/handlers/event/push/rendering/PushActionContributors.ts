@@ -108,7 +108,52 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
     }
 }
 
-export class TagActionContributor extends AbstractIdentifiableContribution
+export class TagPushActionContributor extends AbstractIdentifiableContribution
+    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super(LifecycleActionPreferences.push.new_tag.id);
+    }
+
+    public supports(node: any): boolean {
+        if (node.after) {
+            const push = node as graphql.PushToPushLifecycle.Push;
+            return push.commits && !push.commits.some(c => c.tags && c.tags.length > 0);
+        } else {
+            return false;
+        }
+    }
+
+    public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const buttons = [];
+
+        if (context.rendererId === "commit") {
+            this.createTagButton(push, repo, buttons);
+        }
+
+        return Promise.resolve(buttons);
+    }
+
+    public menusFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+        return Promise.resolve([]);
+    }
+
+    private createTagButton(push: graphql.PushToPushLifecycle.Push,
+                            repo: graphql.PushToPushLifecycle.Repo,
+                            buttons: any[]) {
+        // Add the create tag button
+        const tagHandler = new CreateGitHubTag();
+        tagHandler.message = push.after.message || "Tag created by Atomist Lifecycle Automation";
+        tagHandler.sha = push.after.sha;
+        tagHandler.repo = repo.name;
+        tagHandler.owner = repo.owner;
+
+        buttons.push(buttonForCommand({ text: "Tag" }, tagHandler));
+    }
+}
+
+export class TagTagActionContributor extends AbstractIdentifiableContribution
     implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
 
     constructor() {

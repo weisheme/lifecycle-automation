@@ -108,7 +108,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 const configureHandler = new ConfigureLifecyclePreferences();
                 configureHandler.msgId = this.msgId;
                 configureHandler.lifecycle = type;
-                actions.push(buttonForCommand({ text: "Configure..."}, configureHandler));
+                actions.push(buttonForCommand({ text: "Configure"}, configureHandler));
 
                 const configureAttachment: Attachment = {
                     title: lifecycleType.name,

@@ -42,13 +42,18 @@ export const LifecycleActionPreferences = {
         },
         release: {
             id: "release",
-            name: "GitHub Release",
+            name: "Create GitHub Release",
             description: "Create a release on GitHub for the given Git tag",
+        },
+        new_tag: {
+            id: "new_tag",
+            name: "Create Git Tag",
+            description: "Create a Git tag on the last commit of the push",
         },
         tag: {
             id: "tag",
-            name: "Git Tag",
-            description: "Create a Git tag",
+            name: "Create Git Tag from Tag",
+            description: "Create a Git tag from a SemVer tag",
         },
         raise_pullrequest: {
             id: "raise_pullrequest",
