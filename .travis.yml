@@ -17,11 +17,11 @@ env:
 before_install:
 - openssl aes-256-cbc -K $encrypted_195b2e60f131_key -iv $encrypted_195b2e60f131_iv
   -in scripts/.npmrc.enc -out $HOME/.npmrc -d
-- wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key |
-  sudo apt-key add -
-- echo "deb http://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-- sudo apt-get update
-- sudo apt-get install cf-cli
+#- wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key |
+#  sudo apt-key add -
+#- echo "deb http://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+#- sudo apt-get update
+#- sudo apt-get install cf-cli
 script: bash scripts/travis-build.bash
 notifications:
   email: false
