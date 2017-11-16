@@ -172,7 +172,7 @@ export class LogzioForwardingEventStore implements EventStore {
     }
 
     public recordEvent(event: EventIncoming): string {
-        this.sendEvent("Incoming event subscription", "event", event);
+        this.sendEvent("Incoming event", "event", event);
         return this.delegate.recordEvent(event);
     }
 
