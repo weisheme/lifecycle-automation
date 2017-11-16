@@ -48,7 +48,7 @@ export const LifecycleActionPreferences = {
         new_tag: {
             id: "new_tag",
             name: "Create Git Tag",
-            description: "Create a Git tag on the last commit of the push",
+            description: "Create a Git tag on the last commit of a push to the default branch",
         },
         tag: {
             id: "tag",
