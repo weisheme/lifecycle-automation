@@ -240,6 +240,7 @@ export const configuration = {
         new DatadogAutomationEventListener(datadogOptions),
     ] : [
         new ShortenUrlAutomationEventListener(),
+        new DatadogAutomationEventListener(datadogOptions),
     ],
     token,
     http: {
@@ -272,7 +273,7 @@ export const configuration = {
         teamId: "T29E48P34",
     },
     cluster: {
-        enabled: false,
+        enabled: true,
         // worker: 2,
     },
 };
