@@ -114,7 +114,10 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         } else {
             type = "response";
         }
-        this.increment("counter.message", 1, 1, [ `atomist_message_type:${type}` ]);
+        this.increment("counter.message", 1, 1, [
+            `atomist_message_type:${type}`,
+            ...this.teamDetail(),
+        ]);
     }
 
     private increment(stat: string | string[],
