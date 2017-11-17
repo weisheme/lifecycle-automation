@@ -83,7 +83,7 @@ export class ListMyGitHubIssues implements HandleCommand {
         if (result && result.data && result.data.items && result.data.items.length > 0) {
             return this.renderIssues(result.data.items, this.apiUrl);
         } else {
-            return `No issues/pull requests found for the last ${this.days} ${this.days > 1 ? "days" : "day"}`;
+            return `No issues/pull requests found`;
         }
     }
 
