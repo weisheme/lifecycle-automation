@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.5...HEAD
+[Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.6...HEAD
+
+## [0.2.6][] - 2017-11-15
+
+[0.2.6]: https://github.com/atomist/lifecycle-automation/compare/0.2.5...0.2.6
+
+Datadog Stats release
+
+### Added
+
+-   Metrics tracking via Datadog now
+
+### Changed
+
+-   Auto-Merge now uses a repo rather a comment
 
 ## [0.2.5][] - 2017-11-15
 

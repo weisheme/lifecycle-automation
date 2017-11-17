@@ -12,7 +12,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { AutoMergeTag } from "../../event/pullrequest/autoMerge";
+import { AutoMergeLabel } from "../../event/pullrequest/autoMerge";
 import * as github from "./gitHubApi";
 
 /**
@@ -46,13 +46,40 @@ export class EnableGitHubPullRequestAutoMerge implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return github.api(this.githubToken, this.apiUrl).issues.createComment({
-            owner: this.owner,
+        const api = github.api(this.githubToken, this.apiUrl);
+
+        // Verify that auto-merge label exists
+        return api.issues.getLabel({
+            name: AutoMergeLabel,
             repo: this.repo,
-            number: this.issue,
-            body: `Pull request auto merge enabled. ${AutoMergeTag}`,
+            owner: this.owner,
         })
-        .then(() => Success)
-        .catch(err => failure(err));
+        // Label exists; add it to the PR
+        .then(() => {
+            return api.issues.addLabels({
+                owner: this.owner,
+                repo: this.repo,
+                number: this.issue,
+                labels: [ AutoMergeLabel ],
+            });
+        })
+        // Label doesn't exist; put create it and add it to the PR
+        .catch(() => {
+            return api.issues.createLabel({
+                owner: this.owner,
+                repo: this.repo,
+                name: AutoMergeLabel,
+                color: "277D7D",
+            })
+            .then(() => {
+                return api.issues.addLabels({
+                    owner: this.owner,
+                    repo: this.repo,
+                    number: this.issue,
+                    labels: [ AutoMergeLabel ],
+                });
+            });
+        })
+        .then(() => Success, failure);
     }
 }

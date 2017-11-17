@@ -5,6 +5,9 @@ subscription AutoMergeOnPullRequest
         number
         body
         title
+        labels {
+            name
+        }
         branch {
             name
         }

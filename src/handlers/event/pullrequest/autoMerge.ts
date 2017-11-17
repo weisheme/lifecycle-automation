@@ -7,7 +7,8 @@ import * as graphql from "../../../typings/types";
 import { apiUrl } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
-export const AutoMergeTag = "[atomist:enable-auto-merge]";
+export const AutoMergeLabel = "atomist:auto-merge";
+export const AutoMergeTag = "atomist:auto-merge-enabled";
 
 export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: string): Promise<HandlerResult> {
     if (pr) {
@@ -79,24 +80,27 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
 }
 
 export function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest) {
-    let merge = false;
+    // 0. check labels
+    if (pr.labels && pr.labels.some(l => l.name === AutoMergeLabel)) {
+        return true;
+    }
 
     // 1. check body and title for auto merge marker
     if (isTagged(pr.title) || isTagged(pr.body)) {
-        merge = true;
+        return true;
     }
 
-    // 2. PR comment that contains the marger
+    // 2. PR comment that contains the merger
     if (pr.comments && pr.comments.some(c => isTagged(c.body))) {
-        merge = true;
+        return true;
     }
 
     // 3. Commit message containing the auto merge marker
     if (pr.commits && pr.commits.some(c => isTagged(c.message))) {
-        merge = true;
+        return true;
     }
 
-    return merge;
+    return false;
 }
 
 export function isTagged(msg: string) {

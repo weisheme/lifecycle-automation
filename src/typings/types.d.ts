@@ -1127,12 +1127,17 @@ export namespace AutoMergeOnBuild {
     number?: number | null; 
     body?: string | null; 
     title?: string | null; 
+    labels?: Labels[] | null; 
     branch?: Branch | null; 
     head?: Head | null; 
     reviews?: Reviews[] | null; 
     commits?: Commits[] | null; 
     repo?: Repo | null; 
     comments?: Comments[] | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
   } 
 
   export type Branch = {
@@ -1195,12 +1200,17 @@ export namespace AutoMergeOnPullRequest {
     number?: number | null; 
     body?: string | null; 
     title?: string | null; 
+    labels?: Labels[] | null; 
     branch?: Branch | null; 
     head?: Head | null; 
     reviews?: Reviews[] | null; 
     commits?: Commits[] | null; 
     repo?: Repo | null; 
     comments?: Comments[] | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
   } 
 
   export type Branch = {
@@ -1267,12 +1277,17 @@ export namespace AutoMergeOnReview {
     number?: number | null; 
     body?: string | null; 
     title?: string | null; 
+    labels?: Labels[] | null; 
     branch?: Branch | null; 
     head?: Head | null; 
     reviews?: Reviews[] | null; 
     commits?: Commits[] | null; 
     repo?: Repo | null; 
     comments?: Comments[] | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
   } 
 
   export type Branch = {
@@ -1344,6 +1359,7 @@ export namespace AutoMergeOnStatus {
     body?: string | null; 
     title?: string | null; 
     branch?: Branch | null; 
+    labels?: Labels[] | null; 
     head?: Head | null; 
     reviews?: Reviews[] | null; 
     commits?: Commits[] | null; 
@@ -1352,6 +1368,10 @@ export namespace AutoMergeOnStatus {
   } 
 
   export type Branch = {
+    name?: string | null; 
+  } 
+
+  export type Labels = {
     name?: string | null; 
   } 
 

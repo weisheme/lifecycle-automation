@@ -10,6 +10,9 @@ subscription AutoMergeOnStatus
                 branch {
                     name
                 }
+                labels {
+                    name
+                }
                 head {
                     sha
                     statuses {

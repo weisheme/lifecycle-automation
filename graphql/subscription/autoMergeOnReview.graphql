@@ -6,6 +6,9 @@ subscription AutoMergeOnReview
       number
       body
       title
+      labels {
+        name
+      }
       branch {
         name
       }
