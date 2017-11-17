@@ -57,7 +57,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         ];
         this.increment("counter.operation.failure", 1, 1, tags );
         this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
-        this.event("event.operation.failed", "Unsuccessfully invoked command", tags);
+        this.event("event.operation.failure", "Unsuccessfully invoked command", tags);
     }
 
     public eventSuccessful(payload: EventFired<any>, ctx: HandlerContext, result: HandlerResult[]) {
@@ -76,9 +76,9 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
             `atomist_operation_type:event`,
             ...this.teamDetail(),
         ];
-        this.increment("counter.operation.failed", 1, 1, tags);
+        this.increment("counter.operation.failure", 1, 1, tags);
         this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
-        this.event("event.operation.failed", "Unsuccessfully invoked event", tags);
+        this.event("event.operation.failure", "Unsuccessfully invoked event", tags);
     }
 
     public messageSent(message: string | SlackMessage,
