@@ -36,70 +36,49 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     public registrationSuccessful(handler: RequestProcessor) {
         this.increment("counter.registration");
+        this.event("event.registration", `New registration for ${pj.name}/${pj.version}`);
     }
 
     public commandSuccessful(payload: CommandInvocation, ctx: HandlerContext, result: HandlerResult) {
-        const teamDetail = this.teamDetail();
-        this.increment("counter.operation.success", 1, 1,
-            [
-                `atomist_operation:${payload.name}`,
-                `atomist_operation_type:command`,
-                ...teamDetail,
-            ]);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
-            [
-                `atomist_operation:${payload.name}`,
-                `atomist_operation_type:command`,
-                ...teamDetail,
-            ]);
+        const tags = [
+            `atomist_operation:${payload.name}`,
+            `atomist_operation_type:command`,
+            ...this.teamDetail(),
+        ];
+        this.increment("counter.operation.success", 1, 1, tags);
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
     }
 
     public commandFailed(payload: CommandInvocation, ctx: HandlerContext, err: any) {
-        const teamDetail = this.teamDetail();
-        this.increment("counter.operation.failure", 1, 1,
-            [
-                `atomist_operation:${payload.name}`,
-                `atomist_operation_type:command`,
-                ...teamDetail,
-            ]);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
-            [
-                `atomist_operation:${payload.name}`,
-                `atomist_operation_type:command`,
-                ...teamDetail,
-            ]);
+        const tags = [
+            `atomist_operation:${payload.name}`,
+            `atomist_operation_type:command`,
+            ...this.teamDetail(),
+        ];
+        this.increment("counter.operation.failure", 1, 1, tags );
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
+        this.event("event.operation.failed", "Unsuccessfully invoked command", tags);
     }
 
     public eventSuccessful(payload: EventFired<any>, ctx: HandlerContext, result: HandlerResult[]) {
-        const teamDetail = this.teamDetail();
-        this.increment("counter.operation.success", 1, 1,
-            [
-                `atomist_operation:${payload.extensions.operationName}`,
-                `atomist_operation_type:event`,
-                ...teamDetail,
-            ]);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
-            [
-                `atomist_operation:${payload.extensions.operationName}`,
-                `atomist_operation_type:event`,
-                ...teamDetail,
-            ]);
+        const tags = [
+            `atomist_operation:${payload.extensions.operationName}`,
+            `atomist_operation_type:event`,
+            ...this.teamDetail(),
+        ];
+        this.increment("counter.operation.success", 1, 1, tags);
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
     }
 
     public eventFailed(payload: EventFired<any>, ctx: HandlerContext, err: any) {
-        const teamDetail = this.teamDetail();
-        this.increment("counter.operation.failed", 1, 1,
-            [
-                `atomist_operation:${payload.extensions.operationName}`,
-                `atomist_operation_type:event`,
-                ...teamDetail,
-            ]);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1,
-            [
-                `atomist_operation:${payload.extensions.operationName}`,
-                `atomist_operation_type:event`,
-                ...teamDetail,
-            ]);
+        const tags = [
+            `atomist_operation:${payload.extensions.operationName}`,
+            `atomist_operation_type:event`,
+            ...this.teamDetail(),
+        ];
+        this.increment("counter.operation.failed", 1, 1, tags);
+        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
+        this.event("event.operation.failed", "Unsuccessfully invoked event", tags);
     }
 
     public messageSent(message: string | SlackMessage,
@@ -126,6 +105,12 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
                       tags?: string[]) {
         if (cluster.isMaster) {
             this.statsd.increment(stat, value, sampleRate, tags);
+        }
+    }
+
+    private event(title: string, text?: string, tags?: string[]) {
+        if (cluster.isMaster) {
+            this.statsd.event(title, text, {}, tags);
         }
     }
 
@@ -158,6 +143,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
         // Register orderly shutdown
         registerShutdownHook(() => {
+            this.event("event.shutdown", `Shutting down client ${pj.name}/${pj.version}`);
             this.statsd.close(() => {
                 logger.debug("Closing StatsD connection");
             });
