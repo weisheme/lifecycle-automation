@@ -159,7 +159,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         // Register orderly shutdown
         registerShutdownHook(() => {
             this.statsd.close(() => {
-                logger.debug("StatsD shutdown complete");
+                logger.debug("Closing StatsD connection");
             });
             return Promise.resolve(0);
         });
