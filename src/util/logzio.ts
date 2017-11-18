@@ -117,6 +117,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             "correlation-id": nsp.get().correlationId,
             "invocation-id": nsp.get().invocationId,
             "message": `${identifier} ${name} invocation ${status} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
+            "process-id": process.pid,
         };
         if (err) {
             if (status === "failed") {
@@ -145,6 +146,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             "invocation-id": nsp.get().invocationId,
             "message": `${identifier} of ${nsp.get().operation} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
             "payload": JSON.stringify(payload),
+            "process-id": process.pid,
         };
         if (this.logzio) {
             this.logzio.log(data);

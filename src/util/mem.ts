@@ -1,8 +1,11 @@
-import { MappedParameters, RedirectResult } from "@atomist/automation-client";
-import { CommandHandler, MappedParameter, Tags } from "@atomist/automation-client/decorators";
-import { HandleCommand } from "@atomist/automation-client/HandleCommand";
-import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import { HandlerResult, Success } from "@atomist/automation-client/HandlerResult";
+import {
+    CommandHandler,
+    HandleCommand,
+    HandlerContext,
+    HandlerResult,
+    RedirectResult
+    Tags,
+} from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { codeBlock, url } from "@atomist/slack-messages/SlackMessages";
 import * as appRoot from "app-root-path";
