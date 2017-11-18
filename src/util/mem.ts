@@ -3,7 +3,7 @@ import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
-    RedirectResult
+    RedirectResult,
     Tags,
 } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
