@@ -1,4 +1,5 @@
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
+import { Action } from "@atomist/slack-messages";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import {
     bold,
@@ -33,7 +34,8 @@ export function issueNotification(id: string,
                                   login: string,
                                   issue: graphql.NotifyMentionedOnIssue.Issue,
                                   repo: graphql.NotifyMentionedOnIssue.Repo,
-                                  ctx: HandlerContext): Promise<any[]> {
+                                  ctx: HandlerContext,
+                                  actions?: Action[]): Promise<any[]> {
 
     const matches = getGitHubUsers(body);
     return linkGitHubUsers(githubToSlack(body), ctx)
@@ -61,6 +63,7 @@ export function issueNotification(id: string,
                                             footer: repoAndChannelFooter(repo),
                                             footer_icon,
                                             ts: Math.floor(Date.now() / 1000),
+                                            actions,
                                         },
                                     ],
                                 };
