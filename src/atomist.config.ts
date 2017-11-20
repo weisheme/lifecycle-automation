@@ -1,4 +1,5 @@
 import { HandleCommand } from "@atomist/automation-client";
+import { initMemoryMonitoring } from "@atomist/automation-client/internal/util/memory";
 import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";
 import * as config from "config";
@@ -90,7 +91,6 @@ import {
 } from "./util/logzio";
 import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
-import { initMemoryMonitoring } from "@atomist/automation-client/internal/util/memory";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
