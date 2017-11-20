@@ -328,6 +328,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
 
         return client.executeQueryFromFile("suggestedReviewers",
             { owner: repo.owner, name: repo.name, number: pr.number },
+            {},
             __dirname)
             .then(result => {
                 const reviewers = _.get(result, "repository.pullRequest.suggestedReviewers");
