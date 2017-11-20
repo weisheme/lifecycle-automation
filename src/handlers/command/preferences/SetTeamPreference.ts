@@ -77,7 +77,7 @@ export class SetTeamPreference implements HandleCommand {
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeQueryFromFile<graphql.TeamPreferences.Query,
             graphql.TeamPreferences.Variables>("graphql/query/teamPreferences",
-            { })
+            { }, { fetchPolicy: "network-only" })
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].preferences") as graphql.TeamPreferences.Preferences[];

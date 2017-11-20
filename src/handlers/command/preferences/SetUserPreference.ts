@@ -78,7 +78,7 @@ export class SetUserPreference implements HandleCommand {
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
             graphql.ChatId.Variables>("graphql/query/chatId",
-            { teamId: ctx.teamId, chatId: this.requester })
+            { teamId: ctx.teamId, chatId: this.requester }, { fetchPolicy: "network-only" })
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].members[0].person.chatId.preferences") as graphql.ChatId.Preferences[];
