@@ -54,7 +54,7 @@ function createActions(comment: graphql.NotifyMentionedOnIssueComment.Comment): 
     const reactComment = new ReactGitHubIssueComment();
     reactComment.owner = comment.issue.repo.owner;
     reactComment.repo = comment.issue.repo.name;
-    reactComment.comment = comment._id;
+    reactComment.comment = comment.gitHubId;
     reactComment.reaction = "+1";
 
     return [
