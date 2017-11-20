@@ -132,6 +132,7 @@ const AdminTeam = "atomist-automation";
 export const configuration = {
     name: pj.name,
     version: pj.version,
+    // policy: "durable",
     teamIds: config.get("teamIds"),
     groups: config.get("groups"),
     commands: [
