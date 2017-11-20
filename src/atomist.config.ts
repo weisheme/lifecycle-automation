@@ -88,14 +88,9 @@ import {
     LogzioAutomationEventListener,
     LogzioOptions,
 } from "./util/logzio";
-import {
-    GcCommand,
-    HeapDumpCommand,
-    initMemoryMonitoring,
-    MemoryUsageCommand,
-} from "./util/mem";
 import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
+import { initMemoryMonitoring } from "@atomist/automation-client/internal/util/memory";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
@@ -187,11 +182,6 @@ export const configuration = {
 
         // travis
         () => new RestartTravisBuild(),
-
-        // gc
-        () => new HeapDumpCommand(),
-        () => new MemoryUsageCommand(),
-        () => new GcCommand(),
     ],
     events: [
         // build
