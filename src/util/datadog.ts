@@ -45,8 +45,8 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
             `atomist_operation_type:command`,
             ...this.teamDetail(),
         ];
-        this.increment("counter.operation.success", 1, 1, tags);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
+        this.increment("counter.operation.success", tags);
+        this.timing("timer.operation", tags);
     }
 
     public commandFailed(payload: CommandInvocation, ctx: HandlerContext, err: any) {
@@ -55,8 +55,8 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
             `atomist_operation_type:command`,
             ...this.teamDetail(),
         ];
-        this.increment("counter.operation.failure", 1, 1, tags );
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
+        this.increment("counter.operation.failure", tags );
+        this.timing("timer.operation", tags);
         this.event("event.operation.failure", "Unsuccessfully invoked command", tags);
     }
 
@@ -66,8 +66,8 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
             `atomist_operation_type:event`,
             ...this.teamDetail(),
         ];
-        this.increment("counter.operation.success", 1, 1, tags);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
+        this.increment("counter.operation.success", tags);
+        this.timing("timer.operation", tags);
     }
 
     public eventFailed(payload: EventFired<any>, ctx: HandlerContext, err: any) {
@@ -76,8 +76,8 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
             `atomist_operation_type:event`,
             ...this.teamDetail(),
         ];
-        this.increment("counter.operation.failure", 1, 1, tags);
-        this.timing("timer.operation", Date.now() - nsp.get().ts, 1, tags);
+        this.increment("counter.operation.failure", tags);
+        this.timing("timer.operation", tags);
         this.event("event.operation.failure", "Unsuccessfully invoked event", tags);
     }
 
@@ -93,18 +93,16 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         } else {
             type = "response";
         }
-        this.increment("counter.message", 1, 1, [
+        this.increment("counter.message", [
             `atomist_message_type:${type}`,
             ...this.teamDetail(),
         ]);
     }
 
     private increment(stat: string | string[],
-                      value?: number,
-                      sampleRate?: number,
                       tags?: string[]) {
         if (cluster.isMaster) {
-            this.statsd.increment(stat, value, sampleRate, tags);
+            this.statsd.increment(stat, 1, 1, tags);
         }
     }
 
@@ -115,11 +113,9 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
     }
 
     private timing(stat: string | string[],
-                   value?: number,
-                   sampleRate?: number,
                    tags?: string[]) {
-        if (cluster.isMaster) {
-            this.statsd.timing(stat, value, sampleRate, tags);
+        if (nsp.get().ts && cluster.isMaster) {
+            this.statsd.timing(stat, Date.now() - nsp.get().ts, 1, tags);
         }
     }
 
