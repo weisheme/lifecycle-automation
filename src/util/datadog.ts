@@ -155,8 +155,8 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         const session = nsp.get();
         return [
             `atomist_team_id:${session.teamId}`,
-            `atomist_team_name:${stripchar.RSExceptUnsAlpNum(session.teamName)
-                .trim().replace(/ /g, "_")}`,
+            `atomist_team_name:${session.teamName ? stripchar.RSExceptUnsAlpNum(session.teamName)
+                .trim().replace(/ /g, "_") : undefined}`,
         ];
     }
 
