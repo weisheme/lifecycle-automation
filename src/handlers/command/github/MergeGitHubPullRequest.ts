@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -11,6 +12,11 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
+import {
+    bold,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages";
 import * as github from "./gitHubApi";
 
 /**
@@ -82,16 +88,41 @@ export class MergeGitHubPullRequest implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return github.api(this.githubToken, this.apiUrl).pullRequests.merge({
-            owner: this.owner,
-            repo: this.repo,
-            number: this.issue,
-            commit_title: this.title,
-            commit_message: this.message,
-            sha: this.sha,
-            merge_method: this.mergeMethod,
-        })
-            .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+        const api = github.api(this.githubToken, this.apiUrl);
+        return api.pullRequests.get({
+                owner: this.owner,
+                repo: this.repo,
+                number: this.issue,
+            })
+            .then(result => {
+                return result.data;
+            })
+            .then(pr => {
+                if (pr.mergeable === true) {
+                    return api.pullRequests.merge({
+                        owner: this.owner,
+                        repo: this.repo,
+                        number: this.issue,
+                        commit_title: this.title,
+                        commit_message: this.message,
+                        sha: this.sha,
+                        merge_method: this.mergeMethod,
+                    });
+                } else {
+                    const msg: SlackMessage = {
+                        attachments: [{
+                            author_icon: `https://images.atomist.com/rug/warning-yellow.png`,
+                            author_name: `Pull Request not mergeable`,
+                            text: `Pull request ${bold(url(pr.html_url, `#${this.issue} ${pr.title}`))} can not` +
+                                ` be merged at this time. Please review the pull request for potential conflicts.`,
+                            fallback: `Pull request #${this.issue} ${pr.title} can not be merged at this time`,
+                            color: "#ffcc00",
+                            mrkdwn_in: [ "text" ],
+                        }],
+                    };
+                    return ctx.messageClient.respond(msg);
+                }
+            })
+            .then(() => Success, failure);
     }
 }
