@@ -36,15 +36,15 @@ function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Prom
     }
 
     return axios.put("https://r.atomist.com/v2/shorten", {
-        teamId: nsp.teamId,
-        teamName: nsp.teamName,
-        group: "atomist",
-        artifact: nsp.name,
-        version: nsp.version,
-        name: nsp.operation,
-        messageId: options && options.id ? options.id : guid(),
-        redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
-    }, { timeout: 2000 })
+            teamId: nsp.teamId,
+            teamName: nsp.teamName,
+            group: "atomist",
+            artifact: nsp.name,
+            version: nsp.version,
+            name: nsp.operation,
+            messageId: options && options.id ? options.id : guid(),
+            redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
+        }, { timeout: 2000 })
         .then(() => {
             logger.debug("Finished url shortening");
             return markShortened(wrappedSlackMessage);
