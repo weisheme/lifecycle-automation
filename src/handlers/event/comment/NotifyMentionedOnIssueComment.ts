@@ -1,7 +1,7 @@
 import {
     EventFired,
     EventHandler,
-    Failure,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,
@@ -31,8 +31,7 @@ export class NotifyMentionedOnIssueComment implements HandleEvent<graphql.Notify
             const repo = issue.repo;
             return issueNotification(`${issue.number}/${comment._id}`, "New mention in comment on issue",
                 comment.body, comment.by.login, issue, repo, ctx, createActions(comment))
-                .then(_ => Success)
-                .catch(() => Failure);
+                .then(_ => Success, failure);
         } else {
             return Promise.resolve(Success);
         }

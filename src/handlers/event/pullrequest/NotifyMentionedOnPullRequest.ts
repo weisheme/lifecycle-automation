@@ -1,7 +1,7 @@
 import {
     EventFired,
     EventHandler,
-    Failure,
+    failure,
     HandleEvent,
     HandlerContext,
     HandlerResult,
@@ -55,7 +55,6 @@ export class NotifyMentionedOnPullRequest implements HandleEvent<graphql.NotifyM
                     return Promise.resolve(null);
                 }
             })
-            .then(() => Success)
-            .catch(() => Failure);
+            .then(() => Success, failure);
     }
 }

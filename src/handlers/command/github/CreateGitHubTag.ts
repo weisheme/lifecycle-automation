@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -103,7 +104,6 @@ export class CreateGitHubTag implements HandleCommand {
                     sha: this.sha,
                 });
             })
-            .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .then(() => Success, failure);
     }
 }

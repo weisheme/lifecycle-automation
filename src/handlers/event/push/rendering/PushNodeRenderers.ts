@@ -1,3 +1,4 @@
+import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
     Action,
     Attachment,
@@ -662,6 +663,9 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                 }
                 return msg;
             })
-            .catch(() => msg);
+            .catch(err => {
+                logger.error("Error occurred running GraphQL query: %s", err);
+                return msg;
+            });
     }
 }

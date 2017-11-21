@@ -1,3 +1,4 @@
+import { logger } from "@atomist/automation-client/internal/util/logger";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
@@ -266,6 +267,10 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
                             }));
                     }
                     return buttons;
+                })
+                .catch(err => {
+                    logger.error("Error occurred running GraphQL query: %s", err);
+                    return [];
                 });
         } else {
             return Promise.resolve([]);

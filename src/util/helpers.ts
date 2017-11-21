@@ -1,4 +1,5 @@
 import { HandlerContext } from "@atomist/automation-client";
+import { logger } from "@atomist/automation-client/internal/util/logger";
 import { channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
@@ -156,7 +157,7 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
         const r = match[2] || repo.name;
         const no = match[3];
 
-        promises.push(loadIsseOrPullRequest(o, r, [no], ctx)
+        promises.push(loadIssueOrPullRequest(o, r, [no], ctx)
             .then(result => {
                 const results = [];
                 if (result && result.repo) {
@@ -187,10 +188,10 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
         });
 }
 
-export function loadIsseOrPullRequest(owner: string,
-                                      repo: string,
-                                      names: string[],
-                                      ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
+export function loadIssueOrPullRequest(owner: string,
+                                       repo: string,
+                                       names: string[],
+                                       ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
     return ctx.graphClient.executeQueryFromFile<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>(
         "graphql/query/issueOrPr",
         { orgOwner: owner, repoName: repo, names })
@@ -198,8 +199,12 @@ export function loadIsseOrPullRequest(owner: string,
             if (result && result.Org && result.Org.length > 0) {
                 return result.Org[0];
             } else {
-                return Promise.resolve(null);
+                return null;
             }
+        })
+        .catch(err => {
+            logger.error("Error occurred running GraphQL query: %s", err);
+            return null;
         });
 }
 
@@ -282,6 +287,7 @@ export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): 
                 return [];
             })
             .catch(err => {
+                logger.error("Error occurred running GraphQL query: %s", err);
                 return [];
             });
     } else {
@@ -307,6 +313,7 @@ export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promi
             return null;
         })
         .catch(err => {
+            logger.error("Error occurred running GraphQL query: %s", err);
             return null;
         });
 }
@@ -329,6 +336,7 @@ export function loadChatIdByChatId(ctx: HandlerContext, chatId: string): Promise
             return null;
         })
         .catch(err => {
+            logger.error("Error occurred running GraphQL query: %s", err);
             return null;
         });
 }
@@ -341,6 +349,7 @@ export function loadRepoByNameAndOwner(ctx: HandlerContext, name: string, owner:
             return _.get(result, "Repo[0]");
         })
         .catch(err => {
+            logger.error("Error occurred running GraphQL query: %s", err);
             return null;
         });
 }
@@ -353,6 +362,7 @@ export function loadChatTeam(ctx: HandlerContext): Promise<graphql.ChatTeam.Chat
             return _.get(result, "ChatTeam[0]");
         })
         .catch(err => {
+            logger.error("Error occurred running GraphQL query: %s", err);
             return null;
         });
 }
@@ -472,6 +482,10 @@ export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext
                             }
                         }
                     }
+                })
+                .catch(err => {
+                    logger.error("Error occurred running GraphQL query: %s", err);
+                    return body;
                 });
         })).then(() => {
             return body;

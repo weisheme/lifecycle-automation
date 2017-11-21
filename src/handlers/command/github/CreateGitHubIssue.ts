@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -119,7 +120,7 @@ export class CreateGitHubIssue implements HandleCommand {
                     return Success;
                 }
             })
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(failure);
     }
 }
 

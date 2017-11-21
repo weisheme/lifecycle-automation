@@ -90,15 +90,9 @@ class ShortenUrlMessageClient extends MessageClientSupport {
     private sendMessage(message: string | SlackMessage, userNames: string | string[],
                         channelNames: string | string[], options?: MessageOptions) {
         if (userNames && userNames.length > 0) {
-            return this.messageClient.addressUsers(message, userNames, options)
-                .then(msg => {
-                    return msg;
-                });
+            return this.messageClient.addressUsers(message, userNames, options);
         } else {
-            return this.messageClient.addressChannels(message, channelNames, options)
-                .then(msg => {
-                    return msg;
-                });
+            return this.messageClient.addressChannels(message, channelNames, options);
         }
     }
 }
