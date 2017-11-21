@@ -10,7 +10,7 @@
   },
   "homepage": "https://github.com/atomist/lifecycle-automation#readme",
   "bugs": {
-    "url": "https://githubg.com/atomist/lifecycle-automation/issues"
+    "url": "https://github.com/atomist/lifecycle-automation/issues"
   },
   "keywords": [
     "atomist",
@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://r.atomist.com/rkB9xSpZlG",
+    "@atomist/automation-client": "https://r.atomist.com/r1SJphC-lz",
     "@atomist/slack-messages": "^0.12.0",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
