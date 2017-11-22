@@ -34,10 +34,10 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubWebHookUrl)
-    public url: string = "https://webhook.atomist.com/github";
+    public url: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl: string;
 
     @Secret(Secrets.userToken("admin:org_hook"))
     public githubToken: string;
@@ -90,10 +90,10 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
     public repo: string;
 
     @MappedParameter(MappedParameters.GitHubWebHookUrl)
-    public url: string = "https://webhook.atomist.com/github";
+    public url: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl: string;
 
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
