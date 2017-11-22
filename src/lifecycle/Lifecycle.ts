@@ -22,7 +22,11 @@ import {
 import * as config from "config";
 import * as deepmerge from "deepmerge";
 import * as _ from "lodash";
-import { LifecycleActionPreferences, LifecyclePreferences } from "../handlers/event/preferences";
+import {
+    LifecycleActionPreferences,
+    LifecyclePreferences,
+} from "../handlers/event/preferences";
+
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
  */
