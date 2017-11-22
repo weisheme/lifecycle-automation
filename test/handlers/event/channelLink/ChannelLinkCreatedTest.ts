@@ -40,11 +40,26 @@ describe("ChannelLinkCreated", () => {
                     assert(channelNames === "automation-clj");
                     const sm = msg as SlackMessage;
                     assert(sm.attachments[0].text.indexOf("atomisthq/automation-clj") >= 0);
-                    assert(sm.attachments[0].actions.length === 2);
+                    assert(!sm.attachments[0].actions);
                     messageSend = true;
                     return Promise.resolve();
                 },
             },
+            graphClient: {
+                executeQueryFromFile() {
+                    return Promise.resolve({
+                       GitHubOrgWebhook: [
+                           {
+                               url: "https://webhook.atomist.com/atomist/github/teams/T147DUZJP/zjlmxjzwhurspem",
+                               webhookType: "organization",
+                               org: {
+                                   owner: "atomisthq",
+                               },
+                           },
+                       ],
+                    });
+                },
+            }
         };
 
         handler.handle(event, ctx)
