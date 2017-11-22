@@ -48,17 +48,18 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     public commandSuccessful(payload: CommandInvocation,
                              ctx: HandlerContext,
-                             result: HandlerResult) {
+                             result: HandlerResult): Promise<any> {
         this.sendOperation("CommandHandler", "operation", "command-handler",
             payload.name, "successful", result);
-
+        return Promise.resolve();
     }
 
     public commandFailed(payload: CommandInvocation,
                          ctx: HandlerContext,
-                         err: any) {
+                         err: any): Promise<any> {
         this.sendOperation("CommandHandler", "operation", "command-handler",
             payload.name, "failed", err);
+        return Promise.resolve();
     }
 
     public eventIncoming(payload: EventIncoming) {
@@ -73,15 +74,17 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     public eventSuccessful(payload: EventFired<any>,
                            ctx: HandlerContext,
-                           result: HandlerResult[]) {
+                           result: HandlerResult[]): Promise<any> {
         this.sendOperation("EventHandler", "operation", "event-handler",
             payload.extensions.operationName, "successful", result);
+        return Promise.resolve();
     }
 
     public eventFailed(payload: EventFired<any>,
-                       ctx: HandlerContext, err: any) {
+                       ctx: HandlerContext, err: any): Promise<any> {
         this.sendOperation("EventHandler", "operation", "event-handler",
             payload.extensions.operationName, "failed", err);
+        return Promise.resolve();
     }
 
     public messageSent(message: string | SlackMessage,

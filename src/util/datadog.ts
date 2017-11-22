@@ -39,7 +39,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         this.event("event.registration", `New registration for ${pj.name}/${pj.version}`);
     }
 
-    public commandSuccessful(payload: CommandInvocation, ctx: HandlerContext, result: HandlerResult) {
+    public commandSuccessful(payload: CommandInvocation, ctx: HandlerContext, result: HandlerResult): Promise<any> {
         const tags = [
             `atomist_operation:${payload.name}`,
             `atomist_operation_type:command`,
@@ -47,9 +47,10 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         ];
         this.increment("counter.operation.success", tags);
         this.timing("timer.operation", tags);
+        return Promise.resolve();
     }
 
-    public commandFailed(payload: CommandInvocation, ctx: HandlerContext, err: any) {
+    public commandFailed(payload: CommandInvocation, ctx: HandlerContext, err: any): Promise<any> {
         const tags = [
             `atomist_operation:${payload.name}`,
             `atomist_operation_type:command`,
@@ -58,9 +59,10 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         this.increment("counter.operation.failure", tags );
         this.timing("timer.operation", tags);
         this.event("event.operation.failure", "Unsuccessfully invoked command", tags);
+        return Promise.resolve();
     }
 
-    public eventSuccessful(payload: EventFired<any>, ctx: HandlerContext, result: HandlerResult[]) {
+    public eventSuccessful(payload: EventFired<any>, ctx: HandlerContext, result: HandlerResult[]): Promise<any> {
         const tags = [
             `atomist_operation:${payload.extensions.operationName}`,
             `atomist_operation_type:event`,
@@ -68,9 +70,10 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         ];
         this.increment("counter.operation.success", tags);
         this.timing("timer.operation", tags);
+        return Promise.resolve();
     }
 
-    public eventFailed(payload: EventFired<any>, ctx: HandlerContext, err: any) {
+    public eventFailed(payload: EventFired<any>, ctx: HandlerContext, err: any): Promise<any> {
         const tags = [
             `atomist_operation:${payload.extensions.operationName}`,
             `atomist_operation_type:event`,
@@ -79,6 +82,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         this.increment("counter.operation.failure", tags);
         this.timing("timer.operation", tags);
         this.event("event.operation.failure", "Unsuccessfully invoked event", tags);
+        return Promise.resolve();
     }
 
     public messageSent(message: string | SlackMessage,
