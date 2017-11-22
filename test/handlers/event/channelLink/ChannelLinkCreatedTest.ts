@@ -1,5 +1,6 @@
 import "mocha";
 import assert = require("power-assert");
+import * as graphql from "../../../../src/typings/types";
 
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import { ChannelLinkCreated } from "../../../../src/handlers/event/channellink/ChannelLinkCreated";
@@ -7,6 +8,7 @@ import { ChannelLinkCreated } from "../../../../src/handlers/event/channellink/C
 describe("ChannelLinkCreated", () => {
 
     const handler = new ChannelLinkCreated();
+    handler.orgToken = "some broken token";
 
     it("should generate a message", done => {
         const event = {
@@ -20,6 +22,7 @@ describe("ChannelLinkCreated", () => {
                         name: "automation-clj",
                         owner: "atomisthq",
                         org: {
+                            ownerType: "organization" as graphql.OwnerType,
                             provider: null,
                         },
                     },
@@ -37,7 +40,7 @@ describe("ChannelLinkCreated", () => {
                     assert(channelNames === "automation-clj");
                     const sm = msg as SlackMessage;
                     assert(sm.attachments[0].text.indexOf("atomisthq/automation-clj") >= 0);
-                    assert(!sm.attachments[0].actions);
+                    assert(sm.attachments[0].actions.length === 2);
                     messageSend = true;
                     return Promise.resolve();
                 },

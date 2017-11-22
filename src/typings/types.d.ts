@@ -1944,6 +1944,7 @@ export namespace ChannelLinkCreated {
   } 
 
   export type Org = {
+    ownerType?: OwnerType | null; 
     provider?: Provider | null; 
   } 
 

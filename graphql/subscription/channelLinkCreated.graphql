@@ -1,21 +1,24 @@
 subscription ChannelLinkCreated
 {
-    ChannelLink {
-        channel {
-            name
-            normalizedName
-        }
-        repo {
-            name
-            owner
-            org {
-                provider {
-                    apiUrl
-                    url
-                    providerId
-                }
-            }
-        }
+  ChannelLink {
+    channel {
+      name
+      normalizedName
     }
+    repo {
+      name
+      owner
+      org {
+        ownerType
+        provider {
+          apiUrl
+          url
+          providerId
+        }
+      }
+    }
+  }
 }
+
+
 
