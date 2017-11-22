@@ -35,6 +35,16 @@ function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Prom
         return Promise.resolve(wrappedSlackMessage);
     }
 
+    const success = namespace.init().bind<Promise<SlackMessage>>(() => {
+        logger.debug("Finished url shortening");
+        return markShortened(wrappedSlackMessage);
+    });
+
+    const failure = namespace.init().bind<Promise<SlackMessage>>(err => {
+        console.warn(`Error shortening urls: '${err.message}'`);
+        return markShortened(slackMessage);
+    });
+
     return axios.put("https://r.atomist.com/v2/shorten", {
             teamId: nsp.teamId,
             teamName: nsp.teamName,
@@ -45,14 +55,7 @@ function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Prom
             messageId: options && options.id ? options.id : guid(),
             redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
         }, { timeout: 2000 })
-        .then(() => {
-            logger.debug("Finished url shortening");
-            return markShortened(wrappedSlackMessage);
-        })
-        .catch(err => {
-            console.warn(`Error shortening urls: '${err.message}'`);
-            return markShortened(slackMessage);
-        });
+        .then(() => success(), err => failure(err));
 }
 
 function markShortened(slackMessage: SlackMessage): SlackMessage {
