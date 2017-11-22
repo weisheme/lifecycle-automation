@@ -920,6 +920,24 @@ export namespace TeamPreferences {
     value?: string | null; 
   } 
 }
+export namespace Webhook {
+  export type Variables = {
+  }
+
+  export type Query = {
+    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
+  } 
+
+  export type GitHubOrgWebhook = {
+    url?: string | null; 
+    webhookType?: WebhookType | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    owner?: string | null; 
+  } 
+}
 export namespace ApplicationToPushLifecycle {
   export type Variables = {
   }

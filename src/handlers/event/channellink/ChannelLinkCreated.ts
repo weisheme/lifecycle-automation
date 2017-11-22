@@ -19,6 +19,7 @@ import {
     codeLine,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import {
     apiUrl,
@@ -66,11 +67,10 @@ Please use one of the buttons below to install a Webhook in your repository or o
             if (exists) {
                 return true;
             } else if (repo.org.ownerType === "organization") {
-                return api.orgs.getHooks({
-                    org: repo.owner,
-                })
+                return ctx.graphClient.executeQueryFromFile<graphql.Webhook.Query, graphql.Webhook.Variables>(
+                    "graphql/query/webhook")
                 .then(result => {
-                    return hookExists(result.data);
+                    return _.get(result, "GitHubOrgWebhook[0].url") !== null;
                 })
                 .catch(() => {
                     return false;
