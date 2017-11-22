@@ -59,7 +59,7 @@ describe("ChannelLinkCreated", () => {
                        ],
                     });
                 },
-            }
+            },
         };
 
         handler.handle(event, ctx)
