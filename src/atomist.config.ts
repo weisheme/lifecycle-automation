@@ -1,4 +1,3 @@
-import { HandleCommand } from "@atomist/automation-client";
 import { initMemoryMonitoring } from "@atomist/automation-client/internal/util/memory";
 import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";
@@ -129,7 +128,7 @@ if (notLocal) {
 
 const AdminTeam = "atomist-automation";
 
-export const configuration = {
+export const configuration: any = {
     name: pj.name,
     version: pj.version,
     policy: "durable",
