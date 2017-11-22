@@ -117,8 +117,8 @@ Please use one of the buttons below to install a Webhook in your repository or o
     }
 }
 
-function hookExists(hooks: any[]): boolean {
-    const urlRegexp = /https:\/\/.+.atomist.+\/github\/teams/;
+export function hookExists(hooks: any[]): boolean {
+    const urlRegexp = /^https:\/\/.+.atomist.+\/github\/teams.*$/;
     return hooks.filter(w => w.config && w.config.url)
         .some(w => urlRegexp.test(w.config.url));
 }
