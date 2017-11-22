@@ -2,7 +2,7 @@ import { EventFired } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import * as _ from "lodash";
 import {
-    Lifecycle, LifecycleConfiguration,
+    Lifecycle,
     LifecycleHandler,
     Preferences,
 } from "../../../lifecycle/Lifecycle";
