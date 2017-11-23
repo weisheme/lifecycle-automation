@@ -97,7 +97,7 @@ describe("BuildToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames === "lifecycle-demo");
+                assert(channelNames[0] === "lifecycle-demo");
                 assert(options.id ===
                     "push_lifecycle/atomisthq/lifecycle-demo/cdupuis-patch-7/4dd9c968915d3b01e5252fb6f430ada5fc024f63");
                 const sm = msg as SlackMessage;

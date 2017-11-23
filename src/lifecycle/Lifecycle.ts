@@ -47,10 +47,9 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             return Promise.resolve({ code: 0, message: "No lifecycle created" });
         }
 
-        const results = lifecycles.filter(l => this.validate(l)).map(lifecycle => {
+        const results = lifecycles.map(lifecycle => {
 
-            const channelResults = lifecycle.channels.filter(
-                channel => this.validateChannel(lifecycle, channel, preferences)).map(channel => {
+            const channelResults = this.groupChannels(lifecycle, preferences).map(channels => {
 
                 // Merge default and handler provided configuration
                 const configuration = deepmerge(
@@ -59,9 +58,9 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
                 if (configuration) {
                     lifecycle.renderers = this.configureRenderers(lifecycle.renderers, configuration,
-                        lifecycle.name, channel, preferences);
+                        lifecycle.name, channels, preferences);
                     lifecycle.contributors = this.configureContributors(lifecycle.contributors, configuration,
-                        lifecycle.name, channel, preferences);
+                        lifecycle.name, channels, preferences);
                 }
 
                 const renderers: any[] = [];
@@ -108,7 +107,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 return renderers.reduce((p, f) => p.then(f), Promise.resolve(message))
                     .then(msg => {
                         // Finally create the UpdatableMessage from the populated SlackMessage
-                        return this.createAndSendMessage(msg, lifecycle, channel, ctx.messageClient);
+                        return this.createAndSendMessage(msg, lifecycle, channels, ctx.messageClient);
                     });
             });
 
@@ -155,7 +154,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
     private createAndSendMessage(message: SlackMessage,
                                  lifecycle: Lifecycle,
-                                 channel: string,
+                                 channels: string[],
                                  messageClient: MessageClient): Promise<any> {
         message.unfurl_links = false;
         message.unfurl_media = true;
@@ -172,32 +171,22 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
-        return this.sendMessage(message, options, channel, messageClient);
+        return this.sendMessage(message, options, channels, messageClient);
     }
 
-    private sendMessage(slackMessage: SlackMessage, options: MessageOptions, channel: string,
+    private sendMessage(slackMessage: SlackMessage,
+                        options: MessageOptions,
+                        channels: string[],
                         messageClient: MessageClient): Promise<any> {
-        return messageClient.addressChannels(slackMessage, channel, options)
+        return messageClient.addressChannels(slackMessage, channels, options)
             .then(() => {
-                logger.info("Sending lifecycle message '%s' to channel '%s'", options.id, channel);
+                logger.info("Sending lifecycle message '%s' to channel '%s'", options.id, channels.join(", "));
                 return Success;
             })
             .catch(failure);
     }
 
-    private validate(lifecycle: Lifecycle): boolean {
-        // Make sure there is a lifecycle
-        if (lifecycle == null) {
-            return false;
-        }
-
-        lifecycle.channels = clean(lifecycle.channels);
-
-        // Verify that lifecycle has channels
-        return (lifecycle.channels && lifecycle.channels.length > 0);
-    }
-
-    private validateChannel(lifecycle: Lifecycle, channel: string, preferences: Preferences[]): boolean {
+    private lifecycleEnabled(lifecycle: Lifecycle, channel: string, preferences: Preferences[]): boolean {
         if (preferences) {
             const preference = preferences.find(p => p.name ===  LifecyclePreferences.key);
             if (preference) {
@@ -209,6 +198,48 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             }
         }
         return true;
+    }
+
+    /**
+     * Clean up the list of channels; look for channels that can be processed together as they don't have
+     * any configuration.
+     */
+    private groupChannels(lifecycle: Lifecycle, preferences: Preferences[]): string[][] {
+        if (lifecycle == null) {
+            return [];
+        }
+
+        // First filter out channel / lifecycle combinations that aren't enabled
+        const channels = clean(lifecycle.channels)
+            .filter(channel => this.lifecycleEnabled(lifecycle, channel, preferences));
+
+        const unconfiguredChannels: string[] = [];
+        const configuredChannels: string[][] = [];
+
+        const preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
+        if (preference) {
+            try {
+                const preferenceValue = JSON.parse(preference.value) || {};
+                channels.forEach(channel => {
+                    if (preferenceValue[channel]) {
+                        configuredChannels.push([channel]);
+                    } else {
+                        unconfiguredChannels.push(channel);
+                    }
+                });
+            } catch (e) {
+                console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
+                unconfiguredChannels.push(...channels);
+            }
+        } else {
+            unconfiguredChannels.push(...channels);
+        }
+
+        if (unconfiguredChannels.length > 0) {
+            return [ ...configuredChannels, unconfiguredChannels];
+        } else {
+            return configuredChannels;
+        }
     }
 
     private normalizeTimestamp(timestamp: string): string {
@@ -228,10 +259,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private configureContributors(contributors: Array<ActionContributor<any>>,
                                   configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                   name: string,
-                                  channel: string,
+                                  channels: string[],
                                   preferences: Preferences[]) {
-        contributors = this.filterAndSort("action", contributors, configuration.contributors,
-            name, channel, preferences) as Array<ActionContributor<any>>;
+        contributors = this.filterAndSortContributions("action", contributors, configuration.contributors,
+            name, channels, preferences) as Array<ActionContributor<any>>;
         contributors.forEach(c => {
            if (c.configure) {
                c.configure(configuration);
@@ -243,10 +274,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private configureRenderers(renderers: Array<NodeRenderer<any>>,
                                configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                name: string,
-                               channel: string,
+                               channels: string[],
                                preferences: Preferences[]): Array<NodeRenderer<any>> {
-        renderers = this.filterAndSort("renderer", renderers, configuration.renderers,
-            name, channel, preferences) as Array<NodeRenderer<any>>;
+        renderers = this.filterAndSortContributions("renderer", renderers, configuration.renderers,
+            name, channels, preferences) as Array<NodeRenderer<any>>;
         renderers.forEach(c => {
             if (c.configure) {
                 c.configure(configuration);
@@ -255,18 +286,19 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return renderers;
     }
 
-    private filterAndSort(kind: "action" | "renderer",
-                          contributions: IdentifiableContribution[],
-                          configuration: string[],
-                          name: string,
-                          channel: string,
-                          preferences: Preferences[] = []): IdentifiableContribution[] {
+    private filterAndSortContributions(kind: "action" | "renderer",
+                                       contributions: IdentifiableContribution[],
+                                       configuration: string[],
+                                       name: string,
+                                       channels: string[],
+                                       preferences: Preferences[] = []): IdentifiableContribution[] {
         let preference;
         if (kind === "action") {
             preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
         }
-        if (preference) {
+        if (preference && channels.length === 1) {
             try {
+                const channel = channels[0];
                 const preferenceValue = JSON.parse(preference.value) || {};
                 if (preferenceValue[channel]) {
                     const channelPreferences = preferenceValue[channel];

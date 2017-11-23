@@ -80,7 +80,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames === "some-channel2");
+                assert(channelNames[0] === "some-channel2");
                 return Promise.resolve();
             }
         }
@@ -114,7 +114,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames);
+                assert(channelNames.length === 2);
                 this.counter++;
                 return Promise.resolve();
             }
@@ -137,7 +137,7 @@ describe("PushToPushLifecycle", () => {
         handler.handle(JSON.parse(payload.replace("%%CONFIG%%", config)) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(result.code === 0);
-                assert(ctx.messageClient.counter === 2);
+                assert(ctx.messageClient.counter === 1);
             })
             .then(done, done);
 
@@ -148,7 +148,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames === "some-channel2");
+                assert(channelNames[0] === "some-channel2");
                 return Promise.resolve();
             }
         }
@@ -284,7 +284,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames === "handlers");
+                assert(channelNames[0] === "handlers");
                 const sm = msg as SlackMessage;
                 assert(sm.attachments[1].author_name === "#128: Simplify filter. Add a note");
                 return Promise.resolve();
