@@ -1,5 +1,7 @@
-import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import * as namespace from "@atomist/automation-client/internal/util/cls";
+import {
+    AutomationContextAware,
+    HandlerContext,
+} from "@atomist/automation-client/HandlerContext";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { AutomationEventListenerSupport } from "@atomist/automation-client/server/AutomationEventListener";
@@ -14,48 +16,44 @@ import axios from "axios";
 import * as cluster from "cluster";
 import { wrapLinks } from "./tracking";
 
-function shortenUrls(slackMessage: SlackMessage, options?: MessageOptions): Promise<SlackMessage> {
+function shortenUrls(slackMessage: SlackMessage,
+                     options: MessageOptions,
+                     ctx: AutomationContextAware): Promise<SlackMessage> {
 
     // Check if this message was already shortened
     if (isShortened(slackMessage)) {
         return Promise.resolve(slackMessage);
     }
 
-    const nsp = namespace.get();
-
-    if (!nsp) {
+    if (!ctx || !ctx.context) {
         return Promise.resolve(slackMessage);
     }
 
     logger.debug("Starting url shortening");
-    const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, nsp.operation);
+    const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, ctx.context.operation);
 
     if (hashesToUrl.length === 0) {
         logger.debug("No urls shortened");
         return Promise.resolve(wrappedSlackMessage);
     }
 
-    const success = namespace.init().bind<Promise<SlackMessage>>(() => {
-        logger.debug("Finished url shortening");
-        return markShortened(wrappedSlackMessage);
-    });
-
-    const failure = namespace.init().bind<Promise<SlackMessage>>(err => {
-        console.warn(`Error shortening urls: '${err.message}'`);
-        return markShortened(slackMessage);
-    });
-
     return axios.put("https://r.atomist.com/v2/shorten", {
-            teamId: nsp.teamId,
-            teamName: nsp.teamName,
+            teamId: ctx.context.teamId,
+            teamName: ctx.context.teamName,
             group: "atomist",
-            artifact: nsp.name,
-            version: nsp.version,
-            name: nsp.operation,
+            artifact: ctx.context.name,
+            version: ctx.context.version,
+            name: ctx.context.operation,
             messageId: options && options.id ? options.id : guid(),
             redirects: hashesToUrl.map(([hash, url]) => ({ hash, url })),
         }, { timeout: 2000 })
-        .then(() => success(), err => failure(err));
+        .then(() => {
+            logger.debug("Finished url shortening");
+            return markShortened(wrappedSlackMessage);
+        }, err => {
+            console.warn(`Error shortening urls: '${err.message}'`);
+            return markShortened(slackMessage);
+        });
 }
 
 function markShortened(slackMessage: SlackMessage): SlackMessage {
@@ -76,14 +74,14 @@ function isShortened(slackMessage: SlackMessage): boolean {
 
 class ShortenUrlMessageClient extends MessageClientSupport {
 
-    constructor(public messageClient: MessageClient) {
+    constructor(public messageClient: MessageClient, public ctx: HandlerContext) {
         super();
     }
 
     protected doSend(msg: string | SlackMessage, userNames: string | string[],
                      channelNames: string | string[], options?: MessageOptions): Promise<any> {
         if (isSlackMessage(msg)) {
-             return shortenUrls(msg as SlackMessage, options)
+             return shortenUrls(msg as SlackMessage, options, (this.ctx as any) as AutomationContextAware)
                  .then(message => this.sendMessage(message, userNames, channelNames, options));
         } else {
             return this.sendMessage(msg, userNames, channelNames, options);
@@ -103,6 +101,6 @@ class ShortenUrlMessageClient extends MessageClientSupport {
 export class ShortenUrlAutomationEventListener extends AutomationEventListenerSupport {
 
     public contextCreated(context: HandlerContext): void {
-          context.messageClient = new ShortenUrlMessageClient(context.messageClient);
+          context.messageClient = new ShortenUrlMessageClient(context.messageClient, context);
     }
 }
