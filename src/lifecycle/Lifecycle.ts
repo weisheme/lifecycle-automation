@@ -213,6 +213,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         const channels = clean(lifecycle.channels)
             .filter(channel => this.lifecycleEnabled(lifecycle, channel, preferences));
 
+        if (!preferences) {
+            return [channels];
+        }
+
         const unconfiguredChannels: string[] = [];
         const configuredChannels: string[][] = [];
 
