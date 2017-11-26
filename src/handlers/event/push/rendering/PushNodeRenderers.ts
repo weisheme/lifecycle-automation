@@ -101,11 +101,11 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         super("commit");
     }
 
-    public configure(configuration: LifecycleConfiguration) {
-        this.style = configuration.configuration.fingerprints.style || "fingerprint-inline";
-        this.renderUnchangedFingerprints = configuration.configuration.fingerprints["render-unchanged"] || true;
-        this.aboutHint = configuration.configuration.fingerprints["about-hint"] || true;
-        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
+    public configure(lifecyle: LifecycleConfiguration) {
+        this.style = lifecyle.configuration.fingerprints.style || "fingerprint-inline";
+        this.renderUnchangedFingerprints = lifecyle.configuration.fingerprints["render-unchanged"] || true;
+        this.aboutHint = lifecyle.configuration.fingerprints["about-hint"] || true;
+        this.emojiStyle = lifecyle.configuration["emoji-style"] || "default";
     }
 
     public supports(node: any): boolean {
@@ -116,7 +116,8 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const slug = repo.owner + "/" + repo.name + "/" + push.branch;
-        const commits = push.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
+        const commits = _.uniqBy(push.commits, c => c.sha).sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
+
         const commitsGroupedByAuthor = [];
 
         let author = null;

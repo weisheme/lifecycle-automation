@@ -6,6 +6,7 @@ import {
     SlackMessage,
     url,
 } from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import {
     AbstractIdentifiableContribution,
     NodeRenderer,
@@ -124,7 +125,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const repoSlug = repo.owner + "/" + repo.name + "/" + pr.branchName;
-        const commits = pr.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
+        const commits = _.uniqBy(pr.commits, c => c.sha).sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
         const commitsGroupedByAuthor = [];
 
         let author = null;
