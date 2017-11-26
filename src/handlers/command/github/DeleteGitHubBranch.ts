@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -8,10 +9,11 @@ import {
     Parameter,
     Secret,
     Secrets,
-    Success,
+    Success, success,
     Tags,
 } from "@atomist/automation-client";
 import * as github from "./gitHubApi";
+import { SlackMessage } from "@atomist/slack-messages";
 
 @CommandHandler("Deletes a GitHub branch", "delete branch", "delete github branch")
 @Tags("github", "branch")
@@ -34,11 +36,30 @@ export class DeleteGitHubBranch implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return github.api(this.githubToken, this.apiUrl).gitdata.deleteReference({
-            owner: this.owner,
-            repo: this.repo,
-            ref: `heads/${this.branch.trim()}`,
-        })
+                owner: this.owner,
+                repo: this.repo,
+                ref: `heads/${this.branch.trim()}`,
+            })
             .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(err => {
+                if (err.message === "Reference does not exist") {
+                    const text = `Branch or Reference could not be deleted. \
+Please make sure that it still exists and wasn't deleted in the meantime.`
+                    const msg: SlackMessage = {
+                        attachments: [{
+                            author_icon: `https://images.atomist.com/rug/warning-yellow.png`,
+                            author_name: "Failed to delete branch or reference",
+                            text,
+                            fallback: text,
+                            color: "#ffcc00",
+                            mrkdwn_in: [ "text" ],
+                        }],
+                    };
+                    return ctx.messageClient.respond(msg)
+                        .then(success, failure);
+                } else {
+                    return failure(err);
+                }
+            });
     }
 }
