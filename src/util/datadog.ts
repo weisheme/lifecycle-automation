@@ -106,20 +106,20 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
     private increment(stat: string | string[],
                       tags?: string[]) {
         if (cluster.isMaster) {
-            this.statsd.increment(stat, 1, 1, tags);
+            this.statsd.increment(stat, 1, 1, tags, callback);
         }
     }
 
     private event(title: string, text?: string, tags?: string[]) {
         if (cluster.isMaster) {
-            this.statsd.event(`automation_client.${title}`, text, {}, tags);
+            this.statsd.event(`automation_client.${title}`, text, {}, tags,callback);
         }
     }
 
     private timing(stat: string | string[],
                    tags?: string[]) {
         if (nsp.get().ts && cluster.isMaster) {
-            this.statsd.timing(stat, Date.now() - nsp.get().ts, 1, tags);
+            this.statsd.timing(stat, Date.now() - nsp.get().ts, 1, tags, callback);
         }
     }
 
@@ -162,9 +162,9 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     private submitHeapStats() {
         const heap = process.memoryUsage();
-        this.statsd.gauge("heap.rss", heap.rss);
-        this.statsd.gauge("heap.total", heap.heapTotal);
-        this.statsd.gauge("heap.used", heap.heapUsed);
+        this.statsd.gauge("heap.rss", heap.rss, 1, [], callback);
+        this.statsd.gauge("heap.total", heap.heapTotal, 1, [], callback);
+        this.statsd.gauge("heap.used", heap.heapUsed, 1, [], callback);
     }
 }
 
@@ -175,4 +175,8 @@ export interface DatadogOptions {
     host?: string;
     port?: number;
 
+}
+
+function callback(err) {
+    // Do nothing
 }
