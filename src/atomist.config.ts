@@ -273,8 +273,8 @@ export const configuration: any = {
         enabled: true,
         termination: {
             graceful: true,
-        }
-    }
+        },
+    },
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client

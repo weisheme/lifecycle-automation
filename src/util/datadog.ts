@@ -112,7 +112,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     private event(title: string, text?: string, tags?: string[]) {
         if (cluster.isMaster) {
-            this.statsd.event(`automation_client.${title}`, text, {}, tags,callback);
+            this.statsd.event(`automation_client.${title}`, text, {}, tags, callback);
         }
     }
 
