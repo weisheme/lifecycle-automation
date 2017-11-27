@@ -253,14 +253,7 @@ export const configuration: any = {
             },
             bearer: {
                 enabled: notLocal,
-                token,
-            },
-            github: {
-                enabled: notLocal,
-                clientId: secret("oauth.clientId"),
-                clientSecret: secret("oauth.clientSecret"),
-                callbackUrl: secret("oauth.callbackUrl"),
-                org: secret("oauth.org"),
+                adminOrg: "atomisthq",
             },
         },
     },
@@ -276,7 +269,13 @@ export const configuration: any = {
         enabled: true,
         // worker: 2,
     },
+    ws: {
+        enabled: true,
+        termination: {
+            graceful: true,
+        }
+    }
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
-initMemoryMonitoring(`${appRoot.path}/node_modules/@atomist/automation-client/public/heap`);
+initMemoryMonitoring();

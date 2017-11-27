@@ -14,17 +14,17 @@
   },
   "keywords": [
     "atomist",
+    "automation",
     "github",
     "java",
     "kubernetes",
-    "rug",
     "spring",
     "spring-boot",
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://atomist.jfrog.io/atomist/npm-dev/@atomist/automation-client/-/@atomist/automation-client-0.3.5-20171122221813.tgz",
-    "@atomist/slack-messages": "^0.12.0",
+    "@atomist/automation-client": "https://r.atomist.com/rJHbiXitgG",
+    "@atomist/slack-messages": "^0.12.1",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
     "base64-js": "^1.2.1",
@@ -35,7 +35,6 @@
     "deepmerge": "^2.0.0",
     "format-date": "^1.0.0",
     "github": "^12.0.1",
-    "heapdump": "^0.3.9",
     "hot-shots": "^5.0.0",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
