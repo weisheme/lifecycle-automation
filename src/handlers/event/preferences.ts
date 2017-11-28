@@ -39,31 +39,37 @@ export const LifecycleActionPreferences = {
             id: "restart_build",
             name: "Restart Failed Builds",
             description: "Restart a failed build on the connected CI system",
+            enabled: true,
         },
         release: {
             id: "release",
             name: "Create GitHub Release",
             description: "Create a release on GitHub for the given Git tag",
+            enabled: true,
         },
         new_tag: {
             id: "new_tag",
             name: "Create Git Tag",
             description: "Create a Git tag on the last commit of a push to the default branch",
+            enabled: false,
         },
         tag: {
             id: "tag",
             name: "Create Git Tag from Tag",
             description: "Create a Git tag from a SemVer tag",
+            enabled: false,
         },
         raise_pullrequest: {
             id: "raise_pullrequest",
             name: "Raise GitHub Pull Request",
             description: "Raise a GitHub pull request for any pushes to non-default branches",
+            enabled: true,
         },
         cf_application: {
             id: "cf_application",
             name: "Manage Cloud Foundry Applications",
             description: "Start, Stop, Scale and retrieve application information for Cloud Foundry applications",
+            enabled: true,
         },
     },
 
@@ -72,26 +78,31 @@ export const LifecycleActionPreferences = {
             id: "assign",
             name: "Assign To Me",
             description: "Assign GitHub issues to me",
+            enabled: true,
         },
         label: {
             id: "label",
             name: "Toggle Labels",
             description: "Add or remove labels to GitHub issue",
+            enabled: true,
         },
         close: {
             id: "close",
             name: "Close Issue",
             description: "Close GitHub issue",
+            enabled: true,
         },
         comment: {
             id: "comment",
             name: "Add Comment",
             description: "Add comment to GitHub issue and pull request",
+            enabled: true,
         },
         thumps_up: {
             id: "thumps_up",
             name: "Add :+1: Reaction",
             description: "Add reaction to GitHub issue or pull request comment",
+            enabled: true,
         },
     },
 
@@ -100,31 +111,37 @@ export const LifecycleActionPreferences = {
             id: "assign",
             name: "Assign To Me",
             description: "Assign GitHub issues to me",
+            enabled: true,
         },
         label: {
             id: "label",
             name: "Toggle Labels",
             description: "Add or remove labels to GitHub issue",
+            enabled: true,
         },
         close: {
             id: "close",
             name: "Close Issue",
             description: "Close GitHub issue",
+            enabled: true,
         },
         comment: {
             id: "comment",
             name: "Add Comment",
             description: "Add comment to GitHub issue",
+            enabled: true,
         },
         thumps_up: {
             id: "thumps_up",
             name: "Add :+1: Reaction",
             description: "Add reaction to GitHub issue",
+            enabled: true,
         },
         reopen: {
             id: "reopen",
             name: "Reopen Issue",
             description: "Reopen GitHub issue",
+            enabled: true,
         },
     },
 
@@ -133,36 +150,43 @@ export const LifecycleActionPreferences = {
             id: "merge",
             name: "Merge Pull Request",
             description: "Merge GitHub pull request",
+            enabled: true,
         },
         auto_merge: {
             id: "auto_merge",
             name: "Auto Merge Pull Request",
             description: "Auto merge a GitHub pull request after successful status checks and reviews",
+            enabled: true,
         },
         approve: {
             id: "approve",
             name: "Approve Breaking Change",
             description: "Approve a breaking fingerprint change",
+            enabled: true,
         },
         delete: {
             id: "delete",
             name: "Delete Branch",
             description: "Delete a GitHub branch",
+            enabled: true,
         },
         comment: {
             id: "comment",
             name: "Add Comment",
             description: "Add comment on GitHub pull request",
+            enabled: true,
         },
         thumps_up: {
             id: "thumps_up",
             name: "Add :+1: Reaction",
             description: "Add reaction to GitHub issue",
+            enabled: true,
         },
         assign_reviewer: {
             id: "assign_reviewer",
             name: "Assign Pull Request Reviewer",
             description: "Assign reviewer to GitHub pull request",
+            enabled: true,
         },
     },
 
@@ -171,8 +195,32 @@ export const LifecycleActionPreferences = {
             id: "comment",
             name: "Add Comemnt",
             description: "Add comment on GitHub review",
+            enabled: true,
         },
     },
+
+};
+
+export const LifecycleRendererPreferences = {
+
+    key: "lifecycle_renderers",
+
+    push: {
+        workflow: {
+            id: "workflow",
+            name: "Workflow",
+            description: "Render an updating chart of a Circle CI Workflow",
+            enabled: false,
+        },
+    },
+
+    comment: {},
+
+    issue: {},
+
+    pull_request: {},
+
+    review: {},
 
 };
 

@@ -25,6 +25,7 @@ import * as _ from "lodash";
 import {
     LifecycleActionPreferences,
     LifecyclePreferences,
+    LifecycleRendererPreferences,
 } from "../handlers/event/preferences";
 
 /**
@@ -220,29 +221,40 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         const unconfiguredChannels: string[] = [];
         const configuredChannels: string[][] = [];
 
-        const preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
-        if (preference) {
-            try {
-                const preferenceValue = JSON.parse(preference.value) || {};
-                channels.forEach(channel => {
-                    if (preferenceValue[channel]) {
-                        configuredChannels.push([channel]);
-                    } else {
-                        unconfiguredChannels.push(channel);
-                    }
-                });
-            } catch (e) {
-                console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
-                unconfiguredChannels.push(...channels);
-            }
-        } else {
-            unconfiguredChannels.push(...channels);
-        }
+        const actionPreference = preferences.find(p => p.name === LifecycleActionPreferences.key);
+        const rendererPreference = preferences.find(p => p.name === LifecycleRendererPreferences.key);
+        channels.forEach(c => {
+           if (this.channelConfigured(c, actionPreference)) {
+               configuredChannels.push([c]);
+           } else if (this.channelConfigured(c, rendererPreference)) {
+               configuredChannels.push([c]);
+           } else {
+               unconfiguredChannels.push(c);
+           }
+        });
 
         if (unconfiguredChannels.length > 0) {
             return [ ...configuredChannels, unconfiguredChannels];
         } else {
             return configuredChannels;
+        }
+    }
+
+    private channelConfigured(channel: string, preference: any): boolean {
+        if (preference) {
+            try {
+                const preferenceValue = JSON.parse(preference.value) || {};
+                if (preferenceValue[channel]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (e) {
+                console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 
@@ -297,8 +309,13 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                                        channels: string[],
                                        preferences: Preferences[] = []): IdentifiableContribution[] {
         let preference;
+        let preferenceConfiguration;
         if (kind === "action") {
             preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
+            preferenceConfiguration = LifecycleActionPreferences[name];
+        } else if (kind === "renderer") {
+            preference = preferences.find(p => p.name === LifecycleRendererPreferences.key);
+            preferenceConfiguration = LifecycleRendererPreferences[name];
         }
         if (preference && channels.length === 1) {
             try {
@@ -311,7 +328,11 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                         if (channelPreference != null) {
                             return channelPreference === true;
                         }
-                        return true;
+                        if (preferenceConfiguration && preferenceConfiguration[c.id()]) {
+                            return preferenceConfiguration[c.id()].enabled;
+                        } else {
+                            return true;
+                        }
                     });
                 }
             } catch (e) {

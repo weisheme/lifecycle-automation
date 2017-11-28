@@ -19,7 +19,11 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
-import { LifecycleActionPreferences, LifecyclePreferences } from "../../event/preferences";
+import {
+    LifecycleActionPreferences,
+    LifecyclePreferences,
+    LifecycleRendererPreferences,
+} from "../../event/preferences";
 
 /**
  * Configure DM preferences for the invoking user.
@@ -71,9 +75,11 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 })
                 .then(() => Success, failure);
         } else {
-            return this.loadPreferences(ctx, LifecycleActionPreferences.key)
+            return Promise.all([this.loadPreferences(ctx, LifecycleActionPreferences.key),
+                this.loadPreferences(ctx, LifecycleRendererPreferences.key)])
                 .then(preferences => {
-                    return ctx.messageClient.respond(this.createConfigureMessage(preferences), { id: this.msgId });
+                    return ctx.messageClient.respond(
+                        this.createConfigureMessage(preferences[0], preferences[1]), { id: this.msgId });
                 })
                 .then(() => Success, failure);
         }
@@ -136,10 +142,11 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
         return msg;
     }
 
-    private createConfigureMessage(preferences: any): SlackMessage {
+    private createConfigureMessage(actionPreferences: any, rendererPreferences: any): SlackMessage {
 
         const lifecycle = LifecyclePreferences[this.lifecycle];
         const lifecycleActions = LifecycleActionPreferences[this.lifecycle];
+        const lifecycleRenderers = LifecycleRendererPreferences[this.lifecycle];
 
         const msg: SlackMessage = {
             text: `Configure ${bold(`'${lifecycle.name}'`)} actions for ${channel(this.channelId)}:`,
@@ -151,11 +158,11 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 const actionType = lifecycleActions[type];
                 const actions: Action[] = [];
 
-                const channelPreferences = _.cloneDeep(preferences[this.channelName] || {});
+                const channelPreferences = _.cloneDeep(actionPreferences[this.channelName] || {});
 
-                if (!this.isLifecycleActionEnabled(preferences, actionType.id)) {
+                if (!this.isLifecycleActionEnabled(actionPreferences, actionType.id)) {
                     _.set(channelPreferences, `${this.lifecycle}.${type}`, true);
-                    actions.push(buttonForCommand({text: "Enable", style: "primary" }, "SetTeamPreference",
+                    actions.push(buttonForCommand({text: "Enable Action", style: "primary" }, "SetTeamPreference",
                         {
                             msgId: this.msgId,
                             key: LifecycleActionPreferences.key,
@@ -164,13 +171,51 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                             label: `'${actionType.name}' action of '${lifecycle.name}' enabled` }));
                 } else {
                     _.set(channelPreferences, `${this.lifecycle}.${type}`, false);
-                    actions.push(buttonForCommand({ text: "Disable", style: "danger" }, "SetTeamPreference",
+                    actions.push(buttonForCommand({ text: "Disable Action", style: "danger" }, "SetTeamPreference",
                         {
                             msgId: this.msgId,
                             key: LifecycleActionPreferences.key,
                             name: this.channelName,
                             value: JSON.stringify(channelPreferences),
                             label: `'${actionType.name}' action of '${lifecycle.name}' disabled` }));
+                }
+
+                const attachment: Attachment = {
+                    title: actionType.name,
+                    fallback: actionType.name,
+                    text: actionType.description,
+                    actions,
+                };
+
+                msg.attachments.push(attachment);
+            }
+        }
+
+        for (const type in lifecycleRenderers) {
+            if (lifecycleRenderers.hasOwnProperty(type) && type !== "key") {
+                const actionType = lifecycleRenderers[type];
+                const actions: Action[] = [];
+
+                const channelPreferences = _.cloneDeep(rendererPreferences[this.channelName] || {});
+
+                if (!this.isLifecycleRendererEnabled(rendererPreferences, actionType.id)) {
+                    _.set(channelPreferences, `${this.lifecycle}.${type}`, true);
+                    actions.push(buttonForCommand({text: "Enable Renderer", style: "primary" }, "SetTeamPreference",
+                        {
+                            msgId: this.msgId,
+                            key: LifecycleRendererPreferences.key,
+                            name: this.channelName,
+                            value: JSON.stringify(channelPreferences),
+                            label: `'${actionType.name}' renderer of '${lifecycle.name}' enabled` }));
+                } else {
+                    _.set(channelPreferences, `${this.lifecycle}.${type}`, false);
+                    actions.push(buttonForCommand({ text: "Disable Renderer", style: "danger" }, "SetTeamPreference",
+                        {
+                            msgId: this.msgId,
+                            key: LifecycleRendererPreferences.key,
+                            name: this.channelName,
+                            value: JSON.stringify(channelPreferences),
+                            label: `'${actionType.name}' renderer of '${lifecycle.name}' disabled` }));
                 }
 
                 const attachment: Attachment = {
@@ -208,11 +253,22 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
 
     private isLifecycleActionEnabled(preferences: any, type: string): boolean {
         if (preferences[this.channelName] && preferences[this.channelName][this.lifecycle]) {
-            return preferences[this.channelName][this.lifecycle] == null
-                || preferences[this.channelName][this.lifecycle][type] == null
-                || preferences[this.channelName][this.lifecycle][type] as boolean === true;
+            if (preferences[this.channelName][this.lifecycle] != null
+                && preferences[this.channelName][this.lifecycle][type] != null) {
+                return preferences[this.channelName][this.lifecycle][type] as boolean === true;
+            }
         }
-        return true;
+        return LifecycleActionPreferences[this.lifecycle][type].enabled;
+    }
+
+    private isLifecycleRendererEnabled(preferences: any, type: string): boolean {
+        if (preferences[this.channelName] && preferences[this.channelName][this.lifecycle]) {
+            if (preferences[this.channelName][this.lifecycle] != null
+                && preferences[this.channelName][this.lifecycle][type] != null) {
+                return preferences[this.channelName][this.lifecycle][type] as boolean === true;
+            }
+        }
+        return LifecycleRendererPreferences[this.lifecycle][type].enabled;
     }
 
     private loadPreferences(ctx: HandlerContext, key: string): Promise<graphql.TeamPreferences.Preferences[]> {
