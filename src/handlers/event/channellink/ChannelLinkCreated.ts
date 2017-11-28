@@ -38,7 +38,7 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
     public orgToken: string;
 
     public handle(event: EventFired<graphql.ChannelLinkCreated.Subscription>,
-                  ctx: HandlerContext): Promise<HandlerResult> {
+        ctx: HandlerContext): Promise<HandlerResult> {
         const channelName = event.data.ChannelLink[0].channel.name || event.data.ChannelLink[0].channel.normalizedName;
         const repo = event.data.ChannelLink[0].repo;
         const repoLink = repoSlackLink(repo);
@@ -47,11 +47,11 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
 repository here. To turn this off, type ${codeLine("@atomist repos")} and click the ${bold("Unlink")} button.`;
 
         const noRepoHookMsg = `${repoLink} is now linked to this channel. Unfortunately I'm not able to send \
-activity form that repository here because there is no Webhook installed. \
+activity from that repository here because there is no Webhook installed. \
 Please use the button below to install a Webhook in your repository.`;
 
         const noHookMsg = `${repoLink} is now linked to this channel. Unfortunately I'm not able to send \
-activity form that repository here because there is no Webhook installed. \
+activity from that repository here because there is no Webhook installed. \
 Please use one of the buttons below to install a Webhook in your repository or organization.`;
 
         const api = github.api(this.orgToken, apiUrl(repo));
