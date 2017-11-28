@@ -38,7 +38,7 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
     public orgToken: string;
 
     public handle(event: EventFired<graphql.ChannelLinkCreated.Subscription>,
-        ctx: HandlerContext): Promise<HandlerResult> {
+                  ctx: HandlerContext): Promise<HandlerResult> {
         const channelName = event.data.ChannelLink[0].channel.name || event.data.ChannelLink[0].channel.normalizedName;
         const repo = event.data.ChannelLink[0].repo;
         const repoLink = repoSlackLink(repo);
