@@ -6,6 +6,17 @@
   },
   "groups": null,
   "teamIds": "T1L0VDKJP",
+  "policy": null,
+  "http": {
+    "auth": {
+      "bearer": {
+        "enabled": true
+      },
+      "basic": {
+        "enabled": false
+      }
+    }
+  },
 
   // lifecycle configuration
   "lifecycles": {

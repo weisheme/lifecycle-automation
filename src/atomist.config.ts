@@ -131,7 +131,7 @@ const AdminTeam = "atomist-automation";
 export const configuration: any = {
     name: pj.name,
     version: pj.version,
-    policy: "durable",
+    policy: config.get("policy"),
     teamIds: config.get("teamIds"),
     groups: config.get("groups"),
     commands: [
@@ -247,12 +247,12 @@ export const configuration: any = {
         enabled: true,
         auth: {
             basic: {
-                enabled: !notLocal,
+                enabled: config.get("http.auth.basic.enabled"),
                 username: secret("dashboard.user"),
                 password: secret("dashboard.password"),
             },
             bearer: {
-                enabled: notLocal,
+                enabled: config.get("http.auth.bearer.enabled"),
                 adminOrg: "atomisthq",
             },
         },
