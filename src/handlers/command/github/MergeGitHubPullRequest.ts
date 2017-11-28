@@ -17,6 +17,7 @@ import {
     SlackMessage,
     url,
 } from "@atomist/slack-messages";
+import { warning } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 /**
@@ -109,18 +110,9 @@ export class MergeGitHubPullRequest implements HandleCommand {
                         merge_method: this.mergeMethod,
                     });
                 } else {
-                    const msg: SlackMessage = {
-                        attachments: [{
-                            author_icon: `https://images.atomist.com/rug/warning-yellow.png`,
-                            author_name: `Pull Request not mergeable`,
-                            text: `Pull request ${bold(url(pr.html_url, `#${this.issue} ${pr.title}`))} can not` +
-                                ` be merged at this time. Please review the pull request for potential conflicts.`,
-                            fallback: `Pull request #${this.issue} ${pr.title} can not be merged at this time`,
-                            color: "#ffcc00",
-                            mrkdwn_in: [ "text" ],
-                        }],
-                    };
-                    return ctx.messageClient.respond(msg);
+                    const text = `Pull request ${bold(url(pr.html_url, `#${this.issue} ${pr.title}`))} can not` +
+                        ` be merged at this time. Please review the pull request for potential conflicts.`;
+                    return ctx.messageClient.respond(warning("Pull Request not mergeable", text));
                 }
             })
             .then(() => Success, failure);

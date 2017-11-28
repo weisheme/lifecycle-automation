@@ -25,6 +25,7 @@ import {
     apiUrl,
     repoSlackLink,
 } from "../../../util/helpers";
+import { warning } from "../../../util/messages";
 import * as github from "../../command/github/gitHubApi";
 import { InstallGitHubOrgWebhook, InstallGitHubRepoWebhook } from "../../command/github/InstallGitHubWebhook";
 
@@ -99,18 +100,8 @@ Please use one of the buttons below to install a Webhook in your repository or o
                 } else {
                     text = noRepoHookMsg;
                 }
-                const msg: SlackMessage = {
-                    attachments: [{
-                        author_icon: `https://images.atomist.com/rug/warning-yellow.png`,
-                        author_name: "Channel Linked",
-                        text,
-                        fallback: text,
-                        color: "#ffcc00",
-                        mrkdwn_in: [ "text" ],
-                        actions: createActions(repo),
-                    }],
-                };
-                return ctx.messageClient.addressChannels(msg, channelName);
+                return ctx.messageClient.addressChannels(
+                    warning("Channel Linked", text, createActions(repo)), channelName);
             }
         })
         .then(() => Success, failure);
