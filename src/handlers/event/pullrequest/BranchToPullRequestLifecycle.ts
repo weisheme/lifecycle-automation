@@ -19,10 +19,11 @@ export class BranchToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.BranchToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.BranchToPullRequestLifecycle.Subscription>):
-        [graphql.BranchToPullRequestLifecycle.PullRequests, graphql.BranchToPullRequestLifecycle.Repo, string] {
+        [graphql.BranchToPullRequestLifecycle.PullRequests, graphql.BranchToPullRequestLifecycle.Repo,
+            string, boolean ] {
 
         const pr = _.get(event, "data.Branch[0].pullRequests[0]");
-        return [pr, _.get(pr, "repo"), new Date().getTime().toString()];
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
     }
 
     protected extractPreferences(event: EventFired<graphql.BranchToPullRequestLifecycle.Subscription>)

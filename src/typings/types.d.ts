@@ -1496,6 +1496,53 @@ export namespace BotJoinedChannel {
     owner?: string | null; 
   } 
 }
+export namespace BranchToBranchLifecycle {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Branch?: Branch[] | null; 
+  } 
+
+  export type Branch = {
+    name?: string | null; 
+    deleted?: boolean | null; 
+    repo?: Repo | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    defaultBranch?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type Provider = {
+    id?: string | null; 
+    apiUrl?: string | null; 
+    url?: string | null; 
+  } 
+}
 export namespace BranchToPullRequestLifecycle {
   export type Variables = {
   }

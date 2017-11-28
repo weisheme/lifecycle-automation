@@ -25,7 +25,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const nodes = [];
-        const [pullrequest, repo, timestamp] = this.extractNodes(event);
+        const [pullrequest, repo, timestamp, updateOnly] = this.extractNodes(event);
 
         if (repo != null) {
             nodes.push(repo);
@@ -64,6 +64,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
             id: `pullrequest_lifecycle/${repo.owner}/${repo.name}/${pullrequest.number}`,
             timestamp,
             ttl: (1000 * 60 * 60 * 8).toString(),
+            post: updateOnly ? "update_only" : "always",
             channels: pullrequest.repo.channels.map(c => c.name),
             extract: (type: string) => {
                 if (type === "repo") {
@@ -77,5 +78,8 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
     }
 
     protected abstract extractNodes(event: EventFired<R>):
-        [graphql.PullRequestToPullRequestLifecycle.PullRequest, graphql.PullRequestToPullRequestLifecycle.Repo, string];
+        [graphql.PullRequestToPullRequestLifecycle.PullRequest,
+            graphql.PullRequestToPullRequestLifecycle.Repo,
+            string,
+            boolean];
 }

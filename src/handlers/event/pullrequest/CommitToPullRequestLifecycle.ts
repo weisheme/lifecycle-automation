@@ -20,10 +20,11 @@ export class CommitToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.CommitToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>):
-        [graphql.CommitToPullRequestLifecycle.PullRequests, graphql.CommitToPullRequestLifecycle.Repo, string] {
+        [graphql.CommitToPullRequestLifecycle.PullRequests, graphql.CommitToPullRequestLifecycle.Repo,
+            string, boolean] {
 
         const pr = _.get(event, "data.Commit[0].pullRequests[0]");
-        return [pr, _.get(pr, "repo"), new Date().getTime().toString()];
+        return [pr, _.get(pr, "repo"), Date.now().toString(), false];
     }
 
     protected extractPreferences(event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>)

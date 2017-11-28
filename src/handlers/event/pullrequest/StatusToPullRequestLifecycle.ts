@@ -19,10 +19,11 @@ export class StatusToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.StatusToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.StatusToPullRequestLifecycle.Subscription>):
-        [graphql.StatusToPullRequestLifecycle.PullRequests, graphql.StatusToPullRequestLifecycle.Repo, string] {
+        [graphql.StatusToPullRequestLifecycle.PullRequests, graphql.StatusToPullRequestLifecycle.Repo,
+            string, boolean] {
 
         const pr = _.get(event, "data.Status[0].commit.pullRequests[0]");
-        return [pr, _.get(pr, "repo"), new Date().getTime().toString()];
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
     }
 
     protected extractPreferences(event: EventFired<graphql.StatusToPullRequestLifecycle.Subscription>)

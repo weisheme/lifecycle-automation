@@ -21,9 +21,9 @@ export class PullRequestToPullRequestLifecycle
     protected extractNodes(event: EventFired<graphql.PullRequestToPullRequestLifecycle.Subscription>):
         [graphql.PullRequestToPullRequestLifecycle.PullRequest,
             graphql.PullRequestToPullRequestLifecycle.Repo,
-            string] {
+            string, boolean] {
 
-        return [event.data.PullRequest[0], event.data.PullRequest[0].repo, new Date().getTime().toString()];
+        return [event.data.PullRequest[0], event.data.PullRequest[0].repo, Date.now().toString(), false];
     }
 
     protected extractPreferences(event: EventFired<graphql.PullRequestToPullRequestLifecycle.Subscription>)

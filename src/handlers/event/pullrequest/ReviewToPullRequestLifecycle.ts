@@ -19,10 +19,11 @@ export class ReviewToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.ReviewToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ReviewToPullRequestLifecycle.Subscription>):
-        [graphql.ReviewToPullRequestLifecycle.PullRequest, graphql.ReviewToPullRequestLifecycle.Repo, string] {
+        [graphql.ReviewToPullRequestLifecycle.PullRequest, graphql.ReviewToPullRequestLifecycle.Repo,
+            string, boolean] {
 
         const pr = _.get(event, "data.Review[0].pullRequest");
-        return [pr, _.get(pr, "repo"), new Date().getTime().toString()];
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
     }
 
     protected extractPreferences(event: EventFired<graphql.ReviewToPullRequestLifecycle.Subscription>)

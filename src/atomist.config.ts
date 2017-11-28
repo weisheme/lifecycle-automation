@@ -44,6 +44,7 @@ import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
 import { UnlinkRepo } from "./handlers/command/slack/UnlinkRepo";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
+import { BranchToBranchLifecycle } from "./handlers/event/branch/BranchToBranchLifecycle";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
@@ -184,6 +185,9 @@ export const configuration: any = {
         () => new RestartTravisBuild(),
     ],
     events: [
+        // branch
+        () => new BranchToBranchLifecycle(),
+
         // build
         () => new NotifyPusherOnBuild(),
 

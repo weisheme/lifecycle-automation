@@ -12,6 +12,11 @@ export const LifecyclePreferences = {
         name: "Issue Lifecycle",
         description: "Lifecycle messages for GitHub issues",
     },
+    branch: {
+        id: "branch",
+        name: "Branch Lifecycle",
+        description: "Lifecycle messages for GitHub branches",
+    },
     pull_request: {
         id: "pull_request",
         name: "Pull Request Lifecycle",
@@ -217,6 +222,8 @@ export const LifecycleRendererPreferences = {
     comment: {},
 
     issue: {},
+
+    branch: {},
 
     pull_request: {},
 

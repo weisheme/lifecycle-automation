@@ -312,10 +312,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         let preferenceConfiguration;
         if (kind === "action") {
             preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
-            preferenceConfiguration = LifecycleActionPreferences[name];
+            preferenceConfiguration = LifecycleActionPreferences[name] || {};
         } else if (kind === "renderer") {
             preference = preferences.find(p => p.name === LifecycleRendererPreferences.key);
-            preferenceConfiguration = LifecycleRendererPreferences[name];
+            preferenceConfiguration = LifecycleRendererPreferences[name] || {};
         }
         if (preference && channels.length === 1) {
             try {
@@ -334,11 +334,18 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                             return true;
                         }
                     });
+                } else {
+                    contributions = contributions.filter(c =>
+                        preferenceConfiguration[c.id()] == null || preferenceConfiguration[c.id()].enabled);
                 }
             } catch (e) {
                 console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
             }
+        } else {
+            contributions = contributions.filter(c =>
+                preferenceConfiguration[c.id()] == null || preferenceConfiguration[c.id()].enabled);
         }
+
         if (configuration) {
             contributions = contributions.filter(r => configuration.indexOf(r.id()) >= 0);
 

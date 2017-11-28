@@ -19,10 +19,11 @@ export class CommentToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.CommentToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.CommentToPullRequestLifecycle.Subscription>):
-        [graphql.CommentToPullRequestLifecycle.PullRequest, graphql.CommentToPullRequestLifecycle.Repo, string] {
+        [graphql.CommentToPullRequestLifecycle.PullRequest, graphql.CommentToPullRequestLifecycle.Repo,
+            string, boolean] {
 
         const pr = _.get(event, "data.Comment[0].pullRequest");
-        return [pr, _.get(pr, "repo"), new Date().getTime().toString()];
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
     }
 
     protected extractPreferences(event: EventFired<graphql.CommentToPullRequestLifecycle.Subscription>)
