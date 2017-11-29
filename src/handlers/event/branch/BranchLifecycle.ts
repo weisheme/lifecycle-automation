@@ -32,6 +32,7 @@ export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
                     contributors: [
                     ],
                     id: `branch_lifecycle/${repo.owner}/${repo.name}/${branch.name}/${branch.deleted}`,
+                    ttl: (1000 * 60 * 60).toString(),
                     timestamp: Date.now().toString(),
                     channels: repo.channels.map(c => c.name),
                     extract: (type: string) => {
