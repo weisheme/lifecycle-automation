@@ -78,7 +78,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                     color,
                     title: `#${pr.number} ${escape(pr.title)}`,
                     title_link: prUrl(repo, pr),
-                    text: pr.state === "closed" ? linkIssues(body, repo) : undefined,
+                    text: pr.state !== "closed" ? linkIssues(body, repo) : undefined,
                     fallback: `#${pr.number} ${escape(pr.title)}`,
                     mrkdwn_in: ["text"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, pr.labels, pr.assignees),
