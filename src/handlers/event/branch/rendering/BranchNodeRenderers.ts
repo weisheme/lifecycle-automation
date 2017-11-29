@@ -33,6 +33,8 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
         const repoSlug = `${repo.owner}/${repo.name}`;
         const branchSlug = `${repoSlug}/${branch.name}`;
         const state = branch.deleted ? "deleted" : "created";
+        const prMerged = branch.pullRequests ?
+            (branch.pullRequests.find(pr => pr.merged === true) ? "merged" : "closed") : "closed";
 
         let color;
         let text;
@@ -41,8 +43,12 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
 
         if (state === "deleted") {
             text = `Branch ${bold(url(repoUrl(repo), branchSlug))} deleted`;
-            color = "#BD2C00";
-            icon = `https://images.atomist.com/rug/pull-request-closed.png`;
+            if (prMerged) {
+                color = "#6E5692";
+            } else {
+                color = "#BD2C00";
+            }
+            icon = `https://images.atomist.com/rug/pull-request-${prMerged}.png`;
         } else if (state === "created") {
             text = `New branch ${bold(url(branchUrl(repo, branch.name), branchSlug))} created`;
             color = "#6FC44C";

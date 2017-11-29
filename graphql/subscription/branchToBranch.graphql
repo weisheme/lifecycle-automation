@@ -1,6 +1,10 @@
 subscription BranchToBranchLifecycle
 {
     Branch {
+        id
+        pullRequests {
+            merged
+        }
         name
         deleted
         repo {
@@ -27,3 +31,4 @@ subscription BranchToBranchLifecycle
         timestamp
     }
 }
+

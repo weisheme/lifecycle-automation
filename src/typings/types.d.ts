@@ -1505,10 +1505,16 @@ export namespace BranchToBranchLifecycle {
   } 
 
   export type Branch = {
+    id?: string | null; 
+    pullRequests?: PullRequests[] | null; 
     name?: string | null; 
     deleted?: boolean | null; 
     repo?: Repo | null; 
     timestamp?: string | null; 
+  } 
+
+  export type PullRequests = {
+    merged?: boolean | null; 
   } 
 
   export type Repo = {
