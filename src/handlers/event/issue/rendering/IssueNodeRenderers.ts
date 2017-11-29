@@ -82,7 +82,7 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution implemen
                 const attachment: Attachment = {
                     color,
                     pretext,
-                    text: linkIssues(body, repo),
+                    text: node.state === "closed" ? linkIssues(body, repo) : undefined,
                     author_name,
                     author_icon,
                     author_link,
