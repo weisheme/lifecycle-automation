@@ -83,7 +83,7 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
 @Tags("github", "webhook")
 export class InstallGitHubRepoWebhook implements HandleCommand {
 
-    @MappedParameter(MappedParameters.GitHubOwner)
+    @MappedParameter(MappedParameters.GitHubOwnerWithUser)
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
