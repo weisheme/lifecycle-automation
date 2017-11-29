@@ -58,10 +58,27 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        // Clean up the reviewer parameter
-        const reviewers = getChatIds(this.reviewer);
 
-        return Promise.all(reviewers.map(r => loadGitHubIdByChatId(ctx, r)))
+        // Clean up the reviewer parameter
+        const reviewers = this.reviewer.split(" ").map(r => {
+            r = r.trim();
+            const gitHubId = getChatIds(r);
+            if (gitHubId && gitHubId.length === 1) {
+                r = gitHubId[0];
+            }
+            return r;
+        });
+
+        return Promise.all(reviewers.map(r => {
+                return loadGitHubIdByChatId(ctx, r)
+                    .then(chatId => {
+                        if (chatId) {
+                            return chatId;
+                        } else {
+                            return r;
+                        }
+                    });
+                }))
                 .then(chatIds => {
                     return github.api(this.githubToken, this.apiUrl).pullRequests.createReviewRequest({
                         owner: this.owner,
