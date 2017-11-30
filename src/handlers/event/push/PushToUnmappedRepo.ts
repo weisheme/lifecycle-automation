@@ -158,6 +158,7 @@ export function mapRepoMessage(
     const slug = `${repo.owner}/${repo.name}`;
     const slugText = repoSlackLink(repo);
     const msgId = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
+    botName = botName == null ? DefaultBotName : botName;
 
     let channelText: string;
     let mapCommand: AssociateRepo | CreateChannel;
