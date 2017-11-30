@@ -230,7 +230,8 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
 
             return ctx.context.graphClient.executeQueryFromFile<graphql.Branch.Query, graphql.Branch.Variables>(
                 "graphql/query/branch",
-                { teamId: ctx.context.teamId, repoName: repo.name, repoOwner: repo.owner, branchName: node.branch })
+                { teamId: ctx.context.teamId, repoName: repo.name, repoOwner: repo.owner, branchName: node.branch },
+                { fetchPolicy: "network-only" })
                 .then(result => {
                     let showButton = true;
                     const buttons = [];

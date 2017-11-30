@@ -297,6 +297,68 @@ export namespace Branch {
     sha?: string | null; 
   } 
 }
+export namespace BranchWithPullRequest {
+  export type Variables = {
+    branch: string;
+    owner: string;
+    repo: string;
+  }
+
+  export type Query = {
+    Branch?: Branch[] | null; 
+  } 
+
+  export type Branch = {
+    id?: string | null; 
+    pullRequests?: PullRequests[] | null; 
+    commit?: Commit | null; 
+    name?: string | null; 
+    deleted?: boolean | null; 
+    repo?: Repo | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type PullRequests = {
+    merged?: boolean | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+    message?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    defaultBranch?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type Provider = {
+    id?: string | null; 
+    apiUrl?: string | null; 
+    url?: string | null; 
+  } 
+}
 export namespace Channels {
   export type Variables = {
     first: number;
@@ -4248,6 +4310,38 @@ export namespace ParentImpactToPushLifecycle {
 
   export type ChatId = {
     screenName?: string | null; 
+  } 
+}
+export namespace PullRequestToBranchLifecycle {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    PullRequest?: PullRequest[] | null; 
+  } 
+
+  export type PullRequest = {
+    branchName?: string | null; 
+    repo?: Repo | null; 
+  } 
+
+  export type Repo = {
+    owner?: string | null; 
+    name?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace PullRequestToPullRequestLifecycle {

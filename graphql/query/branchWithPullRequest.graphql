@@ -1,0 +1,37 @@
+query BranchWithPullRequest ($branch: String!, $owner: String!, $repo: String!) {
+  Branch(name: $branch) {
+    id
+    pullRequests(first: 1, orderBy: [timestamp_desc]) {
+      merged
+    }
+    commit {
+      sha
+      message
+    }
+    name
+    deleted
+    repo (owner: $owner, name: $repo) {
+      name
+      owner
+      defaultBranch
+      channels {
+        name
+      }
+      org {
+        chatTeam {
+          preferences {
+            name
+            value
+          }
+        }
+        provider {
+          id
+          apiUrl
+          url
+        }
+      }
+    }
+    timestamp
+  }
+}
+

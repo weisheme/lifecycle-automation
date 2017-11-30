@@ -91,6 +91,7 @@ import {
 } from "./util/logzio";
 import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
+import { PullRequestToBranchLifecycle } from "./handlers/event/branch/PullRequestToBranchLifecycle";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
@@ -187,6 +188,7 @@ export const configuration: any = {
     events: [
         // branch
         () => new BranchToBranchLifecycle(),
+        () => new PullRequestToBranchLifecycle(),
 
         // build
         () => new NotifyPusherOnBuild(),
@@ -270,7 +272,7 @@ export const configuration: any = {
         teamId: "T29E48P34",
     },
     cluster: {
-        enabled: true,
+        enabled: notLocal,
         // worker: 2,
     },
     ws: {

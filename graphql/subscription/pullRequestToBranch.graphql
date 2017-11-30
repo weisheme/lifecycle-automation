@@ -1,0 +1,18 @@
+subscription PullRequestToBranchLifecycle {
+  PullRequest {
+    branchName
+    repo {
+      owner
+      name
+      org {
+        chatTeam {
+          preferences {
+            name
+            value
+          }
+        }
+      }
+    }
+  }
+}
+
