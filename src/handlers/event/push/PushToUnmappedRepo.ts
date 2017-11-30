@@ -67,7 +67,7 @@ export function sendUnMappedRepoMessage(
     chatIds: graphql.PushToUnmappedRepo.ChatId[],
     repo: graphql.PushToUnmappedRepo.Repo,
     ctx: HandlerContext,
-    botName: string,
+    botName: string = DefaultBotName,
 ): Promise<HandlerResult> {
 
     const enabledChatIds = chatIds.filter(c => {
