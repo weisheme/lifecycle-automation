@@ -2,7 +2,7 @@ subscription BranchToBranchLifecycle
 {
     Branch {
         id
-        pullRequests {
+        pullRequests(first: 1, orderBy: [timestamp_desc]) {
             merged
         }
         name
