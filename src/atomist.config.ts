@@ -45,6 +45,7 @@ import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
 import { UnlinkRepo } from "./handlers/command/slack/UnlinkRepo";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { BranchToBranchLifecycle } from "./handlers/event/branch/BranchToBranchLifecycle";
+import { PullRequestToBranchLifecycle } from "./handlers/event/branch/PullRequestToBranchLifecycle";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
@@ -91,7 +92,6 @@ import {
 } from "./util/logzio";
 import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
-import { PullRequestToBranchLifecycle } from "./handlers/event/branch/PullRequestToBranchLifecycle";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);

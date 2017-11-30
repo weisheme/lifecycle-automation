@@ -23,7 +23,8 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
                   ctx: HandlerContext): Promise<HandlerResult> {
         const pr = e.data.PullRequest[0];
 
-        return ctx.graphClient.executeQueryFromFile<graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>(
+        return ctx.graphClient.executeQueryFromFile
+            <graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>(
             "graphql/query/branchWithPullRequest",
             { owner: pr.repo.owner, repo: pr.repo.name, branch: pr.branchName },
             { fetchPolicy: "network-only" })
@@ -38,7 +39,7 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
                             team_id: ctx.teamId,
                             team_name: (ctx as any as AutomationContextAware).context.teamName,
                             correlation_id: ctx.correlationId,
-                        }
+                        },
                     };
                     return handler.handle(event, ctx);
                 } else {
