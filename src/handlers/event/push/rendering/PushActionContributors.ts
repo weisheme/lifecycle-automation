@@ -66,7 +66,9 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const buttons = [];
 
-        this.createReleaseButton(push, tag, repo, buttons);
+        if (!push.commits.some(c => c.tags && c.tags.some(t => t.release !== null))) {
+            this.createReleaseButton(push, tag, repo, buttons);
+        }
 
         return Promise.resolve(buttons);
     }
