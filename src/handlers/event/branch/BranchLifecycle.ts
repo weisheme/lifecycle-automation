@@ -6,6 +6,7 @@ import {
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import * as graphql from "../../../typings/types";
 import { LifecyclePreferences } from "../preferences";
+import { RaisePrActionContributor } from "./rendering/BranchActionContributors";
 import { BranchNodeRenderer } from "./rendering/BranchNodeRenderers";
 
 export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
@@ -30,6 +31,7 @@ export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
                         new BranchNodeRenderer(),
                         new FooterNodeRenderer(node => node.hasOwnProperty("deleted"))],
                     contributors: [
+                        new RaisePrActionContributor(),
                     ],
                     id: `branch_lifecycle/${repo.owner}/${repo.name}/${branch.name}/${branch.deleted}`,
                     // ttl: (1000 * 60 * 60).toString(),

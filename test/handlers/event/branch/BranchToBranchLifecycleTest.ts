@@ -7,7 +7,6 @@ import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
 import { BranchToBranchLifecycle } from "../../../../src/handlers/event/branch/BranchToBranchLifecycle";
-import { PushToPushLifecycle } from "../../../../src/handlers/event/push/PushToPushLifecycle";
 
 describe("BranchToBranchLifecycle", () => {
 
@@ -102,6 +101,10 @@ describe("BranchToBranchLifecycle", () => {
         "Branch": [{
             "name": "some-feature",
             "deleted": false,
+            "commit": {
+                "sha": "f94a69f1ce47f2862d3e34e6ec08c868bbfc4738",
+                "message": "Delint"
+            },
             "repo": {
                 "name": "ddmvc1",
                 "owner": "atomisthqa",
@@ -113,7 +116,7 @@ describe("BranchToBranchLifecycle", () => {
                     "chatTeam": {
                         "preferences": [{
                             "name": "lifecycle_actions",
-                            "value": "{\\"handlers\\":{\\"push\\":{\\"restart_build\\":true,\\"tag\\":true,\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
+                            "value": "{\\"ddmvc1\\":{\\"branch\\":{\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
                         }, {
                             "name": "graphs",
                             "value": "rock"
@@ -165,6 +168,8 @@ describe("BranchToBranchLifecycle", () => {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 1);
                 assert(sm.attachments[0].text.indexOf("created"));
+                assert(sm.attachments[0].actions.length === 1);
+                assert(sm.attachments[0].actions[0].text === "Raise PR");
                 return Promise.resolve();
             }
         }
@@ -252,6 +257,7 @@ describe("BranchToBranchLifecycle", () => {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 1);
                 assert(sm.attachments[0].text.indexOf("deleted"));
+                assert(sm.attachments[0].actions.length === 0);
                 return Promise.resolve();
             }
         }

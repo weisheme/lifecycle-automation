@@ -32,7 +32,7 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const repoSlug = `${repo.owner}/${repo.name}`;
         const branchSlug = `${repoSlug}/${branch.name}`;
-        const state = branch.deleted ? "deleted" : "created";
+        const state = branch.deleted && branch.deleted === true ? "deleted" : "created";
         const prMerged = branch.pullRequests ?
             (branch.pullRequests.find(pr => pr.merged === true) ? "merged" : "closed") : "closed";
 

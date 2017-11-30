@@ -1,34 +1,37 @@
-subscription BranchToBranchLifecycle
-{
-    Branch {
-        id
-        pullRequests(first: 1, orderBy: [timestamp_desc]) {
-            merged
-        }
-        name
-        deleted
-        repo {
-            name
-            owner
-            defaultBranch
-            channels {
-                name
-            }
-            org {
-                chatTeam {
-                    preferences {
-                        name
-                        value
-                    }
-                }
-                provider {
-                    id
-                    apiUrl
-                    url
-                }
-            }
-        }
-        timestamp
+subscription BranchToBranchLifecycle {
+  Branch {
+    id
+    pullRequests(first: 1, orderBy: [timestamp_desc]) {
+      merged
     }
+    commit {
+      sha
+      message
+    }
+    name
+    deleted
+    repo {
+      name
+      owner
+      defaultBranch
+      channels {
+        name
+      }
+      org {
+        chatTeam {
+          preferences {
+            name
+            value
+          }
+        }
+        provider {
+          id
+          apiUrl
+          url
+        }
+      }
+    }
+    timestamp
+  }
 }
 

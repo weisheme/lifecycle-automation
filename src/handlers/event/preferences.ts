@@ -150,6 +150,15 @@ export const LifecycleActionPreferences = {
         },
     },
 
+    branch: {
+        raise_pullrequest: {
+            id: "raise_pullrequest",
+            name: "Raise GitHub Pull Request",
+            description: "Raise a GitHub pull request for any pushes to non-default branches",
+            enabled: false,
+        },
+    },
+
     pull_request: {
         merge: {
             id: "merge",

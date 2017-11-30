@@ -1507,6 +1507,7 @@ export namespace BranchToBranchLifecycle {
   export type Branch = {
     id?: string | null; 
     pullRequests?: PullRequests[] | null; 
+    commit?: Commit | null; 
     name?: string | null; 
     deleted?: boolean | null; 
     repo?: Repo | null; 
@@ -1515,6 +1516,11 @@ export namespace BranchToBranchLifecycle {
 
   export type PullRequests = {
     merged?: boolean | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type Repo = {
