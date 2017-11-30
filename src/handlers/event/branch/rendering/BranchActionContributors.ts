@@ -18,7 +18,7 @@ export class RaisePrActionContributor extends AbstractIdentifiableContribution
 
     public supports(node: any): boolean {
         return (node.deleted === null || node.deleted === false)
-            && node.pullRequests == null || node.pullRequests.length === 0;
+            && node.pullRequests == null || (node.pullRequests && node.pullRequests.length === 0);
     }
 
     public buttonsFor(node: graphql.BranchToBranchLifecycle.Branch, context: RendererContext): Promise<Action[]> {
