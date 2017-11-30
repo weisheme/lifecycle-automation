@@ -155,7 +155,7 @@ export const LifecycleActionPreferences = {
             id: "raise_pullrequest",
             name: "Raise GitHub Pull Request",
             description: "Raise a GitHub pull request for any pushes to non-default branches",
-            enabled: false,
+            enabled: true,
         },
     },
 
