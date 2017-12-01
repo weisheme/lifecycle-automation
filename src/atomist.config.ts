@@ -124,9 +124,9 @@ if (logzioOptions.token) {
 }
 
 // StatsD/Datadog servers aren't available locally either
-if (notLocal) {
-    listeners.push(new DatadogAutomationEventListener(datadogOptions));
-}
+// if (notLocal) {
+listeners.push(new DatadogAutomationEventListener(datadogOptions));
+// }
 
 const AdminTeam = "atomist-automation";
 
