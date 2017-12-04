@@ -46,7 +46,7 @@ export class DeleteGitHubBranch implements HandleCommand {
                 if (err.message === "Reference does not exist") {
                     const text = `Branch or Reference could not be deleted. \
 Please make sure that it still exists and wasn't deleted in the meantime.`;
-                    return ctx.messageClient.respond(warning("Failed to delete Branch or Reference", text))
+                    return ctx.messageClient.respond(warning("Delete Branch or Reference", text, ctx))
                         .then(success, failure);
                 } else {
                     return failure(err);

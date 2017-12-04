@@ -17,7 +17,7 @@ import {
     SlackMessage,
     url,
 } from "@atomist/slack-messages";
-import { warning } from "../../../util/messages";
+import { error, warning } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 /**
@@ -112,8 +112,12 @@ export class MergeGitHubPullRequest implements HandleCommand {
                 } else {
                     const text = `Pull request ${bold(url(pr.html_url, `#${this.issue} ${pr.title}`))} can not` +
                         ` be merged at this time. Please review the pull request for potential conflicts.`;
-                    return ctx.messageClient.respond(warning("Pull Request not mergeable", text));
+                    return ctx.messageClient.respond(warning("Merge Pull Request", text, ctx));
                 }
+            })
+            .catch(err => {
+                return ctx.messageClient.respond(error("Merge Pull Request", err.message, ctx))
+                    .then(() => Success, failure);
             })
             .then(() => Success, failure);
     }

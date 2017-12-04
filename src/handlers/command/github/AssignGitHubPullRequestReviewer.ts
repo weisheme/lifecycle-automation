@@ -14,7 +14,7 @@ import {
 import { failure } from "@atomist/automation-client/HandlerResult";
 import { user } from "@atomist/slack-messages/SlackMessages";
 import { getChatIds, loadGitHubIdByChatId } from "../../../util/helpers";
-import { warning } from "../../../util/messages";
+import { error, warning } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 /**
@@ -92,17 +92,18 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
                     if (err.message
                             && err.message.indexOf("Review cannot be requested from pull request author.") >= 0) {
                         return ctx.messageClient
-                            .respond(warning("Pull Request Reviewer",
-                                "Review cannot be requested from pull request author."))
+                            .respond(warning("Review Pull Request",
+                                "Review cannot be requested from pull request author.", ctx))
                             .then(() => Success, failure);
                     } else if (err.message
                             && err.message.indexOf("Reviews may only be requested from collaborators") >= 0) {
                         return ctx.messageClient
-                            .respond(warning("Pull Request Reviewer",
-                                "Reviews may only be requested from collaborators."))
+                            .respond(warning("Review Pull Request",
+                                "Reviews may only be requested from collaborators.", ctx))
                             .then(() => Success, failure);
                     } else {
-                        return failure(err);
+                        return ctx.messageClient.respond(error("Review Pull Request", err.message, ctx))
+                            .then(() => Success, failure);
                     }
                 });
     }

@@ -101,7 +101,7 @@ Please use one of the buttons below to install a Webhook in your repository or o
                     text = noRepoHookMsg;
                 }
                 return ctx.messageClient.addressChannels(
-                    warning("Channel Linked", text, createActions(repo)), channelName);
+                    warning("Channel Linked", text, ctx, createActions(repo)), channelName);
             }
         })
         .then(() => Success, failure);
