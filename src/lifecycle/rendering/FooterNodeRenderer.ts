@@ -33,7 +33,7 @@ export class FooterNodeRenderer implements NodeRenderer<any> {
             // Render feedback url in the footer
             const feedbackUrl =
                 `https://atomist.typeform.com/to/yvnyOj?message_id=${base64.encode(context.context.invocationId)}`;
-            const feedbackFooter = `${url(feedbackUrl, "Feedback?")}`;
+            const feedbackFooter = `${url(feedbackUrl, "Feedback")}`;
             if (attachment.footer != null) {
                 const footer = `${attachment.footer} | ${feedbackFooter}`;
                 if (footer.length <= 300) {
