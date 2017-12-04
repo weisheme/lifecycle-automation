@@ -17,7 +17,8 @@ export class RaisePrActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return (node.deleted === null || node.deleted === false)
+        return (node.deleted == null || node.deleted === false)
+            && node.commit != null
             && node.pullRequests == null || (node.pullRequests && node.pullRequests.length === 0);
     }
 
