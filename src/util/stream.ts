@@ -1,7 +1,7 @@
 import {
     AutomationContextAware,
     HandlerContext,
-    logger,
+    logger, SuccessPromise,
 } from "@atomist/automation-client";
 import { mapActions } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 import { toStringArray } from "@atomist/automation-client/internal/util/string";
@@ -55,8 +55,12 @@ class EventRaisingMessageClient extends MessageClientSupport {
         if (toStringArray(channelNames).some(c => c === DashboardChannelName)) {
              raiseEvent(msg, options, this.ctx as HandlerContext & AutomationContextAware);
         }
-        return this.sendMessage(msg, userNames,
-            toStringArray(channelNames).filter(c => c !== DashboardChannelName), options);
+        channelNames = toStringArray(channelNames).filter(c => c !== DashboardChannelName);
+        if (channelNames.length > 0 || toStringArray(userNames).length > 0) {
+            return this.sendMessage(msg, userNames, channelNames, options);
+        } else {
+            return Promise.resolve();
+        }
     }
 
     private sendMessage(message: string | SlackMessage, userNames: string | string[],
