@@ -1,7 +1,7 @@
 dist: trusty
 sudo: required
 services:
-  - docker
+- docker
 language: node_js
 node_js:
 - 8.7.0
@@ -38,11 +38,3 @@ notifications:
 cache:
   directories:
   - "$HOME/.npm"
-deploy:
-  provider: releases
-  api_key:
-    secure: vzokJUVgSnbcLTHmSePDd2leZEb8/HLpH3xwuiTksNPiNCS1uxbtzaObph7GIAYRRgtr66+74co9+3YM7QpLx9CpIT1rDQ+t5D5oAgCHswyNaHHDvvR4Cd/bQ7wZ1dmCj4MhETIkHDUI5a1pTUA9U0xwcD/8PofsiM+rqRs7Oke237UK+C+CUb7cWyLuXg/kWctmNmJdZlgM5cFmWIc3UoWqLDHzZMj8QRVm5G90NxMOtT7uSqR1aoUm7GnihHelkLbUSAe1NRRnvBZ4GdrJ1GAt+6gpH4ugW67C1TOCqmqJs367Lra4beeZsgRqvIroLneLowNlZkddpBl83oXwoVeHaxEATbXrwi9S92vPQwKBKUMX3wI7whyDpZx++I3yCf7e6Iqua/26hxi6DNwdzI4uzUy7M8SGldTNCOZaK7awzv5T7LZD2Bis8WLUk1fv61DfMS+1SOanXhPMAAosbZtnqsOrovXXBu9DMR9G0iDHclgTF8ClB5T11SJ36ZetTk90cIhfCTPqUS46sbzTzhTQxtcxDBdEwZCH+9PeAsg35h42VfHCBpleqGKtjdUWiV2hQJ4FX6GdK3NZKkJuIGnrvAWkG9MDuCgWsViXHFAOKAN49p2efexbUbKj+uRj9eo1fKDHUzV5sKuCohGVSKaKJudtWqFsfigsMdrfI0s=
-  on:
-    tags: true
-    condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(-(m|rc)\\.[0-9]+)?$"
-after_success: 

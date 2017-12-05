@@ -3,8 +3,8 @@
 
 set -o pipefail
 
-declare Pkg=travis-build-node
-declare Version=0.5.0
+declare Pkg=travis-build-node-docker
+declare Version=0.2.0
 
 # write message to standard out (stdout)
 # usage: msg MESSAGE
@@ -19,10 +19,9 @@ function err() {
 }
 
 # git tag and push
-# usage: git-tag TAG
+# usage: git-tag TAG[...]
 function git-tag () {
-    local tag=$1
-    if [[ ! $tag ]]; then
+    if [[ ! $1 ]]; then
         err "git-tag: missing required argument: TAG"
         return 10
     fi
@@ -35,63 +34,31 @@ function git-tag () {
         err "failed to set git user name"
         return 1
     fi
-    if ! git tag "$tag" -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"; then
-        err "failed to create git tag: $tag"
-        return 1
-    fi
+    local tag
+    for tag in "$@"; do
+        if ! git tag "$tag" -m "Generated tag from Travis CI build $TRAVIS_BUILD_NUMBER"; then
+            err "failed to create git tag: '$tag'"
+            return 1
+        fi
+    done
     local remote=origin
     if [[ $GITHUB_TOKEN ]]; then
         remote=https://$GITHUB_TOKEN:x-oauth-basic@github.com/$TRAVIS_REPO_SLUG.git
     fi
-    if ! git push --quiet "$remote" "$tag" > /dev/null 2>&1; then
-        err "failed to push git tag: $tag"
+    if ! git push --quiet "$remote" "$@" > /dev/null 2>&1; then
+        err "failed to push git tag(s): $*"
         return 1
     fi
 }
 
-# npm publish
-# usage: npm-publish [NPM_PUBLISH_ARGS]...
-function npm-publish () {
-    msg "packaging module"
-    if ! cp -r build/src/* .; then
-        err "packaging module failed"
-        return 1
-    fi
-
-    # npm honors this
-    rm -f .gitignore
-
-    if ! npm publish "$@"; then
-        err "failed to publish node module"
-        cat $HOME/.npm/_logs/*-debug.log
-        return 1
-    fi
-
-    if ! git checkout -- .gitignore; then
-        err "removed .gitignore and was unable to check out original"
-        return 1
-    fi
-
-    local pub_file pub_base
-    for pub_file in build/src/*; do
-        pub_base=${pub_file#build/src/}
-        rm -rf "$pub_base"
-    done
-}
-
-# publish a public timestamp version to non-standard registry
-# usage: npm-publish-timestamp [BRANCH]
-function npm-publish-timestamp () {
-    if [[ ! $NPM_REGISTRY ]]; then
-        msg "no team NPM registry set"
-        return 0
-    fi
-
+# create and set a prerelease timestamped, and optionally branched, version
+# usage: ts_ver=$(timestamp-version [BRANCH])
+function timestamp-version () {
     local branch=$1 prerelease
-    if [[ $branch ]]; then
+    if [[ $branch && $branch != master ]]; then
         shift
         local safe_branch
-        safe_branch=$(echo -n "$branch" | tr -C -s '[:alnum:]-' .)
+        safe_branch=$(echo -n "$branch" | tr -C -s '[:alnum:]-' . | sed -e 's/^[-.]*//' -e 's/[-.]*$//')
         if [[ $? -ne 0 || ! $safe_branch ]]; then
             err "failed to create safe branch name from '$branch': $safe_branch"
             return 1
@@ -116,21 +83,58 @@ function npm-publish-timestamp () {
         err "failed to set package version: $project_version"
         return 1
     fi
+    echo "$project_version"
+}
 
-    msg "publishing NPM module version $project_version"
+# npm publish
+# usage: npm-publish [NPM_PUBLISH_ARGS]...
+function npm-publish () {
+    msg "packaging module"
+    if ! cp -r build/src/* .; then
+        err "packaging module failed"
+        return 1
+    fi
+
+    # npm honors this
+    rm -f .gitignore
+
+    if ! npm publish "$@"; then
+        err "failed to publish node module"
+        cat "$(ls -t "$HOME"/.npm/_logs/*-debug.log | head -n 1)"
+        return 1
+    fi
+
+    if ! git checkout -- .gitignore; then
+        err "removed .gitignore and was unable to check out original"
+        return 1
+    fi
+
+    local pub_file pub_base
+    for pub_file in build/src/*; do
+        pub_base=${pub_file#build/src/}
+        rm -rf "$pub_base"
+    done
+}
+
+# publish a public prerelease version to non-standard registry
+# usage: npm-publish-prerelease [BRANCH]
+function npm-publish-prerelease () {
+    local package_version=$1
+    if [[ ! $package_version ]]; then
+        err "npm-publish-prerelease: missing required argument: PACKAGE_VERSION"
+        return 10
+    fi
+    shift
+
+    if [[ ! $NPM_REGISTRY ]]; then
+        msg "no team NPM registry set"
+        return 0
+    fi
+
+    msg "publishing NPM module version $package_version"
     if ! npm-publish --registry "$NPM_REGISTRY" --access public; then
         err "failed to publish to Artifactory NPM registry"
         return 1
-    fi
-
-    if ! git-tag "$project_version+travis.$TRAVIS_BUILD_NUMBER"; then
-        return 1
-    fi
-
-    if [[ $TRAVIS_BRANCH == master ]]; then
-        if ! docker-push "$project_version"; then
-                return 1
-        fi
     fi
 
     local sha
@@ -146,7 +150,7 @@ function npm-publish-timestamp () {
         err "failed to parse NPM module name from $pkg_json"
         return 1
     fi
-    local module_url=https://atomist.jfrog.io/atomist/npm-dev/$module_name/-/$module_name-$project_version.tgz
+    local module_url=https://atomist.jfrog.io/atomist/npm-dev/$module_name/-/$module_name-$package_version.tgz
     local status_url=https://api.github.com/repos/$TRAVIS_REPO_SLUG/statuses/$sha
     local post_data
     printf -v post_data '{"state":"success","target_url":"%s","description":"Pre-release NPM module publication","context":"npm/atomist/prerelease"}' "$module_url"
@@ -162,27 +166,30 @@ function npm-publish-timestamp () {
 }
 
 # create and push a Docker image
-# usage: docker-push [VERSION]
+# usage: docker-push VERSION
 function docker-push () {
-    local project_version=$1
-    repo_name=`echo $TRAVIS_REPO_SLUG | sed -E 's/.*\/(.*)/\1/'`
+    local image_version=$1
+    if [[ ! $image_version ]]; then
+        err "docker-push: missing required argument: VERSION"
+        return 10
+    fi
 
-    if ! docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD" sforzando-dockerv2-local.jfrog.io; then
-        err "failed to login to docker registry"
+    local repo_name=${TRAVIS_REPO_SLUG##*/}
+
+    local registry=sforzando-dockerv2-local.jfrog.io
+    if ! docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD" "$registry"; then
+        err "failed to login to docker registry: $registry"
         return 1
     fi
 
-    if ! docker build . -t sforzando-dockerv2-local.jfrog.io/$repo_name:$project_version; then
-        err "failed to build docker image"
+    local tag=$registry/$repo_name:$image_version
+    if ! docker build . -t "$tag"; then
+        err "failed to build docker image: '$tag'"
         return 1
     fi
 
-    if ! docker push sforzando-dockerv2-local.jfrog.io/$repo_name:$project_version; then
-        err "failed to push docker image"
-        return 1
-    fi
-
-    if ! git-tag "$project_version"; then
+    if ! docker push "$tag"; then
+        err "failed to push docker image: '$tag'"
         return 1
     fi
 
@@ -234,26 +241,35 @@ function main () {
         return 1
     fi
 
-    if [[ $TRAVIS_PULL_REQUEST != false ]] ; then
-        if [[ $TRAVIS_PULL_REQUEST_BRANCH != master ]]; then
-            if ! npm-publish-timestamp "$TRAVIS_PULL_REQUEST_BRANCH"; then
-                err "failed to publish PR build"
-                return 1
-            fi
-        else
-            msg "will not publish PR from $TRAVIS_PULL_REQUEST_BRANCH"
-        fi
-    elif [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(m|rc)\.[0-9]+)?$ ]]; then
+    [[ $TRAVIS_PULL_REQUEST == false ]] || return 0
+
+    if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(m|rc)\.[0-9]+)?$ ]]; then
         if ! npm-publish --access public; then
-            err "failed to publish tag build: $TRAVIS_TAG"
+            err "failed to publish tag build: '$TRAVIS_TAG'"
             return 1
         fi
         if ! git-tag "$TRAVIS_TAG+travis.$TRAVIS_BUILD_NUMBER"; then
             return 1
         fi
-    elif [[ $TRAVIS_BRANCH == master ]]; then
-        if ! npm-publish-timestamp; then
-            err "failed to publish master build"
+    else
+        local prerelease_version=$(timestamp-version "$TRAVIS_BRANCH")
+        if [[ $? -ne 0 || ! $prerelease_version ]]; then
+            err "failed to generate prerelease version: $prerelease_version"
+            return 1
+        fi
+        if ! npm-publish-timestamp "$prerelease_version"; then
+            err "failed to publish version '$prerelease_version'"
+            return 1
+        fi
+
+        if [[ $TRAVIS_BRANCH == master ]]; then
+            if ! docker-push "$prerelease_version"; then
+                err "failed to build and push docker image"
+                return 1
+            fi
+        fi
+
+        if ! git-tag "$prerelease_version" "$prerelease_version+travis.$TRAVIS_BUILD_NUMBER"; then
             return 1
         fi
     fi
