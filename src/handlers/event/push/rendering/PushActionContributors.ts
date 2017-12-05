@@ -66,7 +66,7 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         const buttons = [];
 
         if (context.rendererId === "tag") {
-            const tags = push.after.tags.filter(t => t.release == null);
+            const tags = push.after.tags.filter(t => t.name.indexOf("+") < 0 && t.release == null);
             tags.forEach(t => this.createReleaseButton(push, t, repo, buttons));
         }
         return Promise.resolve(buttons);
