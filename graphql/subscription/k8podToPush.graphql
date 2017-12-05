@@ -51,6 +51,14 @@ subscription K8PodToPushLifecycle
                                 release {
                                     name
                                 }
+                                builds {
+                                    buildId
+                                    buildUrl
+                                    name
+                                    provider
+                                    status
+                                    timestamp
+                                }
                             }
                         }
                         repo {

@@ -47,6 +47,14 @@ subscription TagToPushLifecycle
                         release {
                             name
                         }
+                        builds {
+                            buildId
+                            buildUrl
+                            name
+                            provider
+                            status
+                            timestamp
+                        }
                     }
                 }
                 repo {

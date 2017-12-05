@@ -311,8 +311,6 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 export class BuildNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PushToPushLifecycle.Builds> {
 
-    public style: "attachment" | "footer" | "decorator";
-
     public emojiStyle: "default" | "atomist";
 
     constructor() {
@@ -320,7 +318,6 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public configure(configuration: LifecycleConfiguration) {
-        this.style = configuration.configuration.build.style || "decorator";
         this.emojiStyle = configuration.configuration["emoji-style"] || "default";
     }
 
@@ -331,108 +328,60 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
         const push = context.lifecycle.extract("push");
-        const random = `${push.after.sha}-${Date.now().toString()}`;
-
-        let title;
-        let fallback;
-
-        // build.name might be a number in which case we should render "Build #<number>".
-        // It it isn't a number just render the build.name
-        if (isNaN(+build.name)) {
-            title = `${build.name} ${build.status}`;
-            fallback = `${build.name} ${build.status}`;
-        } else {
-            title = `Build #${build.name} ${build.status}`;
-            fallback = `Build #${build.name} ${build.status}`;
-        }
-
-        let icon;
-        let color;
-        let emoji;
-        if (build.status === "passed") {
-                icon = `https://images.atomist.com/rug/check-circle.gif?gif=${random}`;
-                color = "#45B254";
-                emoji = EMOJI_SCHEME[this.emojiStyle].build.passed;
-        } else if (build.status === "started") {
-            icon = `https://images.atomist.com/rug/pulsating-circle.gif?gif=${random}`;
-            color = "#cccc00";
-            emoji = EMOJI_SCHEME[this.emojiStyle].build.started;
-        } else {
-            icon = `https://images.atomist.com/rug/cross-circle.png`;
-            color = "#D94649";
-            emoji = EMOJI_SCHEME[this.emojiStyle].build.failed;
-        }
-
-        if (this.style === "footer") {
-            this.renderFooter(build, actions, msg, title, icon);
-        } else if (this.style === "attachment") {
-            this.renderAttachment(build, actions, msg, title, icon, color, fallback);
-        } else if (this.style === "decorator") {
-            this.renderDecorator(build, push, actions, msg, emoji, color);
-        }
-
-        return Promise.resolve(msg);
-    }
-
-    private renderDecorator(build: graphql.PushToPushLifecycle.Builds, push: graphql.PushToPushLifecycle.Push,
-                            actions: Action[], msg: SlackMessage, emoji: string, color: string) {
-        // For now we only render the last build as decorator
-        const builds = push.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
-        if (builds[0].buildId !== build.buildId) {
-            return;
-        }
-
-        const attachment: Attachment = msg.attachments[0];
-        if (attachment) {
-            const messages = attachment.text.split(("\n"));
-
-            let title;
-            // build.name might be a number in which case we should render "Build #<number>".
-            // It it isn't a number just render the build.name
-            if (isNaN(+build.name)) {
-                title = build.name;
-            } else {
-                title = `Build #${build.name}`;
-            }
-
-            messages[0] = `${messages[0]} ${emoji} ${url(build.buildUrl, title)}`;
-            attachment.text = messages.join("\n");
-            if (attachment.actions != null) {
-                attachment.actions = attachment.actions.concat(actions);
-            } else {
-                attachment.actions = actions;
-            }
-
-            if (this.emojiStyle === "default") {
-                // Colorize the push to indicate something might be wrong for builds
-                attachment.color = color;
-            }
-        }
-    }
-
-    private renderAttachment(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
-                             title: string, icon: string, color: string, fallback: string) {
-        const attachment: Attachment = {
-            author_name: title,
-            author_icon: icon,
-            author_link: build.buildUrl,
-            color,
-            fallback,
-            actions,
-        };
-
-        msg.attachments.push(attachment);
-    }
-
-    private renderFooter(build: graphql.PushToPushLifecycle.Builds, actions: Action[],
-                         msg: SlackMessage, title: string, icon: string) {
-        const attachment: Attachment = msg.attachments[msg.attachments.length - 1];
-        attachment.footer = url(build.buildUrl, title);
-        attachment.footer_icon = icon;
-        if (attachment.actions) {
+        const attachment = msg.attachments[0];
+        const [message, color] = renderDecorator(build, push.builds, attachment.text, this.emojiStyle);
+        attachment.color = color;
+        attachment.text = message;
+        if (attachment.actions != null) {
             attachment.actions = attachment.actions.concat(actions);
         } else {
             attachment.actions = actions;
+        }
+        return Promise.resolve(msg);
+    }
+}
+
+function renderDecorator(build: graphql.PushToPushLifecycle.Builds, builds: graphql.PushToPushLifecycle.Builds[],
+                         message: string, emojiStyle: string): [string, string] {
+    // For now we only render the last build as decorator
+    builds = builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
+    if (builds[0].buildId !== build.buildId) {
+        return;
+    }
+
+    let color;
+    let emoji;
+    if (build.status === "passed") {
+        color = "#45B254";
+        emoji = EMOJI_SCHEME[emojiStyle].build.passed;
+    } else if (build.status === "started") {
+        color = "#cccc00";
+        emoji = EMOJI_SCHEME[emojiStyle].build.started;
+    } else {
+        color = "#D94649";
+        emoji = EMOJI_SCHEME[emojiStyle].build.failed;
+    }
+
+    if (message) {
+        const messages = (message || "").split(("\n"));
+
+        let title;
+        // build.name might be a number in which case we should render "Build #<number>".
+        // It it isn't a number just render the build.name
+        if (isNaN(+build.name)) {
+            title = build.name;
+        } else {
+            title = `Build #${build.name}`;
+        }
+
+        messages[0] = `${messages[0]} ${emoji} ${url(build.buildUrl, title)}`;
+        message = messages.join("\n");
+
+        if (emojiStyle === "default") {
+            // Colorize the push to indicate something might be wrong for builds
+            return [message, color];
+        } else {
+            return [message, undefined];
         }
     }
 }
@@ -440,27 +389,54 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
 export class TagNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PushToPushLifecycle.Tags> {
 
+    public emojiStyle: "default" | "atomist";
+
     constructor() {
         super("tag");
     }
 
-    public supports(node: any): boolean {
-        return "release" in node;
+    public configure(configuration: LifecycleConfiguration) {
+        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
     }
 
-    public render(tag: graphql.PushToPushLifecycle.Tags, actions: Action[], msg: SlackMessage,
+    public supports(node: any): boolean {
+        return "after" in node && node.after.tags && node.after.tags.length > 0;
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
+
         const repo = context.lifecycle.extract("repo");
+        const text = push.after.tags.map(t => {
+            let message = url(tagUrl(repo, t), codeLine(t.name));
+            if (t.builds && t.builds.length > 0) {
+                const builds = t.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
+                const [newMessage, color] = renderDecorator(builds[0], builds, message, this.emojiStyle);
+                message = newMessage;
+            }
+            return message;
+        } ).join("\n");
+
         const attachment: Attachment = {
-            author_name: `Tag ${tag.name} created`,
-            author_link: tagUrl(repo, tag),
+            author_name: push.after.tags.length > 1 ? "Tags" : "Tag",
             author_icon: `https://images.atomist.com/rug/tag-outline.png`,
-            fallback: `Tag ${tag.name} created`,
+            fallback: push.after.tags.length > 1 ? "Tags" : "Tag",
+            text,
+            mrkdwn_in: ["text"],
             // color: "#767676",
-            actions,
         };
         msg.attachments.push(attachment);
 
+        if (actions && actions.length > 0) {
+            const actionChunks = _.chunk(actions, 5);
+            attachment.actions = actionChunks[0];
+            for (let i = 1; i < actionChunks.length; i++) {
+                msg.attachments.push({
+                    fallback: "Tag actions",
+                    actions: actionChunks[i],
+                });
+            }
+        }
         return Promise.resolve(msg);
     }
 }

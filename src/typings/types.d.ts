@@ -1083,10 +1083,20 @@ export namespace ApplicationToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -1951,10 +1961,20 @@ export namespace BuildToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -3168,10 +3188,20 @@ export namespace IssueToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -3369,10 +3399,20 @@ export namespace K8PodToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -4205,10 +4245,20 @@ export namespace ParentImpactToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -4852,10 +4902,20 @@ export namespace PushToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -5128,10 +5188,20 @@ export namespace ReleaseToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: _Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -5941,10 +6011,20 @@ export namespace StatusToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
@@ -6131,10 +6211,20 @@ export namespace TagToPushLifecycle {
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
+    builds?: __Builds[] | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Repo = {
