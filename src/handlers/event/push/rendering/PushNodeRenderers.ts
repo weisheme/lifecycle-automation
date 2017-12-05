@@ -400,43 +400,34 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return "after" in node && node.after.tags && node.after.tags.length > 0;
+        return "release" in node;
     }
 
-    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
+    public render(tag: graphql.PushToPushLifecycle.Tags, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
-
         const repo = context.lifecycle.extract("repo");
-        const text = push.after.tags.map(t => {
-            let message = url(tagUrl(repo, t), codeLine(t.name));
-            if (t.builds && t.builds.length > 0) {
-                const builds = t.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
-                const [newMessage, color] = renderDecorator(builds[0], builds, message, this.emojiStyle);
-                message = newMessage;
-            }
-            return message;
-        } ).join("\n");
+        const push = context.lifecycle.extract("push");
+        const first = push.after.tags.indexOf(tag) === 0;
+
+        let message = url(tagUrl(repo, tag), codeLine(tag.name));
+        let color;
+        if (tag.builds && tag.builds.length > 0) {
+            const builds = tag.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
+            const [newMessage, newColor] = renderDecorator(builds[0], builds, message, this.emojiStyle);
+            message = newMessage;
+            color = newColor;
+        }
 
         const attachment: Attachment = {
-            author_name: push.after.tags.length > 1 ? "Tags" : "Tag",
-            author_icon: `https://images.atomist.com/rug/tag-outline.png`,
-            fallback: push.after.tags.length > 1 ? "Tags" : "Tag",
-            text,
-            mrkdwn_in: ["text"],
-            // color: "#767676",
+            author_name: first ? (push.after.tags.length > 1 ? "Tags" : "Tag") : undefined,
+            author_icon: first ? `https://images.atomist.com/rug/tag-outline.png` : undefined,
+            fallback: first ? push.after.tags.length > 1 ? "Tags" : "Tag" : undefined,
+            text: message,
+            mrkdwn_in: [ "text" ],
+            color,
+            actions,
         };
         msg.attachments.push(attachment);
-
-        if (actions && actions.length > 0) {
-            const actionChunks = _.chunk(actions, 5);
-            attachment.actions = actionChunks[0];
-            for (let i = 1; i < actionChunks.length; i++) {
-                msg.attachments.push({
-                    fallback: "Tag actions",
-                    actions: actionChunks[i],
-                });
-            }
-        }
         return Promise.resolve(msg);
     }
 }

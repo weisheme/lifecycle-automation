@@ -54,6 +54,10 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
             // Push lifecycle starts with, drum roll, a Push
             if (push != null) {
                 nodes.push(push);
+                // Add all Tag nodes
+                if (push.after != null && push.after.tags != null) {
+                    push.after.tags.forEach(t => nodes.push(t));
+                }
             }
 
             // Add Build nodes

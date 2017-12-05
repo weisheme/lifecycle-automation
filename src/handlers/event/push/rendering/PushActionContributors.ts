@@ -13,7 +13,7 @@ import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
-import { LifecycleActionPreferences, LifecycleRendererPreferences } from "../../preferences";
+import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
@@ -51,28 +51,30 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
 }
 
 export class ReleaseActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+    implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
 
     constructor() {
         super(LifecycleActionPreferences.push.release.id);
     }
 
     public supports(node: any): boolean {
-        return node.after && node.after.tags && node.after.tags.length > 0;
+        return node.release === null;
     }
 
-    public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+    public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const buttons = [];
 
-        if (context.rendererId === "tag") {
-            const tags = push.after.tags.filter(t => t.name.indexOf("+") < 0 && t.release == null);
-            tags.forEach(t => this.createReleaseButton(push, t, repo, buttons));
+        if (!push.commits.some(
+            c => c.tags && c.tags.some(t => t.name.indexOf("+") < 0 && t.release !== null))) {
+            this.createReleaseButton(push, tag, repo, buttons);
         }
+
         return Promise.resolve(buttons);
     }
 
-    public menusFor(tag: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+    public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 
@@ -102,7 +104,7 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         releaseHandler.repo = repo.name;
 
         buttons.push(buttonForCommand({
-            text: `Release ${tag.name}`, confirm: {
+            text: "Release", confirm: {
                 title: "Create Release",
                 text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel",
             },
@@ -118,7 +120,12 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.after && node.after.tags && node.after.tags.length > 0;
+        if (node.after) {
+            const push = node as graphql.PushToPushLifecycle.Push;
+            return push.commits && !push.commits.some(c => c.tags && c.tags.length > 0);
+        } else {
+            return false;
+        }
     }
 
     public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
@@ -152,23 +159,22 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
 }
 
 export class TagTagActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+    implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
 
     constructor() {
         super(LifecycleActionPreferences.push.tag.id);
     }
 
     public supports(node: any): boolean {
-        return node.after && node.after.tags && node.after.tags.length > 0;
+        return node.release === null;
     }
 
-    public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+    public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const buttons = [];
 
-        if (context.rendererId === "tag") {
-            push.after.tags.forEach(t => this.createTagButton(t, push, repo, buttons));
-        }
+        this.createTagButton(tag, push, repo, buttons);
 
         return Promise.resolve(buttons);
     }
@@ -185,7 +191,7 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
         if (semver.valid(tag.name)) {
             const version = `${semver.major(tag.name)}.${semver.minor(tag.name)}.${semver.patch(tag.name)}`;
 
-            if (!push.commits.some(c => c.tags && c.tags.some(t => t.name === version))) {
+            if (!push.after.tags.some(t => t.name === version)) {
 
                 const tagHandler = new CreateGitHubTag();
                 tagHandler.tag = version;
