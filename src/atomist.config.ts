@@ -92,6 +92,7 @@ import {
 } from "./util/logzio";
 import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
+import { EventRaisingAutomationEventListener } from "./util/stream";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
@@ -115,6 +116,7 @@ const datadogOptions: DatadogOptions = {
 
 // Set uo automation event listeners
 const listeners = [
+    new EventRaisingAutomationEventListener(),
     new ShortenUrlAutomationEventListener(),
 ];
 
@@ -124,9 +126,9 @@ if (logzioOptions.token) {
 }
 
 // StatsD/Datadog servers aren't available locally either
-// if (notLocal) {
-listeners.push(new DatadogAutomationEventListener(datadogOptions));
-// }
+if (notLocal) {
+    listeners.push(new DatadogAutomationEventListener(datadogOptions));
+}
 
 const AdminTeam = "atomist-automation";
 

@@ -3,7 +3,8 @@
   // this gets applied when running on eg PCF
   "endpoints": {
     "api": "https://automation.atomist.com/registration",
-    "graphql": "https://automation.atomist.com/graphql/team"
+    "graphql": "https://automation.atomist.com/graphql/team",
+    "events": "https://app.atomist.com/v1/event"
   },
   "groups": ["all"],
   "teamIds": [],

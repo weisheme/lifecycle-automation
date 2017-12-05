@@ -60,22 +60,13 @@ export type _CommitOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "sha_asc" | "
 export type BuildStatus = "passed" | "broken" | "failed" | "started" | "canceled";
 
 /* Enum for BuildTrigger */
-export type BuildTrigger = "pull_request" | "push";
+export type BuildTrigger = "pull_request" | "push" | "tag";
 
 /* Ordering Enum for Build */
 export type _BuildOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "buildId_asc" | "buildId_desc" | "name_asc" | "name_desc" | "status_asc" | "status_desc" | "buildUrl_asc" | "buildUrl_desc" | "compareUrl_asc" | "compareUrl_desc" | "trigger_asc" | "trigger_desc" | "provider_asc" | "provider_desc" | "pullRequestNumber_asc" | "pullRequestNumber_desc" | "startedAt_asc" | "startedAt_desc" | "finishedAt_asc" | "finishedAt_desc" | "timestamp_asc" | "timestamp_desc" | "workflowId_asc" | "workflowId_desc" | "jobName_asc" | "jobName_desc" | "jobId_asc" | "jobId_desc";
 
 /* Ordering Enum for Push */
 export type _PushOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "timestamp_asc" | "timestamp_desc" | "branch_asc" | "branch_desc";
-
-/* Ordering Enum for SpinnakerPipeline */
-export type _SpinnakerPipelineOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "executionId_asc" | "executionId_desc" | "application_asc" | "application_desc" | "eventType_asc" | "eventType_desc" | "taskName_asc" | "taskName_desc" | "stageName_asc" | "stageName_desc" | "stageType_asc" | "stageType_desc" | "waitingForJudgement_asc" | "waitingForJudgement_desc";
-
-/* Ordering Enum for SpinnakerStage */
-export type _SpinnakerStageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "type_asc" | "type_desc" | "status_asc" | "status_desc" | "startTime_asc" | "startTime_desc" | "endTime_asc" | "endTime_desc" | "refId_asc" | "refId_desc";
-
-/* Ordering Enum for Workflow */
-export type _WorkflowOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "provider_asc" | "provider_desc" | "config_asc" | "config_desc";
 
 /* Ordering Enum for Tag */
 export type _TagOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "description_asc" | "description_desc" | "ref_asc" | "ref_desc" | "timestamp_asc" | "timestamp_desc";
@@ -94,6 +85,15 @@ export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "
 
 /* Ordering Enum for Environment */
 export type _EnvironmentOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "vpcName_asc" | "vpcName_desc";
+
+/* Ordering Enum for SpinnakerPipeline */
+export type _SpinnakerPipelineOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "executionId_asc" | "executionId_desc" | "application_asc" | "application_desc" | "eventType_asc" | "eventType_desc" | "taskName_asc" | "taskName_desc" | "stageName_asc" | "stageName_desc" | "stageType_asc" | "stageType_desc" | "waitingForJudgement_asc" | "waitingForJudgement_desc";
+
+/* Ordering Enum for SpinnakerStage */
+export type _SpinnakerStageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "type_asc" | "type_desc" | "status_asc" | "status_desc" | "startTime_asc" | "startTime_desc" | "endTime_asc" | "endTime_desc" | "refId_asc" | "refId_desc";
+
+/* Ordering Enum for Workflow */
+export type _WorkflowOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "workflowId_asc" | "workflowId_desc" | "provider_asc" | "provider_desc" | "config_asc" | "config_desc";
 
 /* Enum for StatusState */
 export type StatusState = "pending" | "success" | "error" | "failure";

@@ -7,6 +7,7 @@ import {
     Secret,
     Secrets,
     Success,
+    SuccessPromise,
 } from "@atomist/automation-client";
 import { HandlerContext } from "@atomist/automation-client";
 import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
@@ -27,6 +28,7 @@ import {
     LifecyclePreferences,
     LifecycleRendererPreferences,
 } from "../handlers/event/preferences";
+import { DashboardChannelName } from "../util/stream";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -162,7 +164,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
         let ts = this.normalizeTimestamp(lifecycle.timestamp);
         if (ts == null) {
-            ts = new Date().getTime().toString();
+            ts = Date.now().toString();
         }
 
         const options: MessageOptions = {
@@ -172,6 +174,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
+        const repo = lifecycle.extract("repo");
+        if (repo) {
+            (options as any).owner = repo.owner;
+            (options as any).repository = repo.name;
+        }
+
         return this.sendMessage(message, options, channels, messageClient);
     }
 
@@ -179,6 +187,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                         options: MessageOptions,
                         channels: string[],
                         messageClient: MessageClient): Promise<any> {
+        // Make sure we don't send empty messages
+        if (slackMessage.text === null &&
+            (slackMessage.attachments === null || slackMessage.attachments.length === 0)) {
+            return SuccessPromise;
+        }
+
         return messageClient.addressChannels(slackMessage, channels, options)
             .then(() => {
                 logger.info("Sending lifecycle message '%s' to channel '%s'", options.id, channels.join(", "));
@@ -213,6 +227,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         // First filter out channel / lifecycle combinations that aren't enabled
         const channels = clean(lifecycle.channels)
             .filter(channel => this.lifecycleEnabled(lifecycle, channel, preferences));
+        channels.push(DashboardChannelName);
 
         if (!preferences) {
             return [channels];
