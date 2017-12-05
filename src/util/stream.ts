@@ -17,6 +17,7 @@ import {
 } from "@atomist/slack-messages";
 import axios from "axios";
 import * as config from "config";
+import * as _ from "lodash";
 
 export const DashboardChannelName: string =  "atomist://dashboard";
 
@@ -35,10 +36,7 @@ function raiseEvent(msg: string | SlackMessage,
             type: "event",
             options,
             actions: isSlackMessage(msg) ?
-                mapActions(msg as SlackMessage, ctx.context.name, ctx.context.version) : undefined,
-        })
-        .then(() => {
-            logger.debug("Sent event to dashboard stream");
+                mapActions(_.cloneDeep(msg as SlackMessage), ctx.context.name, ctx.context.version) : undefined,
         })
         .catch(err => {
             logger.warn("Failed to send to dashboard stream: '%s'", err.message);
