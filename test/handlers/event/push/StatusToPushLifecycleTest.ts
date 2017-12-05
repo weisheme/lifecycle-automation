@@ -187,6 +187,7 @@ describe("StatusToPushLifecycle", () => {
 
     });
 
+    /* tslint:disable */
     const payloadNoChannel = `{
     "data": {
         "Status": [{
