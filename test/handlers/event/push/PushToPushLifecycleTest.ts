@@ -114,7 +114,7 @@ describe("PushToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 2);
+                assert(channelNames.length === 3);
                 this.counter++;
                 return Promise.resolve();
             }

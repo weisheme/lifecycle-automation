@@ -7,6 +7,7 @@ import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
 import { BranchToBranchLifecycle } from "../../../../src/handlers/event/branch/BranchToBranchLifecycle";
+import { DashboardChannelName } from "../../../../src/util/stream";
 
 describe("BranchToBranchLifecycle", () => {
 
@@ -162,6 +163,10 @@ describe("BranchToBranchLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
+                if (channelNames[0] === DashboardChannelName) {
+                    return Promise.resolve();
+                }
+
                 assert(channelNames[0] === "ddmvc1");
                 assert(options.id === "branch_lifecycle/atomisthqa/ddmvc1/some-feature/false");
 

@@ -187,7 +187,6 @@ describe("StatusToPushLifecycle", () => {
 
     });
 
-    /* tslint:disable */
     const payloadNoChannel = `{
     "data": {
         "Status": [{
@@ -261,8 +260,8 @@ describe("StatusToPushLifecycle", () => {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                fail();
-                return Promise.reject("Shouldn't call this");
+                assert((channelNames as string[]).length === 1);
+                return Promise.resolve();
             }
 
         }
@@ -272,8 +271,31 @@ describe("StatusToPushLifecycle", () => {
             public endpoint = "";
 
             public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
+
+                return Promise.resolve({
+                    ChatTeam: [
+                        {
+                            orgs: [
+                                {
+                                    repo: [
+                                        {
+                                            owner: "atomisthq",
+                                            name: "automation-api",
+                                            branches: [
+                                                {
+                                                    name: "prefs",
+                                                    deleted: false,
+                                                    pullRequests: null,
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                } as any);
+
             }
 
             public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
