@@ -142,20 +142,12 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         commitsGroupedByAuthor
             .forEach(cgba => {
                 const a = cgba.author;
-                let foundFingerprints = false;
 
                 // TODO this should use reduce here
                 const message = cgba.commits.map(c => {
                     const [m, fp] = this.renderCommitMessage(c, push, repo);
-                    if (fp) {
-                        foundFingerprints = true;
-                    }
                     return m;
                 }).join("\n");
-
-                const footer = (this.aboutHint && foundFingerprints
-                    ? `${url("http://docs.atomist.com/user-guide/fingerprints/", "About fingerprints")}`
-                    : null);
 
                 const attachment: Attachment = {
                     author_name: `@${a}`,
@@ -166,7 +158,6 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                     color: "#00a5ff",
                     fallback: `${cgba.commits.length} ${(cgba.commits.length > 1 ? "commits" : "commit")}` +
                     ` to ${url(branchUrl(repo, push.branch), slug)} by @${a}`,
-                    footer,
                     actions: [],
                 };
                 attachments.push(attachment);
@@ -340,7 +331,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
         const push = context.lifecycle.extract("push");
-        const random = `${push.after.sha}-${new Date().getTime().toString()}`;
+        const random = `${push.after.sha}-${Date.now().toString()}`;
 
         let title;
         let fallback;
