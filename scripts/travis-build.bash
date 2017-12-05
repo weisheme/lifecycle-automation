@@ -257,7 +257,7 @@ function main () {
             err "failed to generate prerelease version: $prerelease_version"
             return 1
         fi
-        if ! npm-publish-timestamp "$prerelease_version"; then
+        if ! npm-publish-prerelease "$prerelease_version"; then
             err "failed to publish version '$prerelease_version'"
             return 1
         fi
