@@ -281,4 +281,31 @@ describe("BranchToBranchLifecycle", () => {
 
     });
 
+    /* tslint:disable */
+    const payloadFailure =
+        `{"data":{"Branch":[{"id":"T0434HFDT_github.release_branch_test","pullRequests":[],"commit":null,"name":"release_branch_test","deleted":true,"repo":{"name":"test","owner":"atomisthq","defaultBranch":"master","channels":[],"org":{"chatTeam":{"preferences":[{"name":"disable_bot_owner_on_github_activity_notification","value":"true"}]},"provider":null}},"timestamp":"2017-12-05T22:09:00.084Z"}]},"extensions":{"type":"READ_ONLY","operationName":"BranchToBranchLifecycle","team_id":"T0434HFDT","team_name":"atomisthq","correlation_id":"057f722f-7de9-4e8a-b877-8713ff1e8004"},"secrets":[{"name":"github://org_token","value":"7**************************************3"}]}`
+    /* tslint:enable */
+
+    it("don't fail for null commit", done => {
+        class MockMessageClient extends MessageClientSupport {
+
+            protected doSend(msg: string | SlackMessage, userNames: string | string[],
+                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
+                return Promise.resolve();
+            }
+        }
+
+        const ctx: any = {
+            invocationId: guid(),
+            messageClient: new MockMessageClient(),
+        };
+        const handler = new BranchToBranchLifecycle();
+
+        handler.handle(JSON.parse(payloadFailure) as EventFired<any>, ctx as HandlerContext)
+            .then(result => {
+                assert(result.code === 0);
+            })
+            .then(done, done);
+
+    });
 });
