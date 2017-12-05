@@ -43,7 +43,7 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
 
         if (state === "deleted") {
             text = `Branch ${bold(url(repoUrl(repo), branchSlug))} deleted`;
-            if (prMerged) {
+            if (prMerged === "merged") {
                 color = "#6E5692";
             } else {
                 color = "#BD2C00";
