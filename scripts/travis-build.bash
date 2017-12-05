@@ -52,8 +52,8 @@ function git-tag () {
 }
 
 # create and set a prerelease timestamped, and optionally branched, version
-# usage: ts_ver=$(timestamp-version [BRANCH])
-function timestamp-version () {
+# usage: set-timestamp-version [BRANCH]
+function set-timestamp-version () {
     local branch=$1 prerelease
     if [[ $branch && $branch != master ]]; then
         shift
@@ -83,7 +83,6 @@ function timestamp-version () {
         err "failed to set package version: $project_version"
         return 1
     fi
-    echo "$project_version"
 }
 
 # npm publish
@@ -144,7 +143,7 @@ function npm-publish-prerelease () {
         sha=$TRAVIS_COMMIT
     fi
 
-    local module_name
+    local module_name pkg_json=package.json
     module_name=$(jq -er .name "$pkg_json")
     if [[ $? -ne 0 || ! $module_name ]]; then
         err "failed to parse NPM module name from $pkg_json"
@@ -252,9 +251,14 @@ function main () {
             return 1
         fi
     else
-        local prerelease_version=$(timestamp-version "$TRAVIS_BRANCH")
+        if ! set-timestamp-version "$TRAVIS_BRANCH"; then
+            err "failed to set timestamp version"
+            return 1
+        fi
+        local prerelease_version pkg_json=package.json
+        prerelease_version=$(jq -e --raw-output .version "$pkg_json")
         if [[ $? -ne 0 || ! $prerelease_version ]]; then
-            err "failed to generate prerelease version: $prerelease_version"
+            err "failed to parse version from $pkg_json: $prerelease_version"
             return 1
         fi
         if ! npm-publish-prerelease "$prerelease_version"; then
