@@ -108,11 +108,11 @@ export class ListMyGitHubIssues implements HandleCommand {
                 attachment.author_icon = issue.assignee.avatar_url;
             }
             if (issue.state === "closed") {
-                attachment.footer_icon = `http://images.atomist.com/rug/${issue.pull_request
+                attachment.footer_icon = `https://images.atomist.com/rug/${issue.pull_request
                     ? "pull-request" : "issue"}-closed.png`;
                 attachment.color = "#bd2c00";
             } else {
-                attachment.footer_icon = `http://images.atomist.com/rug/${issue.pull_request
+                attachment.footer_icon = `https://images.atomist.com/rug/${issue.pull_request
                     ? "pull-request" : "issue"}-open.png`;
                 attachment.color = "#6cc644";
             }

@@ -180,7 +180,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         if (attachments.length > 0) {
             const lastAttachment = attachments[attachments.length - 1];
             lastAttachment.actions = actions;
-            lastAttachment.footer_icon = "http://images.atomist.com/rug/commit.png";
+            lastAttachment.footer_icon = "https://images.atomist.com/rug/commit.png";
             if (lastAttachment.footer != null) {
                 lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
             } else {
