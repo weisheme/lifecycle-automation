@@ -40,7 +40,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
             const channels = this.filterChannels(push, preferences);
 
             // Verify that there is at least a push and repo node
-            if (!push || !push.repo || !push.commits || push.commits.length === 0 || channels.length === 0) {
+            if (!push || !push.repo || !push.commits || push.commits.length === 0) {
                 console.debug(`Lifecycle event is missing push, commits and/or repo node`);
                 return null;
             }
