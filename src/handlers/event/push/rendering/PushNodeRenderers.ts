@@ -346,7 +346,7 @@ function renderDecorator(build: graphql.PushToPushLifecycle.Builds, builds: grap
     // For now we only render the last build as decorator
     builds = builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
     if (builds[0].buildId !== build.buildId) {
-        return;
+        return [message, null];
     }
 
     let color;
@@ -381,9 +381,10 @@ function renderDecorator(build: graphql.PushToPushLifecycle.Builds, builds: grap
             // Colorize the push to indicate something might be wrong for builds
             return [message, color];
         } else {
-            return [message, undefined];
+            return [message, null];
         }
     }
+    return [message, null];
 }
 
 export class TagNodeRenderer extends AbstractIdentifiableContribution
