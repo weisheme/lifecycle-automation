@@ -53,13 +53,15 @@ class EventRaisingMessageClient extends MessageClientSupport {
     protected doSend(msg: string | SlackMessage, userNames: string | string[],
                      channelNames: string | string[], options: MessageOptions = {}): Promise<any> {
         if (toStringArray(channelNames).some(c => c === DashboardChannelName)) {
-             raiseEvent(msg, options, this.ctx as HandlerContext & AutomationContextAware);
-        }
-        channelNames = toStringArray(channelNames).filter(c => c !== DashboardChannelName);
-        if (channelNames.length > 0 || toStringArray(userNames).length > 0) {
-            return this.sendMessage(msg, userNames, channelNames, options);
+            raiseEvent(msg, options, this.ctx as HandlerContext & AutomationContextAware);
+            channelNames = toStringArray(channelNames).filter(c => c !== DashboardChannelName);
+            if (channelNames.length > 0 || toStringArray(userNames).length > 0) {
+                return this.sendMessage(msg, userNames, channelNames, options);
+            } else {
+                return Promise.resolve();
+            }
         } else {
-            return Promise.resolve();
+            return this.sendMessage(msg, userNames, channelNames, options);
         }
     }
 
