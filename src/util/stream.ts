@@ -1,7 +1,7 @@
 import {
     AutomationContextAware,
     HandlerContext,
-    logger, SuccessPromise,
+    logger,
 } from "@atomist/automation-client";
 import { mapActions } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 import { toStringArray } from "@atomist/automation-client/internal/util/string";
