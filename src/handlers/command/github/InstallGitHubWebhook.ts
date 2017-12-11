@@ -11,9 +11,8 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { guid } from "@atomist/automation-client/internal/util/string";
+import { url } from "@atomist/slack-messages";
 import {
-    Attachment,
     codeLine,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
@@ -22,6 +21,11 @@ import {
     loadChatIdByChatId,
     loadChatTeam,
 } from "../../../util/helpers";
+import {
+    error,
+    success,
+    warning,
+} from "../../../util/messages";
 import { sendUnMappedRepoMessage } from "../../event/push/PushToUnmappedRepo";
 import { DefaultBotName } from "../slack/LinkRepo";
 import * as github from "./gitHubApi";
@@ -38,6 +42,9 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
+
+    @MappedParameter(MappedParameters.GitHubUrl)
+    public webUrl: string;
 
     @Secret(Secrets.userToken("admin:org_hook"))
     public githubToken: string;
@@ -57,24 +64,15 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
 
         return (github.api(this.githubToken, this.apiUrl).orgs as any).createHook(payload)
             .then(() => {
-
-                const msg: SlackMessage = {
-                    attachments: [{
-                        author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
-                        author_name: `Successfully installed webhook for ${codeLine(this.owner)}`,
-                        fallback: `Successfully installed  webhook for ${codeLine(this.owner)}`,
-                        color: "#45B254",
-                    }],
-                };
-
-                return ctx.messageClient.respond(msg)
+                return ctx.messageClient.respond(
+                    success("Organization Webhook", `Successfully installed webhook for ${url(
+                        orgHookUrl(this.webUrl, this.owner), codeLine(this.owner))}`))
                     .then(() => Success)
                     .catch(err => failure(err));
             })
             .catch(result => {
-                return ctx.messageClient.respond(handleResponse(result, ctx.correlationId, this.url, this.owner))
-                    .then(() => Success)
-                    .catch(err => failure(err));
+                return ctx.messageClient.respond(handleResponse(result, this.webUrl, this.owner, ctx))
+                    .then(() => Success, failure);
             });
     }
 }
@@ -94,6 +92,9 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
+
+    @MappedParameter(MappedParameters.GitHubUrl)
+    public webUrl: string;
 
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
@@ -117,19 +118,11 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
 
         return (github.api(this.githubToken, this.apiUrl).repos as any).createHook(payload)
             .then(() => {
-                const text = `Successfully installed repository webhook`;
-                const msg: SlackMessage = {
-                    attachments: [{
-                        text: `${codeLine(`${this.owner}/${this.repo}`)}`,
-                        author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
-                        author_name: text,
-                        fallback: text,
-                        mrkdwn_in: ["text"],
-                        color: "#45B254",
-                    }],
-                };
-
-                return ctx.messageClient.respond(msg)
+                return ctx.messageClient.respond(
+                    success("Repository Webhook",
+                        `Successfully installed repository webhook for ${url(
+                            orgHookUrl(this.webUrl, this.owner, this.repo),
+                            codeLine(`${this.owner}/${this.repo}`))}`))
                     .then(() => Promise.all([
                         loadChatIdByChatId(ctx, this.requester),
                         loadChatTeam(ctx),
@@ -154,44 +147,42 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                     .catch(err => failure(err));
             })
             .catch(result => {
-                return ctx.messageClient.respond(handleResponse(result, ctx.correlationId,
-                    this.url, this.owner, this.repo))
-                    .then(() => Success)
-                    .catch(err => failure(err));
+                return ctx.messageClient.respond(handleResponse(result, this.webUrl, this.owner, ctx, this.repo))
+                    .then(() => Success, failure);
             });
     }
 }
 
-function handleResponse(response: any, correlationId: string, url: string,
-                        owner: string, repo?: string): string | SlackMessage {
+function handleResponse(response: any,
+                        webUrl: string,
+                        owner: string,
+                        ctx: HandlerContext,
+                        repo?: string): string | SlackMessage {
     const body = JSON.parse(response.message);
     const errors = body.errors;
-    const code = response.code;
     if (errors != null && errors.length > 0) {
         if (errors[0].message === "Hook already exists on this organization") {
-            return `Webhook already installed for \`${owner}\` (${url})`;
+            return warning("Organization Webhook",
+                `Webhook already installed for ${url(orgHookUrl(webUrl, owner, repo),
+                    codeLine(owner))}`, ctx);
         }
         if (errors[0].message === "Hook already exists on this repository") {
-            return `Webhook already installed for \`${owner}/${repo}\` (${url})`;
+            return warning("Repository Webhook",
+                `Webhook already installed for ${url(orgHookUrl(webUrl, owner, repo),
+                    codeLine(`${owner}/${repo}`))}`, ctx);
         }
-        return renderError(`Failed to install webhook: ${errors[0].message} (${code})`, correlationId);
+        return error(repo ? "Repository Webhook" : "Organization Webhook",
+            `Failed to install webhook: ${errors[0].message}`, ctx);
     } else {
-        return renderError(`Failed to install webhook: ${body.message} (${code})`, correlationId);
+        return error(repo ? "Repository Webhook" : "Organization Webhook",
+            `Failed to install webhook: ${body.message}`, ctx);
     }
 }
 
-function renderError(msg, correlationId): SlackMessage {
-    const error: Attachment = {
-        text: msg,
-        author_name: "Unable to run command",
-        author_icon: "https://images.atomist.com/rug/error-circle.png",
-        fallback: "Unable to run command",
-        mrkdwn_in: ["text"],
-        color: "#D94649",
-        footer: `Correlation ID: ${correlationId},`,
-    };
-    const sm: SlackMessage = {
-        attachments: [error],
-    };
-    return sm;
+function orgHookUrl(webUrl: string, owner: string, repo?: string): string {
+    if (repo) {
+        return `${webUrl}/${owner}/${repo}/settings/hooks`;
+    } else {
+        return `${webUrl}/organizations/${owner}/settings/hooks`;
+    }
 }
