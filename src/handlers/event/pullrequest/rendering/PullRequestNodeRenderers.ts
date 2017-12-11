@@ -211,15 +211,15 @@ export class StatusNodeRenderer extends AbstractIdentifiableContribution
             let message;
 
             if (pending > 0) {
-                author_icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+                author_icon = "https://images.atomist.com/rug/pulsating-circle.gif";
                 color = "#cccc00";
                 message = "Some checks haven't completed yet";
             } else if (error > 0) {
-                author_icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+                author_icon = "https://images.atomist.com/rug/error-circle.png";
                 color = "#D94649";
                 message = "Some checks were not successful";
             } else {
-                author_icon = "https://images.atomist.com/rug/atomist_build_passed.png";
+                author_icon = "https://images.atomist.com/rug/check-circle.png";
                 color = "#45B254";
                 message = "All checks have passed";
             }
