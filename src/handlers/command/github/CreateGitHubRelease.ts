@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    CommandHandler, failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -11,7 +11,8 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { success } from "../../../util/messages";
+import { codeLine, url } from "@atomist/slack-messages";
+import { error, success } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Create a release of a repo on GitHub", "create release", "create github release")
@@ -33,25 +34,34 @@ export class CreateGitHubRelease implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
 
+    @MappedParameter(MappedParameters.GitHubUrl)
+    public webUrl: string = "https://github.com";
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
         return github.api(this.githubToken, this.apiUrl).repos.createRelease({
-            owner: this.owner,
-            repo: this.repo,
-            tag_name: this.tag,
-            name: this.tag,
-            body: this.message,
-            draft: false,
-            prerelease: false,
-        })
+                owner: this.owner,
+                repo: this.repo,
+                tag_name: this.tag,
+                name: this.tag,
+                body: this.message,
+                draft: false,
+                prerelease: false,
+            })
             .then(() => {
                 return ctx.messageClient.respond(success("GitHub Release",
-                    `Successfully created a new release on \`${this.owner}/${this.repo}#${this.tag}\``));
+                    `Successfully created a new release on ${url(
+                        `${this.webUrl}/ghi${this.owner}/${this.repo}/releases/tag/${this.tag}`,
+                        codeLine(`${this.owner}/${this.repo}#${this.tag}`))}`));
             })
-            .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(err => {
+                return ctx.messageClient.respond(error("Create Release", err.message, ctx))
+                    .then(() => Success, failure);
+            })
+            .then(() => Success, failure);
+
     }
 }
