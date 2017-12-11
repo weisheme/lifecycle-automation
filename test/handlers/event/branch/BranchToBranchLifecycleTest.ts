@@ -225,7 +225,7 @@ describe("BranchToBranchLifecycle", () => {
                             "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
                         }, {
                             "name": "lifecycles",
-                            "value": "{\\"handlers\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
+                            "value": "{\\"ddmvc1\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
                         }, {
                             "name": "disable_bot_owner_on_github_activity_notification",
                             "value": "true"

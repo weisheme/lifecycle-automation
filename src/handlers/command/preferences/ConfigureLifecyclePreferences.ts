@@ -245,10 +245,11 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
 
     private isLifecycleEnabled(preferences: any, type: string): boolean {
         if (preferences[this.channelName]) {
-            return preferences[this.channelName][type] == null
-                || preferences[this.channelName][type] as boolean === true;
+            if (preferences[this.channelName][type] != null) {
+                return preferences[this.channelName][type] as boolean === true;
+            }
         }
-        return true;
+        return LifecyclePreferences[type].enabled;
     }
 
     private isLifecycleActionEnabled(preferences: any, type: string): boolean {

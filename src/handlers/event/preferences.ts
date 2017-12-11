@@ -6,31 +6,37 @@ export const LifecyclePreferences = {
         id: "push",
         name: "Push Lifecycle",
         description: "Lifecycle messages for GitHub pushes, including builds, status etc",
+        enabled: true,
     },
     issue: {
         id: "issue",
         name: "Issue Lifecycle",
         description: "Lifecycle messages for GitHub issues",
+        enabled: true,
     },
     branch: {
         id: "branch",
         name: "Branch Lifecycle",
         description: "Lifecycle messages for GitHub branches",
+        enabled: false,
     },
     pull_request: {
         id: "pull_request",
         name: "Pull Request Lifecycle",
         description: "Lifecycle messages for GitHub pull requests",
+        enabled: true,
     },
     comment: {
         id: "comment",
         name: "Comment Lifecycle",
         description: "Lifecycle messages for GitHub issues and pull request comments",
+        enabled: true,
     },
     review: {
         id: "review",
         name: "Review Lifecycle",
         description: "Lifecycle messages for GitHub pull request reviews",
+        enabled: true,
     },
 
 };

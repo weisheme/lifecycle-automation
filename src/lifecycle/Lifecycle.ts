@@ -203,16 +203,23 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
     private lifecycleEnabled(lifecycle: Lifecycle, channel: string, preferences: Preferences[]): boolean {
         if (preferences) {
-            const preference = preferences.find(p => p.name ===  LifecyclePreferences.key);
+            const preference = preferences.find(p => p.name === LifecyclePreferences.key);
             if (preference) {
                 const preferenceValue = JSON.parse(preference.value) || {};
                 if (preferenceValue[channel]) {
-                    return preferenceValue[channel][lifecycle.name] == null
-                        || preferenceValue[channel][lifecycle.name] as boolean;
+                    if (preferenceValue[channel][lifecycle.name]) {
+                        if (preferenceValue[channel][lifecycle.name] === true) {
+                            return true;
+                        } else if (preferenceValue[channel][lifecycle.name] === false) {
+                            return false;
+                        }
+                    }
                 }
             }
         }
-        return true;
+
+        // Check the default
+        return LifecyclePreferences[lifecycle.name].enabled;
     }
 
     /**
