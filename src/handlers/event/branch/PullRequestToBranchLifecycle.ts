@@ -1,14 +1,17 @@
 import {
     AutomationContextAware,
     EventFired,
-    EventHandler, failure, HandleEvent, HandlerContext, HandlerResult, Success, SuccessPromise,
+    EventHandler,
+    failure,
+    HandleEvent,
+    HandlerContext,
+    HandlerResult,
+    Success,
+    SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
-import * as _ from "lodash";
-import { Preferences } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
-import { BranchLifecycle } from "./BranchLifecycle";
 import { BranchToBranchLifecycle } from "./BranchToBranchLifecycle";
 
 /**
@@ -26,7 +29,7 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
         return ctx.graphClient.executeQueryFromFile
             <graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>(
             "graphql/query/branchWithPullRequest",
-            { owner: pr.repo.owner, repo: pr.repo.name, branch: pr.branchName },
+            { id: pr.branch.id },
             { fetchPolicy: "network-only" })
             .then(result => {
                 if (result && result.Branch && result.Branch.length > 0) {

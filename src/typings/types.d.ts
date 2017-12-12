@@ -299,9 +299,7 @@ export namespace Branch {
 }
 export namespace BranchWithPullRequest {
   export type Variables = {
-    branch: string;
-    owner: string;
-    repo: string;
+    id: string;
   }
 
   export type Query = {
@@ -4371,8 +4369,12 @@ export namespace PullRequestToBranchLifecycle {
   } 
 
   export type PullRequest = {
-    branchName?: string | null; 
+    branch?: Branch | null; 
     repo?: Repo | null; 
+  } 
+
+  export type Branch = {
+    id?: string | null; 
   } 
 
   export type Repo = {

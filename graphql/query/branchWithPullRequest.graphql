@@ -1,5 +1,5 @@
-query BranchWithPullRequest ($branch: String!, $owner: String!, $repo: String!) {
-  Branch(name: $branch) {
+query BranchWithPullRequest($id: ID!) {
+  Branch(id: $id) {
     id
     pullRequests(first: 1, orderBy: [timestamp_desc]) {
       merged
@@ -10,7 +10,7 @@ query BranchWithPullRequest ($branch: String!, $owner: String!, $repo: String!) 
     }
     name
     deleted
-    repo (owner: $owner, name: $repo) {
+    repo {
       name
       owner
       defaultBranch
@@ -34,4 +34,3 @@ query BranchWithPullRequest ($branch: String!, $owner: String!, $repo: String!) 
     timestamp
   }
 }
-

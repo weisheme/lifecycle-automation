@@ -1,6 +1,9 @@
-subscription PullRequestToBranchLifecycle {
+subscription PullRequestToBranchLifecycle
+{
   PullRequest {
-    branchName
+    branch {
+      id
+    }
     repo {
       owner
       name
