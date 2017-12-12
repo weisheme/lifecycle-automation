@@ -144,12 +144,14 @@ export function labelUrl(repo: any, label: string): string {
 export const AtomistGeneratedLabel = "atomist:generated";
 
 export function isGenerated(node: graphql.PullRequestToPullRequestLifecycle.PullRequest): boolean {
-    if (node && node.labels) {
-        return node.labels.some(l => l === AtomistGeneratedLabel);
-    } else if (node && node.body) {
-        return node.body.indexOf(`[${AtomistGeneratedLabel}]`) >= 0;
-    } else if (node && node.title) {
-        return node.title.indexOf(`[${AtomistGeneratedLabel}]`) >= 0;
+    if (node && node.labels && node.labels.some(l => l === AtomistGeneratedLabel)) {
+        return true;
+    }
+    if (node && node.body && node.body.indexOf(`[${AtomistGeneratedLabel}]`) >= 0) {
+        return true;
+    }
+    if (node && node.title && node.title.indexOf(`[${AtomistGeneratedLabel}]`) >= 0) {
+        return true;
     }
     return false;
 }
