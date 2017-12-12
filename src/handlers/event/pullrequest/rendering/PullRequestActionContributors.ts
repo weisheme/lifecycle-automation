@@ -1,6 +1,7 @@
 import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
 import {
-    buttonForCommand, menuForCommand,
+    buttonForCommand,
+    menuForCommand,
     MenuSpecification,
 } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages/SlackMessages";
@@ -11,6 +12,7 @@ import {
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import { isGenerated } from "../../../../util/helpers";
 import { LifecycleActionPreferences } from "../../preferences";
 import { isPrTagged } from "../autoMerge";
 
@@ -69,11 +71,11 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
         if (repo.allowMergeCommit === true) {
             mergeMethods.merge = { method: "Merge", commitMessage };
         }
-        if (repo.allowSquashMerge === true) {
+        if (repo.allowSquashMerge === true && !isGenerated(pr)) {
             mergeMethods.squash = { method: "Squash and Merge",
                 commitMessage: pr.commits.map(c => `* ${c.message}`).join("\n")};
         }
-        if (repo.allowRebaseMerge === true) {
+        if (repo.allowRebaseMerge === true && !isGenerated(pr)) {
             mergeMethods.rebase = { method: "Rebase and Merge", commitMessage };
         }
         if (repo.allowMergeCommit === undefined
@@ -110,7 +112,9 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        if (node.baseBranchName) {
+        if (isGenerated(node)) {
+            return false;
+        } else if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
             return pr.state === "open" && !isPrTagged(pr);
         } else {
@@ -149,7 +153,9 @@ export class ApproveActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        if (node.baseBranchName) {
+        if (isGenerated(node)) {
+            return false;
+        } else if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
             return pr.state === "open"
                 && pr.commits != null && pr.commits.length > 0;
@@ -236,7 +242,12 @@ export class CommentActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.baseBranchName && (node as graphql.PullRequestToPullRequestLifecycle.PullRequest).state === "open";
+        if (isGenerated(node)) {
+            return false;
+        } else {
+            return node.baseBranchName
+                && (node as graphql.PullRequestToPullRequestLifecycle.PullRequest).state === "open";
+        }
     }
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):
@@ -266,7 +277,12 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.baseBranchName && (node as graphql.PullRequestToPullRequestLifecycle.PullRequest).state === "open";
+        if (isGenerated(node)) {
+            return false;
+        } else {
+            return node.baseBranchName
+                && (node as graphql.PullRequestToPullRequestLifecycle.PullRequest).state === "open";
+        }
     }
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):
@@ -296,7 +312,12 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
     }
 
     public supports(node: any): boolean {
-        return node.baseBranchName && (node as graphql.PullRequestToPullRequestLifecycle.PullRequest).state === "open";
+        if (isGenerated(node)) {
+            return false;
+        } else {
+            return node.baseBranchName
+                && (node as graphql.PullRequestToPullRequestLifecycle.PullRequest).state === "open";
+        }
     }
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):

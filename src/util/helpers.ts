@@ -141,6 +141,19 @@ export function labelUrl(repo: any, label: string): string {
     return `${htmlUrl(repo)}/${repoSlug(repo)}/labels/${label}`;
 }
 
+export const AtomistGeneratedLabel = "atomist:generated";
+
+export function isGenerated(node: graphql.PullRequestToPullRequestLifecycle.PullRequest): boolean {
+    if (node && node.labels) {
+        return node.labels.some(l => l === AtomistGeneratedLabel);
+    } else if (node && node.body) {
+        return node.body.indexOf(`[${AtomistGeneratedLabel}]`) >= 0;
+    } else if (node && node.title) {
+        return node.title.indexOf(`[${AtomistGeneratedLabel}]`) >= 0;
+    }
+    return false;
+}
+
 export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext): Promise<ReferencedIssues> {
     const promises = [];
 

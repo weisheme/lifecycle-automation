@@ -1,7 +1,9 @@
+import { guid } from "@atomist/automation-client/internal/util/string";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import {
     Action,
-    Attachment, emoji,
+    Attachment,
+    emoji,
     escape,
     SlackMessage,
     url,
@@ -17,6 +19,7 @@ import {
     avatarUrl,
     branchUrl,
     commitUrl,
+    isGenerated,
     linkGitHubUsers,
     linkIssues,
     prUrl,
@@ -78,7 +81,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                     color,
                     title: `#${pr.number} ${escape(pr.title)}`,
                     title_link: prUrl(repo, pr),
-                    text: pr.state !== "closed" ? linkIssues(body, repo) : undefined,
+                    text: pr.state !== "closed" && !isGenerated(pr) ? linkIssues(body, repo) : undefined,
                     fallback: `#${pr.number} ${escape(pr.title)}`,
                     mrkdwn_in: ["text"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, pr.labels, pr.assignees),
@@ -211,7 +214,7 @@ export class StatusNodeRenderer extends AbstractIdentifiableContribution
             let message;
 
             if (pending > 0) {
-                author_icon = "https://images.atomist.com/rug/pulsating-circle.gif";
+                author_icon = `https://images.atomist.com/rug/pulsating-circle.gif?${guid()}`;
                 color = "#cccc00";
                 message = "Some checks haven't completed yet";
             } else if (error > 0) {
@@ -290,7 +293,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
         let message;
 
         if (pending > 0) {
-            author_icon = "https://images.atomist.com/rug/pulsating-circle.gif";
+            author_icon = `https://images.atomist.com/rug/pulsating-circle.gif?${guid()}`;
             color = "#cccc00";
             message = "Some reviews are pending";
         } else if (changesRequested > 0) {
