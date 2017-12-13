@@ -53,7 +53,7 @@ export class CreateGitHubRelease implements HandleCommand {
             })
             .then(() => {
                 return ctx.messageClient.respond(success("GitHub Release",
-                    `Successfully created a new release on ${url(
+                    `Successfully created a new release\n${url(
                         `${this.webUrl}/${this.owner}/${this.repo}/releases/tag/${this.tag}`,
                         codeLine(`${this.owner}/${this.repo}#${this.tag}`))}`));
             })
