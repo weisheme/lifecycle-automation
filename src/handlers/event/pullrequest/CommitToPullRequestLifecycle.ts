@@ -24,7 +24,7 @@ export class CommitToPullRequestLifecycle
             string, boolean] {
 
         const pr = _.get(event, "data.Commit[0].pullRequests[0]");
-        return [pr, _.get(pr, "repo"), Date.now().toString(), false];
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
     }
 
     protected extractPreferences(event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>)
