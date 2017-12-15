@@ -1,4 +1,3 @@
-
 import {
     CommandHandler, failure,
     HandleCommand,
@@ -13,7 +12,6 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
-import { error } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Raise a GitHub pull request", "raise pr", "raise pullrequest",
@@ -67,8 +65,7 @@ export class RaiseGitHubPullRequest implements HandleCommand {
                 });
             })
             .catch(err => {
-                return ctx.messageClient.respond(error("Raise Pull Request", err.message, ctx))
-                    .then(() => Success, failure);
+                return github.handleError("Raise Pull Request", err, ctx);
             })
             .then(() => Success, failure);
     }

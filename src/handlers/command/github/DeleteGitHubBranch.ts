@@ -1,6 +1,5 @@
 import {
     CommandHandler,
-    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -9,11 +8,9 @@ import {
     Parameter,
     Secret,
     Secrets,
-    Success, success,
+    Success,
     Tags,
 } from "@atomist/automation-client";
-import { SlackMessage } from "@atomist/slack-messages";
-import { warning } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Deletes a GitHub branch", "delete branch", "delete github branch")
@@ -43,14 +40,7 @@ export class DeleteGitHubBranch implements HandleCommand {
             })
             .then(() => Success)
             .catch(err => {
-                if (err.message === "Reference does not exist") {
-                    const text = `Branch or Reference could not be deleted. \
-Please make sure that it still exists and wasn't deleted in the meantime.`;
-                    return ctx.messageClient.respond(warning("Delete Branch or Reference", text, ctx))
-                        .then(success, failure);
-                } else {
-                    return failure(err);
-                }
+                return github.handleError("Delete Branch or Reference", err, ctx);
             });
     }
 }

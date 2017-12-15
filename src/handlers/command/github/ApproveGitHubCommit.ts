@@ -63,6 +63,8 @@ export class ApproveGitHubCommit implements HandleCommand {
                 }));
             })
             .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(err => {
+                return github.handleError("Approve Commit", err, ctx);
+            });
     }
 }

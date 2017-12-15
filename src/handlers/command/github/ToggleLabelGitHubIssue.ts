@@ -59,6 +59,8 @@ export class ToggleLabelGitHubIssue implements HandleCommand {
                 });
             })
             .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(err => {
+                return github.handleError("Label Issue", err, ctx);
+            });
     }
 }

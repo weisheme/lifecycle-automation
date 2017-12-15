@@ -14,10 +14,9 @@ import {
 } from "@atomist/automation-client";
 import {
     bold,
-    SlackMessage,
     url,
 } from "@atomist/slack-messages";
-import { error, warning } from "../../../util/messages";
+import { warning } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 /**
@@ -116,8 +115,7 @@ export class MergeGitHubPullRequest implements HandleCommand {
                 }
             })
             .catch(err => {
-                return ctx.messageClient.respond(error("Merge Pull Request", err.message, ctx))
-                    .then(() => Success, failure);
+                return github.handleError("Merge Pull Request", err, ctx);
             })
             .then(() => Success, failure);
     }

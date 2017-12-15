@@ -1,5 +1,5 @@
 import {
-    CommandHandler, failure,
+    CommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -11,8 +11,11 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { codeLine, url } from "@atomist/slack-messages";
-import { error, success } from "../../../util/messages";
+import {
+    codeLine,
+    url,
+} from "@atomist/slack-messages";
+import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
 @CommandHandler("Create a release of a repo on GitHub", "create release", "create github release")
@@ -52,16 +55,15 @@ export class CreateGitHubRelease implements HandleCommand {
                 prerelease: false,
             })
             .then(() => {
-                return ctx.messageClient.respond(success("GitHub Release",
+                return ctx.messageClient.respond(success("Create Release",
                     `Successfully created a new release\n${url(
                         `${this.webUrl}/${this.owner}/${this.repo}/releases/tag/${this.tag}`,
                         codeLine(`${this.owner}/${this.repo}#${this.tag}`))}`));
             })
+            .then(() => Success)
             .catch(err => {
-                return ctx.messageClient.respond(error("Create Release", err.message, ctx))
-                    .then(() => Success, failure);
-            })
-            .then(() => Success, failure);
+                return github.handleError("Create Release", err, ctx);
+            });
 
     }
 }
