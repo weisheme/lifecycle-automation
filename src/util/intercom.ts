@@ -17,7 +17,7 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
     }
 
     public commandStarting(payload: CommandInvocation, ctx: HandlerContext) {
-        if (ctx && ctx.userId) {
+        if (ctx && ctx.graphClient && ctx.userId) {
             ctx.graphClient.executeQueryFromFile
                 <graphql.EMailAndGitHubIdByUserId.Query, graphql.EMailAndGitHubIdByUserId.Variables > (
                 "graphql/query/emailAndGitHubIdByUserId",
