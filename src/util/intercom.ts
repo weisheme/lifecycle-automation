@@ -35,6 +35,7 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                 user_id: login,
                                 custom_attributes: {
                                     team_id: ctx.teamId,
+                                    team_name: actx.context.teamName,
                                 },
                             })
                             .then(() => {
