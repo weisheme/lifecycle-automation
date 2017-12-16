@@ -40,7 +40,7 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                             })
                             .then(() => {
                                 this.client.events.create({
-                                    event_name: "command",
+                                    event_name: "slack.command",
                                     created_at: Math.floor(Date.now() / 1000),
                                     email,
                                     metadata: {
