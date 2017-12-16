@@ -86,6 +86,7 @@ import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
 import { DatadogAutomationEventListener, DatadogOptions } from "./util/datadog";
+import { IntercomAutomationEventListener } from "./util/intercom";
 import {
     LogzioAutomationEventListener,
     LogzioOptions,
@@ -123,6 +124,10 @@ const listeners = [
 // Logz.io will only work in certain environments
 if (logzioOptions.token) {
     listeners.push(new LogzioAutomationEventListener(logzioOptions));
+}
+
+if (secret("intercom.token")) {
+    listeners.push(new IntercomAutomationEventListener(secret("intercom.token")));
 }
 
 // StatsD/Datadog servers aren't available locally either

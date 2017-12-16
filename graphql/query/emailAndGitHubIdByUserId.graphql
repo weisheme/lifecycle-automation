@@ -1,0 +1,15 @@
+query EMailAndGitHubIdByUserId($userId: String!) {
+    ChatId(userId: $userId) {
+        person {
+            surname
+            forename
+            emails {
+                address
+            }
+            gitHubId {
+                login
+            }
+        }
+    }
+}
+

@@ -626,6 +626,34 @@ export namespace Commit {
     screenName?: string | null; 
   } 
 }
+export namespace EMailAndGitHubIdByUserId {
+  export type Variables = {
+    userId: string;
+  }
+
+  export type Query = {
+    ChatId?: ChatId[] | null; 
+  } 
+
+  export type ChatId = {
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    surname?: string | null; 
+    forename?: string | null; 
+    emails?: Emails[] | null; 
+    gitHubId?: GitHubId | null; 
+  } 
+
+  export type Emails = {
+    address?: string | null; 
+  } 
+
+  export type GitHubId = {
+    login?: string | null; 
+  } 
+}
 export namespace GitHubId {
   export type Variables = {
     gitHubIds: string[];
