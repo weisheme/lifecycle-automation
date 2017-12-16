@@ -33,7 +33,6 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                 name,
                                 email,
                                 user_id: login,
-                                team_id: ctx.teamId,
                                 custom_attributes: {
                                     team_id: ctx.teamId,
                                 },
