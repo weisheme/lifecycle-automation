@@ -47,6 +47,7 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                         name: `${actx.context.name}@${actx.context.version}`,
                                         command: actx.context.operation,
                                         team_id: ctx.teamId,
+                                        team_name: actx.context.teamName,
                                     },
                                 });
                             });
