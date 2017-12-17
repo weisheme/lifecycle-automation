@@ -33,6 +33,8 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                 name,
                                 email,
                                 user_id: login,
+                                update_last_request_at: true,
+                                new_session: true,
                                 custom_attributes: {
                                     team_id: ctx.teamId,
                                     team_name: actx.context.teamName,
