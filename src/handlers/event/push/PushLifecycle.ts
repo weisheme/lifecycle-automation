@@ -56,7 +56,10 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                 nodes.push(push);
                 // Add all Tag nodes
                 if (push.after != null && push.after.tags != null) {
-                    push.after.tags.forEach(t => nodes.push(t));
+                    push.after.tags
+                        .filter(t => t.name)
+                        .sort((t1, t2) => t1.name.localeCompare(t2.name))
+                        .forEach(t => nodes.push(t));
                 }
             }
 
