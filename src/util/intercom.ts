@@ -1,4 +1,4 @@
-import { AutomationContextAware, HandlerContext } from "@atomist/automation-client";
+import { AutomationContextAware, HandlerContext, logger } from "@atomist/automation-client";
 import { CommandInvocation } from "@atomist/automation-client/internal/invoker/Payload";
 import { AutomationEventListenerSupport } from "@atomist/automation-client/server/AutomationEventListener";
 import * as _ from "lodash";
@@ -18,8 +18,8 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
 
     public commandStarting(payload: CommandInvocation, ctx: HandlerContext) {
         if (ctx && ctx.graphClient && ctx.userId) {
-            ctx.graphClient.executeQueryFromFile
-                <graphql.EMailAndGitHubIdByUserId.Query, graphql.EMailAndGitHubIdByUserId.Variables > (
+            ctx.graphClient.executeQueryFromFile<graphql.EMailAndGitHubIdByUserId.Query,
+                graphql.EMailAndGitHubIdByUserId.Variables > (
                 "graphql/query/emailAndGitHubIdByUserId",
                 { userId: ctx.userId })
                 .then(result => {
@@ -27,7 +27,12 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                         const email = _.get(result, "ChatId[0].person.emails[0].address");
                         const login = _.get(result, "ChatId[0].person.gitHubId.login");
                         const name = `${result.ChatId[0].person.forename} ${result.ChatId[0].person.surname}`;
+
                         if (email) {
+
+                            logger.info(
+                                `Updating intercom activity for email '${email}', login '${login}' and name '${name}'`);
+
                             const actx = ctx as any as AutomationContextAware;
                             this.client.users.create({
                                 name,
@@ -41,7 +46,27 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                 },
                             })
                             .then(() => {
-                                this.client.events.create({
+                                return this.client.users.find({ email })
+                                    .then(user => {
+                                        if (user && user.body) {
+                                            const tags = user.body.tags;
+                                            if (tags && tags.tags) {
+                                                if (!tags.tags.some(t => t.name === "Slack")) {
+                                                    this.client.tags.tag({ name: "Slack", users: [{ email }] });
+                                                }
+                                            }
+                                            if (!user.body.signed_up_at || user.body.signed_up_at == null) {
+                                                this.client.users.create({
+                                                    email,
+                                                    signed_up_at: Math.floor(Date.now() / 1000),
+                                                });
+                                            }
+                                        }
+                                        return Promise.resolve();
+                                    });
+                            })
+                            .then(() => {
+                                return this.client.events.create({
                                     event_name: "slack.command",
                                     created_at: Math.floor(Date.now() / 1000),
                                     email,
