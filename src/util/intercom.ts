@@ -49,12 +49,6 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                 return this.client.users.find({ email })
                                     .then(user => {
                                         if (user && user.body) {
-                                            const tags = user.body.tags;
-                                            if (tags && tags.tags) {
-                                                if (!tags.tags.some(t => t.name === "Slack")) {
-                                                    this.client.tags.tag({ name: "Slack", users: [{ email }] });
-                                                }
-                                            }
                                             if (!user.body.signed_up_at || user.body.signed_up_at == null) {
                                                 this.client.users.create({
                                                     email,
