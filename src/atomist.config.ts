@@ -94,6 +94,7 @@ import {
 import { secret } from "./util/secrets";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 import { EventRaisingAutomationEventListener } from "./util/stream";
+import { InitiateConversation } from "./handlers/command/slack/InitiateConversation";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require(`${appRoot.path}/package.json`);
@@ -183,6 +184,7 @@ export const configuration: any = {
         () => new AddBotToChannel(),
         () => new AssociateRepo(),
         () => new CreateChannel(),
+        () => new InitiateConversation(),
         () => new LinkOwnerRepo(),
         () => new LinkRepo(),
         () => new ListRepoLinks(),
