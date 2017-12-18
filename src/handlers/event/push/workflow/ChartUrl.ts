@@ -49,7 +49,7 @@ export function chartUrlFromWorkflow(stages: WorkflowStage[]): string {
     const url = `https://image-charts.com/chart?chs=400x${chartHeight}&cht=bhs&` +
         `chd=t:${longestDurations.join(",")}|${remainingDurations.join(",")}` +
         `|${failureDurations.join(",")}|${progressDurations.join(",")}&` +
-        `chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxr=200&chxt=x,y&chxl=0:${stageNamesString}&` +
+        `chds=a&chco=0FA215,86DB95,DD5B6A,E9D139&chxt=x,y&chxl=0:${stageNamesString}&` +
         `chtt=Workflow%20Stage%20Durations%20(${scaleText})&chts=000000,10&chof=.png`;
     return _.replace(url, new RegExp(" ", "g"), "%20");
 }
