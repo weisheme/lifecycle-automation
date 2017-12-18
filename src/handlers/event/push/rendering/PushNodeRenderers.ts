@@ -408,7 +408,10 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const push = context.lifecycle.extract("push");
-        const first = push.after.tags.indexOf(tag) === 0;
+        const first =  push.after.tags
+            .filter(t => t.name)
+            .sort((t1, t2) => t1.name.localeCompare(t2.name))
+            .indexOf(tag) === 0;
 
         let message = url(tagUrl(repo, tag), codeLine(tag.name));
         let color;
