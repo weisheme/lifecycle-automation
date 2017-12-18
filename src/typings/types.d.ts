@@ -636,17 +636,23 @@ export namespace EMailAndGitHubIdByUserId {
   } 
 
   export type ChatId = {
+    screenName?: string | null; 
+    emails?: Emails[] | null; 
     person?: Person | null; 
+  } 
+
+  export type Emails = {
+    address?: string | null; 
   } 
 
   export type Person = {
     surname?: string | null; 
     forename?: string | null; 
-    emails?: Emails[] | null; 
+    emails?: _Emails[] | null; 
     gitHubId?: GitHubId | null; 
   } 
 
-  export type Emails = {
+  export type _Emails = {
     address?: string | null; 
   } 
 

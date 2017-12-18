@@ -24,9 +24,20 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                 { userId: ctx.userId })
                 .then(result => {
                     if (result.ChatId && result.ChatId[0] && result.ChatId[0].person) {
-                        const email = _.get(result, "ChatId[0].person.emails[0].address");
-                        const login = _.get(result, "ChatId[0].person.gitHubId.login");
-                        const name = `${result.ChatId[0].person.forename} ${result.ChatId[0].person.surname}`;
+                        let login;
+                        let email;
+                        let name;
+                        let screenName;
+                        if (result.ChatId && result.ChatId[0] && result.ChatId[0].person) {
+                            email = _.get(result, "ChatId[0].person.emails[0].address");
+                            login = _.get(result, "ChatId[0].person.gitHubId.login");
+                            name = `${result.ChatId[0].person.forename} ${result.ChatId[0].person.surname}`;
+                            screenName = result.ChatId[0].screenName;
+                        } else if (result.ChatId && result.ChatId[0]) {
+                            email = _.get(result, "ChatId[0].emails[0].address");
+                            name = result.ChatId[0].screenName;
+                            screenName = result.ChatId[0].screenName;
+                        }
 
                         if (email) {
 
@@ -43,6 +54,7 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
                                 custom_attributes: {
                                     team_id: ctx.teamId,
                                     team_name: actx.context.teamName,
+                                    screen_name: screenName,
                                 },
                             })
                             .then(() => {
