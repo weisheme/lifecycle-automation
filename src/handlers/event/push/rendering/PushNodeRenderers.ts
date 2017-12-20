@@ -29,6 +29,7 @@ import {
     userUrl,
 } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
+import { sortTagsByName } from "./PushActionContributors";
 
 export const EMOJI_SCHEME = {
 
@@ -224,13 +225,13 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                         i.filter(f => this.renderUnchangedFingerprints
                             || (!this.renderUnchangedFingerprints && f[1] === 1))
                             .map(f => [this.getGroup(f[0]), f[1]]).forEach(f => {
-                                const fpvf = fpv.filter(fp => fp[0] === f[0]);
-                                if (fpvf.length > 0) {
-                                    fpvf.forEach(fp => fp[1] += f[1]);
-                                } else {
-                                    fpv.push(f);
-                                }
-                            });
+                            const fpvf = fpv.filter(fp => fp[0] === f[0]);
+                            if (fpvf.length > 0) {
+                                fpvf.forEach(fp => fp[1] += f[1]);
+                            } else {
+                                fpv.push(f);
+                            }
+                        });
 
                         const max = fpv.reduce((a, b) => (a[0].length > b[0].length ? a : b))[0].length;
                         fpv.sort((f1, f2) => f1[0].localeCompare(f2[0])).forEach(f => {
@@ -408,9 +409,8 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const push = context.lifecycle.extract("push");
-        const first =  push.after.tags
-            .filter(t => t.name)
-            .sort((t1, t2) => t1.name.localeCompare(t2.name))
+
+        const first = sortTagsByName(push.after.tags)
             .indexOf(tag) === 0;
 
         let message = url(tagUrl(repo, tag), codeLine(tag.name));
@@ -427,7 +427,7 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
             author_icon: first ? `https://images.atomist.com/rug/tag-outline.png` : undefined,
             fallback: first ? push.after.tags.length > 1 ? "Tags" : "Tag" : undefined,
             text: message,
-            mrkdwn_in: [ "text" ],
+            mrkdwn_in: ["text"],
             color,
             actions,
         };

@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist automations displaying development and operations lifecycle messages in chat",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
