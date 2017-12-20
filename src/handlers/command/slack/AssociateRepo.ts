@@ -15,6 +15,7 @@ import {
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { InviteUserToSlackChannel } from "../../../typings/types";
+import * as graphql from "../../../typings/types";
 import { isChannelPublic } from "../../../util/slack";
 import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
 import * as github from "../github/gitHubApi";
@@ -99,9 +100,9 @@ export class AssociateRepo implements HandleCommand {
                             .then(result => {
                                 if (result.Org && result.Org[0] && result.Org[0].provider) {
                                     return linkSlackChannelToRepo(
-                                        ctx, this.channelId, this.repo, this.owner, result.Org[0].provider.providerId)
+                                        ctx, this.channelId, this.repo, this.owner, result.Org[0].provider.providerId);
                                 }
-                            })
+                            });
                     })
                     .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
                     .then(() => {
