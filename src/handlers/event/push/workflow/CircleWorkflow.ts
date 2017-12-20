@@ -3,19 +3,19 @@ import * as _ from "lodash";
 import * as graphql from "../../../../typings/types";
 import { WorkflowStage } from "./WorkflowStage";
 
-export interface Push {
+export interface PushTrigger {
     name: string;
     type: PushType;
 }
 
-export type PushType = "branch" | "tag"
+export type PushType = "branch" | "tag";
 
 function findMatchingRegex(text: string, regexes: string[]): string {
-    return regexes.find(r => new RegExp(r.replace(new RegExp('^/(.*?)/'), '$1')).test(text));
+    return regexes.find(r => new RegExp(r.replace(new RegExp("^/(.*?)/"), "$1")).test(text));
 }
 
 export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Workflow,
-                                       workflowPush: Push = {name: "master", type: "branch"}): WorkflowStage[] {
+                                       workflowPush: PushTrigger = {name: "master", type: "branch"}): WorkflowStage[] {
 
     const doc = yaml.load(workflow.config);
     const jobsConfig = _.find(_.values(doc.workflows), v => v.jobs).jobs;
@@ -31,7 +31,8 @@ export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Wor
             const filtersBranchesOnly = filtersBranches.only ? filtersBranches.only : [];
             const onlyBranches = typeof filtersBranchesOnly === "string" ? [filtersBranchesOnly] : filtersBranchesOnly;
             const filtersBranchesIgnore = filtersBranches.ignore ? filtersBranches.ignore : [];
-            const ignoreBranches = typeof filtersBranchesIgnore === "string" ? [filtersBranchesIgnore] : filtersBranchesIgnore;
+            const ignoreBranches = typeof filtersBranchesIgnore === "string" ?
+                [filtersBranchesIgnore] : filtersBranchesIgnore;
             const ignoreMatch = findMatchingRegex(workflowPush.name, ignoreBranches);
             if (ignoreMatch) {
                 filtered = true;
