@@ -193,9 +193,13 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
                             push: graphql.PushToPushLifecycle.Push,
                             repo: graphql.PushToPushLifecycle.Repo,
                             buttons: any[]) {
-        // Add the create tag button
-        const version = this.versionPrefix(tag.name)
+        if (push.branch !== repo.defaultBranch) {
+            return;
+        }
+        // If the tag is like 0.5.32-stuff, offer to create a tag like 0.5.32
+        const version = this.versionPrefix(tag.name);
         if (version) {
+            // if that tag does not exist already, and only for the last tag of that same version prefix.
             if (!push.after.tags.some(t => t.name === version) && this.isLastTagOfVersion(push, tag, version)) {
 
                 const tagHandler = new CreateGitHubTag();
@@ -220,10 +224,10 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
     private isLastTagOfVersion(push: graphql.PushToPushLifecycle.Push,
                                tag: graphql.PushToPushLifecycle.Tags,
                                version: string): boolean {
-       const sortedTagNamesWithThisVersion = sortTagsByName(push.after.tags)
-           .filter(t => this.versionPrefix(t.name) === version)
-           .map(t => t.name);
-       return sortedTagNamesWithThisVersion.indexOf(tag.name) === (sortedTagNamesWithThisVersion.length - 1);
+        const sortedTagNamesWithThisVersion = sortTagsByName(push.after.tags)
+            .filter(t => this.versionPrefix(t.name) === version)
+            .map(t => t.name);
+        return sortedTagNamesWithThisVersion.indexOf(tag.name) === (sortedTagNamesWithThisVersion.length - 1);
     }
 }
 
