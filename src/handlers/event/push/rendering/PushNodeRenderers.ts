@@ -29,6 +29,7 @@ import {
     userUrl,
 } from "../../../../util/helpers";
 import { Domain } from "../PushLifecycle";
+import { sortTagsByName } from "./PushActionContributors";
 
 export const EMOJI_SCHEME = {
 
@@ -409,13 +410,8 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const push = context.lifecycle.extract("push");
 
-        const sortedTags = push.after.tags
-            .filter(t => t.name)
-            .sort((t1, t2) => t1.name.localeCompare(t2.name));
-        const first = sortedTags
+        const first = sortTagsByName(push.after.tags)
             .indexOf(tag) === 0;
-        const last = sortedTags
-            .indexOf(tag) === (sortedTags.length - 1);
 
         let message = url(tagUrl(repo, tag), codeLine(tag.name));
         let color;
@@ -433,7 +429,7 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
             text: message,
             mrkdwn_in: ["text"],
             color,
-            actions: last ? actions : undefined,
+            actions,
         };
         msg.attachments.push(attachment);
         return Promise.resolve(msg);

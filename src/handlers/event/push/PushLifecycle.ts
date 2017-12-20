@@ -14,7 +14,7 @@ import {
     ApplicationActionContributor,
     BuildActionContributor,
     PullRequestActionContributor,
-    ReleaseActionContributor, TagPushActionContributor,
+    ReleaseActionContributor, sortTagsByName, TagPushActionContributor,
     TagTagActionContributor,
 } from "./rendering/PushActionContributors";
 import {
@@ -56,9 +56,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                 nodes.push(push);
                 // Add all Tag nodes
                 if (push.after != null && push.after.tags != null) {
-                    push.after.tags
-                        .filter(t => t.name)
-                        .sort((t1, t2) => t1.name.localeCompare(t2.name))
+                    sortTagsByName(push.after.tags)
                         .forEach(t => nodes.push(t));
                 }
             }
