@@ -185,6 +185,7 @@ export namespace LinkSlackChannelToRepo {
     channelId: string;
     repo: string;
     owner: string;
+    providerId?: string | null;
   }
 
   export type Mutation = {
@@ -947,6 +948,23 @@ export namespace Pr {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+}
+export namespace ProviderIdFromOrg {
+  export type Variables = {
+    owner: string;
+  }
+
+  export type Query = {
+    Org?: Org[] | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    providerId?: string | null; 
   } 
 }
 export namespace Repo {

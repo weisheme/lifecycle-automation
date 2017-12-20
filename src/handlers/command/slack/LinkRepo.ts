@@ -15,6 +15,7 @@ import {
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { LinkSlackChannelToRepo } from "../../../typings/types";
+import * as graphql from "../../../typings/types";
 import { isChannelPublic } from "../../../util/slack";
 import {
     checkRepo,
@@ -28,11 +29,12 @@ export function linkSlackChannelToRepo(
     channelId: string,
     repo: string,
     owner: string,
+    providerId: string,
 ): Promise<LinkSlackChannelToRepo.Mutation> {
 
     return ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation, LinkSlackChannelToRepo.Variables>(
         "graphql/mutation/linkSlackChannelToRepo",
-        { channelId, repo, owner },
+        { channelId, repo, owner, providerId },
     );
 }
 
@@ -93,12 +95,22 @@ export class LinkRepo implements HandleCommand {
                     ctx.messageClient.respond(noRepoMessage(this.name, this.owner));
                     return;
                 }
-                return linkSlackChannelToRepo(ctx, this.channelId, this.name, this.owner)
-                    .then(() => {
-                        if (this.msgId) {
-                            ctx.messageClient.addressChannels(this.msg, this.channelName, { id: this.msgId });
+                return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
+                    graphql.ProviderIdFromOrg.Variables>(
+                    "graphql/query/providerIdFromOrg",
+                    { owner: this.owner })
+                    .then(result => {
+                        if (result.Org && result.Org[0] && result.Org[0].provider) {
+                        return linkSlackChannelToRepo(
+                            ctx, this.channelId, this.name, this.owner, result.Org[0].provider.providerId)
+                            .then(() => {
+                                if (this.msgId) {
+                                    ctx.messageClient.addressChannels(
+                                        this.msg, this.channelName, { id: this.msgId });
+                                }
+                                return Success;
+                            });
                         }
-                        return Success;
                     });
             })
             .then(() => Success, failure);
