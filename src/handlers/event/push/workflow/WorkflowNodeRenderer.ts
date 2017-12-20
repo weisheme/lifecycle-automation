@@ -9,7 +9,7 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { chartUrlFromWorkflow } from "./ChartUrl";
-import { circleWorkflowtoStages } from "./CircleWorkflow";
+import {circleWorkflowtoStages, PushTrigger} from "./CircleWorkflow";
 
 export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PushToPushLifecycle.Builds> {
@@ -24,7 +24,12 @@ export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
 
     public render(workflow: graphql.PushToPushLifecycle.Workflow, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
-        const chartUrl = chartUrlFromWorkflow(circleWorkflowtoStages(workflow));
+        const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
+        const pushTrigger: PushTrigger = {
+            name: push.branch,
+            type: "branch", // we only trigger on branch pushes currently, though the logic here would handle tags
+        };
+        const chartUrl = chartUrlFromWorkflow(circleWorkflowtoStages(workflow, pushTrigger));
         if (chartUrl) {
             const attachment: Attachment = {
                 author_name: "Workflow",

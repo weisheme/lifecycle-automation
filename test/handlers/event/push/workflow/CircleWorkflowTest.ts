@@ -752,7 +752,6 @@ describe("CircleWorkflow", () => {
         assert.deepEqual(stages, expectedStages);
     });
 
-
     const branchAndTagFiltersWorkflow2 = {
         id: "workflow id",
         name: "pipelineDooling",
