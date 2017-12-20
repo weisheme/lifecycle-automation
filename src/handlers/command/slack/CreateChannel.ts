@@ -33,7 +33,7 @@ export class CreateChannel implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl: string;
 
     @MappedParameter(MappedParameters.SlackUser)
     public userId: string;
