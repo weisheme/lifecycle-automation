@@ -89,7 +89,7 @@ export class CreateGitHubTag implements HandleCommand {
                     owner: this.owner,
                     repo: this.repo,
                     tag: this.tag,
-                    message: this.message,
+                    message: this.message || "Tag created by Atomist Lifecycle Automation",
                     object: this.sha,
                     type: "commit",
                     tagger,
