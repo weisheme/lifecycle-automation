@@ -3,23 +3,80 @@ import * as _ from "lodash";
 import * as graphql from "../../../../typings/types";
 import { WorkflowStage } from "./WorkflowStage";
 
-export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Workflow): WorkflowStage[] {
+export interface PushTrigger {
+    name: string;
+    type: PushType;
+}
+
+export type PushType = "branch" | "tag";
+
+function findMatchingRegex(text: string, regexes: string[]): string {
+    return regexes.find(r => new RegExp(r.replace(new RegExp("^/(.*?)/"), "$1")).test(text));
+}
+
+export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Workflow,
+                                       workflowPush: PushTrigger = {name: "master", type: "branch"}): WorkflowStage[] {
 
     const doc = yaml.load(workflow.config);
     const jobsConfig = _.find(_.values(doc.workflows), v => v.jobs).jobs;
     const stages: Stage[] = [];
     jobsConfig.forEach(jc => {
         const name = typeof jc === "string" ? jc : _.head(_.keys(jc));
-        const requires = typeof jc === "string" ? [] : jc[name].requires;
-        let stage = _.find(stages, j => _.isEqual(j.require, requires));
-        if (!stage) {
-            stage = {
-                jobs: [name],
-                require: requires,
-            };
-            stages.push(stage);
-        } else {
-            stage.jobs.push(name);
+        const jobConfig = !jc[name] ? {} : jc[name];
+
+        let filtered = false;
+        const filters = jobConfig.filters ? jobConfig.filters : {};
+        if (workflowPush.type === "branch") {
+            const filtersBranches = filters.branches ? filters.branches : {};
+            const filtersBranchesOnly = filtersBranches.only ? filtersBranches.only : [];
+            const onlyBranches = typeof filtersBranchesOnly === "string" ? [filtersBranchesOnly] : filtersBranchesOnly;
+            const filtersBranchesIgnore = filtersBranches.ignore ? filtersBranches.ignore : [];
+            const ignoreBranches = typeof filtersBranchesIgnore === "string" ?
+                [filtersBranchesIgnore] : filtersBranchesIgnore;
+            const ignoreMatch = findMatchingRegex(workflowPush.name, ignoreBranches);
+            if (ignoreMatch) {
+                filtered = true;
+            } else {
+                if (onlyBranches.length > 0) {
+                    filtered = true;
+                    if (!!findMatchingRegex(workflowPush.name, onlyBranches)) {
+                        filtered = false;
+                    }
+                }
+            }
+        }
+        if (workflowPush.type === "tag") {
+            const filtersTags = filters.tags ? filters.tags : {};
+            const filtersTagsOnly = filtersTags.only ? filtersTags.only : [];
+            const onlyTags = typeof filtersTagsOnly === "string" ? [filtersTagsOnly] : filtersTagsOnly;
+            const filtersTagsIgnore = filtersTags.ignore ? filtersTags.ignore : [];
+            const ignoreTags = typeof filtersTagsIgnore === "string" ? [filtersTagsIgnore] : filtersTagsIgnore;
+            filtered = !(ignoreTags.length > 0);
+            const ignoreMatch = findMatchingRegex(workflowPush.name, ignoreTags);
+            if (ignoreMatch) {
+                filtered = true;
+            } else {
+                if (onlyTags.length > 0) {
+                    filtered = true;
+                    if (!!findMatchingRegex(workflowPush.name, onlyTags)) {
+                        filtered = false;
+                    }
+                }
+            }
+        }
+
+        if (!filtered) {
+            const requires = !jobConfig.requires ? [] : jobConfig.requires;
+            let stage = _.find(stages, j => _.isEqual(j.require, requires));
+            if (!stage) {
+                stage = {
+                    jobs: [name],
+                    require: requires,
+                };
+                stages.push(stage);
+            } else {
+                stage.jobs.push(name);
+            }
         }
     });
 
