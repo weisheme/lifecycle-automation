@@ -1,6 +1,7 @@
 import {
     failure,
     HandlerResult,
+    logger,
     Success,
 } from "@atomist/automation-client";
 import * as graphql from "../../../typings/types";
@@ -70,6 +71,7 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
                     })
                     .then(() => Success);
                 } else {
+                    logger.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
                     return Promise.resolve(Success);
                 }
             })
