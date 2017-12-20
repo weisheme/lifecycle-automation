@@ -20,6 +20,7 @@ import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUn
 import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
 import { linkSlackChannelToRepo } from "./LinkRepo";
+import * as graphql from "../../../typings/types";
 
 export function checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
     return github.api(token, url).repos.get({ owner, repo })
@@ -90,7 +91,18 @@ export class AssociateRepo implements HandleCommand {
                     return;
                 }
                 return addBotToSlackChannel(ctx, this.channelId)
-                    .then(() => linkSlackChannelToRepo(ctx, this.channelId, this.repo, this.owner))
+                    .then(() => {
+                        return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
+                            graphql.ProviderIdFromOrg.Variables>(
+                            "graphql/query/providerIdFromOrg",
+                            { owner: this.owner })
+                            .then(result => {
+                                if (result.Org && result.Org[0] && result.Org[0].provider) {
+                                    return linkSlackChannelToRepo(
+                                        ctx, this.channelId, this.repo, this.owner, result.Org[0].provider.providerId)
+                                }
+                            })
+                    })
                     .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
                     .then(() => {
                         if (this.msgId) {
