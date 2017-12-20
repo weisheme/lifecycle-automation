@@ -602,4 +602,214 @@ describe("CircleWorkflow", () => {
         assert.deepEqual(stages, expectedStages);
     });
 
+    const branchFilterWorkflow = {
+        id: "workflow id",
+        name: "pipelineDooling",
+        provider: "circle",
+        config: `workflows:
+  version: 2
+  dev_stage_pre-prod:
+    jobs:
+      - test_dev:
+          filters:
+            branches:
+              only:
+                - dev
+                - /user-.*/
+      - test_stage:
+          filters:
+            branches:
+              only: stage
+      - test_pre-prod:
+          filters:
+            branches:
+              only: /pre-prod(?:-.+)?$/
+      - test_req:
+          requires:
+            - test_stage
+      - test_init:
+`,
+        builds: [],
+    } as graphql.PushToPushLifecycle.Workflow;
+
+    it("should run branch filter jobs where no branch matches", () => {
+        const stages = circleWorkflowtoStages(branchFilterWorkflow);
+        const expectedStages: WorkflowStage[] = [{
+            name: "test_init",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should run branch filter jobs where branch matches exactly", () => {
+        const stages = circleWorkflowtoStages(branchFilterWorkflow, {name: "stage", type: "branch"});
+        const expectedStages: WorkflowStage[] = [{
+            name: "test_stage",
+        }, {
+            name: "test_req",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should run branch filter jobs where branch matches regex", () => {
+        const stages = circleWorkflowtoStages(branchFilterWorkflow, {name: "pre-prod-1", type: "branch"});
+        const expectedStages: WorkflowStage[] = [{
+            name: "test_pre-prod",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should not run jobs without tag filters for tag push", () => {
+        const stages = circleWorkflowtoStages(branchFilterWorkflow, {name: "stage", type: "tag"});
+        const expectedStages: WorkflowStage[] = [];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    const tagIgnoreWorkflow = {
+        id: "workflow id",
+        name: "pipelineDooling",
+        provider: "circle",
+        config: `workflows:
+  version: 2
+  build-workflow:
+    jobs:
+      - build:
+          filters:
+            tags:
+              ignore: /^testing-.*/
+`,
+        builds: [],
+    } as graphql.PushToPushLifecycle.Workflow;
+
+    it("should run tag filter jobs", () => {
+        const stages = circleWorkflowtoStages(tagIgnoreWorkflow);
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should run tag filter jobs for nonignored tag push", () => {
+        const stages = circleWorkflowtoStages(tagIgnoreWorkflow, {name: "1", type: "tag"});
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should not run tag filter jobs for ignored tag push", () => {
+        const stages = circleWorkflowtoStages(tagIgnoreWorkflow, {name: "testing-1", type: "tag"});
+        const expectedStages: WorkflowStage[] = [];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    const branchAndTagFiltersWorkflow = {
+        id: "workflow id",
+        name: "pipelineDooling",
+        provider: "circle",
+        config: `workflows:
+  version: 2
+  build-n-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^config-test.*/
+            branches:
+              ignore: /.*/
+`,
+        builds: [],
+    } as graphql.PushToPushLifecycle.Workflow;
+
+    it("should run tag only jobs for branch push", () => {
+        const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow);
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should not run tag only jobs for nonmatching tags", () => {
+        const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow, {name: "testing-1", type: "tag"});
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should run tag only jobs for matching tags", () => {
+        const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow, {name: "config-test-1", type: "tag"});
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }, {
+            name: "deploy",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+
+    const branchAndTagFiltersWorkflow2 = {
+        id: "workflow id",
+        name: "pipelineDooling",
+        provider: "circle",
+        config: `workflows:
+  version: 2
+  build-n-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^config-test.*/
+      - test:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^config-test.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^config-test.*/
+            branches:
+              ignore: /.*/
+`,
+        builds: [],
+    } as graphql.PushToPushLifecycle.Workflow;
+
+    it("should not run branch ignore all job for branch push", () => {
+        const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow2);
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }, {
+            name: "test",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should not run tag only jobs for nonmatching tags 2", () => {
+        const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow2,
+            {name: "testing-1", type: "tag"});
+        const expectedStages: WorkflowStage[] = [];
+        assert.deepEqual(stages, expectedStages);
+    });
+
+    it("should run tag only jobs for matching tags 2", () => {
+        const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow2, {name: "config-test-1", type: "tag"});
+        const expectedStages: WorkflowStage[] = [{
+            name: "build",
+        }, {
+            name: "test",
+        }, {
+            name: "deploy",
+        }];
+        assert.deepEqual(stages, expectedStages);
+    });
+
 });
