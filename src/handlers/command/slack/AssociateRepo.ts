@@ -21,7 +21,6 @@ import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUn
 import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
 import { linkSlackChannelToRepo } from "./LinkRepo";
-import * as graphql from "../../../typings/types";
 
 export function checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
     return github.api(token, url).repos.get({ owner, repo })
