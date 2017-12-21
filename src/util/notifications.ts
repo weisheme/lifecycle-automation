@@ -412,7 +412,7 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
                 footer_icon: "https://images.atomist.com/rug/commit.png",
                 ts: Math.floor(Date.now() / 1000),
                 actions,
-            },           tow
+            },
         ],
     };
     const msgId =
