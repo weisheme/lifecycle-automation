@@ -4078,6 +4078,8 @@ export namespace NotifyPusherOnBuild {
     status?: BuildStatus | null; 
     buildUrl?: string | null; 
     name?: string | null; 
+    provider?: string | null; 
+    buildId?: string | null; 
     commit?: Commit | null; 
     repo?: Repo | null; 
   } 

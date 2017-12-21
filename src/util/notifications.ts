@@ -1,4 +1,5 @@
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
+import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import {
@@ -7,6 +8,7 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
+import { RestartTravisBuild } from "../handlers/command/travis/RestartTravisBuild";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
 import {
@@ -380,6 +382,18 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
     }
 
     const commit = build.commit;
+
+    // Add restart action
+    const actions: Action[] = [];
+    if (build.provider === "travis") {
+        const handler = new RestartTravisBuild();
+        handler.owner = repo.owner;
+        handler.repo = repo.name;
+        handler.buildId = build.buildId;
+
+        actions.push(buttonForCommand({ text: "Restart" }, handler));
+    }
+
     const slackMessage: SlackMessage = {
         // tslint:disable-next-line:max-line-length
         text: `${url(build.buildUrl, `Build #${build.name}`)} of your push to ${url(repoUrl(repo), repoSlug(repo))} failed`,
@@ -397,7 +411,8 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
                 footer: repoAndChannelFooter(repo),
                 footer_icon: "https://images.atomist.com/rug/commit.png",
                 ts: Math.floor(Date.now() / 1000),
-            },
+                actions,
+            },           tow
         ],
     };
     const msgId =

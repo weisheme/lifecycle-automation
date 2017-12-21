@@ -5,6 +5,8 @@ subscription NotifyPusherOnBuild
     status
     buildUrl
     name
+    provider
+    buildId
     commit {
       sha
       message
