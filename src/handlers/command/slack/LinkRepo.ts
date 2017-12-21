@@ -13,6 +13,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 
 import { LinkSlackChannelToRepo } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
@@ -100,9 +101,9 @@ export class LinkRepo implements HandleCommand {
                     "graphql/query/providerIdFromOrg",
                     { owner: this.owner })
                     .then(result => {
-                        if (result.Org && result.Org[0] && result.Org[0].provider) {
+                        const providerId = _.get(result, "Org[0].provider.providerId");
                         return linkSlackChannelToRepo(
-                            ctx, this.channelId, this.name, this.owner, result.Org[0].provider.providerId)
+                            ctx, this.channelId, this.name, this.owner, providerId)
                             .then(() => {
                                 if (this.msgId) {
                                     ctx.messageClient.addressChannels(
@@ -110,7 +111,6 @@ export class LinkRepo implements HandleCommand {
                                 }
                                 return Success;
                             });
-                        }
                     });
             })
             .then(() => Success, failure);

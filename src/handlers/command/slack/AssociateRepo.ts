@@ -13,6 +13,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 
 import { InviteUserToSlackChannel } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
@@ -97,10 +98,9 @@ export class AssociateRepo implements HandleCommand {
                             "graphql/query/providerIdFromOrg",
                             { owner: this.owner })
                             .then(result => {
-                                if (result.Org && result.Org[0] && result.Org[0].provider) {
-                                    return linkSlackChannelToRepo(
-                                        ctx, this.channelId, this.repo, this.owner, result.Org[0].provider.providerId);
-                                }
+                                const providerId = _.get(result, "Org[0].provider.providerId");
+                                return linkSlackChannelToRepo(
+                                    ctx, this.channelId, this.repo, this.owner, providerId);
                             });
                     })
                     .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
