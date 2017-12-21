@@ -297,7 +297,7 @@ describe("PushToPushLifecycle", () => {
             invocationId: guid(),
             graphClient: {
                 executeQueryFromFile(name: string, variables?: any): Promise<any> {
-                    assert(variables.branchName === "cdupuis-patch-37");
+                    assert(variables.branch === "cdupuis-patch-37");
                     return Promise.resolve({
                         Repo: [
                             {

@@ -1,5 +1,5 @@
-subscription BranchToBranchLifecycle {
-  Branch {
+subscription DeletedBranchToBranchLifecycle {
+  DeletedBranch {
     id
     pullRequests(first: 1, orderBy: [timestamp_desc]) {
       merged

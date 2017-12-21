@@ -209,7 +209,7 @@ export function loadIssueOrPullRequest(owner: string,
                                        ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
     return ctx.graphClient.executeQueryFromFile<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>(
         "graphql/query/issueOrPr",
-        { orgOwner: owner, repoName: repo, names })
+        { owner, repo, names })
         .then(result => {
             if (result && result.Org && result.Org.length > 0) {
                 return result.Org[0];

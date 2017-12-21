@@ -10,23 +10,23 @@ import * as graphql from "../../../typings/types";
 import { BranchLifecycle } from "./BranchLifecycle";
 
 /**
- * Send a lifecycle message on Branch events.
+ * Send a lifecycle message on DeletedBranch events.
  */
-@EventHandler("Send a lifecycle message on Branch events",
-    GraphQL.subscriptionFromFile("graphql/subscription/branchToBranch"))
-@Tags("lifecycle", "branch")
-export class BranchToBranchLifecycle
+@EventHandler("Send a lifecycle message on DeletedBranch events",
+    GraphQL.subscriptionFromFile("graphql/subscription/deletedBranchToBranch"))
+@Tags("lifecycle", "branch", "pr")
+export class DeletedBranchToBranchLifecycle
     extends BranchLifecycle<graphql.BranchToBranchLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.BranchToBranchLifecycle.Subscription>)
-        : [graphql.BranchToBranchLifecycle.Branch[], graphql.BranchToBranchLifecycle.Repo, boolean] {
+    : [graphql.BranchToBranchLifecycle.Branch[], graphql.BranchToBranchLifecycle.Repo, boolean] {
 
-        const branch = _.get(event, "data.Branch[0]");
-        return [[branch], branch.repo, false];
+        const branch = _.get(event, "data.DeletedBranch[0]");
+        return [[branch], branch.repo, true];
     }
 
     protected extractPreferences(event: EventFired<graphql.BranchToBranchLifecycle.Subscription>)
-        : Preferences[] {
-        return _.get(event, "data.Branch[0].repo.org.chatTeam.preferences");
+    : Preferences[] {
+        return _.get(event, "data.DeletedBranch[0].repo.org.chatTeam.preferences");
     }
 }

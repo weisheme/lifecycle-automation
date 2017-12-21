@@ -609,7 +609,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 
         return context.context.graphClient.executeQueryFromFile<graphql.OpenPr.Query, graphql.OpenPr.Variables>(
             "graphql/query/openPr",
-            { repoName: repo.name, ownerName: repo.owner, branchName: node.branch })
+            { repo: repo.name, owner: repo.owner, branch: node.branch })
             .then(result => {
                 const pr = _.get(result, "Repo[0].branches[0].pullRequests[0]") as graphql.OpenPr.PullRequests;
                 if (pr) {

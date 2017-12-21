@@ -60,7 +60,7 @@ export type _CommitOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "sha_asc" | "
 export type BuildStatus = "passed" | "broken" | "failed" | "started" | "canceled";
 
 /* Enum for BuildTrigger */
-export type BuildTrigger = "pull_request" | "push" | "tag";
+export type BuildTrigger = "pull_request" | "push" | "tag" | "cron";
 
 /* Ordering Enum for Build */
 export type _BuildOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "buildId_asc" | "buildId_desc" | "name_asc" | "name_desc" | "status_asc" | "status_desc" | "buildUrl_asc" | "buildUrl_desc" | "compareUrl_asc" | "compareUrl_desc" | "trigger_asc" | "trigger_desc" | "provider_asc" | "provider_desc" | "pullRequestNumber_asc" | "pullRequestNumber_desc" | "startedAt_asc" | "startedAt_desc" | "finishedAt_asc" | "finishedAt_desc" | "timestamp_asc" | "timestamp_desc" | "workflowId_asc" | "workflowId_desc" | "jobName_asc" | "jobName_desc" | "jobId_asc" | "jobId_desc";
@@ -114,7 +114,7 @@ export type _FingerprintOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_as
 export type _ParentImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "url_asc" | "url_desc" | "data_asc" | "data_desc";
 
 /* Ordering Enum for Branch */
-export type _BranchOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "deleted_asc" | "deleted_desc" | "timestamp_asc" | "timestamp_desc";
+export type _BranchOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Enum for ReviewState */
 export type ReviewState = "requested" | "pending" | "approved" | "commented" | "changes_requested";
@@ -127,6 +127,9 @@ export type CommentCommentType = "review" | "pullRequest" | "issue";
 
 /* Ordering Enum for Comment */
 export type _CommentOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "body_asc" | "body_desc" | "timestamp_asc" | "timestamp_desc" | "gitHubId_asc" | "gitHubId_desc" | "path_asc" | "path_desc" | "position_asc" | "position_desc" | "htmlUrl_asc" | "htmlUrl_desc" | "commentType_asc" | "commentType_desc";
+
+/* Ordering Enum for DeletedBranch */
+export type _DeletedBranchOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for K8Cluster */
 export type _K8ClusterOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "availabilityZone_asc" | "availabilityZone_desc";
@@ -259,33 +262,21 @@ export namespace BotOwner {
 }
 export namespace Branch {
   export type Variables = {
-    teamId: string;
-    repoOwner: string;
-    repoName: string;
-    branchName: string;
+    owner: string;
+    repo: string;
+    branch: string;
   }
 
   export type Query = {
-    ChatTeam?: ChatTeam[] | null; 
-  } 
-
-  export type ChatTeam = {
-    orgs?: Orgs[] | null; 
-  } 
-
-  export type Orgs = {
-    repo?: Repo[] | null; 
+    Repo?: Repo[] | null; 
   } 
 
   export type Repo = {
-    owner?: string | null; 
-    name?: string | null; 
     branches?: Branches[] | null; 
   } 
 
   export type Branches = {
     name?: string | null; 
-    deleted?: boolean | null; 
     pullRequests?: PullRequests[] | null; 
   } 
 
@@ -312,7 +303,6 @@ export namespace BranchWithPullRequest {
     pullRequests?: PullRequests[] | null; 
     commit?: Commit | null; 
     name?: string | null; 
-    deleted?: boolean | null; 
     repo?: Repo | null; 
     timestamp?: string | null; 
   } 
@@ -800,8 +790,8 @@ export namespace Issue {
 }
 export namespace IssueOrPr {
   export type Variables = {
-    orgOwner: string;
-    repoName: string;
+    owner: string;
+    repo: string;
     names: string[];
   }
 
@@ -872,9 +862,9 @@ export namespace IssueOrPr {
 }
 export namespace OpenPr {
   export type Variables = {
-    repoName: string;
-    ownerName: string;
-    branchName: string;
+    repo: string;
+    owner: string;
+    branch: string;
   }
 
   export type Query = {
@@ -900,10 +890,9 @@ export namespace OpenPr {
 }
 export namespace Pr {
   export type Variables = {
-    teamId: string;
-    orgOwner: string;
-    repoName: string;
-    prName: string;
+    owner: string;
+    repo: string;
+    pr: string;
   }
 
   export type Query = {
@@ -1631,7 +1620,6 @@ export namespace BranchToBranchLifecycle {
     pullRequests?: PullRequests[] | null; 
     commit?: Commit | null; 
     name?: string | null; 
-    deleted?: boolean | null; 
     repo?: Repo | null; 
     timestamp?: string | null; 
   } 
@@ -1744,7 +1732,6 @@ export namespace BranchToPullRequestLifecycle {
 
   export type _Branch = {
     name?: string | null; 
-    deleted?: boolean | null; 
     timestamp?: string | null; 
   } 
 
@@ -2347,7 +2334,6 @@ export namespace CommentToPullRequestLifecycle {
 
   export type Branch = {
     name?: string | null; 
-    deleted?: boolean | null; 
     timestamp?: string | null; 
   } 
 
@@ -2715,7 +2701,319 @@ export namespace CommitToPullRequestLifecycle {
 
   export type Branch = {
     name?: string | null; 
-    deleted?: boolean | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
+  } 
+
+  export type _Person = {
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
+  } 
+
+  export type _GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type _ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Merger = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
+  } 
+
+  export type __Person = {
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
+  } 
+
+  export type __GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type __ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Assignees = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
+  } 
+
+  export type ___Person = {
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
+  } 
+
+  export type ___GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type ___ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Reviewers = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
+  } 
+
+  export type ____Person = {
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
+  } 
+
+  export type ____GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type ____ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
+  } 
+
+  export type Commits = {
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
+  } 
+
+  export type Tags = {
+    name?: string | null; 
+    release?: Release | null; 
+  } 
+
+  export type Release = {
+    name?: string | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Statuses = {
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
+  } 
+
+  export type _Author = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
+  } 
+
+  export type _____Person = {
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
+  } 
+
+  export type _____GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type _____ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Builds = {
+    name?: string | null; 
+    status?: BuildStatus | null; 
+    buildUrl?: string | null; 
+    provider?: string | null; 
+  } 
+
+  export type Reviews = {
+    state?: ReviewState | null; 
+    by?: By[] | null; 
+  } 
+
+  export type By = {
+    login?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+    chatTeam?: ChatTeam | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+}
+export namespace DeletedBranchToBranchLifecycle {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    DeletedBranch?: DeletedBranch[] | null; 
+  } 
+
+  export type DeletedBranch = {
+    id?: string | null; 
+    pullRequests?: PullRequests[] | null; 
+    commit?: Commit | null; 
+    name?: string | null; 
+    repo?: Repo | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type PullRequests = {
+    merged?: boolean | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+    message?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    defaultBranch?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    chatTeam?: ChatTeam | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type ChatTeam = {
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type Provider = {
+    id?: string | null; 
+    apiUrl?: string | null; 
+    url?: string | null; 
+  } 
+}
+export namespace DeletedBranchToPullRequestLifecycle {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    DeletedBranch?: DeletedBranch[] | null; 
+  } 
+
+  export type DeletedBranch = {
+    id?: string | null; 
+    pullRequests?: PullRequests[] | null; 
+  } 
+
+  export type PullRequests = {
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: Repo | null; 
+  } 
+
+  export type Head = {
+    sha?: string | null; 
+  } 
+
+  export type LastAssignedBy = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
+  } 
+
+  export type GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Branch = {
+    name?: string | null; 
     timestamp?: string | null; 
   } 
 
@@ -4513,7 +4811,6 @@ export namespace PullRequestToPullRequestLifecycle {
 
   export type Branch = {
     name?: string | null; 
-    deleted?: boolean | null; 
     timestamp?: string | null; 
   } 
 
@@ -5428,7 +5725,6 @@ export namespace ReviewToPullRequestLifecycle {
 
   export type Branch = {
     name?: string | null; 
-    deleted?: boolean | null; 
     timestamp?: string | null; 
   } 
 
@@ -5796,7 +6092,6 @@ export namespace StatusToPullRequestLifecycle {
 
   export type Branch = {
     name?: string | null; 
-    deleted?: boolean | null; 
     timestamp?: string | null; 
   } 
 

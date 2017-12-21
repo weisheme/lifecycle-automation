@@ -9,7 +9,6 @@ query BranchWithPullRequest($id: ID!) {
       message
     }
     name
-    deleted
     repo {
       name
       owner

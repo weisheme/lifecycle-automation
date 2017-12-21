@@ -255,18 +255,17 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
 
             return ctx.context.graphClient.executeQueryFromFile<graphql.Branch.Query, graphql.Branch.Variables>(
                 "graphql/query/branch",
-                { teamId: ctx.context.teamId, repoName: repo.name, repoOwner: repo.owner, branchName: node.branch },
+                { repo: repo.name, owner: repo.owner, branch: node.branch },
                 { fetchPolicy: "network-only" })
                 .then(result => {
                     let showButton = true;
                     const buttons = [];
 
                     // If there are open PRs on the branch, don't show the button
-                    const branch = _.get(result, "ChatTeam[0].orgs[0].repo[0].branches[0]");
-                    if (branch && branch.deleted) {
-                        showButton = false;
-                        // If there are PRs that already contain this push's after commit, don't show the button
-                    } else if (branch && branch.pullRequests != null
+                    const branch = _.get(result, "Repo[0].branches[0]");
+
+                    // If there are PRs that already contain this push's after commit, don't show the button
+                    if (branch && branch.pullRequests != null
                         && branch.pullRequests.filter(pr => pr.state === "open").length > 0) {
                         showButton = false;
                     } else if (branch && branch.pullRequests != null) {

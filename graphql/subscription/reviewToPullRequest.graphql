@@ -33,7 +33,6 @@ subscription ReviewToPullRequestLifecycle
       closedAt
       branch {
         name
-        deleted
         timestamp
       }
       author {
