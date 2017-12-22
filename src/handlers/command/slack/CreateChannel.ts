@@ -9,10 +9,12 @@ import {
     Parameter,
     Secret,
     Secrets,
+    Success,
     Tags,
 } from "@atomist/automation-client";
 
 import { CreateSlackChannel } from "../../../typings/types";
+import { error } from "../../../util/messages";
 import { AssociateRepo } from "./AssociateRepo";
 
 export function createChannel(ctx: HandlerContext, channelName: string): Promise<CreateSlackChannel.Mutation> {
@@ -67,15 +69,21 @@ export class CreateChannel implements HandleCommand {
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return createChannel(ctx, this.channel)
             .then(channel => {
-                const associateRepo = new AssociateRepo();
-                associateRepo.channelId = channel.createSlackChannel[0].id;
-                associateRepo.owner = this.owner;
-                associateRepo.apiUrl = this.apiUrl;
-                associateRepo.userId = this.userId;
-                associateRepo.githubToken = this.githubToken;
-                associateRepo.repo = this.repo;
-                associateRepo.msgId = this.msgId;
-                return associateRepo.handle(ctx);
+                if (channel && channel.createSlackChannel) {
+                    const associateRepo = new AssociateRepo();
+                    associateRepo.channelId = channel.createSlackChannel[0].id;
+                    associateRepo.owner = this.owner;
+                    associateRepo.apiUrl = this.apiUrl;
+                    associateRepo.userId = this.userId;
+                    associateRepo.githubToken = this.githubToken;
+                    associateRepo.repo = this.repo;
+                    associateRepo.msgId = this.msgId;
+                    return associateRepo.handle(ctx);
+                } else {
+                    return ctx.messageClient.respond(
+                        error("Create Channel", "Channel creation failed", ctx))
+                        .then(() => Success, failure);
+                }
             })
             .catch(e => failure(e));
     }
