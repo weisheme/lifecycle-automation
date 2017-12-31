@@ -23,9 +23,9 @@ describe("slack", () => {
             });
         });
 
-        it("should reject private group chats", () => {
+        it("should accept private group chats", () => {
             ["GR8W1D0PN", "G767PBQBG"].forEach(i => {
-                assert(!isChannelPublic(i));
+                assert(isChannelPublic(i));
             });
         });
 
