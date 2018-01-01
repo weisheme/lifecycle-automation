@@ -17,7 +17,7 @@ import * as _ from "lodash";
 
 import { LinkSlackChannelToRepo } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
-import { isChannelPublic } from "../../../util/slack";
+import { isPublic } from "../../../util/slack";
 import {
     checkRepo,
     noRepoMessage,
@@ -84,7 +84,7 @@ export class LinkRepo implements HandleCommand {
     public msg: string = "";
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        if (!isChannelPublic(this.channelId)) {
+        if (!isPublic(this.channelId)) {
             const err = "The Atomist Bot can only link repositories to public channels. " +
                 "Please try again in a public channel.";
             return ctx.messageClient.addressChannels(err, this.channelName)

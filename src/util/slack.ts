@@ -5,6 +5,6 @@
  * @param id channel ID
  * @return true if the channel is a public channel
  */
-export function isChannelPublic(id: string): boolean {
+export function isPublic(id: string): boolean {
     return id.indexOf("C") === 0 || id.indexOf("G") === 0;
 }
