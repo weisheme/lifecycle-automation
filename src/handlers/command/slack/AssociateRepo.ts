@@ -17,7 +17,7 @@ import * as _ from "lodash";
 
 import { InviteUserToSlackChannel } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
-import { isChannelPublic } from "../../../util/slack";
+import { isPublic } from "../../../util/slack";
 import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
 import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
@@ -79,7 +79,7 @@ export class AssociateRepo implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
-        if (!isChannelPublic(this.channelId)) {
+        if (!isPublic(this.channelId)) {
             const err = "The Atomist Bot can only link repositories to public channels. " +
                 "Please try again with a public channel.";
             return ctx.messageClient.addressUsers(err, screenName)
