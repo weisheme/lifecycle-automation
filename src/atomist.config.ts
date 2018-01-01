@@ -45,6 +45,7 @@ import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
 import { UnlinkRepo } from "./handlers/command/slack/UnlinkRepo";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { BranchToBranchLifecycle } from "./handlers/event/branch/BranchToBranchLifecycle";
+import { DeletedBranchToBranchLifecycle } from "./handlers/event/branch/DeletedBranchToBranchLifecycle";
 import { PullRequestToBranchLifecycle } from "./handlers/event/branch/PullRequestToBranchLifecycle";
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
@@ -67,6 +68,7 @@ import { AutoMergeOnStatus } from "./handlers/event/pullrequest/AutoMergeOnStatu
 import { BranchToPullRequestLifecycle } from "./handlers/event/pullrequest/BranchToPullRequestLifecycle";
 import { CommentToPullRequestLifecycle } from "./handlers/event/pullrequest/CommentToPullRequestLifecycle";
 import { CommitToPullRequestLifecycle } from "./handlers/event/pullrequest/CommitToPullRequestLifecycle";
+import { DeletedBranchToPullRequestLifecycle } from "./handlers/event/pullrequest/DeletedBranchToPullRequestLifecycle";
 import { NotifyMentionedOnPullRequest } from "./handlers/event/pullrequest/NotifyMentionedOnPullRequest";
 import { PullRequestToPullRequestLifecycle } from "./handlers/event/pullrequest/PullRequestToPullRequestLifecycle";
 import { ReviewToPullRequestLifecycle } from "./handlers/event/pullrequest/ReviewToPullRequestLifecycle";
@@ -195,6 +197,7 @@ export const configuration: any = {
     events: [
         // branch
         () => new BranchToBranchLifecycle(),
+        () => new DeletedBranchToBranchLifecycle(),
         () => new PullRequestToBranchLifecycle(),
 
         // build
@@ -233,6 +236,7 @@ export const configuration: any = {
         () => new BranchToPullRequestLifecycle(),
         () => new CommentToPullRequestLifecycle(),
         () => new CommitToPullRequestLifecycle(),
+        () => new DeletedBranchToPullRequestLifecycle(),
         () => new NotifyMentionedOnPullRequest(),
         () => new PullRequestToPullRequestLifecycle(),
         () => new ReviewToPullRequestLifecycle(),

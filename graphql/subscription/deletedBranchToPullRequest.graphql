@@ -1,7 +1,6 @@
-subscription CommitToPullRequestLifecycle
-{
-  Commit {
-    _id
+subscription DeletedBranchToPullRequestLifecycle {
+  DeletedBranch {
+    id
     pullRequests(first: 1) {
       number
       name
@@ -163,4 +162,3 @@ subscription CommitToPullRequestLifecycle
     }
   }
 }
-

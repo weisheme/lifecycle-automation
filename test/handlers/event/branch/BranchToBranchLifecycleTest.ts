@@ -16,7 +16,6 @@ describe("BranchToBranchLifecycle", () => {
     "data": {
         "Branch": [{
             "name": "master",
-            "deleted": false,
             "repo": {
                 "name": "ddmvc1",
                 "owner": "atomisthqa",
@@ -101,7 +100,6 @@ describe("BranchToBranchLifecycle", () => {
     "data": {
         "Branch": [{
             "name": "some-feature",
-            "deleted": false,
             "commit": {
                 "sha": "f94a69f1ce47f2862d3e34e6ec08c868bbfc4738",
                 "message": "Delint"
@@ -198,7 +196,6 @@ describe("BranchToBranchLifecycle", () => {
     "data": {
         "Branch": [{
             "name": "some-feature",
-            "deleted": true,
             "repo": {
                 "name": "ddmvc1",
                 "owner": "atomisthqa",
@@ -251,13 +248,13 @@ describe("BranchToBranchLifecycle", () => {
 }`;
     /* tslint:enable */
 
-    it("display a branch deleted message for branch", done => {
+    it("display a branch message for branch", done => {
         class MockMessageClient extends MessageClientSupport {
 
             protected doSend(msg: string | SlackMessage, userNames: string | string[],
                              channelNames: string | string[], options?: MessageOptions): Promise<any> {
                 assert(channelNames[0] === "ddmvc1");
-                assert(options.id === "branch_lifecycle/atomisthqa/ddmvc1/some-feature/true");
+                assert(options.id === "branch_lifecycle/atomisthqa/ddmvc1/some-feature");
 
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 1);

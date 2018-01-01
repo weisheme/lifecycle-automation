@@ -1,6 +1,6 @@
-query IssueOrPr($orgOwner: String!, $repoName: String!, $names: [String]!) {
-  Org(owner: $orgOwner) {
-    repo(name: $repoName) {
+query IssueOrPr($owner: String!, $repo: String!, $names: [String]!) {
+  Org(owner: $owner) {
+    repo(name: $repo) {
       name
       owner
       pullRequest(names: $names) {

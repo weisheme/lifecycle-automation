@@ -24,15 +24,16 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.name && node.hasOwnProperty("deleted") && node.name !== node.repo.defaultBranch;
+        return node.repo && node.name !== node.repo.defaultBranch;
     }
 
     public render(branch: graphql.BranchToBranchLifecycle.Branch, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
+        const deleted = context.lifecycle.extract("deleted");
         const repoSlug = `${repo.owner}/${repo.name}`;
         const branchSlug = `${repoSlug}/${branch.name}`;
-        const state = branch.deleted && branch.deleted === true ? "deleted" : "created";
+        const state = deleted && deleted === true ? "deleted" : "created";
         const prMerged = branch.pullRequests ?
             (branch.pullRequests.find(pr => pr.merged === true) ? "merged" : "closed") : "closed";
 

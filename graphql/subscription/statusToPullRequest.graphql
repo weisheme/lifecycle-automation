@@ -34,7 +34,6 @@ subscription StatusToPullRequestLifecycle
         closedAt
         branch {
           name
-          deleted
           timestamp
         }
         author {

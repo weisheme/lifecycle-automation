@@ -17,15 +17,15 @@ export class RaisePrActionContributor extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return (node.deleted == null || node.deleted === false)
-            && node.commit !== null
+        return node.commit != null
             && (node.pullRequests == null || (node.pullRequests && node.pullRequests.length === 0));
     }
 
     public buttonsFor(node: graphql.BranchToBranchLifecycle.Branch, context: RendererContext): Promise<Action[]> {
         const actions = [];
+        const deleted = context.lifecycle.extract("deleted");
 
-        if (context.rendererId === "branch") {
+        if (context.rendererId === "branch" && !deleted) {
             const handler = new RaiseGitHubPullRequest();
             handler.owner = node.repo.owner;
             handler.repo = node.repo.name;

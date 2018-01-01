@@ -12,7 +12,7 @@ import { BranchNodeRenderer } from "./rendering/BranchNodeRenderers";
 export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
-        const [branches, repo] = this.extractNodes(event);
+        const [branches, repo, deleted] = this.extractNodes(event);
 
         if (branches != null) {
             return branches.map(branch => {
@@ -33,13 +33,16 @@ export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
                     contributors: [
                         new RaisePrActionContributor(),
                     ],
-                    id: `branch_lifecycle/${repo.owner}/${repo.name}/${branch.name}/${branch.deleted}`,
+                    id: `branch_lifecycle/${repo.owner}/${repo.name}/${branch.name}`,
                     // ttl: (1000 * 60 * 60).toString(),
                     timestamp: Date.now().toString(),
                     channels: repo.channels.map(c => c.name),
+                    post: deleted ? "update_only" : "always",
                     extract: (type: string) => {
                         if (type === "repo") {
                             return repo;
+                        } else if (type === "deleted") {
+                            return deleted;
                         }
                         return null;
                     },
@@ -51,5 +54,6 @@ export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
 
     protected abstract extractNodes(event: EventFired<R>):
         [graphql.BranchToBranchLifecycle.Branch[],
-            graphql.BranchToBranchLifecycle.Repo];
+            graphql.BranchToBranchLifecycle.Repo,
+            boolean];
 }

@@ -33,7 +33,6 @@ subscription CommentToPullRequestLifecycle
       closedAt
       branch {
         name
-        deleted
         timestamp
       }
       author {

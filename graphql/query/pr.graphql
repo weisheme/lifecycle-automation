@@ -1,10 +1,10 @@
-query PR($teamId: ID!, $orgOwner: String!, $repoName: String!, $prName: String!) {
-  ChatTeam(id: $teamId) {
-    orgs(owner: $orgOwner) {
-      repo(name: $repoName) {
+query PR($owner: String!, $repo: String!, $pr: String!) {
+  ChatTeam {
+    orgs(owner: $owner) {
+      repo(name: $repo) {
         name
         owner
-        pullRequest(name: $prName) {
+        pullRequest(name: $pr) {
           state
           merged
           number

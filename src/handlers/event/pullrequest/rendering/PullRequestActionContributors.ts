@@ -207,8 +207,7 @@ export class DeleteActionContributor extends AbstractIdentifiableContribution
     public supports(node: any): boolean {
         if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
-            return pr.state === "closed" && pr.branch != null
-                && (pr.branch.deleted == null || pr.branch.deleted.toString() === "false");
+            return pr.state === "closed" && pr.branch != null;
 
         } else {
             return false;
@@ -325,8 +324,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
         const repo = context.lifecycle.extract("repo") as graphql.PullRequestToPullRequestLifecycle.Repo;
 
         if (context.rendererId === "pull_request") {
-            if (repo.org && repo.org.provider && repo.org.provider
-                && repo.org.provider.apiUrl == null && context.orgToken) {
+            if (repo.org && repo.org.provider == null && context.orgToken) {
                 return this.assiggnReviewMenu(pr, repo, context.orgToken);
             } else {
                 return Promise.resolve(this.assignReviewrButton(pr, repo));

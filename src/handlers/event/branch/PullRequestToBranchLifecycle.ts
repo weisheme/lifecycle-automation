@@ -35,7 +35,7 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
                 if (result && result.Branch && result.Branch.length > 0) {
                     const handler = new BranchToBranchLifecycle();
                     const event: any = {
-                        data: {Branch: result.Branch },
+                        data: { Branch: result.Branch },
                         extensions: {
                             type: "READ_ONLY",
                             operationName: "PullRequestToBranchLifecycle",

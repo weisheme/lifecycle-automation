@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://r.atomist.com/HJkll2qzBzf",
+    "@atomist/automation-client": "https://r.atomist.com/HkJlUtfWFfM",
     "@atomist/slack-messages": "^0.12.1",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
@@ -92,7 +92,7 @@
     "lint": "tslint --format verbose --project . --exclude '{build,node_modules}/**' '**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
     "start": "atomist start --no-install --no-compile",
-    "test": "mocha --require espower-typescript/guess 'test/**/*.ts'",
+    "test": "mocha --require espower-typescript/guess \"test/**/*.ts\"",
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
     "typedoc": "typedoc --mode modules --excludeExternals --out build/typedoc src",
     "watch:compile": "tsc --project . --watch",
