@@ -1,7 +1,7 @@
 import "mocha";
 import * as assert from "power-assert";
 
-import { isPublic } from "../../src/util/slack";
+import { isChannel } from "../../src/util/slack";
 
 describe("slack", () => {
 
@@ -9,23 +9,23 @@ describe("slack", () => {
 
         it("should accept a valid ID", () => {
             ["CH4RL1312", "C2KDBBLBA"].forEach(i => {
-                assert(isPublic(i));
+                assert(isChannel(i));
             });
         });
 
         it("should require capital letters", () => {
-            assert(!isPublic("ch4r1i3"));
+            assert(!isChannel("ch4r1i3"));
         });
 
         it("should reject DMs", () => {
             ["D1LL0N123", "D7F0EFEJ2"].forEach(i => {
-                assert(!isPublic(i));
+                assert(!isChannel(i));
             });
         });
 
         it("should accept private group chats", () => {
             ["GR8W1D0PN", "G767PBQBG"].forEach(i => {
-                assert(isPublic(i));
+                assert(isChannel(i));
             });
         });
 
