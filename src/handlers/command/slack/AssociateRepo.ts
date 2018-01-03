@@ -105,10 +105,12 @@ export class AssociateRepo implements HandleCommand {
                     })
                     .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
                     .then(() => {
+                        const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
+                            `${slack.channel(this.channelId)} and invited you to the channel.`;
                         if (this.msgId) {
-                            const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
-                                `${slack.channel(this.channelId)} and invited you to the channel.`;
                             ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
+                        } else {
+                            ctx.messageClient.respond(msg);
                         }
                         return Success;
                     });
