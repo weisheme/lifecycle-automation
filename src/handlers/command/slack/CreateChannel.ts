@@ -27,7 +27,7 @@ export function createChannel(ctx: HandlerContext, channelName: string): Promise
 /**
  * Create a channel and link it to a repository.
  */
-@CommandHandler("Create channel and link it to a repository")
+@CommandHandler("Create channel and link it to a repository", "link channel")
 @Tags("slack", "channel", "repo")
 export class CreateChannel implements HandleCommand {
 
