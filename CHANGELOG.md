@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/lifecycle-automation/compare/0.2.6...HEAD
 
+### Fixed
+
+-   Make sure branch is available on PullRequestToBranchLifecycle
+
 ## [0.2.6][] - 2017-11-15
 
 [0.2.6]: https://github.com/atomist/lifecycle-automation/compare/0.2.5...0.2.6
