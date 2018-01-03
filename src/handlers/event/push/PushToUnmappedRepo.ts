@@ -105,7 +105,7 @@ export function mapRepoMessageId(owner: string, repo: string, screenName: string
  * @return screen name
  */
 export function extractScreenNameFromMapRepoMessageId(msgId: string): string {
-    return msgId.split("/")[2];
+    return msgId ? msgId.split("/")[2] : null;
 }
 
 function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]): string[] {
