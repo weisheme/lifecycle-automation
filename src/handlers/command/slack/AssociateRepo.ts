@@ -78,11 +78,10 @@ export class AssociateRepo implements HandleCommand {
     public msgId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
         if (!isChannel(this.channelId)) {
             const err = "The Atomist Bot can only link repositories to public channels. " +
                 "Please try again with a public channel.";
-            return ctx.messageClient.addressUsers(err, screenName)
+            return ctx.messageClient.respond(err)
                 .then(() => Success, failure);
         }
         return checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
@@ -105,10 +104,13 @@ export class AssociateRepo implements HandleCommand {
                     })
                     .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
                     .then(() => {
+                        const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
+                            `${slack.channel(this.channelId)} and invited you to the channel.`;
                         if (this.msgId) {
-                            const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
-                                `${slack.channel(this.channelId)} and invited you to the channel.`;
+                            const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
                             ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
+                        } else {
+                            ctx.messageClient.respond(msg);
                         }
                         return Success;
                     });
