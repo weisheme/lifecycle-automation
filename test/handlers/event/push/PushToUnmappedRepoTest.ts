@@ -96,6 +96,14 @@ describe("PushToUnmappedRepo", () => {
             assert(extractScreenNameFromMapRepoMessageId(mapRepoMessageId(owner, repo, screenName)) === screenName);
         });
 
+        it("should return null for a null message ID", () => {
+            assert(extractScreenNameFromMapRepoMessageId(null) === null);
+        });
+
+        it("should return null for a invalid message ID", () => {
+            assert(extractScreenNameFromMapRepoMessageId("invalid/message") === null);
+        });
+
     });
 
     describe("mapRepoMessage", () => {

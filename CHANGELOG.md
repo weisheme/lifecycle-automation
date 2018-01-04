@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 -   Make sure branch is available on PullRequestToBranchLifecycle
+-   Ensure msgId is set before trying to extract the screen name
 
 ## [0.2.6][] - 2017-11-15
 
