@@ -71,7 +71,8 @@ export class CreateChannel implements HandleCommand {
             .then(channel => {
                 if (channel && channel.createSlackChannel) {
                     const associateRepo = new AssociateRepo();
-                    associateRepo.channelId = channel.createSlackChannel[0].id;
+                    associateRepo.channelId = Array.isArray(channel.createSlackChannel)
+                        ? channel.createSlackChannel[0].id : channel.createSlackChannel.id;
                     associateRepo.owner = this.owner;
                     associateRepo.apiUrl = this.apiUrl;
                     associateRepo.userId = this.userId;
