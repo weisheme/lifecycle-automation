@@ -8,7 +8,7 @@ import {
     getIssueMentions,
     isDmDisabled,
     linkGitHubUsers,
-    linkIssues,
+    linkIssues, replaceChatIdWithGitHubId,
     repoSlackLink,
     truncateCommitMessage,
 } from "../../src/util/helpers";
@@ -812,6 +812,82 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
             linkGitHubUsers(body, ctx)
                 .then(r => {
                     assert(r === expected);
+                })
+                .then(done, done);
+        });
+
+    });
+
+    describe("replaceChatIdWithGitHubId", () => {
+
+        const gitHubLogin = "jason-isbell";
+        const slackId = "U1DBT400U";
+        const slackIdUnkownGitHub = "U1DBT400F";
+        const screenName = "jason";
+        const ctx: any = {
+            teamId: "T3434343",
+            graphClient: {
+                executeQueryFromFile(path: string, params: any): Promise<any> {
+                    if (params.chatId === slackId) {
+                        return Promise.resolve({
+                            ChatTeam: [{
+                                members: [{
+                                    person: {
+                                        chatId: {
+                                            screenName,
+                                            preferences: {},
+                                        },
+                                        gitHubId: {
+                                            login: gitHubLogin,
+                                        },
+                                    },
+                                }],
+                            }],
+                        });
+                    } else if (params.chatId === slackIdUnkownGitHub) {
+                        return Promise.resolve({
+                            ChatTeam: [{
+                                members: [{
+                                    person: {
+                                        chatId: {
+                                            screenName,
+                                            preferences: {},
+                                        },
+                                    },
+                                }],
+                            }],
+                        });
+                    }
+                    return Promise.resolve({});
+                },
+            },
+        };
+
+        it("should replace known user with github login", done => {
+            const body = `<@${slackId}>`;
+            const expected = `@${gitHubLogin}`;
+            replaceChatIdWithGitHubId(body, ctx)
+                .then(r => {
+                    assert(r === expected);
+                })
+                .then(done, done);
+        });
+
+        it("should replace known user with slack screeName", done => {
+            const body = `<@${slackIdUnkownGitHub}>`;
+            const expected = screenName;
+            replaceChatIdWithGitHubId(body, ctx)
+                .then(r => {
+                    assert(r === expected);
+                })
+                .then(done, done);
+        });
+
+        it("should not replace unkown user", done => {
+            const body = `<@U123456>`;
+            replaceChatIdWithGitHubId(body, ctx)
+                .then(r => {
+                    assert(r === body);
                 })
                 .then(done, done);
         });

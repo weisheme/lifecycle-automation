@@ -490,10 +490,16 @@ export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext
                     if (result) {
                         if (result.ChatTeam && result.ChatTeam.length > 0) {
                             if (result.ChatTeam[0].members && result.ChatTeam[0].members.length > 0
-                                && result.ChatTeam[0].members[0].person
-                                && result.ChatTeam[0].members[0].person.gitHubId) {
-                                const login = result.ChatTeam[0].members[0].person.gitHubId.login;
-                                body = body.split(`<@${m}>`).join(`@${login}`);
+                                && result.ChatTeam[0].members[0].person) {
+                                if (result.ChatTeam[0].members[0].person.gitHubId
+                                && result.ChatTeam[0].members[0].person.gitHubId.login) {
+                                    const login = result.ChatTeam[0].members[0].person.gitHubId.login;
+                                    body = body.split(`<@${m}>`).join(`@${login}`);
+                                } else if (result.ChatTeam[0].members[0].person.chatId
+                                    && result.ChatTeam[0].members[0].person.chatId.screenName) {
+                                    const screenName = result.ChatTeam[0].members[0].person.chatId.screenName;
+                                    body = body.split(`<@${m}>`).join(screenName);
+                                }
                             }
                         }
                     }
