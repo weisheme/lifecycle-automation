@@ -6,11 +6,15 @@ import { logger } from "@atomist/automation-client/internal/util/logger";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { AutomationEventListenerSupport } from "@atomist/automation-client/server/AutomationEventListener";
 import {
+    Destination,
     isSlackMessage,
     MessageClient,
     MessageOptions,
 } from "@atomist/automation-client/spi/message/MessageClient";
-import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
+import {
+    DefaultSlackMessageClient,
+    MessageClientSupport,
+} from "@atomist/automation-client/spi/message/MessageClientSupport";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import axios from "axios";
 import * as cluster from "cluster";
@@ -78,29 +82,24 @@ class ShortenUrlMessageClient extends MessageClientSupport {
         super();
     }
 
-    protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                     channelNames: string | string[], options?: MessageOptions): Promise<any> {
+    protected doSend(msg: any, destinations: Destination[], options?: MessageOptions): Promise<any> {
         if (isSlackMessage(msg)) {
              return shortenUrls(msg as SlackMessage, options, (this.ctx as any) as AutomationContextAware)
-                 .then(message => this.sendMessage(message, userNames, channelNames, options));
+                 .then(message => this.sendMessage(message, destinations, options));
         } else {
-            return this.sendMessage(msg, userNames, channelNames, options);
+            return this.sendMessage(msg, destinations, options);
         }
     }
 
-    private sendMessage(message: string | SlackMessage, userNames: string | string[],
-                        channelNames: string | string[], options?: MessageOptions) {
-        if (userNames && userNames.length > 0) {
-            return this.messageClient.addressUsers(message, userNames, options);
-        } else {
-            return this.messageClient.addressChannels(message, channelNames, options);
-        }
+    private sendMessage(message: any, destinations: Destination[], options?: MessageOptions) {
+        return this.messageClient.send(message, destinations, options);
     }
 }
 
 export class ShortenUrlAutomationEventListener extends AutomationEventListenerSupport {
 
     public contextCreated(context: HandlerContext): void {
-          context.messageClient = new ShortenUrlMessageClient(context.messageClient, context);
+          context.messageClient = new DefaultSlackMessageClient(
+              new ShortenUrlMessageClient(context.messageClient, context), context.graphClient);
     }
 }

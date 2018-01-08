@@ -46,7 +46,7 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
             timestamp,
             // #47 remove issue rewrite
             // ttl: (1000 * 60 * 60 * 8).toString(),
-            channels: repo.channels.map(c => c.name),
+            channels: repo.channels.map(c => ({ name: c.name, teamId: c.team.id })),
             extract: (type: string) => {
                 if (type === "repo") {
                     return repo;

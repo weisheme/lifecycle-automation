@@ -1,5 +1,4 @@
-subscription NotifyReviewerOnPush
-{
+subscription NotifyReviewerOnPush {
     Push {
         branch
         repo {
@@ -43,6 +42,9 @@ subscription NotifyReviewerOnPush
                                     name
                                     value
                                 }
+                                chatTeam {
+                                    id
+                                }
                             }
                         }
                     }
@@ -51,12 +53,4 @@ subscription NotifyReviewerOnPush
         }
     }
 }
-
-
-
-
-
-
-
-
 

@@ -13,6 +13,9 @@ subscription NotifyMentionedOnIssueComment
             name
             value
           }
+          chatTeam {
+            id
+          }
         }
       }
     }

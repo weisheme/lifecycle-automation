@@ -3,6 +3,7 @@ import * as assert from "power-assert";
 
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
+import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { BotJoinedChannel, repoOptions } from "../../../../src/handlers/event/channellink/BotJoinedChannel";
 
 describe("BotJoinedChannel", () => {
@@ -98,6 +99,7 @@ describe("BotJoinedChannel", () => {
                             },
                         ],
                         team: {
+                            id: "T1L0VDKJP",
                             orgs: [
                                 {
                                     owner: "n",
@@ -126,10 +128,10 @@ describe("BotJoinedChannel", () => {
             let sent = false;
             const ctx: any = {
                 messageClient: {
-                    addressChannels(
-                        msg: string | slack.SlackMessage,
-                        channelNames: string | string[],
-                        options?: any,
+                    send(
+                        msg: any,
+                        destinations: Destination[],
+                        options?: MessageOptions,
                     ): Promise<any> {
                         sent = true;
                         return Promise.resolve(true);

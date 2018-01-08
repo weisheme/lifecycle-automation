@@ -5,7 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { Preferences } from "../../../lifecycle/Lifecycle";
+import { ChatTeam } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
@@ -25,7 +25,8 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
         return pushes;
     }
 
-    protected extractPreferences(event: EventFired<graphql.K8PodToPushLifecycle.Subscription>): Preferences[] {
-        return _.get(event, "data.K8Pod[0].images[0].tag.commit.pushes[0].repo.org.chatTeam.preferences", []);
+    protected extractChatTeams(event: EventFired<graphql.K8PodToPushLifecycle.Subscription>)
+        : ChatTeam[] {
+        return _.get(event, "data.K8Pod[0].images[0].tag.commit.pushes[0].repo.org.team.chatTeams");
     }
 }

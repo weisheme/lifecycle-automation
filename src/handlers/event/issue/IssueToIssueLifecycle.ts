@@ -5,7 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { Preferences } from "../../../lifecycle/Lifecycle";
+import { ChatTeam } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { IssueLifecycleHandler } from "./IssueLifecycle";
 
@@ -25,8 +25,8 @@ export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueTo
         return [issue, repo, new Date().getTime().toString()];
     }
 
-    protected extractPreferences(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>)
-        : Preferences[] {
-        return _.get(event, "data.Issue[0].repo.org.chatTeam.preferences");
+    protected extractChatTeams(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>)
+        : ChatTeam[] {
+        return _.get(event, "data.Issue[0].repo.org.team.chatTeams");
     }
 }

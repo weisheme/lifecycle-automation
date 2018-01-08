@@ -1,6 +1,6 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
+import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
 import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
@@ -51,7 +51,10 @@ describe("NotifyReviewerOnPush", () => {
                   "preferences": [{
                     "name": "dm",
                     "value": "{\\"disable_for_build\\":false,\\"disable_for_assignee\\":false,\\"disable_for_mention\\":false,\\"disable_for_prUpdates\\":false}"
-                  }]
+                  }],
+                  "chatTeam": {
+                    "id": "T1L0VDKJP"
+                  }
                 }
               }
             }]
@@ -72,11 +75,10 @@ describe("NotifyReviewerOnPush", () => {
 
     it("correctly send message to reviewer on new commit", done => {
         let messageSend = false;
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(userNames === "atomista");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).users[0] === "atomista");
                 messageSend = true;
                 return Promise.resolve();
             }
@@ -158,11 +160,10 @@ describe("NotifyReviewerOnPush", () => {
 
     it("correctly don't send message to reviewer commented on new commit", done => {
         let messageSend = false;
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(userNames === "atomista");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).users[0] === "atomista");
                 messageSend = true;
                 return Promise.resolve();
             }
@@ -242,12 +243,10 @@ describe("NotifyReviewerOnPush", () => {
     /* tslint:enable */
 
     it("don't send message to reviewer on new commit if review is requested", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(false);
-                return Promise.resolve();
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                return Promise.reject("Shouldn't be caled");
             }
 
         }
@@ -324,12 +323,10 @@ describe("NotifyReviewerOnPush", () => {
     /* tslint:enable */
 
     it("don't send message to reviewer on new commit if dm is disabled", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(false);
-                return Promise.resolve();
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                return Promise.reject("Shouldn't be called");
             }
 
         }

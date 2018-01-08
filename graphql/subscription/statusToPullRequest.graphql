@@ -142,6 +142,9 @@ subscription StatusToPullRequestLifecycle
           owner
           channels {
             name
+            team {
+              id
+            }
           }
           allowRebaseMerge
           allowSquashMerge
@@ -153,10 +156,14 @@ subscription StatusToPullRequestLifecycle
               apiUrl
               gitUrl
             }
-            chatTeam {
-              preferences {
-               name
-               value
+            team {
+              id
+              chatTeams {
+                id
+                preferences {
+                  name
+                  value
+                }
               }
             }
           }

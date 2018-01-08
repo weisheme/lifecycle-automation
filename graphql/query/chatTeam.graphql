@@ -1,5 +1,5 @@
-query ChatTeam {
-    ChatTeam {
+query ChatTeam($teamId: ID!) {
+    ChatTeam(id: $teamId) {
         channels {
             name
             channelId

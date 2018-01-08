@@ -25,6 +25,9 @@ export class SetTeamPreference implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @Parameter({
         displayName: "Preference Category",
         description: "category of preferences under which you want to set a preference",
@@ -75,12 +78,12 @@ export class SetTeamPreference implements HandleCommand {
     public label: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeQueryFromFile<graphql.TeamPreferences.Query,
-            graphql.TeamPreferences.Variables>("graphql/query/teamPreferences",
-            { }, { fetchPolicy: "network-only" })
+        return ctx.graphClient.executeQueryFromFile<graphql.ChatTeamPreferences.Query,
+            graphql.ChatTeamPreferences.Variables>("graphql/query/chatTeamPreferences",
+            { teamId: this.teamId }, { fetchPolicy: "network-only" })
             .then(result => {
                 const preferences =
-                    _.get(result, "ChatTeam[0].preferences") as graphql.TeamPreferences.Preferences[];
+                    _.get(result, "ChatTeam[0].preferences") as graphql.ChatTeamPreferences.Preferences[];
                 if (preferences) {
                     const lifecyclePreferences = preferences.find(p => p.name === this.key);
                     if (lifecyclePreferences) {
@@ -99,9 +102,9 @@ export class SetTeamPreference implements HandleCommand {
                     value = this.value;
                 }
                 preferences[this.name] = value;
-                return ctx.graphClient.executeMutationFromFile<graphql.SetTeamPreference.Mutation,
-                    graphql.SetTeamPreference.Variables>("graphql/mutation/setTeamPreference",
-                    {name: this.key, value: JSON.stringify(preferences) });
+                return ctx.graphClient.executeMutationFromFile<graphql.SetChatTeamPreference.Mutation,
+                    graphql.SetChatTeamPreference.Variables>("graphql/mutation/setChatTeamPreference",
+                    { teamId: this.teamId, name: this.key, value: JSON.stringify(preferences) });
             })
             .then(() => {
                 const msg: SlackMessage = {

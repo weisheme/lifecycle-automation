@@ -2,6 +2,7 @@ import { EventFired } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import * as _ from "lodash";
 import {
+    Channel,
     Lifecycle,
     LifecycleHandler,
     Preferences,
@@ -142,49 +143,59 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
         return result;
     }
 
-    private filterChannels(push: graphql.PushToPushLifecycle.Push, preferences: Preferences[] = []): string[] {
-        const channels = _.get(push, "repo.channels");
+    private filterChannels(push: graphql.PushToPushLifecycle.Push, preferences: {[teamId: string]: Preferences[]} = {})
+        : Channel[] {
+        const channels = _.get(push, "repo.channels").filter(c => c.name && c.name.length >= 1);
         if (!channels || channels.length === 0) {
             return [];
         }
 
-        const branchConfiguration = preferences.find(p => p.name === "lifecycle_branches");
-        if (branchConfiguration) {
-            const channelNames: string[] = [];
-            try {
-                const configuration = JSON.parse(branchConfiguration.value);
-                const repo = push.repo.name;
-                const owner = push.repo.owner;
-                const branch = push.branch;
+        const channelNames: Channel[] = [];
 
-                push.repo.channels.forEach(channel => {
-                    // Find the first match from the start of the configuration
-                    const channelConfiguration = configuration.find(c => matches(c.name, channel.name));
-                    if (channelConfiguration) {
-                        // Now find the first matching repository configuration
-                        const repoConfiguration = channelConfiguration.repositories
-                            .find(r => matches(r.owner, owner) && matches(r.name, repo));
-                        if (repoConfiguration) {
-                            const include = repoConfiguration.include ?
-                                matches(repoConfiguration.include, branch) : undefined;
-                            const exclude = repoConfiguration.exclude ?
-                                matches(repoConfiguration.exclude, branch) : undefined;
-                            if (include === true || exclude === false) {
-                                channelNames.push(channel.name);
+        const repo = push.repo.name;
+        const owner = push.repo.owner;
+        const branch = push.branch;
+
+        push.repo.channels.forEach(channel => {
+            if (preferences[channel.team.id]) {
+                const branchConfiguration =
+                    preferences[channel.team.id].find(p => p.name === "lifecycle_branches");
+                if (branchConfiguration) {
+                    try {
+                        const configuration = JSON.parse(branchConfiguration.value);
+                        // Find the first match from the start of the configuration
+                        const channelConfiguration = configuration.find(c => matches(c.name, channel.name));
+                        if (channelConfiguration) {
+                            // Now find the first matching repository configuration
+                            const repoConfiguration = channelConfiguration.repositories
+                                .find(r => matches(r.owner, owner) && matches(r.name, repo));
+                            if (repoConfiguration) {
+                                const include = repoConfiguration.include ?
+                                    matches(repoConfiguration.include, branch) : undefined;
+                                const exclude = repoConfiguration.exclude ?
+                                    matches(repoConfiguration.exclude, branch) : undefined;
+                                if (include === true || exclude === false) {
+                                    channelNames.push({name: channel.name, teamId: channel.team.id});
+                                }
                             }
+                        } else {
+                            channelNames.push({name: channel.name, teamId: channel.team.id});
                         }
-                    } else {
-                        channelNames.push(channel.name);
+                    } catch (err) {
+                        logger.warn(
+                            `Team preferences 'branch_configuration' are corrupt: '${branchConfiguration.value}'`);
                     }
-                });
-
-                return channelNames;
-            } catch (err) {
-                logger.warn(`Team preferences 'branch_configuration' are corrupt: '${branchConfiguration.value}'`);
+                } else {
+                    channelNames.push({name: channel.name, teamId: channel.team.id});
+                }
+            } else {
+                channelNames.push({name: channel.name, teamId: channel.team.id});
             }
-        }
-        return push.repo.channels.map(c => c.name);
+        });
+
+        return channelNames;
     }
+
 }
 
 function matches(pattern: string, target: string): boolean {

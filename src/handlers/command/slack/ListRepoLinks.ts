@@ -29,6 +29,9 @@ export class ListRepoLinks implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @Parameter({ pattern: /^\S*$/, displayable: false, required: false })
     public msgId: string;
 
@@ -40,9 +43,10 @@ export class ListRepoLinks implements HandleCommand {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatChannelByChannelId.Query,
             graphql.ChatChannelByChannelId.Variables>(
                 "graphql/query/chatChannelByChannelId",
-                { channelName: this.channelName })
+                { teamId: this.teamId, channelName: this.channelName },
+                { fetchPolicy: "network-only" })
             .then(result => {
-                const repos = _.get(result, "ChatChannel[0].repos");
+                const repos = _.get(result, "ChatTeam[0].channels[0].repos");
                 if (repos && repos.length > 0) {
 
                     const msg: SlackMessage = {

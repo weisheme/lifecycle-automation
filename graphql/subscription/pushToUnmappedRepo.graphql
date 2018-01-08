@@ -1,11 +1,13 @@
-subscription PushToUnmappedRepo
-{
+subscription PushToUnmappedRepo {
   Push {
     repo {
       owner
       name
       channels {
         name
+        team {
+          id
+        }
       }
       org {
         provider {
@@ -14,18 +16,21 @@ subscription PushToUnmappedRepo
           apiUrl
           gitUrl
         }
-        chatTeam {
-          channels {
-            channelId
-            name
-          }
-          members(isAtomistBot: "true") {
-            isAtomistBot
-            screenName
-          }
-          preferences {
-            name
-            value
+        team {
+          chatTeams {
+            id
+            channels {
+              channelId
+              name
+            }
+            members(isAtomistBot: "true") {
+              isAtomistBot
+              screenName
+            }
+            preferences {
+              name
+              value
+            }
           }
         }
       }
@@ -42,9 +47,13 @@ subscription PushToUnmappedRepo
               name
               value
             }
+            chatTeam {
+              id
+            }
           }
         }
       }
     }
   }
 }
+

@@ -13,6 +13,9 @@ subscription NotifyMentionedOnPullRequestComment
             name
             value
           }
+          chatTeam {
+            id
+          }
         }
       }
     }

@@ -36,7 +36,7 @@ export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
                     id: `branch_lifecycle/${repo.owner}/${repo.name}/${branch.name}`,
                     // ttl: (1000 * 60 * 60).toString(),
                     timestamp: Date.now().toString(),
-                    channels: repo.channels.map(c => c.name),
+                    channels: repo.channels.map(c => ({ teamId: c.team.id, name: c.name})),
                     post: deleted ? "update_only" : "always",
                     extract: (type: string) => {
                         if (type === "repo") {

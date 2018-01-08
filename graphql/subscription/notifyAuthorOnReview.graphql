@@ -21,6 +21,9 @@ subscription NotifyAuthorOnReview
               name
               value
             }
+            chatTeam {
+              id
+            }
           }
         }
       }

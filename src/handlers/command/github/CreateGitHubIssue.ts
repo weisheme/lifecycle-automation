@@ -56,6 +56,9 @@ export class CreateGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -74,13 +77,13 @@ export class CreateGitHubIssue implements HandleCommand {
                 });
             })
             .then(result => {
-                // run a graphql query to check whether the current channel to mapped to the repo we are creating the
+                // run a graphql query to check whether the current channel is mapped to the repo we are creating the
                 // issue in.
                 return ctx.graphClient.executeQueryFromFile<graphql.ChatChannel.Query, graphql.ChatChannel.Variables>(
                     "graphql/query/chatChannel",
-                    { channelName: this.channelName, repoOwner: this.owner, repoName: this.repo })
+                    { teamId: this.teamId, channelName: this.channelName, repoOwner: this.owner, repoName: this.repo })
                     .then(repoChannelMapping => {
-                        const repo = _.get(repoChannelMapping, "ChatChannel[0].repos[0]");
+                        const repo = _.get(repoChannelMapping, "ChatTeam[0].channels[0].repos[0]");
                         if (!(repo && repo.name === this.repo && repo.owner === this.owner)) {
                             return result;
                         } else {

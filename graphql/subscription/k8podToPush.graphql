@@ -66,6 +66,9 @@ subscription K8PodToPushLifecycle
                             name
                             channels {
                                 name
+                                team {
+                                    id
+                                }
                             }
                             labels {
                                 name
@@ -76,10 +79,14 @@ subscription K8PodToPushLifecycle
                                     apiUrl
                                     gitUrl
                                 }
-                                chatTeam {
-                                    preferences {
-                                        name
-                                        value
+                                team {
+                                    id
+                                    chatTeams {
+                                        id
+                                        preferences {
+                                            name
+                                            value
+                                        }
                                     }
                                 }
                             }

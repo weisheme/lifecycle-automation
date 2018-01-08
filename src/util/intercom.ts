@@ -17,11 +17,12 @@ export class IntercomAutomationEventListener extends AutomationEventListenerSupp
     }
 
     public commandStarting(payload: CommandInvocation, ctx: HandlerContext) {
-        if (ctx && ctx.graphClient && ctx.userId) {
+        const userId = _.get(ctx, "source.slack.user.id");
+        if (ctx && ctx.graphClient && userId) {
             ctx.graphClient.executeQueryFromFile<graphql.EMailAndGitHubIdByUserId.Query,
                 graphql.EMailAndGitHubIdByUserId.Variables > (
                 "graphql/query/emailAndGitHubIdByUserId",
-                { userId: ctx.userId })
+                { userId })
                 .then(result => {
                     if (result.ChatId && result.ChatId[0] && result.ChatId[0].person) {
                         let login;

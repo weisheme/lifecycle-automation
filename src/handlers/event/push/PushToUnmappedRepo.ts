@@ -9,8 +9,9 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
-import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import { addressSlackUsers, buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import * as slack from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import {
     isDmDisabled,
@@ -20,7 +21,10 @@ import {
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
 import { AssociateRepo } from "../../command/slack/AssociateRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
-import { DefaultBotName, LinkRepo } from "../../command/slack/LinkRepo";
+import {
+    DefaultBotName,
+    LinkRepo,
+} from "../../command/slack/LinkRepo";
 import { DirectMessagePreferences } from "../preferences";
 
 /**
@@ -46,16 +50,24 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 return Success;
             }
 
-            const botName = (p.repo.org && p.repo.org.chatTeam && p.repo.org.chatTeam.members &&
-                p.repo.org.chatTeam.members.length > 0 &&
-                p.repo.org.chatTeam.members.some(m => m.isAtomistBot === "true")) ?
-                p.repo.org.chatTeam.members.find(m => m.isAtomistBot === "true").screenName : DefaultBotName;
+            const botNames: { [teamId: string]: string; } = {};
+
+            const chatTeams = (_.get(p, "repo.org.team.chatTeams")
+                || []) as graphql.PushToUnmappedRepo.ChatTeams[];
+
+            chatTeams.forEach(ct => {
+                if (ct.members && ct.members.length > 0 && ct.members.some(m => m.isAtomistBot === "true")) {
+                    chatTeams[ct.id] = ct.members.find(m => m.isAtomistBot === "true").screenName;
+                } else {
+                    chatTeams[ct.id] = DefaultBotName;
+                }
+            });
 
             const chatIds = p.commits.filter(c => c.author && c.author.person).map(c => c.author.person.chatId);
 
-            return sendUnMappedRepoMessage(chatIds, p.repo, ctx, botName);
+            return sendUnMappedRepoMessage(chatIds, p.repo, ctx, botNames);
         }))
-            .then(() => Success, failure);
+        .then(() => Success, failure);
     }
 
 }
@@ -67,7 +79,7 @@ export function sendUnMappedRepoMessage(
     chatIds: graphql.PushToUnmappedRepo.ChatId[],
     repo: graphql.PushToUnmappedRepo.Repo,
     ctx: HandlerContext,
-    botName: string = DefaultBotName,
+    botNames: { [teamId: string]: string; },
 ): Promise<HandlerResult> {
 
     const enabledChatIds = chatIds.filter(c => {
@@ -81,9 +93,12 @@ export function sendUnMappedRepoMessage(
 
     return Promise.all(enabledChatIds.map(chatId => {
         const id = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
-        return ctx.messageClient.addressUsers(mapRepoMessage(repo, chatId, botName), chatId.screenName, { id });
+        return ctx.messageClient.send(
+            mapRepoMessage(repo, chatId, botNames[chatId.chatTeam.id]) || DefaultBotName,
+            addressSlackUsers(chatId.chatTeam.id, chatId.screenName),
+            { id });
     }))
-        .then(() => Success);
+    .then(() => Success);
 }
 
 /**
@@ -171,7 +186,9 @@ export function mapRepoMessage(
 
     let channelText: string;
     let mapCommand: AssociateRepo | CreateChannel;
-    const channel = repo.org.chatTeam.channels.find(c => c.name === channelName);
+    const channel = repo.org.team.chatTeams
+        .find(ct => ct.id === chatId.chatTeam.id).channels
+        .find(c => c.name === channelName);
     if (channel) {
         channelText = slack.channel(channel.channelId);
         mapCommand = new AssociateRepo();
@@ -218,7 +235,7 @@ ${slack.codeLine(linkRepoCmd)}`;
     stopAllParams.value = "true";
     stopAllParams.label = `${DirectMessagePreferences.mapRepo.id} direct messages disabled`;
     stopAllParams.id = msgId;
-    const stopAllButton = buttonForCommand({ text: "All Repositories" }, SetUserPreference, stopAllParams);
+    const stopAllButton = buttonForCommand({ text: "All Repositories" }, stopAllParams);
 
     const stopAttachment: slack.Attachment = {
         text: stopText,

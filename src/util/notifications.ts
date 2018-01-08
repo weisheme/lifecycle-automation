@@ -1,5 +1,5 @@
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
-import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import { addressSlackUsers, buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import {
@@ -72,9 +72,9 @@ export function issueNotification(id: string,
                                 const msgId =
                                     // tslint:disable-next-line:max-line-length
                                     `user_message/issue/mention/${n.person.chatId.screenName}/${repo.owner}/${repo.name}/${id}`;
-                                return ctx.messageClient.addressUsers(
+                                return ctx.messageClient.send(
                                     slackMessage,
-                                    n.person.chatId.screenName,
+                                    addressSlackUsers(n.person.chatId.chatTeam.id, n.person.chatId.screenName),
                                     { id: msgId });
                             }
                         }));
@@ -126,9 +126,9 @@ export function prNotification(id: string,
                                 const msgId =
                                     // tslint:disable-next-line:max-line-length
                                     `user_message/pullrequest/mention/${n.person.chatId.screenName}/${repo.owner}/${repo.name}/${id}`;
-                                return ctx.messageClient.addressUsers(
+                                return ctx.messageClient.send(
                                     slackMessage,
-                                    n.person.chatId.screenName,
+                                    addressSlackUsers(n.person.chatId.chatTeam.id, n.person.chatId.screenName),
                                     { id: msgId });
                             }
                         }));
@@ -175,7 +175,10 @@ export function issueAssigneeNotification(id: string,
                 };
                 const msgId =
                     `user_message/issue/assignee/${screenName}/${repo.owner}/${repo.name}/${id}`;
-                return ctx.messageClient.addressUsers(slackMessage, screenName, { id: msgId });
+                return ctx.messageClient.send(
+                    slackMessage,
+                    addressSlackUsers(assignee.person.chatId.chatTeam.id, screenName),
+                    { id: msgId });
             }
             return Promise.resolve(null);
         });
@@ -220,7 +223,10 @@ export function prAssigneeNotification(id: string,
                 };
                 const msgId =
                     `user_message/pullrequest/assignee/${screenName}/${repo.owner}/${repo.name}/${id}`;
-                return ctx.messageClient.addressUsers(slackMessage, screenName, { id: msgId });
+                return ctx.messageClient.send(
+                    slackMessage,
+                    addressSlackUsers(assignee.person.chatId.chatTeam.id, screenName),
+                    { id: msgId });
             }
             return Promise.resolve(null);
         });
@@ -264,7 +270,10 @@ export function prRevieweeNotification(id: string,
                 };
                 const msgId =
                     `user_message/pullrequest/reviewee/${login}/${repo.owner}/${repo.name}/${id}`;
-                return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+                return ctx.messageClient.send(
+                    slackMessage,
+                    addressSlackUsers(review.person.chatId.chatTeam.id, login),
+                    { id: msgId });
             }
             return Promise.resolve(null);
         });
@@ -307,7 +316,10 @@ export function prAuthorMergeNotification(id: string,
                 };
                 const msgId =
                     `user_message/pullrequest/author/merge/${login}/${repo.owner}/${repo.name}/${id}`;
-                return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+                return ctx.messageClient.send(
+                    slackMessage,
+                    addressSlackUsers(pr.author.person.chatId.chatTeam.id, login),
+                    { id: msgId });
             }
             return Promise.resolve(null);
         });
@@ -366,7 +378,10 @@ export function prAuthorReviewNotification(id: string,
                 };
                 const msgId =
                     `user_message/pullrequest/author/review/${login}/${repo.owner}/${repo.name}/${id}`;
-                return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+                return ctx.messageClient.send(
+                    slackMessage,
+                    addressSlackUsers(pr.author.person.chatId.chatTeam.id, login),
+                    { id: msgId });
             }
             return Promise.resolve(null);
         });
@@ -417,7 +432,9 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
     };
     const msgId =
         `user_message/build/${login}/${repo.owner}/${repo.name}/${build._id}`;
-    return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+    return ctx.messageClient.send(slackMessage,
+        addressSlackUsers(build.commit.author.person.chatId.chatTeam.id, login),
+        { id: msgId });
 }
 
 export function reviewerNotification(push: graphql.NotifyReviewerOnPush.Push,
@@ -461,6 +478,9 @@ export function reviewerNotification(push: graphql.NotifyReviewerOnPush.Push,
             };
             const msgId =
                 `user_message/pullrequest/reviewee/commits/${login}/${repo.owner}/${repo.name}/${pr.number}`;
-            return ctx.messageClient.addressUsers(slackMessage, login, { id: msgId });
+            return ctx.messageClient.send(
+                slackMessage,
+                addressSlackUsers(review.by[0].person.chatId.chatTeam.id, login),
+                { id: msgId });
         });
 }

@@ -1,8 +1,11 @@
-query BotOwner {
-  ChatId(isPrimaryOwner: "true") {
-    isOwner
-    isAdmin
-    isPrimaryOwner
-    screenName
+query BotOwner($teamId: ID!) {
+  ChatTeam(id: $teamId) {
+    members(isPrimaryOwner: "true") @required {
+      isOwner
+      isAdmin
+      isPrimaryOwner
+      screenName
+    }
   }
 }
+

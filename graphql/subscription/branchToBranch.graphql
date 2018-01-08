@@ -15,12 +15,20 @@ subscription BranchToBranchLifecycle {
       defaultBranch
       channels {
         name
+        team {
+          id
+          name
+        }
       }
       org {
-        chatTeam {
-          preferences {
-            name
-            value
+        team {
+          id
+          chatTeams {
+            id
+            preferences {
+              name
+              value
+            }
           }
         }
         provider {

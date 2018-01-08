@@ -1,7 +1,7 @@
 import { Success } from "@atomist/automation-client";
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
+import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
 import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
@@ -42,7 +42,10 @@ describe("BuildToPushLifecycle", () => {
           "owner": "atomisthq",
           "name": "lifecycle-demo",
           "channels": [{
-            "name": "lifecycle-demo"
+            "name": "lifecycle-demo",
+            "team": {
+                "id": "T095SFFBK"
+            }
           }],
           "labels": [{
             "name": "duplicate"
@@ -93,11 +96,10 @@ describe("BuildToPushLifecycle", () => {
     /* tslint:enable */
 
     it("render correct number of attachments", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames[0] === "lifecycle-demo");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).channels[0] === "lifecycle-demo");
                 assert(options.id ===
                     "push_lifecycle/atomisthq/lifecycle-demo/cdupuis-patch-7/4dd9c968915d3b01e5252fb6f430ada5fc024f63");
                 const sm = msg as SlackMessage;

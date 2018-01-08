@@ -4,17 +4,5 @@ subscription PullRequestToBranchLifecycle
     branch @required {
       id
     }
-    repo {
-      owner
-      name
-      org {
-        chatTeam {
-          preferences {
-            name
-            value
-          }
-        }
-      }
-    }
   }
 }

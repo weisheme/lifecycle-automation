@@ -10,9 +10,9 @@ import {
     SuccessPromise,
 } from "@atomist/automation-client";
 import { HandlerContext } from "@atomist/automation-client";
-import { clean } from "@atomist/automation-client/internal/transport/websocket/WebSocketMessageClient";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
+    addressSlackChannels,
     MessageClient,
     MessageOptions,
 } from "@atomist/automation-client/spi/message/MessageClient";
@@ -28,7 +28,6 @@ import {
     LifecyclePreferences,
     LifecycleRendererPreferences,
 } from "../handlers/event/preferences";
-import { DashboardChannelName } from "../util/stream";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -57,7 +56,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 // Merge default and handler provided configuration
                 const configuration = deepmerge(
                     this.defaultConfigurations[lifecycle.name] as LifecycleConfiguration,
-                    this.prepareConfiguration(lifecycle.name, preferences));
+                    this.prepareConfiguration(lifecycle.name, channels, preferences));
 
                 if (configuration) {
                     lifecycle.renderers = this.configureRenderers(lifecycle.renderers, configuration,
@@ -125,6 +124,17 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             });
     }
 
+    protected extractPreferences(event: EventFired<any>): { [teamId: string]: Preferences[] } {
+        const preferences: {
+                [teamId: string]: Preferences[];
+            } = {};
+
+        const chatTeams = this.extractChatTeams(event) || [];
+        chatTeams.forEach(ct => preferences[ct.id] = ct.preferences);
+
+        return preferences;
+    }
+
     /**
      * Extension point to configure nodes and rendering of those nodes for a given path expression match.
      * @param event the cortex event the path expression matched
@@ -132,15 +142,17 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     protected abstract prepareLifecycle(event: EventFired<R>): Lifecycle[];
 
     /**
-     * Extension point for handlers to extract preferences from user or chatteam nodes.
+     * Extension point for handlers to extract preferences from ChatId or ChatTeam nodes.
      * @param {EventFired<R>} event
      * @returns {Preferences[]}
      */
-    protected abstract extractPreferences(event: EventFired<R>): Preferences[];
+    protected abstract extractChatTeams(event: EventFired<R>): ChatTeam[];
 
-    private prepareConfiguration(name: string, preferences: Preferences[]): LifecycleConfiguration {
-        if (preferences) {
-            const lifecycles = preferences.find(p => p.name === "lifecycle_preferences");
+    private prepareConfiguration(name: string,
+                                 channels: { teamId: string, channels: string[] },
+                                 preferences: { [teamId: string]: Preferences[] }): LifecycleConfiguration {
+        if (preferences && preferences[channels.teamId]) {
+            const lifecycles = preferences[channels.teamId].find(p => p.name === "lifecycle_preferences");
             if (lifecycles && lifecycles.value) {
                 try {
                     const configuration = JSON.parse(lifecycles.value)[name] as LifecycleConfiguration;
@@ -157,7 +169,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
     private createAndSendMessage(message: SlackMessage,
                                  lifecycle: Lifecycle,
-                                 channels: string[],
+                                 channels: { teamId: string, channels: string[] },
                                  messageClient: MessageClient): Promise<any> {
         message.unfurl_links = false;
         message.unfurl_media = true;
@@ -174,18 +186,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
-        const repo = lifecycle.extract("repo");
-        if (repo) {
-            (options as any).owner = repo.owner;
-            (options as any).repository = repo.name;
-        }
-
         return this.sendMessage(message, options, channels, messageClient);
     }
 
     private sendMessage(slackMessage: SlackMessage,
                         options: MessageOptions,
-                        channels: string[],
+                        channels: { teamId: string, channels: string[] },
                         messageClient: MessageClient): Promise<any> {
         // Make sure we don't send empty messages
         if (slackMessage.text === null &&
@@ -193,23 +199,25 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             return SuccessPromise;
         }
 
-        return messageClient.addressChannels(slackMessage, channels, options)
+        return messageClient.send(slackMessage, addressSlackChannels(channels.teamId, ...channels.channels), options)
             .then(() => {
-                logger.info("Sending lifecycle message '%s' to channel '%s'", options.id, channels.join(", "));
+                logger.info("Sending lifecycle message '%s' to channel '%s'", options.id, channels.channels.join(", "));
                 return Success;
             })
             .catch(failure);
     }
 
-    private lifecycleEnabled(lifecycle: Lifecycle, channel: string, preferences: Preferences[]): boolean {
-        if (preferences) {
-            const preference = preferences.find(p => p.name === LifecyclePreferences.key);
+    private lifecycleEnabled(lifecycle: Lifecycle,
+                             channel: Channel,
+                             preferences: { [teamId: string]: Preferences[] }): boolean {
+        if (preferences && preferences[channel.teamId]) {
+            const preference = preferences[channel.teamId].find(p => p.name === LifecyclePreferences.key);
             if (preference) {
                 const preferenceValue = JSON.parse(preference.value) || {};
-                if (preferenceValue[channel]) {
-                    if (preferenceValue[channel][lifecycle.name] === true) {
+                if (preferenceValue[channel.name]) {
+                    if (preferenceValue[channel.name][lifecycle.name] === true) {
                         return true;
-                    } else if (preferenceValue[channel][lifecycle.name] === false) {
+                    } else if (preferenceValue[channel.name][lifecycle.name] === false) {
                         return false;
                     }
                 }
@@ -224,47 +232,49 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
      * Clean up the list of channels; look for channels that can be processed together as they don't have
      * any configuration.
      */
-    private groupChannels(lifecycle: Lifecycle, preferences: Preferences[]): string[][] {
+    private groupChannels(lifecycle: Lifecycle,
+                          preferences: { [teamId: string]: Preferences[] } = {})
+                          : Array<{teamId: string, channels: string[]}> {
+
         if (lifecycle == null) {
             return [];
         }
 
         // First filter out channel / lifecycle combinations that aren't enabled
-        const channels = clean(lifecycle.channels)
+        const channels = lifecycle.channels.filter(c => c.name && c.teamId)
             .filter(channel => this.lifecycleEnabled(lifecycle, channel, preferences));
-        channels.push(DashboardChannelName);
 
-        if (!preferences) {
-            return [channels];
-        }
+        const unconfiguredChannels: Array<{teamId: string, channels: string[]}> = [];
+        const configuredChannels: Array<{teamId: string, channels: string[]}> = [];
 
-        const unconfiguredChannels: string[] = [];
-        const configuredChannels: string[][] = [];
-
-        const actionPreference = preferences.find(p => p.name === LifecycleActionPreferences.key);
-        const rendererPreference = preferences.find(p => p.name === LifecycleRendererPreferences.key);
         channels.forEach(c => {
-           if (this.channelConfigured(c, actionPreference)) {
-               configuredChannels.push([c]);
-           } else if (this.channelConfigured(c, rendererPreference)) {
-               configuredChannels.push([c]);
+           if (preferences[c.teamId] && this.channelConfigured(c,
+                   preferences[c.teamId].find(p => p.name === LifecycleActionPreferences.key))) {
+               configuredChannels.push({teamId: c.teamId, channels: [c.name]});
+           } else if (preferences[c.teamId] && this.channelConfigured(c,
+                   preferences[c.teamId].find(p => p.name === LifecycleRendererPreferences.key))) {
+               configuredChannels.push({teamId: c.teamId, channels: [c.name]});
            } else {
-               unconfiguredChannels.push(c);
+               if (unconfiguredChannels.some(uc => uc.teamId === c.teamId)) {
+                   unconfiguredChannels.find(uc => uc.teamId === c.teamId).channels.push(c.name);
+               } else {
+                   unconfiguredChannels.push({teamId: c.teamId, channels: [c.name]});
+               }
            }
         });
 
         if (unconfiguredChannels.length > 0) {
-            return [ ...configuredChannels, unconfiguredChannels];
+            return [ ...configuredChannels, ...unconfiguredChannels];
         } else {
             return configuredChannels;
         }
     }
 
-    private channelConfigured(channel: string, preference: any): boolean {
+    private channelConfigured(channel: Channel, preference: any): boolean {
         if (preference) {
             try {
                 const preferenceValue = JSON.parse(preference.value) || {};
-                if (preferenceValue[channel]) {
+                if (preferenceValue[channel.name]) {
                     return true;
                 } else {
                     return false;
@@ -295,8 +305,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private configureContributors(contributors: Array<ActionContributor<any>>,
                                   configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                   name: string,
-                                  channels: string[],
-                                  preferences: Preferences[]) {
+                                  channels: { teamId: string, channels: string[] },
+                                  preferences: { [teamId: string]: Preferences[] }) {
         contributors = this.filterAndSortContributions("action", contributors, configuration.contributors,
             name, channels, preferences) as Array<ActionContributor<any>>;
         contributors.forEach(c => {
@@ -310,8 +320,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private configureRenderers(renderers: Array<NodeRenderer<any>>,
                                configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                name: string,
-                               channels: string[],
-                               preferences: Preferences[]): Array<NodeRenderer<any>> {
+                               channels: { teamId: string, channels: string[] },
+                               preferences: { [teamId: string]: Preferences[] }): Array<NodeRenderer<any>> {
         renderers = this.filterAndSortContributions("renderer", renderers, configuration.renderers,
             name, channels, preferences) as Array<NodeRenderer<any>>;
         renderers.forEach(c => {
@@ -326,20 +336,23 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                                        contributions: IdentifiableContribution[],
                                        configuration: string[],
                                        name: string,
-                                       channels: string[],
-                                       preferences: Preferences[] = []): IdentifiableContribution[] {
+                                       channels: { teamId: string, channels: string[] },
+                                       preferences: { [teamId: string]: Preferences[] }): IdentifiableContribution[] {
         let preference;
+        if (kind === "action" && preferences[channels.teamId]) {
+            preference = preferences[channels.teamId].find(p => p.name === LifecycleActionPreferences.key);
+        } else if (kind === "renderer" && preferences[channels.teamId]) {
+            preference = preferences[channels.teamId].find(p => p.name === LifecycleRendererPreferences.key);
+        }
         let preferenceConfiguration;
         if (kind === "action") {
-            preference = preferences.find(p => p.name === LifecycleActionPreferences.key);
             preferenceConfiguration = LifecycleActionPreferences[name] || {};
         } else if (kind === "renderer") {
-            preference = preferences.find(p => p.name === LifecycleRendererPreferences.key);
             preferenceConfiguration = LifecycleRendererPreferences[name] || {};
         }
-        if (preference && channels.length === 1) {
+        if (preference && channels.channels.length === 1) {
             try {
-                const channel = channels[0];
+                const channel = channels.channels[0];
                 const preferenceValue = JSON.parse(preference.value) || {};
                 if (preferenceValue[channel]) {
                     const channelPreferences = preferenceValue[channel];
@@ -387,9 +400,19 @@ export interface LifecycleConfiguration {
     configuration: any;
 }
 
+export interface ChatTeam {
+    id: string;
+    preferences: Preferences[];
+}
+
 export interface Preferences {
     name?: string;
     value?: string;
+}
+
+export interface Channel {
+    name: string;
+    teamId: string;
 }
 
 /**
@@ -427,7 +450,7 @@ export interface Lifecycle {
     /**
      * The channels the lifecycle message should be send to.
      */
-    channels: string[];
+    channels: Channel[];
 
     /**
      * The cortex nodes that should be rendered.

@@ -114,13 +114,16 @@ describe("PushToUnmappedRepo", () => {
                 owner: "grievous-angel",
                 channels: [],
                 org: {
-                    chatTeam: {
-                        channels: [
-                            {
-                                channelId: "C1000WED",
-                                name: "1000-wedding",
-                            },
-                        ],
+                    team: {
+                        chatTeams: [{
+                            id: "TEAMID",
+                            channels: [
+                                {
+                                    channelId: "C1000WED",
+                                    name: "1000-wedding",
+                                },
+                            ],
+                        }],
                     },
                 },
             };
@@ -130,6 +133,9 @@ describe("PushToUnmappedRepo", () => {
                     name: "repo_mapping_flow",
                     value: JSON.stringify({}),
                 }],
+                chatTeam: {
+                    id: "TEAMID",
+                },
             };
             const repoLink = "<https://github.com/grievous-angel/sin-city|grievous-angel/sin-city>";
             const channelText = "*#sin-city*";
@@ -176,17 +182,20 @@ describe("PushToUnmappedRepo", () => {
                         apiUrl: "https://ghe.gram-parsons.com/v3/",
                         url: "https://ghe.gram-parsons.com/",
                     },
-                    chatTeam: {
-                        channels: [
-                            {
-                                channelId: "C1000WED",
-                                name: "1000-wedding",
-                            },
-                            {
-                                channelId: "C51NC1TY",
-                                name: "sin-city",
-                            },
-                        ],
+                    team: {
+                        chatTeams: [{
+                            id: "TEAMID",
+                            channels: [
+                                {
+                                    channelId: "C1000WED",
+                                    name: "1000-wedding",
+                                },
+                                {
+                                    channelId: "C51NC1TY",
+                                    name: "sin-city",
+                                },
+                            ],
+                        }],
                     },
                 },
             };
@@ -202,6 +211,9 @@ describe("PushToUnmappedRepo", () => {
                         ],
                     }),
                 }],
+                chatTeam: {
+                    id: "TEAMID",
+                },
             };
             const repoLink = "<https://ghe.gram-parsons.com/grievous-angel/sin-city|grievous-angel/sin-city>";
             const channelText = "<#C51NC1TY>";

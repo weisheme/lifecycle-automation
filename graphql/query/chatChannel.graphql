@@ -1,9 +1,11 @@
-query ChatChannel($channelName: String!, $repoOwner: String!, $repoName: String!) {
-  ChatChannel(name: $channelName) {
-    name
-    repos(owner: $repoOwner, name: $repoName) {
+query ChatChannel($teamId: ID!, $channelName: String!, $repoOwner: String!, $repoName: String!) {
+  ChatTeam(id: $teamId) {
+    channels(name: $channelName) @required {
       name
-      owner
+      repos(owner: $repoOwner, name: $repoName) @required {
+        name
+        owner
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
 import "mocha";
 import assert = require("power-assert");
 
+import { MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
+import { Destination } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import { GitHubWebhookCreated } from "../../../../src/handlers/event/webhook/GitHubWebhookCreated";
 
@@ -13,27 +15,29 @@ describe("GitHubWebhookCreated", () => {
             data: {
                 GitHubOrgWebhook: [{
                     org: {
-                        chatTeam: {
-                            members: [
-                                {
-                                    isOwner: "true",
-                                    screenName: "cd",
-                                },
-                            ],
-                            channels: [
-                                {
-                                    name: "dev",
-                                    channelId: "C7UR196MB",
-                                },
-                                {
-                                    name: "build-automations",
-                                    channelId: "C7TT99Y10",
-                                },
-                                {
-                                    name: "engineering",
-                                    channelId: "D18G4L88J",
-                                },
-                            ],
+                        team: {
+                            chatTeams: [{
+                                members: [
+                                    {
+                                        isOwner: "true",
+                                        screenName: "cd",
+                                    },
+                                ],
+                                channels: [
+                                    {
+                                        name: "dev",
+                                        channelId: "C7UR196MB",
+                                    },
+                                    {
+                                        name: "build-automations",
+                                        channelId: "C7TT99Y10",
+                                    },
+                                    {
+                                        name: "engineering",
+                                        channelId: "D18G4L88J",
+                                    },
+                                ],
+                            }],
                         },
                     },
                 }],
@@ -46,8 +50,8 @@ describe("GitHubWebhookCreated", () => {
         let messageSend = false;
         const ctx: any = {
             messageClient: {
-                addressUsers(msg: string | SlackMessage, userNames: string | string[]): Promise<any> {
-                    assert(userNames === "cd");
+                send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                    assert((destinations as SlackDestination).users[0] === "cd");
                     const sm = msg as SlackMessage;
                     assert(sm.attachments[0].actions.length === 2);
                     assert(sm.attachments[0].actions[0].text === "#dev");
@@ -74,27 +78,29 @@ describe("GitHubWebhookCreated", () => {
             data: {
                 GitHubOrgWebhook: [{
                     org: {
-                        chatTeam: {
-                            members: [
-                                {
-                                    isOwner: "true",
-                                    screenName: "cd",
-                                },
-                            ],
-                            channels: [
-                                {
-                                    name: "general",
-                                    channelId: "C7UR196MB",
-                                },
-                                {
-                                    name: "build-automations",
-                                    channelId: "C7TT99Y10",
-                                },
-                                {
-                                    name: "random",
-                                    channelId: "D18G4L88J",
-                                },
-                            ],
+                        team: {
+                            chatTeams: [{
+                                members: [
+                                    {
+                                        isOwner: "true",
+                                        screenName: "cd",
+                                    },
+                                ],
+                                channels: [
+                                    {
+                                        name: "general",
+                                        channelId: "C7UR196MB",
+                                    },
+                                    {
+                                        name: "build-automations",
+                                        channelId: "C7TT99Y10",
+                                    },
+                                    {
+                                        name: "random",
+                                        channelId: "D18G4L88J",
+                                    },
+                                ],
+                            }],
                         },
                     },
                 }],
@@ -107,8 +113,8 @@ describe("GitHubWebhookCreated", () => {
         let messageSend = false;
         const ctx: any = {
             messageClient: {
-                addressUsers(msg: string | SlackMessage, userNames: string | string[]): Promise<any> {
-                    assert(userNames === "cd");
+                send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                    assert((destinations as SlackDestination).users[0] === "cd");
                     const sm = msg as SlackMessage;
                     assert(!sm.attachments[0].actions);
                     messageSend = true;
@@ -130,14 +136,16 @@ describe("GitHubWebhookCreated", () => {
             data: {
                 GitHubOrgWebhook: [{
                     org: {
-                        chatTeam: {
-                            members: [
-                                {
-                                    isOwner: "true",
-                                    screenName: "cd",
-                                },
-                            ],
-                            channels: null,
+                        team: {
+                            chatTeams: [{
+                                members: [
+                                    {
+                                        isOwner: "true",
+                                        screenName: "cd",
+                                    },
+                                ],
+                                channels: null,
+                            }],
                         },
                     },
                 }],
@@ -150,8 +158,8 @@ describe("GitHubWebhookCreated", () => {
         let messageSend = false;
         const ctx: any = {
             messageClient: {
-                addressUsers(msg: string | SlackMessage, userNames: string | string[]): Promise<any> {
-                    assert(userNames === "cd");
+                send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                    assert((destinations as SlackDestination).users[0] === "cd");
                     const sm = msg as SlackMessage;
                     assert(!sm.attachments[0].actions);
                     messageSend = true;
@@ -173,14 +181,16 @@ describe("GitHubWebhookCreated", () => {
             data: {
                 GitHubOrgWebhook: [{
                     org: {
-                        chatTeam: {
-                            members: [
-                                {
-                                    isOwner: "true",
-                                    screenName: "cd",
-                                },
-                            ],
-                            channels: undefined,
+                        team: {
+                            chatTeams: [{
+                                members: [
+                                    {
+                                        isOwner: "true",
+                                        screenName: "cd",
+                                    },
+                                ],
+                                channels: undefined,
+                            }],
                         },
                     },
                 }],
@@ -193,8 +203,8 @@ describe("GitHubWebhookCreated", () => {
         let messageSend = false;
         const ctx: any = {
             messageClient: {
-                addressUsers(msg: string | SlackMessage, userNames: string | string[]): Promise<any> {
-                    assert(userNames === "cd");
+                send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                    assert((destinations as SlackDestination).users[0] === "cd");
                     const sm = msg as SlackMessage;
                     assert(!sm.attachments[0].actions);
                     messageSend = true;

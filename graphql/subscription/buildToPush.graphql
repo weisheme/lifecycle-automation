@@ -61,6 +61,9 @@ subscription BuildToPushLifecycle
                 name
                 channels {
                     name
+                    team {
+                        id
+                    }
                 }
                 labels {
                     name
@@ -71,10 +74,14 @@ subscription BuildToPushLifecycle
                         apiUrl
                         gitUrl
                     }
-                    chatTeam {
-                        preferences {
-                            name
-                            value
+                    team {
+                        id
+                        chatTeams {
+                            id
+                            preferences {
+                                name
+                                value
+                            }
                         }
                     }
                 }

@@ -1,8 +1,7 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
-import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
+import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
@@ -29,21 +28,31 @@ describe("PushToPushLifecycle", () => {
                 "owner": "some-owner",
                 "name": "some-repo",
                 "channels": [{
-                    "name": "some-channel1"
+                    "name": "some-channel1",
+                    "team": {
+                        "id": "T095SFFBK"
+                     }
                   },
                   {
-                    "name": "some-channel2"
+                    "name": "some-channel2",
+                    "team": {
+                        "id": "T095SFFBK"
+                     }
                   }],
                 "labels": [{
                     "name": "accepted"
                 }],
                 "org": {
                     "provider": null,
-                    "chatTeam": {
-                        "preferences": [{
-                            "name": "lifecycle_branches",
-                            "value": "[{\\"name\\":\\"^some-ch.*el1$\\",\\"repositories\\":[{\\"owner\\":\\"some-owner\\",\\"name\\":\\"some-repo\\",%%CONFIG%%}]}]"
-                          }]
+                    "team": {
+                        "id": "T095SFFBK",
+                        "chatTeams": [{
+                            "id": "T095SFFBK",
+                            "preferences": [{
+                                "name": "lifecycle_branches",
+                                "value": "[{\\"name\\":\\"^some-ch.*el1$\\",\\"repositories\\":[{\\"owner\\":\\"some-owner\\",\\"name\\":\\"some-repo\\",%%CONFIG%%}]}]"
+                              }]
+                        }]        
                     }
                 },
                 "defaultBranch": "master"
@@ -76,11 +85,10 @@ describe("PushToPushLifecycle", () => {
     /* tslint:enable */
 
     it("correctly filter pushes on excluded branch", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames[0] === "some-channel2");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).channels[0] === "some-channel2");
                 return Promise.resolve();
             }
         }
@@ -108,13 +116,12 @@ describe("PushToPushLifecycle", () => {
     });
 
     it("correctly show pushes on included but also excluded branch", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
             public counter = 0;
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 3);
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).channels.length === 2);
                 this.counter++;
                 return Promise.resolve();
             }
@@ -144,11 +151,10 @@ describe("PushToPushLifecycle", () => {
     });
 
     it("correctly filter pushes that aren't included", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames[0] === "some-channel2");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).channels[0] === "some-channel2");
                 return Promise.resolve();
             }
         }
@@ -193,7 +199,10 @@ describe("PushToPushLifecycle", () => {
                 "owner": "atomisthqa",
                 "name": "handlers",
                 "channels": [ {
-                    "name": "handlers"
+                    "name": "handlers",
+                    "team": {
+                        "id": "T095SFFBK"
+                    }
                 }],
                 "labels": [{
                     "name": "wontfix"
@@ -280,11 +289,10 @@ describe("PushToPushLifecycle", () => {
     `;
 
     it("display referenced PR", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames[0] === "handlers");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).channels[0] === "handlers");
                 const sm = msg as SlackMessage;
                 assert(sm.attachments[1].author_name === "#128: Simplify filter. Add a note");
                 return Promise.resolve();
@@ -365,7 +373,10 @@ describe("PushToPushLifecycle", () => {
       }],
       "repo": {
         "channels": [{
-          "name": "loggregator"
+          "name": "loggregator",
+          "team": {
+            "id": "T095SFFBK"
+          }
         }],
         "defaultBranch": "master",
         "labels": [{
@@ -387,14 +398,18 @@ describe("PushToPushLifecycle", () => {
         }],
         "name": "logging-acceptance-tests-release",
         "org": {
-          "chatTeam": {
-            "preferences": [{
-              "name": "lifecycles",
-              "value": "{\\"D89FP2CFK\\":{\\"push\\":false},\\"loggregator\\":{\\"push\\":false}}"
-            }, {
-              "name": "disable_bot_owner_on_github_activity_notification",
-              "value": "true"
-            }]
+          "team": {
+            "id": "T095SFFBK",
+            "chatTeams": [{
+                "id": "T095SFFBK",
+                "preferences": [{
+                  "name": "lifecycles",
+                  "value": "{\\"D89FP2CFK\\":{\\"push\\":false},\\"loggregator\\":{\\"push\\":false}}"
+                }, {
+                  "name": "disable_bot_owner_on_github_activity_notification",
+                  "value": "true"
+                }]
+             }]
           },
           "provider": null
         },
@@ -416,12 +431,10 @@ describe("PushToPushLifecycle", () => {
 }`;
 
     it("don't display push rendering", done => {
-        class MockMessageClient extends MessageClientSupport {
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames.length === 1);
-                assert(channelNames[0] === "atomist://dashboard");
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                assert((destinations as SlackDestination).channels[0] === "atomist://dashboard");
                 return Promise.resolve();
             }
         }

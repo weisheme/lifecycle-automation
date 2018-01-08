@@ -1,13 +1,15 @@
-subscription NotifyBotOwnerOnPush
-{
+subscription NotifyBotOwnerOnPush {
   Push {
     id
     repo {
       org {
-        chatTeam {
-          preferences {
-            name
-            value
+        team {
+          chatTeams {
+            id
+            preferences {
+              name
+              value
+            }
           }
         }
       }

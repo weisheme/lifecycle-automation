@@ -19,6 +19,9 @@ subscription NotifyMentionedOnIssue
             name
             value
           }
+          chatTeam {
+            id
+          }
         }
       }
     }
@@ -42,6 +45,9 @@ subscription NotifyMentionedOnIssue
           preferences {
             name
             value
+          }
+          chatTeam {
+            id
           }
         }
       }

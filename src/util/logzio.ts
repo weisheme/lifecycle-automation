@@ -14,7 +14,7 @@ import {
     AutomationEventListener,
     AutomationEventListenerSupport,
 } from "@atomist/automation-client/server/AutomationEventListener";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
+import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as appRoot from "app-root-path";
 import { createLogger } from "logzio-nodejs";
@@ -87,14 +87,12 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
         return Promise.resolve();
     }
 
-    public messageSent(message: string | SlackMessage,
-                       userNames: string | string[],
-                       channelName: string | string[],
-                       options?: MessageOptions) {
+    public messageSent(message: any,
+                       destinations: Destination | Destination[],
+                       options: MessageOptions, ctx: HandlerContext) {
         this.sendEvent("Outgoing message", "message", {
             message,
-            "user-names": userNames,
-            "channel-names": channelName,
+            destinations,
             options,
         });
     }

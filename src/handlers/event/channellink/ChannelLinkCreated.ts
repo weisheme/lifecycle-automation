@@ -12,7 +12,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import { addressSlackChannels, buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages";
 import {
     bold,
@@ -40,6 +40,7 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
     public handle(event: EventFired<graphql.ChannelLinkCreated.Subscription>,
                   ctx: HandlerContext): Promise<HandlerResult> {
         const channelName = event.data.ChannelLink[0].channel.name || event.data.ChannelLink[0].channel.normalizedName;
+        const teamId = event.data.ChannelLink[0].channel.team.id;
         const repo = event.data.ChannelLink[0].repo;
         const repoLink = repoSlackLink(repo);
 
@@ -69,9 +70,10 @@ Please use one of the buttons below to install a Webhook in your repository or o
                 return true;
             } else if (repo.org.ownerType === "organization") {
                 return ctx.graphClient.executeQueryFromFile<graphql.Webhook.Query, graphql.Webhook.Variables>(
-                    "graphql/query/webhook")
+                    "graphql/query/webhook",
+                    { owner: repo.owner })
                 .then(result => {
-                    return _.get(result, "GitHubOrgWebhook[0].url") !== null;
+                    return _.get(result, "GitHubOrgWebhook[0].url") != null;
                 })
                 .catch(() => {
                     return false;
@@ -92,7 +94,7 @@ Please use one of the buttons below to install a Webhook in your repository or o
                         mrkdwn_in: [ "text" ],
                     }],
                 };
-                return ctx.messageClient.addressChannels(msg, channelName);
+                return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName));
             } else {
                 let text;
                 if (repo.org.ownerType === "organization") {
@@ -100,8 +102,9 @@ Please use one of the buttons below to install a Webhook in your repository or o
                 } else {
                     text = noRepoHookMsg;
                 }
-                return ctx.messageClient.addressChannels(
-                    warning("Channel Linked", text, ctx, createActions(repo)), channelName);
+                return ctx.messageClient.send(
+                    warning("Channel Linked", text, ctx, createActions(repo)),
+                    addressSlackChannels(teamId, channelName));
             }
         })
         .then(() => Success, failure);

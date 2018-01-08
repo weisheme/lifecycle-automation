@@ -58,7 +58,7 @@ export class LinkRepo implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
-    @MappedParameter(MappedParameters.GitHubOwner)
+    @MappedParameter(MappedParameters.GitHubOwnerWithUser)
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)

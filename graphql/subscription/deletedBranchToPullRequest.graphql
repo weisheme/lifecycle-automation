@@ -140,6 +140,9 @@ subscription DeletedBranchToPullRequestLifecycle {
         owner
         channels {
           name
+          team {
+            id
+          }
         }
         allowRebaseMerge
         allowSquashMerge
@@ -151,10 +154,14 @@ subscription DeletedBranchToPullRequestLifecycle {
             apiUrl
             gitUrl
           }
-          chatTeam {
-            preferences {
-              name
-              value
+          team {
+            id
+            chatTeams {
+              id
+              preferences {
+                name
+                value
+              }
             }
           }
         }
