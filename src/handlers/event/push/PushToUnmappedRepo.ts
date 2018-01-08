@@ -63,7 +63,8 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 }
             });
 
-            const chatIds = p.commits.filter(c => c.author && c.author.person).map(c => c.author.person.chatId);
+            const chatIds = p.commits.filter(c => c.author && c.author.person && c.author.person.chatId)
+                .map(c => c.author.person.chatId);
 
             return sendUnMappedRepoMessage(chatIds, p.repo, ctx, botNames);
         }))
