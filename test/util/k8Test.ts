@@ -1,6 +1,6 @@
 import "mocha";
 import * as assert from "power-assert";
-import {Container, ContainersForPod, Pod, PodsForPhase, podStatusForImage} from "../../src/util/k8";
+import {Container, ContainersForPod, groupPodsWithImageByPhase, Pod, PodsForPhase} from "../../src/util/k8";
 
 describe("k8", () => {
 
@@ -66,25 +66,25 @@ describe("k8", () => {
         } as Pod,
     ];
 
-    describe("podStatusForImage", () => {
+    describe("groupPodsWithImageByPhase", () => {
 
         it("should return empty array for empty pods", () => {
-            const result = podStatusForImage([], "123");
+            const result = groupPodsWithImageByPhase([], "123");
             assert.deepEqual(result, []);
         });
 
         it("should return empty array for missing image name", () => {
-            const result = podStatusForImage(singleStartedPod, undefined);
+            const result = groupPodsWithImageByPhase(singleStartedPod, undefined);
             assert.deepEqual(result, []);
         });
 
         it("should return empty array for non matching image name", () => {
-            const result = podStatusForImage(singleStartedPod, "i2");
+            const result = groupPodsWithImageByPhase(singleStartedPod, "i2");
             assert.deepEqual(result, []);
         });
 
         it("should return container matching image name", () => {
-            const result = podStatusForImage(singleStartedPod, "i1");
+            const result = groupPodsWithImageByPhase(singleStartedPod, "i1");
             assert.deepEqual(result, [
                 {
                     phase: "Started",
@@ -100,7 +100,7 @@ describe("k8", () => {
         });
 
         it("should return containers across pods for matching image name", () => {
-            const result = podStatusForImage(assortedPods, "i1");
+            const result = groupPodsWithImageByPhase(assortedPods, "i1");
             assert.deepEqual(result, [
                 {
                     phase: "Started",
@@ -131,7 +131,7 @@ describe("k8", () => {
         });
 
         it("should return containers across pods with phase collision", () => {
-            const result = podStatusForImage(assortedPods, "i2");
+            const result = groupPodsWithImageByPhase(assortedPods, "i2");
             assert.deepEqual(result, [
                 {
                     phase: "Started",

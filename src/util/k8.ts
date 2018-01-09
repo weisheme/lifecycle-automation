@@ -23,7 +23,7 @@ export interface ContainersForPod {
     containers: Container[];
 }
 
-export function podStatusForImage(pods: Pod[], imageName): PodsForPhase[] {
+export function groupPodsWithImageByPhase(pods: Pod[], imageName): PodsForPhase[] {
     return _.reduce(pods, (podsUsingImage, pod) => {
         const containersForimageInPod = pod.containers.filter( c => c.imageName === imageName);
         if (_.isEmpty(containersForimageInPod)) {
