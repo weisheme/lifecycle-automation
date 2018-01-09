@@ -13,10 +13,12 @@ import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import { AddBotToSlackChannel } from "../../../typings/types";
 
-export function addBotToSlackChannel(ctx: HandlerContext, channelId: string): Promise<AddBotToSlackChannel.Mutation> {
+export function addBotToSlackChannel(ctx: HandlerContext,
+                                     teamId: string,
+                                     channelId: string): Promise<AddBotToSlackChannel.Mutation> {
     return ctx.graphClient.executeMutationFromFile<AddBotToSlackChannel.Mutation, AddBotToSlackChannel.Variables>(
         "graphql/mutation/addBotToSlackChannel",
-        { channelId },
+        { teamId, channelId },
     );
 }
 
@@ -24,11 +26,14 @@ export function addBotToSlackChannel(ctx: HandlerContext, channelId: string): Pr
 @Tags("slack", "bot")
 export class AddBotToChannel implements HandleCommand {
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return addBotToSlackChannel(ctx, this.channelId)
+        return addBotToSlackChannel(ctx, this.teamId, this.channelId)
             .then(() => Success, failure);
     }
 

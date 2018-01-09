@@ -1,5 +1,5 @@
-mutation InviteUserToSlackChannel($channelId: String!, $userId: String!) {
-  inviteUserToSlackChannel(channelId: $channelId, userId: $userId) {
+mutation InviteUserToSlackChannel($teamId: ID!, $channelId: String!, $userId: String!) {
+  inviteUserToSlackChannel(chatTeamId: $teamId, channelId: $channelId, userId: $userId) {
     id
   }
 }

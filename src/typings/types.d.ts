@@ -148,6 +148,7 @@ export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 
 export namespace AddBotToSlackChannel {
   export type Variables = {
+    teamId: string;
     channelId: string;
   }
 
@@ -161,6 +162,7 @@ export namespace AddBotToSlackChannel {
 }
 export namespace CreateSlackChannel {
   export type Variables = {
+    teamId: string;
     name: string;
   }
 
@@ -174,6 +176,7 @@ export namespace CreateSlackChannel {
 }
 export namespace InviteUserToSlackChannel {
   export type Variables = {
+    teamId: string;
     channelId: string;
     userId: string;
   }
@@ -188,6 +191,7 @@ export namespace InviteUserToSlackChannel {
 }
 export namespace LinkSlackChannelToRepo {
   export type Variables = {
+    teamId: string;
     channelId: string;
     repo: string;
     owner: string;
@@ -218,24 +222,26 @@ export namespace SetChatTeamPreference {
     value?: string | null; 
   } 
 }
-export namespace SetUserPreference {
+export namespace SetChatUserPreference {
   export type Variables = {
+    teamId: string;
     userId: string;
     name: string;
     value: string;
   }
 
   export type Mutation = {
-    setUserPreference?: SetUserPreference[] | null; 
+    setChatUserPreference?: SetChatUserPreference[] | null; 
   } 
 
-  export type SetUserPreference = {
+  export type SetChatUserPreference = {
     name?: string | null; 
     value?: string | null; 
   } 
 }
 export namespace UnlinkSlackChannelFromRepo {
   export type Variables = {
+    teamId: string;
     channelId: string;
     repo: string;
     owner: string;

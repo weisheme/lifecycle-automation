@@ -34,6 +34,7 @@ export function noRepoMessage(repo: string, owner: string): slack.SlackMessage {
 
 export function inviteUserToSlackChannel(
     ctx: HandlerContext,
+    teamId: string,
     channelId: string,
     userId: string,
 ): Promise<InviteUserToSlackChannel.Mutation> {
@@ -41,13 +42,16 @@ export function inviteUserToSlackChannel(
     return ctx.graphClient.executeMutationFromFile<InviteUserToSlackChannel.Mutation,
         InviteUserToSlackChannel.Variables>(
         "graphql/mutation/inviteUserToSlackChannel",
-        { channelId, userId },
+        { teamId, channelId, userId },
     );
 }
 
 @CommandHandler("Invite bot, link a repository, and invite user to channel")
 @Tags("slack", "repo")
 export class AssociateRepo implements HandleCommand {
+
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
 
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;
@@ -90,7 +94,7 @@ export class AssociateRepo implements HandleCommand {
                     ctx.messageClient.respond(noRepoMessage(this.repo, this.owner));
                     return;
                 }
-                return addBotToSlackChannel(ctx, this.channelId)
+                return addBotToSlackChannel(ctx, this.teamId, this.channelId)
                     .then(() => {
                         return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
                             graphql.ProviderIdFromOrg.Variables>(
@@ -99,10 +103,10 @@ export class AssociateRepo implements HandleCommand {
                             .then(result => {
                                 const providerId = _.get(result, "Org[0].provider.providerId");
                                 return linkSlackChannelToRepo(
-                                    ctx, this.channelId, this.repo, this.owner, providerId);
+                                    ctx, this.teamId, this.channelId, this.repo, this.owner, providerId);
                             });
                     })
-                    .then(() => inviteUserToSlackChannel(ctx, this.channelId, this.userId))
+                    .then(() => inviteUserToSlackChannel(ctx, this.teamId, this.channelId, this.userId))
                     .then(() => {
                         const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +
                             `${slack.channel(this.channelId)} and invited you to the channel.`;
