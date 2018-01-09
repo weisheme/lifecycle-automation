@@ -109,7 +109,7 @@ export class SetUserPreference implements HandleCommand {
                         teamId: this.teamId,
                         userId: this.requester,
                         name: this.key,
-                        value: JSON.stringify(preferences)
+                        value: JSON.stringify(preferences),
                     });
             })
             .then(() => {
