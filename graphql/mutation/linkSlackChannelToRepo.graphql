@@ -1,4 +1,4 @@
-mutation LinkSlackChannelToRepo($teamId: ID!, $channelId: String!, $repo: String!, $owner: String!, $providerId: String) {
+mutation LinkSlackChannelToRepo($teamId: String!, $channelId: String!, $repo: String!, $owner: String!, $providerId: String) {
   linkSlackChannelToRepo(chatTeamId: $teamId, channelId: $channelId, repo: $repo, owner: $owner, providerId: $providerId) {
     id
   }
