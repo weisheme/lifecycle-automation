@@ -1,12 +1,12 @@
 {
   // configuration that goes into atomist.config.ts
   "endpoints": {
-    "api":"https://automation.atomist.com/registration",
-    "graphql": "https://automation.atomist.com/graphql/team",
-    "events": "https://app.atomist.com/v1/lifecycle"
+    "api":"https://automation-staging.atomist.services/registration",
+    "graphql": "https://automation-staging.atomist.services/graphql/team",
+    "events": "https://app-staging.atomist.services/v1/lifecycle"
   },
   "groups": null,
-  "teamIds": [ "T095SFFBK", "T29E48P34" ],
+  "teamIds": [ "T1L0VDKJP" ],
   "policy": null,
   "http": {
     "auth": {
