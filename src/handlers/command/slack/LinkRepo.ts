@@ -27,6 +27,7 @@ export const DefaultBotName = "atomist";
 
 export function linkSlackChannelToRepo(
     ctx: HandlerContext,
+    teamId: string,
     channelId: string,
     repo: string,
     owner: string,
@@ -35,7 +36,7 @@ export function linkSlackChannelToRepo(
 
     return ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation, LinkSlackChannelToRepo.Variables>(
         "graphql/mutation/linkSlackChannelToRepo",
-        { channelId, repo, owner, providerId },
+        { teamId, channelId, repo, owner, providerId },
     );
 }
 
@@ -52,13 +53,16 @@ export class LinkRepo implements HandleCommand {
         return `@${botName} repo owner=${owner} name=${repo}`;
     }
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;
 
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
-    @MappedParameter(MappedParameters.GitHubOwner)
+    @MappedParameter(MappedParameters.GitHubOwnerWithUser)
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
@@ -103,7 +107,7 @@ export class LinkRepo implements HandleCommand {
                     .then(result => {
                         const providerId = _.get(result, "Org[0].provider.providerId");
                         return linkSlackChannelToRepo(
-                            ctx, this.channelId, this.name, this.owner, providerId)
+                            ctx, this.teamId, this.channelId, this.name, this.owner, providerId)
                             .then(() => {
                                 if (this.msgId) {
                                     ctx.messageClient.addressChannels(

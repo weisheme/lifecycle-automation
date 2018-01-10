@@ -35,6 +35,9 @@ subscription IssueToIssueLifecycle {
       }
       channels {
         name
+        team {
+          id
+        }
       }
       org {
         provider {
@@ -42,10 +45,14 @@ subscription IssueToIssueLifecycle {
             gitUrl
             url
         }
-        chatTeam {
-          preferences {
-            name
-            value
+        team {
+          id
+          chatTeams {
+            id
+            preferences {
+              name
+              value
+            }
           }
         }
       }

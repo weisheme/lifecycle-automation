@@ -4,6 +4,9 @@ subscription ChannelLinkCreated
     channel {
       name
       normalizedName
+      team {
+        id
+      }
     }
     repo {
       name

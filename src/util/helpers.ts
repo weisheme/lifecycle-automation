@@ -356,23 +356,10 @@ export function loadChatIdByChatId(ctx: HandlerContext, chatId: string): Promise
         });
 }
 
-export function loadRepoByNameAndOwner(ctx: HandlerContext, name: string, owner: string): Promise<graphql.Repo.Repo> {
-    return ctx.graphClient.executeQueryFromFile<graphql.Repo.Query, graphql.Repo.Variables>(
-        "graphql/query/repo",
-        { name, owner })
-        .then(result => {
-            return _.get(result, "Repo[0]");
-        })
-        .catch(err => {
-            logger.error("Error occurred running GraphQL query: %s", err);
-            return null;
-        });
-}
-
-export function loadChatTeam(ctx: HandlerContext): Promise<graphql.ChatTeam.ChatTeam> {
+export function loadChatTeam(teamId: string, ctx: HandlerContext): Promise<graphql.ChatTeam.ChatTeam> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatTeam.Query, graphql.ChatTeam.Variables>(
         "graphql/query/chatTeam",
-        {})
+        { teamId })
         .then(result => {
             return _.get(result, "ChatTeam[0]");
         })

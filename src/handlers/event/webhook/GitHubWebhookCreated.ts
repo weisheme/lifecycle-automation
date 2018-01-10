@@ -5,10 +5,15 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
-    Success, Tags,
+    Success,
+    SuccessPromise,
+    Tags,
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
-import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    addressSlackUsers,
+    buttonForCommand,
+} from "@atomist/automation-client/spi/message/MessageClient";
 import {
     Attachment,
     codeLine,
@@ -33,41 +38,48 @@ export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCr
         ctx: HandlerContext,
     ): Promise<HandlerResult> {
 
-        const members = _.get(event.data, "GitHubOrgWebhook[0].org.chatTeam.members", []) as
-            graphql.GitHubWebhookCreated.Members[];
-        if (!members || members.length < 1) {
-            return Promise.resolve(Success);
-        }
-        const owner = members.find(m => m.isOwner === "true");
-        if (!owner) {
-            return Promise.resolve(Success);
-        }
-        const ownerName = owner.screenName;
-        const bot = members.find(m => m.isAtomistBot === "true");
-        const botName = (bot && bot.screenName) ? bot.screenName : DefaultBotName;
+        const chatTeams = _.get(event, "data.GitHubOrgWebhook[0].org.team.chatTeams") as
+            graphql.GitHubWebhookCreated.ChatTeams[];
 
-        const channels = ((_.get(event.data, "GitHubOrgWebhook[0].org.chatTeam.channels", []) || []) as
-            graphql.GitHubWebhookCreated.Channels[])
-            .filter(c => Channels.some(cc => cc === c.name));
+        return Promise.all(chatTeams.map(chatTeam => {
+            if (!chatTeam) {
+                return SuccessPromise;
+            }
+            const members = chatTeam.members;
+            if (!members || members.length < 1) {
+                return Promise.resolve(Success);
+            }
+            const owner = members.find(m => m.isOwner === "true");
+            if (!owner) {
+                return Promise.resolve(Success);
+            }
+            const ownerName = owner.screenName;
+            const teamId = chatTeam.id;
+            const bot = members.find(m => m.isAtomistBot === "true");
+            const botName = (bot && bot.screenName) ? bot.screenName : DefaultBotName;
 
-        const welcomeAttachment: Attachment = {
-            fallback: `Invite me to any channel where your team works using '/invite @${botName}'.`,
-            mrkdwn_in: ["text"],
-        };
-        let suffix = ".";
-        if (channels.length > 0) {
-            suffix = " or click one of the buttons below.";
-            welcomeAttachment.actions = channels.map(c => {
-                const addBotCmd = new AddBotToChannel();
-                addBotCmd.channelId = c.channelId;
-                return buttonForCommand({ text: `#${c.name}` }, addBotCmd);
-            });
-        }
-        welcomeAttachment.text = `Invite me to any channel where your team works using ` +
-            codeLine(`/invite @${botName}`) + suffix;
+            const channels = (chatTeam.channels || []).filter(c => Channels.some(cc => cc === c.name));
 
-        const welcomeMsg: SlackMessage = { attachments: [welcomeAttachment] };
-        return ctx.messageClient.addressUsers(welcomeMsg, ownerName)
-            .then(() => Success, failure);
+            const welcomeAttachment: Attachment = {
+                fallback: `Invite me to any channel where your team works using '/invite @${botName}'.`,
+                mrkdwn_in: ["text"],
+            };
+            let suffix = ".";
+            if (channels.length > 0) {
+                suffix = " or click one of the buttons below.";
+                welcomeAttachment.actions = channels.map(c => {
+                    const addBotCmd = new AddBotToChannel();
+                    addBotCmd.channelId = c.channelId;
+                    return buttonForCommand({ text: `#${c.name}` }, addBotCmd);
+                });
+            }
+            welcomeAttachment.text = `Invite me to any channel where your team works using ` +
+                codeLine(`/invite @${botName}`) + suffix;
+
+            const welcomeMsg: SlackMessage = { attachments: [welcomeAttachment] };
+            return ctx.messageClient.send(welcomeMsg, addressSlackUsers(teamId, ownerName))
+                .then(() => Success, failure);
+        }))
+        .then(() => Success, failure);
     }
 }

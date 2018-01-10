@@ -20,6 +20,9 @@ subscription NotifyMentionedOnPullRequest
             name
             value
           }
+          chatTeam {
+            id
+          }
         }
       }
     }
@@ -44,6 +47,9 @@ subscription NotifyMentionedOnPullRequest
             name
             value
           }
+          chatTeam {
+            id
+          }
         }
       }
     }
@@ -55,6 +61,9 @@ subscription NotifyMentionedOnPullRequest
           preferences {
             name
             value
+          }
+          chatTeam {
+            id
           }
         }
       }

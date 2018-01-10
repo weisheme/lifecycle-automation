@@ -1,5 +1,4 @@
-subscription AutoMergeOnBuild
-{
+subscription AutoMergeOnBuild {
     Build {
         _id
         pullRequest {
@@ -45,3 +44,4 @@ subscription AutoMergeOnBuild
         }
     }
 }
+

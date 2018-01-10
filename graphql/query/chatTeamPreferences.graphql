@@ -1,0 +1,9 @@
+query ChatTeamPreferences($teamId: ID!) {
+  ChatTeam(id: $teamId) {
+    preferences {
+      name
+      value
+    }
+  }
+}
+

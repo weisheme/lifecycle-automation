@@ -38,6 +38,9 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @Parameter({ description: "lifecycle to configure", pattern: /^.*$/,
         required: false, displayable: false })
     public lifecycle: string;
@@ -105,7 +108,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                             value: JSON.stringify(channelPreferences), label: `'${lifecycleType.name}' enabled` }));
                 } else {
                     channelPreferences[type] = false;
-                    actions.push(buttonForCommand({text: "Disable", style: "danger" }, "SetTeamPreference",
+                    actions.push(buttonForCommand({ text: "Disable", style: "danger" }, "SetTeamPreference",
                         { msgId: this.msgId, key: LifecyclePreferences.key, name: this.channelName,
                             value: JSON.stringify(channelPreferences), label: `'${lifecycleType.name}' disabled` }));
                 }
@@ -114,7 +117,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 const configureHandler = new ConfigureLifecyclePreferences();
                 configureHandler.msgId = this.msgId;
                 configureHandler.lifecycle = type;
-                actions.push(buttonForCommand({ text: "Configure"}, configureHandler));
+                actions.push(buttonForCommand({ text: "Configure" }, configureHandler));
 
                 const configureAttachment: Attachment = {
                     title: lifecycleType.name,
@@ -200,7 +203,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
 
                 if (!this.isLifecycleRendererEnabled(rendererPreferences, actionType.id)) {
                     _.set(channelPreferences, `${this.lifecycle}.${type}`, true);
-                    actions.push(buttonForCommand({text: "Enable Renderer", style: "primary" }, "SetTeamPreference",
+                    actions.push(buttonForCommand({ text: "Enable Renderer", style: "primary" }, "SetTeamPreference",
                         {
                             msgId: this.msgId,
                             key: LifecycleRendererPreferences.key,
@@ -272,13 +275,13 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
         return LifecycleRendererPreferences[this.lifecycle][type].enabled;
     }
 
-    private loadPreferences(ctx: HandlerContext, key: string): Promise<graphql.TeamPreferences.Preferences[]> {
-        return ctx.graphClient.executeQueryFromFile<graphql.TeamPreferences.Query,
-            graphql.TeamPreferences.Variables>("graphql/query/teamPreferences",
-            { }, { fetchPolicy: "network-only" })
+    private loadPreferences(ctx: HandlerContext, key: string): Promise<graphql.ChatTeamPreferences.Preferences[]> {
+        return ctx.graphClient.executeQueryFromFile<graphql.ChatTeamPreferences.Query,
+            graphql.ChatTeamPreferences.Variables>("graphql/query/chatTeamPreferences",
+            { teamId: this.teamId }, { fetchPolicy: "network-only" })
             .then(result => {
                 const preferences =
-                    _.get(result, "ChatTeam[0].preferences") as graphql.TeamPreferences.Preferences[];
+                    _.get(result, "ChatTeam[0].preferences") as graphql.ChatTeamPreferences.Preferences[];
                 if (preferences) {
                     const lifecyclePreferences = preferences.find(
                         p => p.name === key);

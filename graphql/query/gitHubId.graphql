@@ -10,6 +10,7 @@ query GitHubId($gitHubIds: [String]!) {
         }
         id
         chatTeam {
+          id
           name
         }
       }

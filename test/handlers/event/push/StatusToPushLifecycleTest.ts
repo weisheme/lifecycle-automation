@@ -2,8 +2,7 @@ import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { GraphClient } from "@atomist/automation-client/spi/graph/GraphClient";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
-import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
+import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
@@ -49,7 +48,10 @@ describe("StatusToPushLifecycle", () => {
             "owner": "atomisthq",
             "name": "automation-api",
             "channels": [{
-              "name": "automation-api"
+              "name": "automation-api",
+              "team": {
+                "id": "T095SFFBK"
+              }
             }],
             "labels": [{
               "name": "help wanted"
@@ -111,13 +113,14 @@ describe("StatusToPushLifecycle", () => {
     /* tslint:enable */
 
     it("render Raise PR button for successful build", done => {
-        class MockMessageClient extends MessageClientSupport {
+        let messageSent = false;
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments[0].actions.length === 1);
                 assert(sm.attachments[0].actions[0].text === "Raise PR");
+                messageSent = true;
                 return Promise.resolve();
             }
 
@@ -171,7 +174,7 @@ describe("StatusToPushLifecycle", () => {
             }
         }
 
-        const ctx: HandlerContext = {
+        const ctx = {
             teamId: "T095SFFBK",
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
@@ -179,9 +182,10 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadRaisePr) as EventFired<any>, ctx)
+        handler.handle(JSON.parse(payloadRaisePr) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
-                console.log(result);
+                assert(messageSent);
+                assert(result.code === 0);
             })
             .then(done, done);
 
@@ -257,12 +261,11 @@ describe("StatusToPushLifecycle", () => {
 }`;
     /* tslint:enable */
     it("don't render message of empty channel", done => {
-        class MockMessageClient extends MessageClientSupport {
+        const messageSent = false;
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert((channelNames as string[]).length === 1);
-                return Promise.resolve();
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                return Promise.reject("Should be called");
             }
 
         }
@@ -315,7 +318,7 @@ describe("StatusToPushLifecycle", () => {
             }
         }
 
-        const ctx: HandlerContext = {
+        const ctx = {
             teamId: "xxx",
             correlationId: "fe4a5e6b-d079-4687-ab04-baf0d2ee3faf",
             invocationId: guid(),
@@ -323,9 +326,10 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadNoChannel) as EventFired<any>, ctx)
+        handler.handle(JSON.parse(payloadNoChannel) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
-                console.log(result);
+                assert(!messageSent);
+                assert(result.code === 0);
             })
             .then(done, done);
 
@@ -368,7 +372,10 @@ describe("StatusToPushLifecycle", () => {
             "owner": "atomisthq",
             "name": "automation-api",
             "channels": [{
-              "name": "automation-api"
+              "name": "automation-api",
+              "team": {
+                "id": "T095SFFBK"
+              }
             }],
             "labels": [{
               "name": "help wanted"
@@ -393,11 +400,15 @@ describe("StatusToPushLifecycle", () => {
             }],
             "org": {
               "provider": null,
-              "chatTeam": {
-                "preferences": [{
-                    "name": "lifecycle_actions",
-                    "value": "{\\"automation-api\\":{\\"push.raise_pullrequest\\":false}}"
-                }]
+              "team": {
+                "id": "T095SFFBK",
+                "chatTeams": [{
+                    "id": "T095SFFBK",
+                    "preferences": [{
+                        "name": "lifecycle_actions",
+                        "value": "{\\"automation-api\\":{\\"push.raise_pullrequest\\":false}}"
+                    }]
+                }] 
               }
             },
             "defaultBranch": "master"
@@ -436,12 +447,13 @@ describe("StatusToPushLifecycle", () => {
     /* tslint:enable */
 
     it("don't render Raise PR button for successful build when button is disabled", done => {
-        class MockMessageClient extends MessageClientSupport {
+        let messageSent = false;
+        class MockMessageClient {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments[0].actions.length === 0);
+                messageSent = true;
                 return Promise.resolve();
             }
         }
@@ -494,7 +506,7 @@ describe("StatusToPushLifecycle", () => {
             }
         }
 
-        const ctx: HandlerContext = {
+        const ctx = {
             teamId: "T095SFFBK",
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
@@ -502,9 +514,10 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadNoRaisePr) as EventFired<any>, ctx)
+        handler.handle(JSON.parse(payloadNoRaisePr) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
-                console.log(result);
+                assert(messageSent);
+                assert(result.code === 0);
             })
             .then(done, done);
 

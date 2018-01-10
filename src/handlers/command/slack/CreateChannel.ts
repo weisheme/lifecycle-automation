@@ -17,10 +17,12 @@ import { CreateSlackChannel } from "../../../typings/types";
 import { error } from "../../../util/messages";
 import { AssociateRepo } from "./AssociateRepo";
 
-export function createChannel(ctx: HandlerContext, channelName: string): Promise<CreateSlackChannel.Mutation> {
+export function createChannel(ctx: HandlerContext,
+                              teamId: string,
+                              channelName: string): Promise<CreateSlackChannel.Mutation> {
     return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
         "graphql/mutation/createSlackChannel",
-        { name: channelName },
+        { teamId, name: channelName },
     );
 }
 
@@ -30,6 +32,9 @@ export function createChannel(ctx: HandlerContext, channelName: string): Promise
 @CommandHandler("Create channel and link it to a repository", "link channel")
 @Tags("slack", "channel", "repo")
 export class CreateChannel implements HandleCommand {
+
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
 
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
@@ -67,7 +72,7 @@ export class CreateChannel implements HandleCommand {
     public msgId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return createChannel(ctx, this.channel)
+        return createChannel(ctx, this.teamId, this.channel)
             .then(channel => {
                 if (channel && channel.createSlackChannel) {
                     const associateRepo = new AssociateRepo();

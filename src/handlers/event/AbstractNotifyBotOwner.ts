@@ -6,7 +6,9 @@ import {
     HandlerResult,
     Success,
 } from "@atomist/automation-client";
-import { Preferences } from "../../lifecycle/Lifecycle";
+import { addressSlackUsers } from "@atomist/automation-client/spi/message/MessageClient";
+import * as _ from "lodash";
+import { ChatTeam } from "../../lifecycle/Lifecycle";
 import * as graphql from "../../typings/types";
 
 const PageSize = 50;
@@ -18,56 +20,58 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
 
     public handle(event: EventFired<any>,
                   ctx: HandlerContext): Promise<HandlerResult> {
-        const preferences = this.extractPreferences(event);
-        if (preferences) {
-            const preference = preferences.find(p => p.name === PreferenceKey);
-            if (preference && preference.value === "true") {
-                return Promise.resolve(Success);
-            }
-        }
+        const chatTeams = (this.extractChatTeams(event) || [])
+            .filter(ct => ct.preferences.some(p => p.name === PreferenceKey));
 
-        return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
-            "graphql/query/channels",
-            { first: PageSize, offset: 0 })
-            .then(function page(result, offset = 0) {
-                if (!result.Repo || result.Repo.length === 0) {
-                    return handleResult(false, ctx);
-                } else if (result.Repo.some(r => r.channels && r.channels.length > 0)) {
-                    return handleResult(true, ctx);
-                }
+        return Promise.all(chatTeams.map(ct => {
+            return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
+                "graphql/query/channels",
+                { teamId: ct.id, first: PageSize, offset: 0 })
+                .then(function page(result, offset = 0) {
+                    const channels = _.get(result, "ChatTeam[0].channels") as graphql.Channels.Channels[];
+                    if (!channels || channels.length === 0) {
+                        return handleResult(ct, false, ctx);
+                    } else if (channels && channels.some(c => c.repos && c.repos.length > 0)) {
+                        return handleResult(ct, true, ctx);
+                    }
 
-                offset = offset + PageSize;
-                return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
-                    "graphql/query/channels",
-                    { first: PageSize, offset })
-                    .then(innerResult => page(innerResult, offset));
-                },
-            )
-            .then(() => Success, failure);
+                    offset = offset + PageSize;
+                    return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
+                        "graphql/query/channels",
+                        {teamId: ct.id, first: PageSize, offset})
+                        .then(innerResult => page(innerResult, offset));
+                })
+                .then(() => Success, failure);
+        }))
+        .then(() => Success, failure);
     }
 
-    protected abstract extractPreferences(event: EventFired<R>): Preferences[];
+    protected abstract extractChatTeams(event: EventFired<R>): ChatTeam[];
 }
 
-function handleResult(mappedRepo: boolean, ctx: HandlerContext): Promise<HandlerResult> {
+function handleResult(team: ChatTeam,
+                      mappedRepo: boolean,
+                      ctx: HandlerContext): Promise<HandlerResult> {
     if (!mappedRepo) {
         return ctx.graphClient.executeQueryFromFile<graphql.BotOwner.Query, graphql.BotOwner.Variables>(
             "graphql/query/botOwner",
-            {})
+            { teamId: team.id})
             .then(r => {
-                return r.ChatId.map(c => c.screenName);
+                const members = (_.get(r, "ChatTeam[0].members") || []) as graphql.BotOwner.Members[];
+                return members.map(c => c.screenName);
             })
             .then(owners => {
                 console.log(`Notifying '${owners.join(", ")}' about GitHub activity`);
-                return ctx.messageClient.addressUsers(Message, owners,
+                return ctx.messageClient.send(
+                    Message, addressSlackUsers(team.id, ...owners),
                     { id: `bot_owner/github/notification`, ttl: 1000 * 60 * 60 * 24 * 7});
             })
             .then(() => Success, failure);
     } else {
         console.log(`Setting team preferences '${PreferenceKey}' to 'true'`);
-        return ctx.graphClient.executeMutationFromFile<graphql.SetTeamPreference.Mutation,
-                graphql.SetTeamPreference.Variables>("graphql/mutation/setTeamPreference",
-                {name: PreferenceKey, value: "true"})
+        return ctx.graphClient.executeMutationFromFile<graphql.SetChatTeamPreference.Mutation,
+                graphql.SetChatTeamPreference.Variables>("graphql/mutation/setChatTeamPreference",
+                { teamId: team.id, name: PreferenceKey, value: "true" })
             .then(() => Success, failure);
     }
 }

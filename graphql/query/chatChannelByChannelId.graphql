@@ -1,14 +1,17 @@
-query ChatChannelByChannelId($channelName: String!) {
-    ChatChannel(name: $channelName) {
-        name
-        repos {
+query ChatChannelByChannelId($teamId: ID!, $channelName: String!) {
+    ChatTeam(id: $teamId) {
+        channels(name: $channelName) {
             name
-            owner
-            org {
-                provider {
-                    url
+            repos {
+                name
+                owner
+                org {
+                    provider {
+                        url
+                    }
                 }
             }
         }
     }
 }
+

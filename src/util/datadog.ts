@@ -9,7 +9,7 @@ import { RequestProcessor } from "@atomist/automation-client/internal/transport/
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { registerShutdownHook } from "@atomist/automation-client/internal/util/shutdown";
 import { AutomationEventListenerSupport } from "@atomist/automation-client/server/AutomationEventListener";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
+import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as appRoot from "app-root-path";
 import Timer = NodeJS.Timer;
@@ -135,19 +135,24 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         return Promise.resolve();
     }
 
-    public messageSent(message: string | SlackMessage,
-                       userNames: string | string[],
-                       channelName: string | string[],
+    public messageSent(message: any,
+                       destinations: Destination | Destination[],
                        options: MessageOptions,
                        ctx: HandlerContext & AutomationContextAware) {
-        let type;
-        if (userNames && userNames.length > 0) {
-            type = "dm";
-        } else if (channelName && channelName.length > 0) {
-            type = "channel";
-        } else {
-            type = "response";
-        }
+        let type: string;
+        destinations = Array.isArray(destinations) ? destinations : [destinations];
+        destinations.forEach(d => {
+            if (d.userAgent === "slack") {
+                const sd = d as SlackDestination;
+                if (sd.users && sd.users.length > 0) {
+                    type = "slack_users";
+                } else if (sd.channels && sd.channels.length > 0) {
+                    type = "slack_channels";
+                } else {
+                    type = "slack_response";
+                }
+            }
+        });
         this.increment("counter.message", [
             `atomist_message_type:${type}`,
             ...this.teamDetail(ctx),

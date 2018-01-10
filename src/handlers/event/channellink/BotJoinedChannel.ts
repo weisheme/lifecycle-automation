@@ -9,6 +9,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
+    addressSlackChannels,
     buttonForCommand,
     menuForCommand,
     MenuSpecification,
@@ -61,13 +62,13 @@ export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Su
                 const linkedRepoNames = j.channel.repos.map(r => repoSlackLink(r));
                 const msg = `${helloText}
 I will post GitHub notifications about ${linkedRepoNames.join(", ")} here.`;
-                return ctx.messageClient.addressChannels(msg, channelName);
+                return ctx.messageClient.send(msg, addressSlackChannels(j.channel.team.id, channelName));
             }
 
             if (!j.channel.team || !j.channel.team.orgs || j.channel.team.orgs.length < 1) {
                 const msg = `${helloText}
 I won't be able to do much without GitHub integration, though. Run \`@atomist enroll org\` to set that up.`;
-                return ctx.messageClient.addressChannels(msg, channelName);
+                return ctx.messageClient.send(msg, addressSlackChannels(j.channel.team.id, channelName));
             }
             const orgs = j.channel.team.orgs;
             const apiUrls = _.uniq(orgs.filter(o => o && o.provider && o.provider.apiUrl).map(o => o.provider.apiUrl));
@@ -91,7 +92,7 @@ I won't be able to do much without GitHub integration, though. Run \`@atomist en
                 ownerText = (ownerText) ? ` for ${ownerText}` : "";
                 const msg = `${helloText}
 I don't see any repositories in GitHub${ownerText}.`;
-                return ctx.messageClient.addressChannels(msg, channelName);
+                return ctx.messageClient.send(msg, addressSlackChannels(j.channel.team.id, channelName));
             }
 
             const msgId = `channel_link/bot_joined_channel/${channelName}`;
@@ -145,7 +146,8 @@ OK. If you want to link a repository later, type \`${linkCmd}\``;
                     },
                 ],
             };
-            return ctx.messageClient.addressChannels(linkMsg, channelName, { id: msgId });
+            return ctx.messageClient.send(linkMsg,
+                addressSlackChannels(j.channel.team.id, channelName), { id: msgId });
         })).then(() => Success, failure);
     }
 }

@@ -6,7 +6,7 @@
     "events": "https://app-staging.atomist.services/v1/lifecycle"
   },
   "groups": null,
-  "teamIds": "T1L0VDKJP",
+  "teamIds": [ "T1L0VDKJP" ],
   "policy": null,
   "http": {
     "auth": {

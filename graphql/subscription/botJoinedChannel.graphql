@@ -19,6 +19,7 @@ subscription BotJoinedChannel {
         }
       }
       team {
+        id
         orgs {
           owner
           provider {

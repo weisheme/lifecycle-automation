@@ -23,6 +23,9 @@ import * as graphql from "../../../typings/types";
 @Tags("preferences", "set")
 export class SetUserPreference implements HandleCommand {
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
@@ -100,9 +103,14 @@ export class SetUserPreference implements HandleCommand {
                     value = this.value;
                 }
                 preferences[this.name] = value;
-                return ctx.graphClient.executeMutationFromFile<graphql.SetUserPreference.Mutation,
-                    graphql.SetUserPreference.Variables>("graphql/mutation/setUserPreference",
-                    { userId: this.requester, name: this.key, value: JSON.stringify(preferences) });
+                return ctx.graphClient.executeMutationFromFile<graphql.SetChatUserPreference.Mutation,
+                    graphql.SetChatUserPreference.Variables>("graphql/mutation/setChatUserPreference",
+                    {
+                        teamId: this.teamId,
+                        userId: this.requester,
+                        name: this.key,
+                        value: JSON.stringify(preferences),
+                    });
             })
             .then(() => {
                 const msg: SlackMessage = {

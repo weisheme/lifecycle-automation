@@ -1,13 +1,15 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
-import { MessageClientSupport } from "@atomist/automation-client/spi/message/MessageClientSupport";
+import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    DefaultSlackMessageClient,
+    MessageClientSupport,
+} from "@atomist/automation-client/spi/message/MessageClientSupport";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
 import { BranchToBranchLifecycle } from "../../../../src/handlers/event/branch/BranchToBranchLifecycle";
-import { DashboardChannelName } from "../../../../src/util/stream";
 
 describe("BranchToBranchLifecycle", () => {
 
@@ -21,31 +23,38 @@ describe("BranchToBranchLifecycle", () => {
                 "owner": "atomisthqa",
                 "defaultBranch": "master",
                 "channels": [{
-                    "name": "ddmvc1"
+                    "name": "ddmvc1",
+                    "team": {
+                        "id": "T1L0VDKJP"
+                    }
                 }],
                 "org": {
-                    "chatTeam": {
-                        "preferences": [{
-                            "name": "lifecycle_actions",
-                            "value": "{\\"handlers\\":{\\"push\\":{\\"restart_build\\":true,\\"tag\\":true,\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
-                        }, {
-                            "name": "graphs",
-                            "value": "rock"
-                        }, {
-                            "name": "lifecycle_preferences",
-                            "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\",\\"show-statuses-on-push\\":true,\\"build\\":{\\"style\\":\\"decorator\\"},\\"fingerprints\\":{\\"about-hint\\":false,\\"render-unchanged\\":true,\\"style\\":\\"fingerprint-inline\\"}}}}"
-                        }, {
-                            "name": "test",
-                            "value": "true"
-                        }, {
-                            "name": "lifecycle_renderers",
-                            "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
-                        }, {
-                            "name": "lifecycles",
-                            "value": "{\\"handlers\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
-                        }, {
-                            "name": "disable_bot_owner_on_github_activity_notification",
-                            "value": "true"
+                    "team": {
+                        "id": "T1L0VDKJP",
+                        "chatTeams": [{
+                            "id": "T1L0VDKJP",
+                            "preferences": [{
+                                "name": "lifecycle_actions",
+                                "value": "{\\"handlers\\":{\\"push\\":{\\"restart_build\\":true,\\"tag\\":true,\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
+                            }, {
+                                "name": "graphs",
+                                "value": "rock"
+                            }, {
+                                "name": "lifecycle_preferences",
+                                "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\",\\"show-statuses-on-push\\":true,\\"build\\":{\\"style\\":\\"decorator\\"},\\"fingerprints\\":{\\"about-hint\\":false,\\"render-unchanged\\":true,\\"style\\":\\"fingerprint-inline\\"}}}}"
+                            }, {
+                                "name": "test",
+                                "value": "true"
+                            }, {
+                                "name": "lifecycle_renderers",
+                                "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
+                            }, {
+                                "name": "lifecycles",
+                                "value": "{\\"handlers\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
+                            }, {
+                                "name": "disable_bot_owner_on_github_activity_notification",
+                                "value": "true"
+                            }]
                         }]
                     },
                     "provider": {}
@@ -71,9 +80,8 @@ describe("BranchToBranchLifecycle", () => {
     it("don't display a branch created message for default or master branch", done => {
         class MockMessageClient extends MessageClientSupport {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames[0] === "ddmvc1");
+            protected doSend(msg: any, destinations: Destination[], options?: MessageOptions): Promise<any> {
+                assert((destinations[0] as SlackDestination).channels[0] === "ddmvc1");
                 assert(options.id === "branch_lifecycle/atomisthqa/ddmvc1/master/false");
                 const sm = msg as SlackMessage;
                 assert(sm.text === null);
@@ -83,7 +91,7 @@ describe("BranchToBranchLifecycle", () => {
         }
 
         const ctx: any = {
-            messageClient: new MockMessageClient(),
+            messageClient: new DefaultSlackMessageClient(new MockMessageClient(), null),
         };
         const handler = new BranchToBranchLifecycle();
 
@@ -109,31 +117,38 @@ describe("BranchToBranchLifecycle", () => {
                 "owner": "atomisthqa",
                 "defaultBranch": "master",
                 "channels": [{
-                    "name": "ddmvc1"
+                    "name": "ddmvc1",
+                    "team": {
+                        "id": "T1L0VDKJP"
+                    }
                 }],
                 "org": {
-                    "chatTeam": {
-                        "preferences": [{
-                            "name": "lifecycle_actions",
-                            "value": "{\\"ddmvc1\\":{\\"branch\\":{\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
-                        }, {
-                            "name": "graphs",
-                            "value": "rock"
-                        }, {
-                            "name": "lifecycle_preferences",
-                            "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\",\\"show-statuses-on-push\\":true,\\"build\\":{\\"style\\":\\"decorator\\"},\\"fingerprints\\":{\\"about-hint\\":false,\\"render-unchanged\\":true,\\"style\\":\\"fingerprint-inline\\"}}}}"
-                        }, {
-                            "name": "test",
-                            "value": "true"
-                        }, {
-                            "name": "lifecycle_renderers",
-                            "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
-                        }, {
-                            "name": "lifecycles",
-                            "value": "{\\"handlers\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
-                        }, {
-                            "name": "disable_bot_owner_on_github_activity_notification",
-                            "value": "true"
+                    "team": {
+                        "id": "T1L0VDKJP",
+                        "chatTeams": [{
+                            "id": "T1L0VDKJP",
+                            "preferences": [{
+                                "name": "lifecycle_actions",
+                                "value": "{\\"ddmvc1\\":{\\"branch\\":{\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
+                            }, {
+                                "name": "graphs",
+                                "value": "rock"
+                            }, {
+                                "name": "lifecycle_preferences",
+                                "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\",\\"show-statuses-on-push\\":true,\\"build\\":{\\"style\\":\\"decorator\\"},\\"fingerprints\\":{\\"about-hint\\":false,\\"render-unchanged\\":true,\\"style\\":\\"fingerprint-inline\\"}}}}"
+                            }, {
+                                "name": "test",
+                                "value": "true"
+                            }, {
+                                "name": "lifecycle_renderers",
+                                "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
+                            }, {
+                                "name": "lifecycles",
+                                "value": "{\\"ddmvc1\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true}}"
+                            }, {
+                                "name": "disable_bot_owner_on_github_activity_notification",
+                                "value": "true"
+                            }]
                         }]
                     },
                     "provider": {}
@@ -156,35 +171,25 @@ describe("BranchToBranchLifecycle", () => {
 }`;
     /* tslint:enable */
 
-    it("display a branch created message for branch", done => {
+    it("don't display a branch created message when lifecycle is disabled", done => {
+        let messageSent = false;
         class MockMessageClient extends MessageClientSupport {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                if (channelNames[0] === DashboardChannelName) {
-                    return Promise.resolve();
-                }
-
-                assert(channelNames[0] === "ddmvc1");
-                assert(options.id === "branch_lifecycle/atomisthqa/ddmvc1/some-feature/false");
-
-                const sm = msg as SlackMessage;
-                assert(sm.attachments.length === 1);
-                assert(sm.attachments[0].text.indexOf("created"));
-                assert(sm.attachments[0].actions.length === 1);
-                assert(sm.attachments[0].actions[0].text === "Raise PR");
+            protected doSend(msg: any, destinations: Destination[], options?: MessageOptions): Promise<any> {
+                messageSent = true;
                 return Promise.resolve();
             }
         }
 
         const ctx: any = {
             invocationId: guid(),
-            messageClient: new MockMessageClient(),
+            messageClient: new DefaultSlackMessageClient(new MockMessageClient(), null),
         };
         const handler = new BranchToBranchLifecycle();
 
         handler.handle(JSON.parse(payload1) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
+                assert(!messageSent);
                 assert(result.code === 0);
             })
             .then(done, done);
@@ -201,31 +206,38 @@ describe("BranchToBranchLifecycle", () => {
                 "owner": "atomisthqa",
                 "defaultBranch": "master",
                 "channels": [{
-                    "name": "ddmvc1"
+                    "name": "ddmvc1",
+                    "team": {
+                        "id": "T1L0VDKJP"
+                    }
                 }],
                 "org": {
-                    "chatTeam": {
-                        "preferences": [{
-                            "name": "lifecycle_actions",
-                            "value": "{\\"handlers\\":{\\"push\\":{\\"restart_build\\":true,\\"tag\\":true,\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
-                        }, {
-                            "name": "graphs",
-                            "value": "rock"
-                        }, {
-                            "name": "lifecycle_preferences",
-                            "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\",\\"show-statuses-on-push\\":true,\\"build\\":{\\"style\\":\\"decorator\\"},\\"fingerprints\\":{\\"about-hint\\":false,\\"render-unchanged\\":true,\\"style\\":\\"fingerprint-inline\\"}}}}"
-                        }, {
-                            "name": "test",
-                            "value": "true"
-                        }, {
-                            "name": "lifecycle_renderers",
-                            "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
-                        }, {
-                            "name": "lifecycles",
-                            "value": "{\\"ddmvc1\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
-                        }, {
-                            "name": "disable_bot_owner_on_github_activity_notification",
-                            "value": "true"
+                    "team": {
+                        "id": "T1L0VDKJP",
+                        "chatTeams": [{
+                            "id": "T1L0VDKJP",
+                            "preferences": [{
+                                "name": "lifecycle_actions",
+                                "value": "{\\"handlers\\":{\\"push\\":{\\"restart_build\\":true,\\"tag\\":true,\\"raise_pullrequest\\":true},\\"issue\\":{\\"assign\\":true}}}"
+                            }, {
+                                "name": "graphs",
+                                "value": "rock"
+                            }, {
+                                "name": "lifecycle_preferences",
+                                "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\",\\"show-statuses-on-push\\":true,\\"build\\":{\\"style\\":\\"decorator\\"},\\"fingerprints\\":{\\"about-hint\\":false,\\"render-unchanged\\":true,\\"style\\":\\"fingerprint-inline\\"}}}}"
+                            }, {
+                                "name": "test",
+                                "value": "true"
+                            }, {
+                                "name": "lifecycle_renderers",
+                                "value": "{\\"handlers\\":{\\"push\\":{\\"workflow\\":false}}}"
+                            }, {
+                                "name": "lifecycles",
+                                "value": "{\\"ddmvc1\\":{\\"push\\":true,\\"review\\":true,\\"issue\\":true,\\"branch\\":true}}"
+                            }, {
+                                "name": "disable_bot_owner_on_github_activity_notification",
+                                "value": "true"
+                            }]
                         }]
                     },
                     "provider": {}
@@ -249,29 +261,31 @@ describe("BranchToBranchLifecycle", () => {
     /* tslint:enable */
 
     it("display a branch message for branch", done => {
+        let messageSent = false;
         class MockMessageClient extends MessageClientSupport {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
-                assert(channelNames[0] === "ddmvc1");
+            protected doSend(msg: any, destinations: Destination[], options?: MessageOptions): Promise<any> {
+                assert((destinations[0] as SlackDestination).channels[0] === "ddmvc1");
                 assert(options.id === "branch_lifecycle/atomisthqa/ddmvc1/some-feature");
 
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 1);
-                assert(sm.attachments[0].text.indexOf("deleted"));
+                assert(sm.attachments[0].text.indexOf("created") >= 0);
                 assert(sm.attachments[0].actions.length === 0);
+                messageSent = true;
                 return Promise.resolve();
             }
         }
 
         const ctx: any = {
             invocationId: guid(),
-            messageClient: new MockMessageClient(),
+            messageClient: new DefaultSlackMessageClient(new MockMessageClient(), null),
         };
         const handler = new BranchToBranchLifecycle();
 
         handler.handle(JSON.parse(payload2) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
+                assert(messageSent);
                 assert(result.code === 0);
             })
             .then(done, done);
@@ -286,15 +300,14 @@ describe("BranchToBranchLifecycle", () => {
     it("don't fail for null commit", done => {
         class MockMessageClient extends MessageClientSupport {
 
-            protected doSend(msg: string | SlackMessage, userNames: string | string[],
-                             channelNames: string | string[], options?: MessageOptions): Promise<any> {
+            protected doSend(msg: any, destinations: Destination[], options?: MessageOptions): Promise<any> {
                 return Promise.resolve();
             }
         }
 
         const ctx: any = {
             invocationId: guid(),
-            messageClient: new MockMessageClient(),
+            messageClient: new DefaultSlackMessageClient(new MockMessageClient(), null),
         };
         const handler = new BranchToBranchLifecycle();
 

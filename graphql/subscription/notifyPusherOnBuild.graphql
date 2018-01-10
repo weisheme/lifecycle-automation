@@ -19,6 +19,9 @@ subscription NotifyPusherOnBuild
               name
               value
             }
+            chatTeam {
+              id
+            }
           }
         }
       }

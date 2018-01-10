@@ -5,7 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { Preferences } from "../../../lifecycle/Lifecycle";
+import { ChatTeam } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PushLifecycleHandler } from "./PushLifecycle";
 
@@ -22,7 +22,8 @@ export class StatusToPushLifecycle extends PushLifecycleHandler<graphql.StatusTo
         return event.data.Status[0].commit.pushes;
     }
 
-    protected extractPreferences(event: EventFired<graphql.StatusToPushLifecycle.Subscription>): Preferences[] {
-        return _.get(event, "data.Status[0].commit.pushes[0].repo.org.chatTeam.preferences", []);
+    protected extractChatTeams(event: EventFired<graphql.StatusToPushLifecycle.Subscription>)
+        : ChatTeam[] {
+        return _.get(event, "data.Status[0].commit.pushes[0].repo.org.team.chatTeams");
     }
 }

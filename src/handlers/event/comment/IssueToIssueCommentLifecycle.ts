@@ -5,7 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { Preferences } from "../../../lifecycle/Lifecycle";
+import { ChatTeam } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { CommentLifecycleHandler } from "./CommentLifecycle";
 
@@ -31,8 +31,8 @@ export class IssueToIssueCommentLifecycle
         }
     }
 
-    protected extractPreferences(event: EventFired<graphql.IssueToIssueCommentLifecycle.Subscription>)
-        : Preferences[] {
-        return _.get(event, "data.Issue[0].repo.org.chatTeam.preferences");
+    protected extractChatTeams(event: EventFired<graphql.IssueToIssueCommentLifecycle.Subscription>)
+        : ChatTeam[] {
+        return _.get(event, "data.Issue[0].repo.org.team.chatTeams");
     }
 }

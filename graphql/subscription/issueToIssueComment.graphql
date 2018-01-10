@@ -10,16 +10,23 @@ subscription IssueToIssueCommentLifecycle
       owner
       channels {
         name
+        team {
+          id
+        }
       }
       org {
         provider {
           apiUrl
           url
         }
-        chatTeam {
-          preferences {
-            name
-            value
+        team {
+          id
+          chatTeams {
+            id
+            preferences {
+              name
+              value
+            }
           }
         }
       }

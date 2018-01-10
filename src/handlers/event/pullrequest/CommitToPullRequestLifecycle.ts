@@ -5,7 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { Preferences } from "../../../lifecycle/Lifecycle";
+import { ChatTeam } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 
@@ -27,8 +27,8 @@ export class CommitToPullRequestLifecycle
         return [pr, _.get(pr, "repo"), Date.now().toString(), true];
     }
 
-    protected extractPreferences(event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>)
-        : Preferences[] {
-        return _.get(event, "data.Commit[0].pullRequests[0].repo.org.chatTeam.preferences");
+    protected extractChatTeams(event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>)
+        : ChatTeam[] {
+        return _.get(event, "data.Commit[0].pullRequests[0].repo.org.team.chatTeams");
     }
 }

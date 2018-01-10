@@ -29,6 +29,9 @@ import {
 @Tags("slack", "repo")
 export class UnlinkRepo implements HandleCommand {
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.SlackChannel)
     public channelId: string;
 
@@ -66,7 +69,7 @@ export class UnlinkRepo implements HandleCommand {
                     return ctx.graphClient.executeMutationFromFile<graphql.UnlinkSlackChannelFromRepo.Mutation,
                         graphql.UnlinkSlackChannelFromRepo.Variables>(
                         "graphql/mutation/unlinkSlackChannelFromRepo",
-                        { channelId: this.channelId, repo: this.name, owner: this.owner })
+                        { teamId: this.teamId, channelId: this.channelId, repo: this.name, owner: this.owner })
                         .then(() => ctx.messageClient.respond(successMessage(this.name, this.owner),
                             { id: this.msgId }));
                 }

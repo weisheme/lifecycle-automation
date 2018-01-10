@@ -31,15 +31,22 @@ subscription PullRequestToReviewLifecycle
             provider {
               url
             }
-            chatTeam {
-              preferences {
-                name
-                value
+            team {
+              id
+              chatTeams {
+                id
+                preferences {
+                  name
+                  value
+                }
               }
             }
           }
           channels {
             name
+            team {
+              id
+            }
           }
         }
       }

@@ -2,6 +2,7 @@ import "mocha";
 import assert = require("power-assert");
 import * as graphql from "../../../../src/typings/types";
 
+import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import { ChannelLinkCreated } from "../../../../src/handlers/event/channellink/ChannelLinkCreated";
 
@@ -17,6 +18,9 @@ describe("ChannelLinkCreated", () => {
                     channel: {
                         name: "automation-clj",
                         normalizedName: "automation-clj",
+                        team: {
+                            id: "T1L0VDKJP",
+                        },
                     },
                     repo: {
                         name: "automation-clj",
@@ -36,8 +40,8 @@ describe("ChannelLinkCreated", () => {
         let messageSend = false;
         const ctx: any = {
             messageClient: {
-                addressChannels(msg: string | SlackMessage, channelNames: string | string[]): Promise<any> {
-                    assert(channelNames === "automation-clj");
+                send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                    assert((destinations as SlackDestination).channels[0] === "automation-clj");
                     const sm = msg as SlackMessage;
                     assert(sm.attachments[0].text.indexOf("atomisthq/automation-clj") >= 0);
                     assert(!sm.attachments[0].actions);

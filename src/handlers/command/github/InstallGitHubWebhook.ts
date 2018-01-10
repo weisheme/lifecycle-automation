@@ -99,6 +99,9 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -125,7 +128,7 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                             codeLine(`${this.owner}/${this.repo}`))}`))
                     .then(() => Promise.all([
                         loadChatIdByChatId(ctx, this.requester),
-                        loadChatTeam(ctx),
+                        loadChatTeam(this.teamId, ctx),
                     ]))
                     .then(results => {
                         if (results[0] && results[1]) {
@@ -133,13 +136,18 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                                 owner: this.owner,
                                 name: this.repo,
                                 org: {
-                                    chatTeam: {
-                                        channels: results[1].channels,
+                                    team: {
+                                        chatTeams: [{
+                                            channels: results[1].channels,
+                                        }],
                                     },
                                     provider: {},
                                 },
                             };
-                            return sendUnMappedRepoMessage([results[0]], repo, ctx, DefaultBotName);
+                            const botNames = {};
+                            botNames[this.teamId] = DefaultBotName;
+
+                            return sendUnMappedRepoMessage([results[0]], repo, ctx, botNames);
                         } else {
                             return Success;
                         }
