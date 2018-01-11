@@ -34,6 +34,11 @@
           "style": "fingerprint-inline"
         }
       }
+    },
+    "pull_request": {
+      "configuration": {
+        "emoji-style": "default",
+      }
     }
   },
   "fingerprints": {

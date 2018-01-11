@@ -10,7 +10,7 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import {
-    AbstractIdentifiableContribution,
+    AbstractIdentifiableContribution, LifecycleConfiguration,
     NodeRenderer,
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
@@ -28,6 +28,7 @@ import {
     truncateCommitMessage,
     userUrl,
 } from "../../../../util/helpers";
+import { renderDecorator } from "../../push/rendering/PushNodeRenderers";
 import { summarizeStatusCounts } from "../../push/rendering/StatusesNodeRenderer";
 
 export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
@@ -110,8 +111,14 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 export class CommitNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
+    public emojiStyle: "default" | "atomist";
+
     constructor() {
         super("commit");
+    }
+
+    public configure(configuration: LifecycleConfiguration) {
+        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
     }
 
     public supports(node: any): boolean {
@@ -151,7 +158,14 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         commitsGroupedByAuthor
             .forEach(cgba => {
                 const a = cgba.author;
-                const message = cgba.commits.map(c => this.renderCommitMessage(c, repo)).join("\n");
+                let color = "#00a5ff";
+                const message = cgba.commits.map(c => {
+                    const [message, cl] = this.renderCommitMessage(pr, c, repo);
+                    if (cl) {
+                        color = cl;
+                    }
+                    return message;
+                }).join("\n");
 
                 const attachment: Attachment = {
                     author_name: `@${a}`,
@@ -159,7 +173,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                     author_icon: avatarUrl(repo, a),
                     text: message,
                     mrkdwn_in: ["text"],
-                    color: "#00a5ff",
+                    color,
                     fallback: `${cgba.commits.length} ${(cgba.commits.length > 1 ? "commits" : "commit")}` +
                     ` to ${url(repoUrl(repo), repoSlug)} by @${a}`,
                     actions,
@@ -169,11 +183,18 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         return Promise.resolve(msg);
     }
 
-    private renderCommitMessage(c: graphql.PullRequestToPullRequestLifecycle.Commits,
-                                repo: graphql.PullRequestToPullRequestLifecycle.Repo) {
+    private renderCommitMessage(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
+                                c: graphql.PullRequestToPullRequestLifecycle.Commits,
+                                repo: graphql.PullRequestToPullRequestLifecycle.Repo): [string, string] {
+
         // Cut commit to 50 chars of first line
-        const m = truncateCommitMessage(c.message, repo);
-        return "`" + url(commitUrl(repo, c), c.sha.substring(0, 7)) + "` " + m;
+        const cm = truncateCommitMessage(c.message, repo);
+        let message = "`" + url(commitUrl(repo, c), c.sha.substring(0, 7)) + "` " + cm;
+
+        if (c.sha === pr.head.sha && c.builds && c.builds.length > 0) {
+            return  renderDecorator(c.builds[0], c.builds, message, this.emojiStyle);
+        }
+        return [message, null];
     }
 }
 
@@ -196,9 +217,11 @@ export class StatusNodeRenderer extends AbstractIdentifiableContribution
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
+
         const repo = context.lifecycle.extract("repo");
         const commits = pr.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp))
             .filter(c => c.statuses != null && c.statuses.length > 0);
+
         if (commits.length > 0 && commits[0].statuses != null) {
             const commit = commits[0];
 
@@ -360,5 +383,54 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
         }
 
         return `${footerMessage} ${check}`;
+    }
+}
+
+export class BuildNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+
+    constructor() {
+        super("build");
+    }
+
+    public supports(node: any): boolean {
+        if (node.builds && node.commits) {
+            const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
+            return pr.state === "open"
+                && pr.builds != null && pr.builds.length > 0;
+        } else {
+            return false;
+        }
+    }
+
+    public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: SlackMessage,
+                  context: RendererContext): Promise<SlackMessage> {
+        const build = pr.builds[0];
+
+        let icon;
+        let color;
+        if (build.status === "passed") {
+            icon = "https://images.atomist.com/rug/check-circle.png";
+            color = "#45B254";
+        } else if (build.status === "started") {
+            icon = `https://images.atomist.com/rug/pulsating-circle.gif?${guid()}`;
+            color = "#cccc00";
+        } else {
+            icon = "https://images.atomist.com/rug/cross-circle.png";
+            color = "#D94649";
+        }
+
+        const attachment: Attachment = {
+            author_name: `Pull Request Build #${build.name}`,
+            author_link: build.buildUrl,
+            author_icon: icon,
+            color,
+            fallback: `Pull Request Build #${build.name}`,
+            actions,
+        };
+
+        msg.attachments.push(attachment);
+
+        return Promise.resolve(msg);
     }
 }

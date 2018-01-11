@@ -123,12 +123,18 @@ subscription ReviewToPullRequestLifecycle
             }
           }
         }
+        builds(trigger: push, orderBy: [timestamp_desc]) {
+          name
+          buildUrl
+          buildId
+          status
+        }
       }
-      builds {
+      builds(trigger: pull_request, orderBy: [timestamp_desc]) {
         name
-        status
         buildUrl
-        provider
+        buildId
+        status
       }
       reviews {
         state

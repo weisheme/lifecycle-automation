@@ -1531,7 +1531,7 @@ export namespace BranchToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -1660,6 +1660,7 @@ export namespace BranchToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -1701,9 +1702,16 @@ export namespace BranchToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {
@@ -2171,7 +2179,7 @@ export namespace CommentToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -2300,6 +2308,7 @@ export namespace CommentToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -2341,9 +2350,16 @@ export namespace CommentToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {
@@ -2560,7 +2576,7 @@ export namespace CommitToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -2689,6 +2705,7 @@ export namespace CommitToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -2730,9 +2747,16 @@ export namespace CommitToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {
@@ -2896,7 +2920,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -3025,6 +3049,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -3066,9 +3091,16 @@ export namespace DeletedBranchToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {
@@ -4799,7 +4831,7 @@ export namespace PullRequestToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -4928,6 +4960,7 @@ export namespace PullRequestToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -4969,9 +5002,16 @@ export namespace PullRequestToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {
@@ -5783,7 +5823,7 @@ export namespace ReviewToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -5912,6 +5952,7 @@ export namespace ReviewToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -5953,9 +5994,16 @@ export namespace ReviewToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {
@@ -6172,7 +6220,7 @@ export namespace StatusToPullRequestLifecycle {
     labels?: Labels[] | null; 
     comments?: Comments[] | null; 
     commits?: Commits[] | null; 
-    builds?: Builds[] | null; 
+    builds?: _Builds[] | null; 
     reviews?: Reviews[] | null; 
     repo?: Repo | null; 
   } 
@@ -6301,6 +6349,7 @@ export namespace StatusToPullRequestLifecycle {
     tags?: Tags[] | null; 
     statuses?: Statuses[] | null; 
     author?: _Author | null; 
+    builds?: Builds[] | null; 
   } 
 
   export type Tags = {
@@ -6342,9 +6391,16 @@ export namespace StatusToPullRequestLifecycle {
 
   export type Builds = {
     name?: string | null; 
-    status?: BuildStatus | null; 
     buildUrl?: string | null; 
-    provider?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
   } 
 
   export type Reviews = {

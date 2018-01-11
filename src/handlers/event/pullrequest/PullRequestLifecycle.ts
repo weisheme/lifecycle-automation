@@ -16,6 +16,7 @@ import {
 } from "./rendering/PullRequestActionContributors";
 import {
     CommitNodeRenderer,
+    BuildNodeRenderer,
     PullRequestNodeRenderer,
     ReviewNodeRenderer,
     StatusNodeRenderer,
@@ -48,6 +49,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
             renderers: [
                 new PullRequestNodeRenderer(),
                 new CommitNodeRenderer(),
+                new BuildNodeRenderer(),
                 new StatusNodeRenderer(),
                 new ReviewNodeRenderer(),
                 new ReferencedIssuesNodeRenderer(),
