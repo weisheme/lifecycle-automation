@@ -3656,8 +3656,209 @@ export namespace K8PodToPushLifecycle {
     _id?: Long | null; 
     name?: string | null; 
     state?: string | null; 
-    images?: DockerImage[] | null; 
+    images?: Images[] | null; 
+  } 
+
+  export type Images = {
+    commits?: Commits[] | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Commits = {
+    pushes?: Pushes[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pushes = {
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: _Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
+  } 
+
+  export type Builds = {
+    id?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
+    workflow?: Workflow | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+  } 
+
+  export type Workflow = {
+    id?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    config?: string | null; 
+    builds?: _Builds[] | null; 
+  } 
+
+  export type _Builds = {
+    jobId?: string | null; 
+    jobName?: string | null; 
+    finishedAt?: string | null; 
+    startedAt?: string | null; 
+    status?: BuildStatus | null; 
+    id?: string | null; 
+    buildUrl?: string | null; 
+  } 
+
+  export type Before = {
+    sha?: string | null; 
+  } 
+
+  export type After = {
+    sha?: string | null; 
+    message?: string | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
+  } 
+
+  export type Statuses = {
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
+  } 
+
+  export type Tags = {
+    name?: string | null; 
+    release?: Release | null; 
+    builds?: __Builds[] | null; 
+  } 
+
+  export type Release = {
+    name?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Repo = {
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+    team?: _Team | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type _Commits = {
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    image?: Image | null; 
+    author?: Author | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Resolves = {
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
+  } 
+
+  export type Impact = {
+    data?: string | null; 
+    url?: string | null; 
+  } 
+
+  export type Apps = {
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
+  } 
+
+  export type _Tags = {
+    name?: string | null; 
+    release?: _Release | null; 
+  } 
+
+  export type _Release = {
+    name?: string | null; 
+  } 
+
+  export type Image = {
+    pods?: Pods[] | null; 
+    imageName?: string | null; 
+  } 
+
+  export type Pods = {
+    baseName?: string | null; 
+    phase?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 }
 export namespace NotifyAuthorOnReview {
