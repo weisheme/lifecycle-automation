@@ -127,6 +127,7 @@ subscription DeletedBranchToPullRequestLifecycle {
           buildUrl
           buildId
           status
+          timestamp
         }
       }
       builds(trigger: pull_request, orderBy: [timestamp_desc]) {
@@ -134,6 +135,7 @@ subscription DeletedBranchToPullRequestLifecycle {
         buildUrl
         buildId
         status
+        timestamp
       }
       reviews {
         state

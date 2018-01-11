@@ -128,6 +128,7 @@ subscription CommitToPullRequestLifecycle
           buildUrl
           buildId
           status
+          timestamp
         }
       }
       builds(trigger: pull_request, orderBy: [timestamp_desc]) {
@@ -135,6 +136,7 @@ subscription CommitToPullRequestLifecycle
         buildUrl
         buildId
         status
+        timestamp
       }
       reviews {
         state
