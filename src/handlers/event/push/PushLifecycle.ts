@@ -8,6 +8,7 @@ import {
     Preferences,
 } from "../../../lifecycle/Lifecycle";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
+import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import { PushToPushLifecycle } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
 import { LifecyclePreferences } from "../preferences";
@@ -30,7 +31,6 @@ import {
 } from "./rendering/PushNodeRenderers";
 import { StatusesNodeRenderer } from "./rendering/StatusesNodeRenderer";
 import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
-import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
