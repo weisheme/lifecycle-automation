@@ -70,12 +70,12 @@ export class ListMyGitHubIssues implements HandleCommand {
             return this.searchReposFromChannel(ctx)
                 .then(repos => {
                     return github.api(this.githubToken, this.apiUrl).search.issues({
-                        q: `involves:${login} updated:>=${formatDate("{year}-{month}-{day}T{hours}:{minutes}", 
+                        q: `involves:${login} updated:>=${formatDate("{year}-{month}-{day}T{hours}:{minutes}",
                             date)} ${repos}`,
                         sort: "updated",
                         order: "desc",
                     });
-            })
+            });
         } else {
             return Promise.resolve(Success);
         }
@@ -87,12 +87,12 @@ export class ListMyGitHubIssues implements HandleCommand {
                 "graphql/query/mappedChannels",
                 {
                     teamId: this.teamId,
-                    name: this.channel
+                    name: this.channel,
                 })
                 .then(result => {
                     const repos = _.get(result, "ChatChannel[0].repos") as graphql.MappedChannels.Repos[] || [];
                     return repos.map(r => `repo:${r.owner}/${r.name}`).join(" ");
-                })
+                });
         } else {
             return Promise.resolve("");
         }
