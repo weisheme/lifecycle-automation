@@ -421,6 +421,14 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
             message = newMessage;
             color = newColor;
         }
+        // Add the release to the message
+        if (tag.release) {
+            if (tag.release.name !== tag.name) {
+                message = `${message} | ${url(tagUrl(repo, tag.release), `Release ${codeLine(tag.release.name)}`)}`;
+            } else {
+                message = `${message} | ${url(tagUrl(repo, tag.release), "Release")}`;
+            }
+        }
 
         const attachment: Attachment = {
             author_name: first ? (push.after.tags.length > 1 ? "Tags" : "Tag") : undefined,

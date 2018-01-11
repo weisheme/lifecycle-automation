@@ -42,7 +42,12 @@ describe("StatusToPushLifecycle", () => {
               "targetUrl": "https://travis-ci.com/atomisthq/automation-api/builds/55826126?utm_source=github_status&utm_medium=notification",
               "state": "success"
             }],
-            "tags": []
+            "tags": [{
+                "name": "1.0.0",
+                "release": {
+                    "name": "release-1.0.0"
+                }
+            }]
           },
           "repo": {
             "owner": "atomisthq",
@@ -120,6 +125,8 @@ describe("StatusToPushLifecycle", () => {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments[0].actions.length === 1);
                 assert(sm.attachments[0].actions[0].text === "Raise PR");
+                assert(sm.attachments[1].text.includes("Release"));
+                assert(sm.attachments[1].text.includes("release-1.0.0"));
                 messageSent = true;
                 return Promise.resolve();
             }
