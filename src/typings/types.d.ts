@@ -781,6 +781,30 @@ export namespace IssueOrPr {
     gitUrl?: string | null; 
   } 
 }
+export namespace MappedChannels {
+  export type Variables = {
+    teamId: string;
+    name: string;
+  }
+
+  export type Query = {
+    ChatChannel?: ChatChannel[] | null; 
+  } 
+
+  export type ChatChannel = {
+    team?: Team | null; 
+    repos?: Repos[] | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
+  } 
+
+  export type Repos = {
+    owner?: string | null; 
+    name?: string | null; 
+  } 
+}
 export namespace OpenPr {
   export type Variables = {
     repo: string;

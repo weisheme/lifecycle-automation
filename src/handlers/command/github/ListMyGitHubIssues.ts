@@ -24,7 +24,7 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 
-@CommandHandler("List user's GitHub issues", "my issues", "my github issues")
+@CommandHandler("List user's GitHub issues from mapped repositories", "my issues", "my github issues")
 @Tags("github", "issue")
 export class ListMyGitHubIssues implements HandleCommand {
 
@@ -33,6 +33,9 @@ export class ListMyGitHubIssues implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string = "https://api.github.com/";
+
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
 
     @MappedParameter(MappedParameters.SlackChannelName)
     public channel: string;
@@ -55,23 +58,43 @@ export class ListMyGitHubIssues implements HandleCommand {
                     return null;
                 }
             })
-            .then(person => this.searchIssues(person))
+            .then(person => this.searchIssues(person, ctx))
             .then(result => this.sendResponse(this.prepareResponse(result), ctx))
-            .then(() => Success)
-            .catch(err => failure(err));
+            .then(() => Success, failure);
     }
 
-    protected searchIssues(person: graphql.ChatId.Person): Promise<any> {
+    protected searchIssues(person: graphql.ChatId.Person, ctx: HandlerContext): Promise<any> {
         if (person && person.gitHubId) {
             const date = new Date(new Date().getTime() - (this.days * 24 * 60 * 60 * 1000));
             const login = person.gitHubId.login;
-            return github.api(this.githubToken, this.apiUrl).search.issues({
-                q: `involves:${login} updated:>=${formatDate("{year}-{month}-{day}T{hours}:{minutes}", date)}`,
-                sort: "updated",
-                order: "desc",
-            });
+            return this.searchReposFromChannel(ctx)
+                .then(repos => {
+                    return github.api(this.githubToken, this.apiUrl).search.issues({
+                        q: `involves:${login} updated:>=${formatDate("{year}-{month}-{day}T{hours}:{minutes}", 
+                            date)} ${repos}`,
+                        sort: "updated",
+                        order: "desc",
+                    });
+            })
         } else {
             return Promise.resolve(Success);
+        }
+    }
+
+    protected searchReposFromChannel(ctx: HandlerContext): Promise<string> {
+        if (this.channel) {
+            return ctx.graphClient.executeQueryFromFile<graphql.MappedChannels.Query, graphql.MappedChannels.Variables>(
+                "graphql/query/mappedChannels",
+                {
+                    teamId: this.teamId,
+                    name: this.channel
+                })
+                .then(result => {
+                    const repos = _.get(result, "ChatChannel[0].repos") as graphql.MappedChannels.Repos[] || [];
+                    return repos.map(r => `repo:${r.owner}/${r.name}`).join(" ");
+                })
+        } else {
+            return Promise.resolve("");
         }
     }
 
