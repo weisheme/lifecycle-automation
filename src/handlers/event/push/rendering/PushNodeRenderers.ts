@@ -505,15 +505,14 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[],
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
         const images = {};
-        push.commits.filter(c => c.tags != null).forEach(c => c.tags.filter(t => t.containers != null)
-            .forEach(t => t.containers.forEach(con => {
-                const image = con.image;
-                if (images[image]) {
-                    images[image].push(con);
+        push.commits.filter(c => c.tags != null && c.image != null).forEach(c => {
+                const imageName = c.image.imageName;
+                if (images[imageName]) {
+                    images[imageName].push(c.image);
                 } else {
-                    images[image] = [con];
+                    images[imageName] = [c.image];
                 }
-            })));
+            });
 
         const messages = [];
         // tslint:disable-next-line:forin

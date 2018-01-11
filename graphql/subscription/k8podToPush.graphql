@@ -116,14 +116,14 @@ subscription K8PodToPushLifecycle
                                 release {
                                     name
                                 }
-                                containers {
-                                    pods {
-                                        baseName
-                                        phase
-                                        name
-                                    }
-                                    imageName
+                            }
+                            image {
+                                pods {
+                                    baseName
+                                    phase
+                                    name
                                 }
+                                imageName
                             }
                             author {
                                 login

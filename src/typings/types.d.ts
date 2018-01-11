@@ -78,16 +78,13 @@ export type _TagOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_d
 export type _ReleaseOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for DockerImage */
-export type _DockerImageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "image_asc" | "image_desc";
-
-/* Ordering Enum for K8Spec */
-export type _K8SpecOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "kind_asc" | "kind_desc" | "curHash_asc" | "curHash_desc" | "fsha_asc" | "fsha_desc" | "timestamp_asc" | "timestamp_desc";
+export type _DockerImageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "image_asc" | "image_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for K8Pod */
-export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "state_asc" | "state_desc" | "host_asc" | "host_desc" | "timestamp_asc" | "timestamp_desc";
+export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "phase_asc" | "phase_desc" | "environment_asc" | "environment_desc" | "timestamp_asc" | "timestamp_desc" | "baseName_asc" | "baseName_desc" | "namespace_asc" | "namespace_desc" | "statusJSON_asc" | "statusJSON_desc" | "host_asc" | "host_desc" | "state_asc" | "state_desc" | "specsJSON_asc" | "specsJSON_desc" | "envJSON_asc" | "envJSON_desc" | "metadataJSON_asc" | "metadataJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc";
 
-/* Ordering Enum for Environment */
-export type _EnvironmentOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "vpcName_asc" | "vpcName_desc";
+/* Ordering Enum for K8Container */
+export type _K8ContainerOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc" | "environment_asc" | "environment_desc" | "containerJSON_asc" | "containerJSON_desc" | "state_asc" | "state_desc" | "ready_asc" | "ready_desc" | "restartCount_asc" | "restartCount_desc" | "statusJSON_asc" | "statusJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc";
 
 /* Ordering Enum for SpinnakerPipeline */
 export type _SpinnakerPipelineOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "executionId_asc" | "executionId_desc" | "application_asc" | "application_desc" | "eventType_asc" | "eventType_desc" | "taskName_asc" | "taskName_desc" | "stageName_asc" | "stageName_desc" | "stageType_asc" | "stageType_desc" | "waitingForJudgement_asc" | "waitingForJudgement_desc";
@@ -134,8 +131,8 @@ export type _CommentOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "
 /* Ordering Enum for DeletedBranch */
 export type _DeletedBranchOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "timestamp_asc" | "timestamp_desc";
 
-/* Ordering Enum for K8Cluster */
-export type _K8ClusterOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "availabilityZone_asc" | "availabilityZone_desc";
+/* Ordering Enum for ImageLinked */
+export type _ImageLinkedOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for PushImpact */
 export type _PushImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "url_asc" | "url_desc" | "data_asc" | "data_desc";
@@ -999,6 +996,7 @@ export namespace ApplicationToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -1025,21 +1023,20 @@ export namespace ApplicationToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -1918,6 +1915,7 @@ export namespace BuildToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -1944,21 +1942,20 @@ export namespace BuildToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -3590,6 +3587,7 @@ export namespace IssueToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -3616,21 +3614,20 @@ export namespace IssueToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -3659,214 +3656,8 @@ export namespace K8PodToPushLifecycle {
     _id?: Long | null; 
     name?: string | null; 
     state?: string | null; 
-    images?: Images[] | null; 
+    images?: DockerImage[] | null; 
     timestamp?: string | null; 
-  } 
-
-  export type Images = {
-    tag?: Tag | null; 
-  } 
-
-  export type Tag = {
-    commit?: Commit | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type Commit = {
-    pushes?: Pushes[] | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type Pushes = {
-    builds?: Builds[] | null; 
-    before?: Before | null; 
-    after?: After | null; 
-    repo?: Repo | null; 
-    commits?: Commits[] | null; 
-    timestamp?: string | null; 
-    branch?: string | null; 
-  } 
-
-  export type Builds = {
-    id?: string | null; 
-    buildUrl?: string | null; 
-    name?: string | null; 
-    provider?: string | null; 
-    status?: BuildStatus | null; 
-    commit?: _Commit | null; 
-    timestamp?: string | null; 
-    workflow?: Workflow | null; 
-  } 
-
-  export type _Commit = {
-    sha?: string | null; 
-  } 
-
-  export type Workflow = {
-    id?: string | null; 
-    name?: string | null; 
-    provider?: string | null; 
-    config?: string | null; 
-    builds?: _Builds[] | null; 
-  } 
-
-  export type _Builds = {
-    jobId?: string | null; 
-    jobName?: string | null; 
-    finishedAt?: string | null; 
-    startedAt?: string | null; 
-    status?: BuildStatus | null; 
-    id?: string | null; 
-    buildUrl?: string | null; 
-  } 
-
-  export type Before = {
-    sha?: string | null; 
-  } 
-
-  export type After = {
-    sha?: string | null; 
-    message?: string | null; 
-    statuses?: Statuses[] | null; 
-    tags?: Tags[] | null; 
-  } 
-
-  export type Statuses = {
-    context?: string | null; 
-    description?: string | null; 
-    targetUrl?: string | null; 
-    state?: StatusState | null; 
-  } 
-
-  export type Tags = {
-    name?: string | null; 
-    release?: Release | null; 
-    builds?: __Builds[] | null; 
-  } 
-
-  export type Release = {
-    name?: string | null; 
-  } 
-
-  export type __Builds = {
-    buildId?: string | null; 
-    buildUrl?: string | null; 
-    name?: string | null; 
-    provider?: string | null; 
-    status?: BuildStatus | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type Repo = {
-    owner?: string | null; 
-    name?: string | null; 
-    channels?: Channels[] | null; 
-    labels?: Labels[] | null; 
-    org?: Org | null; 
-    defaultBranch?: string | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    team?: Team | null; 
-  } 
-
-  export type Team = {
-    id?: string | null; 
-  } 
-
-  export type Labels = {
-    name?: string | null; 
-  } 
-
-  export type Org = {
-    provider?: Provider | null; 
-    team?: _Team | null; 
-  } 
-
-  export type Provider = {
-    url?: string | null; 
-    apiUrl?: string | null; 
-    gitUrl?: string | null; 
-  } 
-
-  export type _Team = {
-    id?: string | null; 
-    chatTeams?: ChatTeams[] | null; 
-  } 
-
-  export type ChatTeams = {
-    id?: string | null; 
-    preferences?: Preferences[] | null; 
-  } 
-
-  export type Preferences = {
-    name?: string | null; 
-    value?: string | null; 
-  } 
-
-  export type Commits = {
-    sha?: string | null; 
-    message?: string | null; 
-    resolves?: Resolves[] | null; 
-    impact?: Impact | null; 
-    apps?: Apps[] | null; 
-    tags?: _Tags[] | null; 
-    author?: Author | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type Resolves = {
-    number?: number | null; 
-    name?: string | null; 
-    title?: string | null; 
-    state?: IssueState | null; 
-  } 
-
-  export type Impact = {
-    data?: string | null; 
-    url?: string | null; 
-  } 
-
-  export type Apps = {
-    state?: string | null; 
-    host?: string | null; 
-    domain?: string | null; 
-    data?: string | null; 
-  } 
-
-  export type _Tags = {
-    name?: string | null; 
-    release?: _Release | null; 
-    containers?: Containers[] | null; 
-  } 
-
-  export type _Release = {
-    name?: string | null; 
-  } 
-
-  export type Containers = {
-    pods?: Pods[] | null; 
-    image?: string | null; 
-  } 
-
-  export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
-    name?: string | null; 
-  } 
-
-  export type Author = {
-    login?: string | null; 
-    person?: Person | null; 
-  } 
-
-  export type Person = {
-    chatId?: ChatId | null; 
-  } 
-
-  export type ChatId = {
-    screenName?: string | null; 
   } 
 }
 export namespace NotifyAuthorOnReview {
@@ -4726,6 +4517,7 @@ export namespace ParentImpactToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -4752,21 +4544,20 @@ export namespace ParentImpactToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -5418,6 +5209,7 @@ export namespace PushToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -5444,21 +5236,20 @@ export namespace PushToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -5730,6 +5521,7 @@ export namespace ReleaseToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -5756,21 +5548,20 @@ export namespace ReleaseToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: __Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type __Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -6611,6 +6402,7 @@ export namespace StatusToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -6637,21 +6429,20 @@ export namespace StatusToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
@@ -6822,6 +6613,7 @@ export namespace TagToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
+    image?: Image | null; 
     author?: Author | null; 
     timestamp?: string | null; 
   } 
@@ -6848,21 +6640,20 @@ export namespace TagToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
+  export type Image = {
     pods?: Pods[] | null; 
-    image?: string | null; 
+    imageName?: string | null; 
   } 
 
   export type Pods = {
-    host?: string | null; 
-    state?: string | null; 
+    baseName?: string | null; 
+    phase?: string | null; 
     name?: string | null; 
   } 
 
