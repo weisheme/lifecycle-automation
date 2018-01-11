@@ -16,6 +16,7 @@ import { CreateGitHubRelease } from "./handlers/command/github/CreateGitHubRelea
 import { CreateGitHubTag } from "./handlers/command/github/CreateGitHubTag";
 import { DeleteGitHubBranch } from "./handlers/command/github/DeleteGitHubBranch";
 import { DisplayGitHubIssue } from "./handlers/command/github/DisplayGitHubIssue";
+import { DisplayGitHubPullRequest } from "./handlers/command/github/DisplayGitHubPullRequest";
 import { EnableGitHubPullRequestAutoMerge } from "./handlers/command/github/EnableGitHubPullRequestAutoMerge";
 import {
     InstallGitHubOrgWebhook,
@@ -156,6 +157,7 @@ export const configuration: any = {
         () => new CreateGitHubTag(),
         () => new DeleteGitHubBranch(),
         () => new DisplayGitHubIssue(),
+        () => new DisplayGitHubPullRequest(),
         () => new EnableGitHubPullRequestAutoMerge(),
         () => new InstallGitHubOrgWebhook(),
         () => new InstallGitHubRepoWebhook(),
