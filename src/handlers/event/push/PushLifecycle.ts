@@ -176,6 +176,8 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                                     matches(repoConfiguration.exclude, branch) : undefined;
                                 if (include === true || exclude === false) {
                                     channelNames.push({name: channel.name, teamId: channel.team.id});
+                                } else if (!include && exclude !== true) {
+                                    channelNames.push({name: channel.name, teamId: channel.team.id});
                                 }
                             }
                         } else {
