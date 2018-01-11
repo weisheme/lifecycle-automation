@@ -30,6 +30,7 @@ import {
 } from "./rendering/PushNodeRenderers";
 import { StatusesNodeRenderer } from "./rendering/StatusesNodeRenderer";
 import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
+import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
@@ -87,6 +88,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new WorkflowNodeRenderer(),
                     new IssueNodeRenderer(),
                     new PullRequestNodeRenderer(),
+                    new ReferencedIssuesNodeRenderer(),
                     new TagNodeRenderer(),
                     new BuildNodeRenderer(),
                     new ApplicationNodeRenderer(),

@@ -577,7 +577,8 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const issues = [];
         push.commits.filter(c => c.resolves != null).forEach(c => c.resolves.forEach(i => {
-            if (issues.indexOf(i.number) < 0 && i.title && i.state) {
+            const key = `${repo.owner}/${repo.name}#${i.number}`;
+            if (issues.indexOf(key) < 0 && i.title && i.state) {
                 // tslint:disable-next-line:variable-name
                 const author_name = `#${i.number}: ${truncateCommitMessage(i.title, repo)}`;
                 const attachment: Attachment = {
@@ -587,10 +588,10 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
                     fallback: author_name,
                 };
                 msg.attachments.push(attachment);
-                issues.push(i.number);
+                issues.push(key);
             }
         }));
-
+        context["issues"] = issues;
         return Promise.resolve(msg);
     }
 }
@@ -631,6 +632,9 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                         fallback: author_name,
                     };
                     msg.attachments.push(attachment);
+
+                    // store on the context
+                    context["open_pr"] = `${repo.owner}/${repo.name}#${pr.number}`;
                 }
                 return msg;
             })

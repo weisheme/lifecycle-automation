@@ -156,7 +156,10 @@ export function isGenerated(node: graphql.PullRequestToPullRequestLifecycle.Pull
     return false;
 }
 
-export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext): Promise<ReferencedIssues> {
+export function extractLinkedIssues(body: string,
+                                    repo: any,
+                                    ignore: string[] = [],
+                                    ctx: HandlerContext): Promise<ReferencedIssues> {
     const promises = [];
 
     let match;
@@ -172,26 +175,28 @@ export function extractLinkedIssues(body: string, repo: any, ctx: HandlerContext
         const r = match[2] || repo.name;
         const no = match[3];
 
-        promises.push(loadIssueOrPullRequest(o, r, [no], ctx)
-            .then(result => {
-                const results = [];
-                if (result && result.repo) {
-                    result.repo.forEach(rr => {
-                        if (rr.issue) {
-                            rr.issue.forEach(i => {
-                                results.push({ type: "issue", result: i });
-                            });
-                        }
-                        if (rr.pullRequest) {
-                            rr.pullRequest.forEach(pr => {
-                                results.push({ type: "pr", result: pr });
-                            });
-                        }
-                    });
-                }
-                return results;
-            }));
-        counter++;
+        if (ignore.indexOf(`${o}/${r}#${no}`) < 0) {
+            promises.push(loadIssueOrPullRequest(o, r, [no], ctx)
+                .then(result => {
+                    const results = [];
+                    if (result && result.repo) {
+                        result.repo.forEach(rr => {
+                            if (rr.issue) {
+                                rr.issue.forEach(i => {
+                                    results.push({type: "issue", result: i});
+                                });
+                            }
+                            if (rr.pullRequest) {
+                                rr.pullRequest.forEach(pr => {
+                                    results.push({type: "pr", result: pr});
+                                });
+                            }
+                        });
+                    }
+                    return results;
+                }));
+            counter++;
+        }
     }
 
     return Promise.all(promises)

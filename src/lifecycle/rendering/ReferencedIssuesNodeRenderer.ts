@@ -23,7 +23,7 @@ export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContributi
     }
 
     public supports(node: any): boolean {
-        return node.body;
+        return node.body || node.commits;
     }
 
     public render(node: any, actions: Action[], msg: SlackMessage, context: RendererContext):
@@ -31,7 +31,21 @@ export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContributi
         const repo = context.lifecycle.extract("repo");
         const issues = [];
 
-        return extractLinkedIssues(node.body, repo, context.context)
+        let message;
+        const ignore: string[] = [];
+        if (node.body) {
+            message = node.body;
+        } else if (node.commits) {
+            message = node.commits.map(c => c.message).join("\n");
+            if (context["open_pr"]) {
+                ignore.push(context["open_pr"]);
+            }
+            if (context["issues"]) {
+                ignore.push(...context["issues"]);
+            }
+        }
+
+        return extractLinkedIssues(message, repo, ignore, context.context)
             .then(ri => {
                 ri.issues.forEach(i => {
                     if (issues.indexOf(i.number) < 0) {
