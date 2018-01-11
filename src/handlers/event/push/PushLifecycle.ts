@@ -147,7 +147,8 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
     private filterChannels(push: graphql.PushToPushLifecycle.Push, preferences: {[teamId: string]: Preferences[]} = {})
         : Channel[] {
-        const channels = _.get(push, "repo.channels").filter(c => c.name && c.name.length >= 1);
+        const channels = (_.get(push, "repo.channels") || [])
+            .filter(c => c.name && c.name.length >= 1);
         if (!channels || channels.length === 0) {
             return [];
         }
