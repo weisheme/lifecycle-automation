@@ -591,7 +591,7 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
                 issues.push(key);
             }
         }));
-        context["issues"] = issues;
+        context.set("issues", issues);
         return Promise.resolve(msg);
     }
 }
@@ -634,7 +634,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                     msg.attachments.push(attachment);
 
                     // store on the context
-                    context["open_pr"] = `${repo.owner}/${repo.name}#${pr.number}`;
+                    context.set("open_pr", `${repo.owner}/${repo.name}#${pr.number}`);
                 }
                 return msg;
             })

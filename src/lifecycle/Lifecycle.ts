@@ -66,12 +66,14 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 }
 
                 const renderers: any[] = [];
+                const store = new Map<string, any>();
 
                 // Call all NodeRenderers and ButtonContributors
                 lifecycle.renderers.forEach(r => {
                     lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
                         // First collect all buttons/actions for the given node
-                        const context = new RendererContext(r.id(), lifecycle, configuration, this.orgToken, ctx);
+                        const context = new RendererContext(
+                            r.id(), lifecycle, configuration, this.orgToken, ctx, store);
 
                         const contributors: any[] = [];
                         lifecycle.contributors.filter(c => c.supports(n)).forEach(c => {
@@ -534,7 +536,20 @@ export class RendererContext {
                 public lifecycle: Lifecycle,
                 public configuration: LifecycleConfiguration,
                 public orgToken: string,
-                public context: HandlerContext) { }
+                public context: HandlerContext,
+                private store: Map<string, any>) { }
+
+    public set(key: string, value: any) {
+        this.store.set(key, value);
+    }
+
+    public get(key: string) {
+        return this.store.get(key);
+    }
+
+    public has(key: string) {
+        return this.store.has(key);
+    }
 }
 
 export abstract class AbstractIdentifiableContribution implements IdentifiableContribution {

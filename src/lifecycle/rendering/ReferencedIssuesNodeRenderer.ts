@@ -37,11 +37,11 @@ export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContributi
             message = node.body;
         } else if (node.commits) {
             message = node.commits.map(c => c.message).join("\n");
-            if (context["open_pr"]) {
-                ignore.push(context["open_pr"]);
+            if (context.has("open_pr")) {
+                ignore.push(context.get("open_pr"));
             }
-            if (context["issues"]) {
-                ignore.push(...context["issues"]);
+            if (context.has("issues")) {
+                ignore.push(...context.get("issues"));
             }
         }
 
