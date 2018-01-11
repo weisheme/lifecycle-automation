@@ -114,11 +114,11 @@ subscription ParentImpactToPushLifecycle
                         }
                         containers {
                             pods {
-                                host
-                                state
+                                baseName
+                                phase
                                 name
                             }
-                            image
+                            imageName
                         }
                     }
                     author {

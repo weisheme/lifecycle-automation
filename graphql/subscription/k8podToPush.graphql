@@ -118,11 +118,11 @@ subscription K8PodToPushLifecycle
                                 }
                                 containers {
                                     pods {
-                                        host
-                                        state
+                                        baseName
+                                        phase
                                         name
                                     }
-                                    image
+                                    imageName
                                 }
                             }
                             author {

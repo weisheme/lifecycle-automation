@@ -115,11 +115,11 @@ subscription ReleaseToPushLifecycle
                             }
                             containers {
                                 pods {
-                                    host
-                                    state
+                                    baseName
+                                    phase
                                     name
                                 }
-                                image
+                                imageName
                             }
                         }
                         author {
