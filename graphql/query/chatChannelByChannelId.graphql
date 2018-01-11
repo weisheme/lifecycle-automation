@@ -1,17 +1,16 @@
 query ChatChannelByChannelId($teamId: ID!, $channelName: String!) {
-    ChatTeam(id: $teamId) {
-        channels(name: $channelName) {
-            name
-            repos {
-                name
-                owner
-                org {
-                    provider {
-                        url
-                    }
-                }
-            }
+  ChatTeam(id: $teamId) {
+    channels(name: $channelName) {
+      name
+      repos {
+        name
+        owner
+        org {
+          provider {
+            url
+          }
         }
+      }
     }
+  }
 }
-

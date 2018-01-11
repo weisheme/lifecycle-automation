@@ -1,5 +1,4 @@
-subscription ReviewToReviewLifecycle
-{
+subscription ReviewToReviewLifecycle {
   Review {
     _id
     body
@@ -51,4 +50,3 @@ subscription ReviewToReviewLifecycle
     }
   }
 }
-

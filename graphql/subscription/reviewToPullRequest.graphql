@@ -1,5 +1,4 @@
-subscription ReviewToPullRequestLifecycle
-{
+subscription ReviewToPullRequestLifecycle {
   Review {
     _id
     pullRequest {
@@ -176,4 +175,3 @@ subscription ReviewToPullRequestLifecycle
     }
   }
 }
-

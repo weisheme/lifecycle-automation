@@ -41,4 +41,3 @@ subscription DeletedBranchToBranchLifecycle {
     timestamp
   }
 }
-

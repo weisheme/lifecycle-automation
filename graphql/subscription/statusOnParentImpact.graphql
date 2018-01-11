@@ -1,5 +1,4 @@
-subscription StatusOnParentImpact
-{
+subscription StatusOnParentImpact {
   ParentImpact {
     _id
     data
@@ -18,4 +17,3 @@ subscription StatusOnParentImpact
     }
   }
 }
-

@@ -42,4 +42,3 @@ query IssueOrPr($owner: String!, $repo: String!, $names: [String]!) {
     }
   }
 }
-

@@ -1,5 +1,4 @@
-subscription CommitToPullRequestLifecycle
-{
+subscription CommitToPullRequestLifecycle {
   Commit {
     _id
     pullRequests(first: 1) {
@@ -176,4 +175,3 @@ subscription CommitToPullRequestLifecycle
     }
   }
 }
-

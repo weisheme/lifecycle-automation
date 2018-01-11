@@ -1,60 +1,65 @@
-query Issue($teamId: ID!, $orgOwner: String!, $repoName: String!, $issueName: String!) {
-    ChatTeam(id: $teamId) {
-        orgs(owner: $orgOwner) {
-          repo(name: $repoName) {
-            name
-            owner
-            issue(name: $issueName) {
-              _id
-              name
-              title
-              body
-              state
-              number
-              createdAt
-              updatedAt
-              closedAt
-              resolvingCommits {
-                author {
-                  person {
-                    chatId {
-                      screenName
-                    }
-                  }
+query Issue(
+  $teamId: ID!
+  $orgOwner: String!
+  $repoName: String!
+  $issueName: String!
+) {
+  ChatTeam(id: $teamId) {
+    orgs(owner: $orgOwner) {
+      repo(name: $repoName) {
+        name
+        owner
+        issue(name: $issueName) {
+          _id
+          name
+          title
+          body
+          state
+          number
+          createdAt
+          updatedAt
+          closedAt
+          resolvingCommits {
+            author {
+              person {
+                chatId {
+                  screenName
                 }
               }
-              openedBy {
-                login
-              }
-              closedBy {
-                login
-              }
-              assignees {
-                login
-              }
-              repo {
-                name
-                owner
-                labels {
-                  name
-                }
-                channels {
-                  name
-                }
-                org {
-                  provider {
-                    apiUrl
-                    gitUrl
-                    url
-                  }
-                }
-              }
-              labels {
-                name
-              }
-              timestamp
             }
           }
+          openedBy {
+            login
+          }
+          closedBy {
+            login
+          }
+          assignees {
+            login
+          }
+          repo {
+            name
+            owner
+            labels {
+              name
+            }
+            channels {
+              name
+            }
+            org {
+              provider {
+                apiUrl
+                gitUrl
+                url
+              }
+            }
+          }
+          labels {
+            name
+          }
+          timestamp
         }
+      }
     }
+  }
 }

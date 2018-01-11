@@ -1,5 +1,4 @@
-subscription CommentToIssueCommentLifecycle
-{
+subscription CommentToIssueCommentLifecycle {
   Comment {
     _id
     gitHubId
@@ -64,10 +63,10 @@ subscription CommentToIssueCommentLifecycle
         message
         author {
           person {
-          chatId {
-            screenName
+            chatId {
+              screenName
+            }
           }
-        }
         }
       }
       labels {
@@ -76,4 +75,3 @@ subscription CommentToIssueCommentLifecycle
     }
   }
 }
-

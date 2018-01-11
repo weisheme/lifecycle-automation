@@ -1,5 +1,4 @@
-subscription PullRequestToReviewLifecycle
-{
+subscription PullRequestToReviewLifecycle {
   PullRequest {
     _id
     reviews {
@@ -53,4 +52,3 @@ subscription PullRequestToReviewLifecycle
     }
   }
 }
-

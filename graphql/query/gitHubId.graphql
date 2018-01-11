@@ -5,8 +5,8 @@ query GitHubId($gitHubIds: [String]!) {
       chatId {
         screenName
         preferences {
-            name
-            value
+          name
+          value
         }
         id
         chatTeam {

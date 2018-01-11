@@ -1,22 +1,22 @@
 query ChatId($teamId: ID!, $chatId: String!) {
-    ChatTeam(id: $teamId) {
-        members(userId: $chatId) {
-            person {
-              	chatId {
-                  screenName
-                  preferences {
-                    name
-                    value
-                  }
-                }
-                gitHubId {
-                  login
-                  name
-                }
-                emails {
-                    address
-                }
-            }
+  ChatTeam(id: $teamId) {
+    members(userId: $chatId) {
+      person {
+        chatId {
+          screenName
+          preferences {
+            name
+            value
+          }
         }
+        gitHubId {
+          login
+          name
+        }
+        emails {
+          address
+        }
+      }
     }
+  }
 }

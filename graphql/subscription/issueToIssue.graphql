@@ -41,9 +41,9 @@ subscription IssueToIssueLifecycle {
       }
       org {
         provider {
-            apiUrl
-            gitUrl
-            url
+          apiUrl
+          gitUrl
+          url
         }
         team {
           id
