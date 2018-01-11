@@ -160,11 +160,11 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                 const a = cgba.author;
                 let color = "#00a5ff";
                 const message = cgba.commits.map(c => {
-                    const [message, cl] = this.renderCommitMessage(pr, c, repo);
+                    const [m, cl] = this.renderCommitMessage(pr, c, repo);
                     if (cl) {
                         color = cl;
                     }
-                    return message;
+                    return m;
                 }).join("\n");
 
                 const attachment: Attachment = {
@@ -189,7 +189,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 
         // Cut commit to 50 chars of first line
         const cm = truncateCommitMessage(c.message, repo);
-        let message = "`" + url(commitUrl(repo, c), c.sha.substring(0, 7)) + "` " + cm;
+        const message = "`" + url(commitUrl(repo, c), c.sha.substring(0, 7)) + "` " + cm;
 
         if (c.sha === pr.head.sha && c.builds && c.builds.length > 0) {
             return  renderDecorator(c.builds[0], c.builds, message, this.emojiStyle);

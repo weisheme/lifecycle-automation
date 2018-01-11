@@ -15,8 +15,8 @@ import {
     ThumbsUpActionContributor,
 } from "./rendering/PullRequestActionContributors";
 import {
-    CommitNodeRenderer,
     BuildNodeRenderer,
+    CommitNodeRenderer,
     PullRequestNodeRenderer,
     ReviewNodeRenderer,
     StatusNodeRenderer,
