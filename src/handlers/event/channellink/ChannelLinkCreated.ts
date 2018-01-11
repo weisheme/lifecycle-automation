@@ -112,9 +112,12 @@ Please use one of the buttons below to install a Webhook in your repository or o
 }
 
 export function hookExists(hooks: any[]): boolean {
-    const urlRegexp = /^https:\/\/.+.atomist.+\/github\/teams.*$/;
-    return hooks && hooks.filter(w => w.config && w.config.url)
-        .some(w => urlRegexp.test(w.config.url));
+    if (hooks && Array.isArray(hooks) && hooks.length > 0) {
+        const urlRegexp = /^https:\/\/.+.atomist.+\/github\/teams.*$/;
+        return hooks.filter(w => w.config && w.config.url)
+            .some(w => urlRegexp.test(w.config.url));
+    }
+    return false;
 }
 
 function createActions(repo: graphql.ChannelLinkCreated.Repo): Action[] {
