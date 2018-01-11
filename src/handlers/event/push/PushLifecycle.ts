@@ -171,12 +171,12 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                                 .find(r => matches(r.owner, owner) && matches(r.name, repo));
                             if (repoConfiguration) {
                                 const include = repoConfiguration.include ?
-                                    matches(repoConfiguration.include, branch) : undefined;
+                                    matches(repoConfiguration.include, branch) : null;
                                 const exclude = repoConfiguration.exclude ?
-                                    matches(repoConfiguration.exclude, branch) : undefined;
-                                if (include === true || exclude === false) {
+                                    matches(repoConfiguration.exclude, branch) : null;
+                                if (include == true && exclude != false) {
                                     channelNames.push({name: channel.name, teamId: channel.team.id});
-                                } else if (!include && exclude !== true) {
+                                } else if (include == null && exclude != true) {
                                     channelNames.push({name: channel.name, teamId: channel.team.id});
                                 }
                             }
@@ -185,7 +185,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                         }
                     } catch (err) {
                         logger.warn(
-                            `Team preferences 'branch_configuration' are corrupt: '${branchConfiguration.value}'`);
+                            `Team preferences 'lifecycle_branches' are corrupt: '${branchConfiguration.value}'`);
                     }
                 } else {
                     channelNames.push({name: channel.name, teamId: channel.team.id});
@@ -203,7 +203,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 function matches(pattern: string, target: string): boolean {
     const regexp = new RegExp(pattern, "g");
     const match = regexp.exec(target);
-    return match && match.length > 0;
+    return match != null && match.length > 0;
 }
 
 export interface Domain {
