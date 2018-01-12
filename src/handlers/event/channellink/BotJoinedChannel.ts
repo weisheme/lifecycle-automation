@@ -104,9 +104,12 @@ I don't see any repositories in GitHub${ownerText}.`;
 
             const msgId = `channel_link/bot_joined_channel/${channelName}`;
 
-            const matchyRepos = allRepos.filter(r =>
-                repoChannelName(r.name).indexOf(channelName) > -1 ||
-                channelName.indexOf(repoChannelName(r.name)) > -1).slice(0, 2);
+            const matchyRepos = allRepos
+                .filter(r => {
+                    const rcName = repoChannelName(r.name);
+                    return rcName.includes(channelName) || channelName.includes(rcName);
+                })
+                .sort((a, b) => a.name.length - b.name.length).slice(0, 2);
             const actions: slack.Action[] = [];
             matchyRepos.forEach(r => {
                 const linkRepo = new LinkRepo();
