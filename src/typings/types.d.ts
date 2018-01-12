@@ -709,6 +709,11 @@ export namespace Issue {
 
   export type Channels = {
     name?: string | null; 
+    team?: _Team | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
   } 
 
   export type Org = {

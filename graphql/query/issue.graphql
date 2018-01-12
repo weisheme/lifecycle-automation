@@ -41,6 +41,9 @@ query Issue($teamId: ID!, $orgOwner: String!, $repoName: String!, $issueName: St
               }
               channels {
                 name
+                team {
+                  id
+                }
               }
               org {
                 provider {
