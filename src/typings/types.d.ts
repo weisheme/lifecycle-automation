@@ -619,6 +619,10 @@ export namespace Issue {
   } 
 
   export type ChatTeam = {
+    team?: Team | null; 
+  } 
+
+  export type Team = {
     orgs?: Orgs[] | null; 
   } 
 
@@ -863,6 +867,10 @@ export namespace PullRequest {
   } 
 
   export type ChatTeam = {
+    team?: Team | null; 
+  } 
+
+  export type Team = {
     orgs?: Orgs[] | null; 
   } 
 
@@ -1105,16 +1113,16 @@ export namespace PullRequest {
 
   export type Channels = {
     name?: string | null; 
-    team?: Team | null; 
+    team?: _Team | null; 
   } 
 
-  export type Team = {
+  export type _Team = {
     id?: string | null; 
   } 
 
   export type Org = {
     provider?: Provider | null; 
-    team?: _Team | null; 
+    team?: __Team | null; 
   } 
 
   export type Provider = {
@@ -1123,7 +1131,7 @@ export namespace PullRequest {
     gitUrl?: string | null; 
   } 
 
-  export type _Team = {
+  export type __Team = {
     id?: string | null; 
     chatTeams?: ChatTeams[] | null; 
   } 
@@ -2017,6 +2025,7 @@ export namespace BranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -2024,6 +2033,7 @@ export namespace BranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -2665,6 +2675,7 @@ export namespace CommentToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -2672,6 +2683,7 @@ export namespace CommentToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -3062,6 +3074,7 @@ export namespace CommitToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -3069,6 +3082,7 @@ export namespace CommitToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -3406,6 +3420,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -3413,6 +3428,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -5317,6 +5333,7 @@ export namespace PullRequestToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -5324,6 +5341,7 @@ export namespace PullRequestToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -6309,6 +6327,7 @@ export namespace ReviewToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -6316,6 +6335,7 @@ export namespace ReviewToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -6706,6 +6726,7 @@ export namespace StatusToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -6713,6 +6734,7 @@ export namespace StatusToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {

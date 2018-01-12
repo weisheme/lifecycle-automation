@@ -1,122 +1,43 @@
-query PullRequest(
-$teamId: ID!
-$orgOwner: String!
-$repoName: String!
-$prName: String!
-) {
+query PullRequest($teamId: ID!, $orgOwner: String!, $repoName: String!, $prName: String!) {
     ChatTeam(id: $teamId) {
-        orgs(owner: $orgOwner) {
-            repo(name: $repoName) {
-                name
-                owner
-                pullRequest(name: $prName) {
-                    _id
-                    number
+        team {
+            orgs(owner: $orgOwner) {
+                repo(name: $repoName) {
                     name
-                    body
-                    state
-                    merged
-                    timestamp
-                    title
-                    createdAt
-                    mergedAt
-                    baseBranchName
-                    branchName
-                    head {
-                        sha
-                    }
-                    lastAssignedBy {
-                        login
+                    owner
+                    pullRequest(name: $prName) {
+                        _id
+                        number
                         name
-                        person {
-                            gitHubId {
-                                login
-                            }
-                            chatId {
-                                screenName
-                                id
-                            }
-                        }
-                    }
-                    closedAt
-                    branch {
-                        name
-                        timestamp
-                    }
-                    author {
-                        login
-                        name
-                        person {
-                            gitHubId {
-                                login
-                            }
-                            chatId {
-                                screenName
-                                id
-                            }
-                        }
-                    }
-                    merger {
-                        login
-                        name
-                        person {
-                            gitHubId {
-                                login
-                            }
-                            chatId {
-                                screenName
-                                id
-                            }
-                        }
-                    }
-                    assignees {
-                        login
-                        name
-                        person {
-                            gitHubId {
-                                login
-                            }
-                            chatId {
-                                screenName
-                                id
-                            }
-                        }
-                    }
-                    reviewers {
-                        login
-                        name
-                        person {
-                            gitHubId {
-                                login
-                            }
-                            chatId {
-                                screenName
-                                id
-                            }
-                        }
-                    }
-                    labels {
-                        name
-                    }
-                    comments {
                         body
-                    }
-                    commits(first: 10, orderBy: [timestamp_desc]) {
-                        sha
-                        message
+                        state
+                        merged
                         timestamp
-                        tags {
+                        title
+                        createdAt
+                        mergedAt
+                        baseBranchName
+                        branchName
+                        head {
+                            sha
+                        }
+                        lastAssignedBy {
+                            login
                             name
-                            release {
-                                name
-                                timestamp
+                            person {
+                                gitHubId {
+                                    login
+                                }
+                                chatId {
+                                    screenName
+                                    id
+                                }
                             }
                         }
-                        statuses {
-                            state
-                            description
-                            context
-                            targetUrl
+                        closedAt
+                        branch {
+                            name
+                            timestamp
                         }
                         author {
                             login
@@ -131,51 +52,127 @@ $prName: String!
                                 }
                             }
                         }
-                        builds(trigger: push, orderBy: [timestamp_desc]) {
+                        merger {
+                            login
+                            name
+                            person {
+                                gitHubId {
+                                    login
+                                }
+                                chatId {
+                                    screenName
+                                    id
+                                }
+                            }
+                        }
+                        assignees {
+                            login
+                            name
+                            person {
+                                gitHubId {
+                                    login
+                                }
+                                chatId {
+                                    screenName
+                                    id
+                                }
+                            }
+                        }
+                        reviewers {
+                            login
+                            name
+                            person {
+                                gitHubId {
+                                    login
+                                }
+                                chatId {
+                                    screenName
+                                    id
+                                }
+                            }
+                        }
+                        labels {
+                            name
+                        }
+                        comments {
+                            body
+                        }
+                        commits(first: 10, orderBy: [timestamp_desc]) {
+                            sha
+                            message
+                            timestamp
+                            tags {
+                                name
+                                release {
+                                    name
+                                    timestamp
+                                }
+                            }
+                            statuses {
+                                state
+                                description
+                                context
+                                targetUrl
+                            }
+                            author {
+                                login
+                                name
+                                person {
+                                    gitHubId {
+                                        login
+                                    }
+                                    chatId {
+                                        screenName
+                                        id
+                                    }
+                                }
+                            }
+                            builds(trigger: push, orderBy: [timestamp_desc]) {
+                                name
+                                buildUrl
+                                buildId
+                                status
+                            }
+                        }
+                        builds(trigger: pull_request, orderBy: [timestamp_desc]) {
                             name
                             buildUrl
                             buildId
                             status
                         }
-                    }
-                    builds(trigger: pull_request, orderBy: [timestamp_desc]) {
-                        name
-                        buildUrl
-                        buildId
-                        status
-                    }
-                    reviews {
-                        state
-                        by {
-                            login
+                        reviews {
+                            state
+                            by {
+                                login
+                            }
                         }
-                    }
-                    repo {
-                        name
-                        owner
-                        channels {
+                        repo {
                             name
-                            team {
-                                id
-                            }
-                        }
-                        allowRebaseMerge
-                        allowSquashMerge
-                        allowMergeCommit
-                        defaultBranch
-                        org {
-                            provider {
-                                url
-                                apiUrl
-                                gitUrl
-                            }
-                            team {
-                                id
-                                chatTeams {
+                            owner
+                            channels {
+                                name
+                                team {
                                     id
-                                    preferences {
-                                        name
-                                        value
+                                }
+                            }
+                            allowRebaseMerge
+                            allowSquashMerge
+                            allowMergeCommit
+                            defaultBranch
+                            org {
+                                provider {
+                                    url
+                                    apiUrl
+                                    gitUrl
+                                }
+                                team {
+                                    id
+                                    chatTeams {
+                                        id
+                                        preferences {
+                                            name
+                                            value
+                                        }
                                     }
                                 }
                             }
@@ -186,3 +183,4 @@ $prName: String!
         }
     }
 }
+
