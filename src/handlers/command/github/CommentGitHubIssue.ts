@@ -31,7 +31,7 @@ export class CommentGitHubIssue implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
@@ -48,6 +48,8 @@ export class CommentGitHubIssue implements HandleCommand {
                 });
             })
             .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+            .catch(err => {
+                return github.handleError("Comment Issue", err, ctx);
+            });
     }
 }

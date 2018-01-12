@@ -35,10 +35,10 @@ export class CreateGitHubRelease implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl;
 
     @MappedParameter(MappedParameters.GitHubUrl)
-    public webUrl: string = "https://github.com";
+    public webUrl;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;

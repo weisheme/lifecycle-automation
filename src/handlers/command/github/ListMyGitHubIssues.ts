@@ -32,7 +32,7 @@ export class ListMyGitHubIssues implements HandleCommand {
     public days: number = 1;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl: string;
 
     @MappedParameter(MappedParameters.SlackTeam)
     public teamId: string;

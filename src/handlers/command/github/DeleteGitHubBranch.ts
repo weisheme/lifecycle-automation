@@ -27,7 +27,7 @@ export class DeleteGitHubBranch implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;

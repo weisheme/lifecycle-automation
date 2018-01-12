@@ -43,8 +43,8 @@ export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements 
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
-    @MappedParameter("atomist://github_api_url")
-    public apiUrl: string = "https://api.github.com/";
+    @MappedParameter(MappedParameters.GitHubApiUrl)
+    public apiUrl;
 
     @MappedParameter(MappedParameters.SlackChannelName)
     public channel: string;

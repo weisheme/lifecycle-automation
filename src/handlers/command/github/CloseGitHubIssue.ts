@@ -27,7 +27,7 @@ export class CloseGitHubIssue implements HandleCommand {
     public issue: number;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
@@ -40,7 +40,10 @@ export class CloseGitHubIssue implements HandleCommand {
             number: this.issue,
             state: "closed",
         })
-            .then(() => Success)
-            .catch(err => ({ code: 1, message: err.message, stack: err.stack }));
+        .then(() => Success)
+        .catch(err => {
+            return github.handleError("Close Issue", err, ctx);
+        });
     }
 }
+
