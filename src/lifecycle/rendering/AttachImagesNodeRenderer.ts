@@ -29,7 +29,7 @@ export class AttachImagesNodeRenderer extends AbstractIdentifiableContribution
     public render(node: any, actions: Action[], msg: SlackMessage, context: RendererContext):
         Promise<SlackMessage> {
 
-        const imageRegExp = /https?:\/\/.*?\/(.*?\.(?:png|jpg|gif|jpeg|bmp))/gi;
+        const imageRegExp = /\bhttps?:\/\/\S+\/(\S+?\.(?:png|jpe?g|gif|bmp))\b/gi;
         let match;
 
         // tslint:disable-next-line:no-conditional-assignment
@@ -37,7 +37,7 @@ export class AttachImagesNodeRenderer extends AbstractIdentifiableContribution
             const url = match[0];
             const image = match[1];
             msg.attachments.push({
-                text: image.split("/").slice(-1)[0],
+                text: image,
                 image_url: url,
                 fallback: image,
             });
