@@ -421,11 +421,11 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
         }
 
         const attachment: Attachment = {
-            author_name: `Pull Request Build #${build.name}`,
+            author_name: `Build #${build.name}`,
             author_link: build.buildUrl,
             author_icon: icon,
             color,
-            fallback: `Pull Request Build #${build.name}`,
+            fallback: `Build #${build.name}`,
             actions,
         };
 
