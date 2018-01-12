@@ -485,11 +485,17 @@ export namespace ChatId {
   export type ChatId = {
     screenName?: string | null; 
     preferences?: Preferences[] | null; 
+    chatTeam?: _ChatTeam | null; 
   } 
 
   export type Preferences = {
     name?: string | null; 
     value?: string | null; 
+  } 
+
+  export type _ChatTeam = {
+    id?: string | null; 
+    name?: string | null; 
   } 
 
   export type GitHubId = {
@@ -517,6 +523,12 @@ export namespace ChatTeam {
   export type Channels = {
     name?: string | null; 
     channelId?: string | null; 
+    repos?: Repos[] | null; 
+  } 
+
+  export type Repos = {
+    name?: string | null; 
+    owner?: string | null; 
   } 
 }
 export namespace ChatTeamPreferences {
@@ -1729,6 +1741,7 @@ export namespace BranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -1736,6 +1749,7 @@ export namespace BranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -2377,6 +2391,7 @@ export namespace CommentToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -2384,6 +2399,7 @@ export namespace CommentToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -2774,6 +2790,7 @@ export namespace CommitToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -2781,6 +2798,7 @@ export namespace CommitToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -3118,6 +3136,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -3125,6 +3144,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -5029,6 +5049,7 @@ export namespace PullRequestToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -5036,6 +5057,7 @@ export namespace PullRequestToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -6021,6 +6043,7 @@ export namespace ReviewToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -6028,6 +6051,7 @@ export namespace ReviewToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
@@ -6418,6 +6442,7 @@ export namespace StatusToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -6425,6 +6450,7 @@ export namespace StatusToPullRequestLifecycle {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {

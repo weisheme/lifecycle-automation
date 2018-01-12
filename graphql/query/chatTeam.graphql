@@ -1,9 +1,13 @@
 query ChatTeam($teamId: ID!) {
-    ChatTeam(id: $teamId) {
-        channels {
-            name
-            channelId
-        }
+  ChatTeam(id: $teamId) {
+    channels {
+      name
+      channelId
+      repos {
+        name
+        owner
+      }
     }
+  }
 }
 

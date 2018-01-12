@@ -132,25 +132,32 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                     ]))
                     .then(results => {
                         if (results[0] && results[1]) {
-                            const repo: graphql.PushToUnmappedRepo.Repo = {
-                                owner: this.owner,
-                                name: this.repo,
-                                org: {
-                                    team: {
-                                        chatTeams: [{
-                                            channels: results[1].channels,
-                                        }],
-                                    },
-                                    provider: {},
-                                },
-                            };
-                            const botNames = {};
-                            botNames[this.teamId] = DefaultBotName;
+                            const chatTeam = results[1] as graphql.ChatTeam.ChatTeam;
+                            const alreadyMapped = (chatTeam.channels || []).some(c => (c.repos || [])
+                                .some(r => r.name === this.repo && r.owner === this.owner));
 
-                            return sendUnMappedRepoMessage([results[0]], repo, ctx, botNames);
-                        } else {
-                            return Success;
+                            if (!alreadyMapped) {
+
+                                const repo: graphql.PushToUnmappedRepo.Repo = {
+                                    owner: this.owner,
+                                    name: this.repo,
+                                    org: {
+                                        team: {
+                                            chatTeams: [{
+                                                id: this.teamId,
+                                                channels: results[1].channels,
+                                            }],
+                                        },
+                                        provider: {},
+                                    },
+                                };
+                                const botNames = {};
+                                botNames[this.teamId] = DefaultBotName;
+
+                                return sendUnMappedRepoMessage([results[0]], repo, ctx, botNames);
+                            }
                         }
+                        return Success;
                     })
                     .catch(err => failure(err));
             })
