@@ -485,11 +485,17 @@ export namespace ChatId {
   export type ChatId = {
     screenName?: string | null; 
     preferences?: Preferences[] | null; 
+    chatTeam?: _ChatTeam | null; 
   } 
 
   export type Preferences = {
     name?: string | null; 
     value?: string | null; 
+  } 
+
+  export type _ChatTeam = {
+    id?: string | null; 
+    name?: string | null; 
   } 
 
   export type GitHubId = {
@@ -517,6 +523,12 @@ export namespace ChatTeam {
   export type Channels = {
     name?: string | null; 
     channelId?: string | null; 
+    repos?: Repos[] | null; 
+  } 
+
+  export type Repos = {
+    name?: string | null; 
+    owner?: string | null; 
   } 
 }
 export namespace ChatTeamPreferences {

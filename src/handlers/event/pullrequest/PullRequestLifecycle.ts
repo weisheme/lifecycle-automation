@@ -3,6 +3,7 @@ import {
     Lifecycle,
     LifecycleHandler,
 } from "../../../lifecycle/Lifecycle";
+import { AttachImagesNodeRenderer } from "../../../lifecycle/rendering/AttachImagesNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
@@ -53,7 +54,8 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
                 new StatusNodeRenderer(),
                 new ReviewNodeRenderer(),
                 new ReferencedIssuesNodeRenderer(),
-                new FooterNodeRenderer((node: any) => node.baseBranchName)],
+                new AttachImagesNodeRenderer(node => node.state === "open"),
+                new FooterNodeRenderer(node => node.baseBranchName)],
             contributors: [
                 new MergeActionContributor(),
                 new AssignReviewerActionContributor(),

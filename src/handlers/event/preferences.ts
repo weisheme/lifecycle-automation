@@ -234,13 +234,34 @@ export const LifecycleRendererPreferences = {
         },
     },
 
-    comment: {},
+    comment: {
+        attachimages: {
+            id: "attachimages",
+            name: "Image Attachments",
+            description: "Extract image attachments from GitHub issue and pull request comments",
+            enabled: true,
+        },
+    },
 
-    issue: {},
+    issue: {
+        attachimages: {
+            id: "attachimages",
+            name: "Image Attachments",
+            description: "Extract image attachments from GitHub issue bodies",
+            enabled: true,
+        },
+    },
 
     branch: {},
 
-    pull_request: {},
+    pull_request: {
+        attachimages: {
+            id: "attachimages",
+            name: "Image Attachments",
+            description: "Extract image attachments from GitHub pull request bodies",
+            enabled: true,
+        },
+    },
 
     review: {},
 

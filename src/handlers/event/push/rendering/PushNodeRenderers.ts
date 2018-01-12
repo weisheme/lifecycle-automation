@@ -124,7 +124,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         let author = null;
         let commitsByAuthor: any = {};
         for (const commit of commits) {
-            const ca = (commit.author != null ? commit.author.login : "<unkown>");
+            const ca = (commit.author != null ? commit.author.login : "(unknown)");
             if (author == null || author !== ca) {
                 commitsByAuthor = {
                     author: ca,

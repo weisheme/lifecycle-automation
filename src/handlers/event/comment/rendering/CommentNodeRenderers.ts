@@ -93,7 +93,7 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
                     author_name: `@${node.by.login}`,
                     author_icon: avatarUrl(repo, node.by.login),
                     author_link: userUrl(repo, node.by.login),
-                    fallback: `New comment on ${pr.state} issue #${pr.number}: ${pr.title}`,
+                    fallback: `New comment on ${pr.state} pull request #${pr.number}: ${pr.title}`,
                     mrkdwn_in: ["text", "pretext"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, pr.labels, pr.assignees),
                     footer_icon: `https://images.atomist.com/rug/pull-request-${state}.png`,

@@ -207,8 +207,9 @@ export class DeleteActionContributor extends AbstractIdentifiableContribution
     public supports(node: any): boolean {
         if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
-            return pr.state === "closed" && pr.branch != null;
-
+            return pr.state === "closed"
+                && pr.branch != null
+                && pr.branch.name !== (pr.repo.defaultBranch || "master");
         } else {
             return false;
         }

@@ -32,7 +32,7 @@ export class AssignToMeGitHubIssue implements HandleCommand {
     public requester: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string = "https://api.github.com/";
+    public apiUrl;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
@@ -64,7 +64,7 @@ export class AssignToMeGitHubIssue implements HandleCommand {
             })
             .then(() => Success)
             .catch(err => {
-                return github.handleError("Approve Commit", err, ctx);
+                return github.handleError("Assign to Me", err, ctx);
             });
     }
 }
