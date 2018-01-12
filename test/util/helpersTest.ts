@@ -822,7 +822,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
 
         const gitHubLogin = "jason-isbell";
         const slackId = "U1DBT400U";
-        const slackIdUnkownGitHub = "U1DBT400F";
+        const slackIdUnknownGitHub = "U1DBT400F";
         const screenName = "jason";
         const ctx: any = {
             teamId: "T3434343",
@@ -844,7 +844,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
                                 }],
                             }],
                         });
-                    } else if (params.chatId === slackIdUnkownGitHub) {
+                    } else if (params.chatId === slackIdUnknownGitHub) {
                         return Promise.resolve({
                             ChatTeam: [{
                                 members: [{
@@ -874,7 +874,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
         });
 
         it("should replace known user with slack screeName", done => {
-            const body = `<@${slackIdUnkownGitHub}>`;
+            const body = `<@${slackIdUnknownGitHub}>`;
             const expected = screenName;
             replaceChatIdWithGitHubId(body, ctx)
                 .then(r => {
@@ -883,7 +883,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
                 .then(done, done);
         });
 
-        it("should not replace unkown user", done => {
+        it("should not replace unknown user", done => {
             const body = `<@U123456>`;
             replaceChatIdWithGitHubId(body, ctx)
                 .then(r => {
