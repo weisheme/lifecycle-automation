@@ -1,5 +1,6 @@
 import { EventFired } from "@atomist/automation-client";
 import { Lifecycle, LifecycleHandler } from "../../../lifecycle/Lifecycle";
+import { AttachImagesNodeRenderer } from "../../../lifecycle/rendering/AttachImagesNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
@@ -33,6 +34,7 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
             renderers: [
                 new IssueNodeRenderer(),
                 new ReferencedIssuesNodeRenderer(),
+                new AttachImagesNodeRenderer(node => node.state === "open"),
                 new FooterNodeRenderer(node => node.title || node.body)],
             contributors: [
                 new AssignActionContributor(),

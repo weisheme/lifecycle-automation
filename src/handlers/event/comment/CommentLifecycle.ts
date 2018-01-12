@@ -3,6 +3,7 @@ import {
     Lifecycle,
     LifecycleHandler,
 } from "../../../lifecycle/Lifecycle";
+import { AttachImagesNodeRenderer } from "../../../lifecycle/rendering/AttachImagesNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
@@ -57,6 +58,15 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
                         new IssueCommentNodeRenderer(),
                         new PullRequestCommentNodeRenderer(),
                         new ReferencedIssuesNodeRenderer(),
+                        new AttachImagesNodeRenderer(node => {
+                            if (node.issue) {
+                                return node.issue.state === "open";
+                            } else if (node.pullRequest) {
+                                return node.pullRequest.state === "open";
+                            } else {
+                                return false;
+                            }
+                        }),
                         new FooterNodeRenderer(node => node.body && (node.issue || node.pullRequest))],
                     contributors: [
                         new AssignActionContributor(),
