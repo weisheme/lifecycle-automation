@@ -97,8 +97,7 @@ export class LinkRepo implements HandleCommand {
         return checkRepo(this.githubToken, this.apiUrl, this.name, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
-                    ctx.messageClient.respond(noRepoMessage(this.name, this.owner));
-                    return;
+                    return ctx.messageClient.respond(noRepoMessage(this.name, this.owner));
                 }
                 return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
                     graphql.ProviderIdFromOrg.Variables>(
