@@ -32,6 +32,7 @@ export class AttachImagesNodeRenderer extends AbstractIdentifiableContribution
         const imageRegExp = /https?:\/\/.*?\/(.*?\.(?:png|jpg|gif|jpeg|bmp))/gi;
         let match;
 
+        // tslint:disable-next-line:no-conditional-assignment
         while (match = imageRegExp.exec(node.body)) {
             const url = match[0];
             const image = match[1];
