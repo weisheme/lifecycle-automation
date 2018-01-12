@@ -192,7 +192,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         const message = "`" + url(commitUrl(repo, c), c.sha.substring(0, 7)) + "` " + cm;
 
         if (c.sha === pr.head.sha && c.builds && c.builds.length > 0) {
-            return  renderDecorator(c.builds[0], c.builds, message, this.emojiStyle);
+            return renderDecorator(c.builds[0], c.builds, message, this.emojiStyle);
         }
         return [message, null];
     }
