@@ -631,6 +631,10 @@ export namespace Issue {
   } 
 
   export type ChatTeam = {
+    team?: Team | null; 
+  } 
+
+  export type Team = {
     orgs?: Orgs[] | null; 
   } 
 
@@ -705,6 +709,11 @@ export namespace Issue {
 
   export type Channels = {
     name?: string | null; 
+    team?: _Team | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
   } 
 
   export type Org = {
@@ -860,6 +869,298 @@ export namespace ProviderIdFromOrg {
 
   export type Provider = {
     providerId?: string | null; 
+  } 
+}
+export namespace PullRequest {
+  export type Variables = {
+    teamId: string;
+    orgOwner: string;
+    repoName: string;
+    prName: string;
+  }
+
+  export type Query = {
+    ChatTeam?: ChatTeam[] | null; 
+  } 
+
+  export type ChatTeam = {
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    orgs?: Orgs[] | null; 
+  } 
+
+  export type Orgs = {
+    repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    pullRequest?: PullRequest[] | null; 
+  } 
+
+  export type PullRequest = {
+    _id?: Long | null; 
+    number?: number | null; 
+    name?: string | null; 
+    body?: string | null; 
+    state?: string | null; 
+    merged?: boolean | null; 
+    timestamp?: string | null; 
+    title?: string | null; 
+    createdAt?: string | null; 
+    mergedAt?: string | null; 
+    baseBranchName?: string | null; 
+    branchName?: string | null; 
+    head?: Head | null; 
+    lastAssignedBy?: LastAssignedBy | null; 
+    closedAt?: string | null; 
+    branch?: Branch | null; 
+    author?: Author | null; 
+    merger?: Merger | null; 
+    assignees?: Assignees[] | null; 
+    reviewers?: Reviewers[] | null; 
+    labels?: Labels[] | null; 
+    comments?: Comments[] | null; 
+    commits?: Commits[] | null; 
+    builds?: _Builds[] | null; 
+    reviews?: Reviews[] | null; 
+    repo?: _Repo | null; 
+  } 
+
+  export type Head = {
+    sha?: string | null; 
+  } 
+
+  export type LastAssignedBy = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    gitHubId?: GitHubId | null; 
+    chatId?: ChatId | null; 
+  } 
+
+  export type GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Branch = {
+    name?: string | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: _Person | null; 
+  } 
+
+  export type _Person = {
+    gitHubId?: _GitHubId | null; 
+    chatId?: _ChatId | null; 
+  } 
+
+  export type _GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type _ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Merger = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: __Person | null; 
+  } 
+
+  export type __Person = {
+    gitHubId?: __GitHubId | null; 
+    chatId?: __ChatId | null; 
+  } 
+
+  export type __GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type __ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Assignees = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: ___Person | null; 
+  } 
+
+  export type ___Person = {
+    gitHubId?: ___GitHubId | null; 
+    chatId?: ___ChatId | null; 
+  } 
+
+  export type ___GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type ___ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Reviewers = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: ____Person | null; 
+  } 
+
+  export type ____Person = {
+    gitHubId?: ____GitHubId | null; 
+    chatId?: ____ChatId | null; 
+  } 
+
+  export type ____GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type ____ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
+  } 
+
+  export type Comments = {
+    body?: string | null; 
+  } 
+
+  export type Commits = {
+    sha?: string | null; 
+    message?: string | null; 
+    timestamp?: string | null; 
+    tags?: Tags[] | null; 
+    statuses?: Statuses[] | null; 
+    author?: _Author | null; 
+    builds?: Builds[] | null; 
+  } 
+
+  export type Tags = {
+    name?: string | null; 
+    release?: Release | null; 
+  } 
+
+  export type Release = {
+    name?: string | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Statuses = {
+    state?: StatusState | null; 
+    description?: string | null; 
+    context?: string | null; 
+    targetUrl?: string | null; 
+  } 
+
+  export type _Author = {
+    login?: string | null; 
+    name?: string | null; 
+    person?: _____Person | null; 
+  } 
+
+  export type _____Person = {
+    gitHubId?: _____GitHubId | null; 
+    chatId?: _____ChatId | null; 
+  } 
+
+  export type _____GitHubId = {
+    login?: string | null; 
+  } 
+
+  export type _____ChatId = {
+    screenName?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type _Builds = {
+    name?: string | null; 
+    buildUrl?: string | null; 
+    buildId?: string | null; 
+    status?: BuildStatus | null; 
+  } 
+
+  export type Reviews = {
+    state?: ReviewState | null; 
+    by?: By[] | null; 
+  } 
+
+  export type By = {
+    login?: string | null; 
+  } 
+
+  export type _Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    channels?: Channels[] | null; 
+    allowRebaseMerge?: boolean | null; 
+    allowSquashMerge?: boolean | null; 
+    allowMergeCommit?: boolean | null; 
+    defaultBranch?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    team?: _Team | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+    team?: __Team | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type __Team = {
+    id?: string | null; 
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 }
 export namespace Webhook {

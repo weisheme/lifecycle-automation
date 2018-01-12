@@ -77,7 +77,7 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
                     ],
                     id: `comment_lifecycle/${repo.owner}/${repo.name}/${id}/${comment.gitHubId}`,
                     timestamp: Date.now().toString(),
-                    post: updateOnly ? "update_only" : "always",
+                    post: updateOnly ? "update_only" : undefined,
                     channels: repo.channels.map(c => ({ name: c.name, teamId: c.team.id })),
                     extract: (type: string) => {
                         if (type === "repo") {

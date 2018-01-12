@@ -110,7 +110,7 @@ export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements 
                     fallback: "Paging",
                     footer: `Search: ${this.q} | Total results: ${result.data.total_count}`
                     + ` | Page: ${this.page} of ${Math.ceil(result.data.total_count / +this.perPage)}`,
-                    ts: Math.floor(new Date().getTime() / 1000),
+                    ts: Math.floor(Date.now() / 1000),
                     actions,
                 };
                 response.attachments.push(pagingAttachment);
@@ -131,7 +131,7 @@ export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements 
                     fallback: "Paging",
                     mrkdwn_in: ["text"],
                     actions,
-                    ts: Math.floor(new Date().getTime() / 1000),
+                    ts: Math.floor(Date.now() / 1000),
                 },
                 ],
             };
@@ -140,7 +140,15 @@ export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements 
     }
 
     protected createActions(issue: any): Action[] {
-        return [buttonForCommand({ text: "Details" },
-            "DisplayGitHubIssue", { owner: this.owner, repo: this.repo, issue: issue.number })];
+        let command;
+        if (issue.pull_request) {
+            command = "DisplayGitHubPullRequest";
+        } else {
+            command = "DisplayGitHubIssue";
+        }
+        return [
+            buttonForCommand({ text: "Details" },
+                command, { owner: this.owner, repo: this.repo, issue: issue.number }),
+        ];
     }
 }

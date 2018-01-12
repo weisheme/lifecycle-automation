@@ -67,8 +67,8 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
             ],
             id: `pullrequest_lifecycle/${repo.owner}/${repo.name}/${pullrequest.number}`,
             timestamp,
-            ttl: (1000 * 60 * 60 * 8).toString(),
-            post: updateOnly ? "update_only" : "always",
+            // ttl: (1000 * 60 * 60 * 8).toString(),
+            post: updateOnly ? "update_only" : undefined,
             channels: pullrequest.repo.channels.map(c => ({ name: c.name, teamId: c.team.id })),
             extract: (type: string) => {
                 if (type === "repo") {
