@@ -107,6 +107,9 @@ export class CreateGitHubIssue implements HandleCommand {
                             name: this.repo,
                             channels: [{
                                 name: this.channelName,
+                                team: {
+                                    id: this.teamId,
+                                },
                             }],
                         },
                         createdAt: gi.created_at,
