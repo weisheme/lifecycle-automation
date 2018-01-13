@@ -5,8 +5,14 @@ test/
 tmp/
 build/
 release/
+scripts/
 .travis.yml
 *.bash
+.cfignore
+.dockerignore
+.travis.yml
+Dockerfile
+manifest-*.yml
 tsconfig.*
 tslint.json
 yarn.lock
