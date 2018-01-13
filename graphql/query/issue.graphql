@@ -1,4 +1,9 @@
-query Issue($teamId: ID!, $orgOwner: String!, $repoName: String!, $issueName: String!) {
+query Issue(
+  $teamId: ID!
+  $orgOwner: String!
+  $repoName: String!
+  $issueName: String!
+) {
   ChatTeam(id: $teamId) {
     team {
       orgs(owner: $orgOwner) {

@@ -1,4 +1,9 @@
-query PullRequest($teamId: ID!, $orgOwner: String!, $repoName: String!, $prName: String!) {
+query PullRequest(
+  $teamId: ID!
+  $orgOwner: String!
+  $repoName: String!
+  $prName: String!
+) {
   ChatTeam(id: $teamId) {
     team {
       orgs(owner: $orgOwner) {
