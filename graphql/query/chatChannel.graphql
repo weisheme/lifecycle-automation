@@ -1,4 +1,9 @@
-query ChatChannel($teamId: ID!, $channelName: String!, $repoOwner: String!, $repoName: String!) {
+query ChatChannel(
+  $teamId: ID!
+  $channelName: String!
+  $repoOwner: String!
+  $repoName: String!
+) {
   ChatTeam(id: $teamId) {
     channels(name: $channelName) @required {
       name
@@ -9,4 +14,3 @@ query ChatChannel($teamId: ID!, $channelName: String!, $repoOwner: String!, $rep
     }
   }
 }
-

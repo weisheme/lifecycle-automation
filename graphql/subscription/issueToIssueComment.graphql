@@ -1,5 +1,4 @@
-subscription IssueToIssueCommentLifecycle
-{
+subscription IssueToIssueCommentLifecycle {
   Issue {
     _id
     title
@@ -81,4 +80,3 @@ subscription IssueToIssueCommentLifecycle
     }
   }
 }
-

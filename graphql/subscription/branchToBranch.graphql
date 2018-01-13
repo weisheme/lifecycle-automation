@@ -41,4 +41,3 @@ subscription BranchToBranchLifecycle {
     timestamp
   }
 }
-

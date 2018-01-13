@@ -1,5 +1,4 @@
-subscription NotifyMentionedOnIssue
-{
+subscription NotifyMentionedOnIssue {
   Issue {
     _id
     name
@@ -72,5 +71,3 @@ subscription NotifyMentionedOnIssue
     }
   }
 }
-
-

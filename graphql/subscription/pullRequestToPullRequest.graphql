@@ -1,5 +1,4 @@
-subscription PullRequestToPullRequestLifecycle
-{
+subscription PullRequestToPullRequestLifecycle {
   PullRequest {
     _id
     number
@@ -176,4 +175,3 @@ subscription PullRequestToPullRequestLifecycle
     }
   }
 }
-

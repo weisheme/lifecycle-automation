@@ -1,4 +1,8 @@
-mutation SetChatTeamPreference($teamId: String!, $name: String!, $value: String!) {
+mutation SetChatTeamPreference(
+  $teamId: String!
+  $name: String!
+  $value: String!
+) {
   setChatTeamPreference(chatTeamId: $teamId, name: $name, value: $value) {
     name
     value

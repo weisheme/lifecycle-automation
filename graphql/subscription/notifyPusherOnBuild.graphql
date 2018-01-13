@@ -1,5 +1,4 @@
-subscription NotifyPusherOnBuild
-{
+subscription NotifyPusherOnBuild {
   Build {
     _id
     status
@@ -42,4 +41,3 @@ subscription NotifyPusherOnBuild
     }
   }
 }
-

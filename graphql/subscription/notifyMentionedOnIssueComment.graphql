@@ -1,5 +1,4 @@
-subscription NotifyMentionedOnIssueComment
-{
+subscription NotifyMentionedOnIssueComment {
   Comment {
     _id
     gitHubId
@@ -47,8 +46,3 @@ subscription NotifyMentionedOnIssueComment
     }
   }
 }
-
-
-
-
-

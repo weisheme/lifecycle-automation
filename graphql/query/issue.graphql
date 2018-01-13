@@ -63,4 +63,3 @@ query Issue($teamId: ID!, $orgOwner: String!, $repoName: String!, $issueName: St
     }
   }
 }
-

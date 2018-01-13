@@ -1,5 +1,4 @@
-subscription CommentToPullRequestLifecycle
-{
+subscription CommentToPullRequestLifecycle {
   Comment {
     _id
     pullRequest {
@@ -178,4 +177,3 @@ subscription CommentToPullRequestLifecycle
     }
   }
 }
-

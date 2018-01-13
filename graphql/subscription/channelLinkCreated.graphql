@@ -1,5 +1,4 @@
-subscription ChannelLinkCreated
-{
+subscription ChannelLinkCreated {
   ChannelLink {
     channel {
       name
@@ -22,6 +21,3 @@ subscription ChannelLinkCreated
     }
   }
 }
-
-
-
