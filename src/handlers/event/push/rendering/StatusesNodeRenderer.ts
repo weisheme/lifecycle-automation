@@ -51,9 +51,9 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution imple
         // Now each one
         const lines = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
             if (s.targetUrl != null && s.targetUrl.length > 0) {
-                return `${this.emoji(s.state)} ${s.description} - ${url(s.targetUrl, s.context)}`;
+                return `${this.emoji(s.state)} ${s.description} | ${url(s.targetUrl, s.context)}`;
             } else {
-                return `${this.emoji(s.state)} ${s.description} - ${s.context}`;
+                return `${this.emoji(s.state)} ${s.description} | ${s.context}`;
             }
         });
 
