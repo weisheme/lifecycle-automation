@@ -51,7 +51,7 @@ export class CreateGitHubIssue implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl;
+    public apiUrl: string;
 
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
