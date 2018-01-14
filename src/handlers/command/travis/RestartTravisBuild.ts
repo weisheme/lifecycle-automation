@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    Failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -7,9 +8,12 @@ import {
     MappedParameters,
     Parameter,
     Secret,
-    Secrets, Tags,
+    Secrets,
+    Tags,
 } from "@atomist/automation-client";
+import { codeBlock, codeLine } from "@atomist/slack-messages";
 import axios from "axios";
+import { error, success } from "../../../util/messages";
 
 const buildIdParameter = {
     displayName: "Build ID",
@@ -72,16 +76,20 @@ export class RestartTravisBuild implements HandleCommand {
                     });
             })
             .then(() => {
-                return ctx.messageClient.respond(
-                    `Successfully restarted build ${this.buildId} on \`${this.owner}/${this.repo}\``);
+                return ctx.messageClient.respond(success(
+                    "Restart Build",
+                    `Successfully restarted build ${
+                        codeLine(this.buildId)} on ${codeLine(`${this.owner}/${this.repo}`)}`));
             })
             .then(() => {
                 return Promise.resolve({ code: 0 });
             })
             .catch(reason => {
-                return ctx.messageClient.respond(
-                    `Failed to restart build ${this.buildId}: \`${reason}\``).then(() => {
-                        return { code: 1 };
+                return ctx.messageClient.respond(error(
+                    "Restart Build",
+                    `Failed to restart build ${codeLine(this.buildId)}:\n ${codeBlock(reason)}`, ctx))
+                    .then(() => {
+                        return Failure;
                     });
             });
     }
