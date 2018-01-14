@@ -38,7 +38,7 @@ export function linkSlackChannelToRepo(
         "../../../graphql/mutation/linkSlackChannelToRepo",
         { teamId, channelId, repo, owner, providerId },
         {},
-        __dirname
+        __dirname,
     );
 }
 

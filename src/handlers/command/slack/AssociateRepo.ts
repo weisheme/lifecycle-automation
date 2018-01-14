@@ -44,7 +44,7 @@ export function inviteUserToSlackChannel(
         "../../../graphql/mutation/inviteUserToSlackChannel",
         { teamId, channelId, userId },
         {},
-        __dirname
+        __dirname,
     );
 }
 

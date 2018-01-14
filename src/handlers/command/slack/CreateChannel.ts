@@ -24,7 +24,7 @@ export function createChannel(ctx: HandlerContext,
         "../../../graphql/mutation/createSlackChannel",
         { teamId, name: channelName },
         {},
-        __dirname
+        __dirname,
     );
 }
 

@@ -20,7 +20,7 @@ export function addBotToSlackChannel(ctx: HandlerContext,
         "../../../graphql/mutation/addBotToSlackChannel",
         { teamId, channelId },
         {},
-        __dirname
+        __dirname,
     );
 }
 
