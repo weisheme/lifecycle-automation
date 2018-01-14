@@ -94,7 +94,7 @@
     "gql:gen": "gql-gen --file node_modules/@atomist/automation-client/graph/schema.cortex.json --template typescript --no-schema --out src/typings/types.ts 'src/graphql/**/*.graphql'",
     "lint": "npm-run-all lint:ts lint:gql",
     "lint:ts": "tslint --format verbose --project . --exclude '{build,node_modules}/**' \"**/*.ts\"",
-    "lint:gql": "prettier --list-different \"graphql/**/*.graphql\"",
+    "lint:gql": "prettier --list-different \"src/graphql/**/*.graphql\"",
     "lint:fix": "npm-run-all lint:ts:fix fmt:gql",
     "lint:ts:fix": "npm run lint:ts -- --fix",
     "start": "atomist start --no-install --no-compile",
