@@ -44,7 +44,7 @@ export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements 
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl;
+    public apiUrl: string;
 
     @MappedParameter(MappedParameters.SlackChannelName)
     public channel: string;

@@ -32,7 +32,7 @@ export class AssignToMeGitHubIssue implements HandleCommand {
     public requester: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl;
+    public apiUrl: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;

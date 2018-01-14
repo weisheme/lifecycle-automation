@@ -27,7 +27,7 @@ export class ReopenGitHubIssue implements HandleCommand {
     public issue: number;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl;
+    public apiUrl: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;

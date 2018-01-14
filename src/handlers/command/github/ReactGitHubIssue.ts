@@ -30,7 +30,7 @@ export class ReactGitHubIssue implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl;
+    public apiUrl: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;

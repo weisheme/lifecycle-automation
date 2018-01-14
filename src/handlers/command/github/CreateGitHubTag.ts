@@ -58,7 +58,7 @@ export class CreateGitHubTag implements HandleCommand {
     public owner: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl;
+    public apiUrl: string;
 
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;

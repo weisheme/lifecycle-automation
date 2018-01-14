@@ -11,9 +11,15 @@ import {
     Secrets,
     Tags,
 } from "@atomist/automation-client";
-import { codeBlock, codeLine } from "@atomist/slack-messages";
+import {
+    codeBlock,
+    codeLine
+} from "@atomist/slack-messages";
 import axios from "axios";
-import { error, success } from "../../../util/messages";
+import {
+    error,
+    success
+} from "../../../util/messages";
 
 const buildIdParameter = {
     displayName: "Build ID",
