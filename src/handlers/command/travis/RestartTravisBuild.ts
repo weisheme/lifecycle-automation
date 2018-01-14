@@ -13,12 +13,12 @@ import {
 } from "@atomist/automation-client";
 import {
     codeBlock,
-    codeLine
+    codeLine,
 } from "@atomist/slack-messages";
 import axios from "axios";
 import {
     error,
-    success
+    success,
 } from "../../../util/messages";
 
 const buildIdParameter = {
