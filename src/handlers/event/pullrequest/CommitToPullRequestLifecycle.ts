@@ -13,7 +13,7 @@ import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
  * Send a lifecycle message on Commit events.
  */
 @EventHandler("Send a lifecycle message on Commit events",
-    GraphQL.subscriptionFromFile("graphql/subscription/commitToPullRequest"),
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/commitToPullRequest", __dirname),
 )
 @Tags("lifecycle", "pr", "commit")
 export class CommitToPullRequestLifecycle

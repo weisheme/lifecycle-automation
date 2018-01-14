@@ -18,7 +18,7 @@ import { BranchToBranchLifecycle } from "./BranchToBranchLifecycle";
  * Send a lifecycle message on PullRequest events.
  */
 @EventHandler("Send a lifecycle message on Branch events",
-    GraphQL.subscriptionFromFile("graphql/subscription/pullRequestToBranch"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/pullRequestToBranch", __dirname))
 @Tags("lifecycle", "branch", "pr")
 export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullRequestToBranchLifecycle.Subscription> {
 
@@ -28,9 +28,10 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
 
         return ctx.graphClient.executeQueryFromFile
             <graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>(
-            "graphql/query/branchWithPullRequest",
+            "../../../graphql/query/branchWithPullRequest",
             { id: pr.branch.id },
-            { fetchPolicy: "network-only" })
+            { fetchPolicy: "network-only" },
+            __dirname)
             .then(result => {
                 if (result && result.Branch && result.Branch.length > 0) {
                     const handler = new BranchToBranchLifecycle();

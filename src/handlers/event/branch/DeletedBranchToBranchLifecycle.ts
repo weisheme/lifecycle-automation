@@ -13,7 +13,7 @@ import { BranchLifecycle } from "./BranchLifecycle";
  * Send a lifecycle message on DeletedBranch events.
  */
 @EventHandler("Send a lifecycle message on DeletedBranch events",
-    GraphQL.subscriptionFromFile("graphql/subscription/deletedBranchToBranch"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/deletedBranchToBranch", __dirname))
 @Tags("lifecycle", "branch", "pr")
 export class DeletedBranchToBranchLifecycle
     extends BranchLifecycle<graphql.BranchToBranchLifecycle.Subscription> {

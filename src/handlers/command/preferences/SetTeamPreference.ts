@@ -79,8 +79,10 @@ export class SetTeamPreference implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatTeamPreferences.Query,
-            graphql.ChatTeamPreferences.Variables>("graphql/query/chatTeamPreferences",
-            { teamId: this.teamId }, { fetchPolicy: "network-only" })
+            graphql.ChatTeamPreferences.Variables>("../../../graphql/query/chatTeamPreferences",
+            { teamId: this.teamId },
+            { fetchPolicy: "network-only" },
+            __dirname)
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].preferences") as graphql.ChatTeamPreferences.Preferences[];
@@ -103,8 +105,11 @@ export class SetTeamPreference implements HandleCommand {
                 }
                 preferences[this.name] = value;
                 return ctx.graphClient.executeMutationFromFile<graphql.SetChatTeamPreference.Mutation,
-                    graphql.SetChatTeamPreference.Variables>("graphql/mutation/setChatTeamPreference",
-                    { teamId: this.teamId, name: this.key, value: JSON.stringify(preferences) });
+                    graphql.SetChatTeamPreference.Variables>(
+                        "../../../graphql/mutation/setChatTeamPreference",
+                        { teamId: this.teamId, name: this.key, value: JSON.stringify(preferences) },
+                        {},
+                        __dirname);
             })
             .then(() => {
                 const msg: SlackMessage = {

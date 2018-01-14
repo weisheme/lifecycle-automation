@@ -17,7 +17,7 @@ import { apiUrl } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
 @EventHandler("Send Fingerprint changes to GitHub statuses",
-    GraphQL.subscriptionFromFile("graphql/subscription/statusOnParentImpact"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/statusOnParentImpact", __dirname))
 @Tags("lifecycle", "impact")
 export class StatusOnParentImpact implements HandleEvent<graphql.StatusOnParentImpact.Subscription> {
 

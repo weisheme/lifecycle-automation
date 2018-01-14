@@ -13,7 +13,7 @@ import { IssueLifecycleHandler } from "./IssueLifecycle";
  * Send a lifecycle message on Issue events.
  */
 @EventHandler("Send a lifecycle message on Issue events",
-    GraphQL.subscriptionFromFile("graphql/subscription/issueToIssue"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/issueToIssue", __dirname))
 @Tags("lifecycle", "issue")
 export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueToIssueLifecycle.Subscription> {
 

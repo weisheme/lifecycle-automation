@@ -13,7 +13,7 @@ import * as graphql from "../../../typings/types";
 import { autoMerge } from "./autoMerge";
 
 @EventHandler("Auto merge reviewed and approved pull requests on PullRequest events",
-    GraphQL.subscriptionFromFile("graphql/subscription/autoMergeOnPullRequest"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/autoMergeOnPullRequest", __dirname))
 @Tags("lifecycle", "pr", "automerge")
 export class AutoMergeOnPullRequest implements HandleEvent<graphql.AutoMergeOnPullRequest.Subscription> {
 

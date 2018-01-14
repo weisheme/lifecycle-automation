@@ -17,8 +17,10 @@ export function addBotToSlackChannel(ctx: HandlerContext,
                                      teamId: string,
                                      channelId: string): Promise<AddBotToSlackChannel.Mutation> {
     return ctx.graphClient.executeMutationFromFile<AddBotToSlackChannel.Mutation, AddBotToSlackChannel.Variables>(
-        "graphql/mutation/addBotToSlackChannel",
+        "../../../graphql/mutation/addBotToSlackChannel",
         { teamId, channelId },
+        {},
+        __dirname
     );
 }
 

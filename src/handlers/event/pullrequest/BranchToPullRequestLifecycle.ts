@@ -13,7 +13,7 @@ import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
  * Send a lifecycle message on Branch events.
  */
 @EventHandler("Send a lifecycle message on Branch events",
-    GraphQL.subscriptionFromFile("graphql/subscription/branchToPullRequest"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/branchToPullRequest", __dirname))
 @Tags("lifecycle", "pr", "branch")
 export class BranchToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.BranchToPullRequestLifecycle.Subscription> {

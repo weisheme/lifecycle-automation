@@ -213,8 +213,10 @@ export function loadIssueOrPullRequest(owner: string,
                                        names: string[],
                                        ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
     return ctx.graphClient.executeQueryFromFile<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>(
-        "graphql/query/issueOrPr",
-        { owner, repo, names })
+        "../graphql/query/issueOrPr",
+        { owner, repo, names },
+        {},
+        __dirname)
         .then(result => {
             if (result && result.Org && result.Org.length > 0) {
                 return result.Org[0];
@@ -295,8 +297,10 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
 export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): Promise<graphql.GitHubId.GitHubId[]> {
     if (gitHubIds && gitHubIds.length > 0) {
         return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
-            "graphql/query/gitHubId",
-            { gitHubIds })
+            "../graphql/query/gitHubId",
+            { gitHubIds },
+            {},
+            __dirname)
             .then(result => {
                 if (result) {
                     if (result.GitHubId && result.GitHubId.length > 0) {
@@ -317,8 +321,10 @@ export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): 
 
 export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promise<string> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-        "graphql/query/chatId",
-        { teamId: ctx.teamId, chatId })
+        "../graphql/query/chatId",
+        { teamId: ctx.teamId, chatId },
+        {},
+        __dirname)
         .then(result => {
             if (result) {
                 if (result.ChatTeam && result.ChatTeam.length > 0) {
@@ -340,8 +346,10 @@ export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promi
 
 export function loadChatIdByChatId(ctx: HandlerContext, chatId: string): Promise<graphql.ChatId.ChatId> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-        "graphql/query/chatId",
-        { teamId: ctx.teamId, chatId })
+        "../graphql/query/chatId",
+        { teamId: ctx.teamId, chatId },
+        {},
+        __dirname)
         .then(result => {
             if (result) {
                 if (result.ChatTeam && result.ChatTeam.length > 0) {
@@ -363,8 +371,10 @@ export function loadChatIdByChatId(ctx: HandlerContext, chatId: string): Promise
 
 export function loadChatTeam(teamId: string, ctx: HandlerContext): Promise<graphql.ChatTeam.ChatTeam> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatTeam.Query, graphql.ChatTeam.Variables>(
-        "graphql/query/chatTeam",
-        { teamId })
+        "../graphql/query/chatTeam",
+        { teamId },
+        {},
+        __dirname)
         .then(result => {
             return _.get(result, "ChatTeam[0]");
         })
@@ -476,8 +486,10 @@ export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext
     if (matches != null) {
         return Promise.all(matches.map(m => {
             return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-                "graphql/query/chatId",
-                { teamId: ctx.teamId, chatId: m })
+                "../graphql/query/chatId",
+                { teamId: ctx.teamId, chatId: m },
+                {},
+                __dirname)
                 .then(result => {
                     if (result) {
                         if (result.ChatTeam && result.ChatTeam.length > 0) {

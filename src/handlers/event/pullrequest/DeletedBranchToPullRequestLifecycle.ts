@@ -13,7 +13,7 @@ import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
  * Send a lifecycle message on DeletedBranch events.
  */
 @EventHandler("Send a lifecycle message on DeletedBranch events",
-    GraphQL.subscriptionFromFile("graphql/subscription/deletedBranchToPullRequest"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/deletedBranchToPullRequest", __dirname))
 @Tags("lifecycle", "pr", "status")
 export class DeletedBranchToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.DeletedBranchToPullRequestLifecycle.Subscription> {

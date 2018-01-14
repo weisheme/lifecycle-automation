@@ -21,8 +21,10 @@ export function createChannel(ctx: HandlerContext,
                               teamId: string,
                               channelName: string): Promise<CreateSlackChannel.Mutation> {
     return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
-        "graphql/mutation/createSlackChannel",
+        "../../../graphql/mutation/createSlackChannel",
         { teamId, name: channelName },
+        {},
+        __dirname
     );
 }
 

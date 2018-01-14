@@ -277,8 +277,10 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
 
     private loadPreferences(ctx: HandlerContext, key: string): Promise<graphql.ChatTeamPreferences.Preferences[]> {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatTeamPreferences.Query,
-            graphql.ChatTeamPreferences.Variables>("graphql/query/chatTeamPreferences",
-            { teamId: this.teamId }, { fetchPolicy: "network-only" })
+            graphql.ChatTeamPreferences.Variables>("../../../graphql/query/chatTeamPreferences",
+            { teamId: this.teamId },
+            { fetchPolicy: "network-only" },
+            __dirname)
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].preferences") as graphql.ChatTeamPreferences.Preferences[];

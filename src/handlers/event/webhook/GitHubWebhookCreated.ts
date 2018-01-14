@@ -29,7 +29,7 @@ import { DefaultBotName } from "../../command/slack/LinkRepo";
 const Channels = ["dev", "engineering", "development", "devops"];
 
 @EventHandler("Displays a welcome message when a new org webhook is installed",
-    GraqhQL.subscriptionFromFile("graphql/subscription/githubOrgWebhook"))
+    GraqhQL.subscriptionFromFile("../../../graphql/subscription/githubOrgWebhook", __dirname))
 @Tags("enrollment")
 export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCreated.Subscription> {
 

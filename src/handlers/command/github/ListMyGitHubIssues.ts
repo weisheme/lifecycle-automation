@@ -48,8 +48,10 @@ export class ListMyGitHubIssues implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-            "graphql/query/chatId",
-            { teamId: ctx.teamId, chatId: this.requester })
+            "../../../graphql/query/chatId",
+            { teamId: ctx.teamId, chatId: this.requester },
+            {},
+            __dirname)
             .then(result => {
                 const person = _.get(result, "ChatTeam[0].members[0].person") as graphql.ChatId.Person;
                 if (person) {
@@ -84,11 +86,13 @@ export class ListMyGitHubIssues implements HandleCommand {
     protected searchReposFromChannel(ctx: HandlerContext): Promise<string> {
         if (this.channel) {
             return ctx.graphClient.executeQueryFromFile<graphql.MappedChannels.Query, graphql.MappedChannels.Variables>(
-                "graphql/query/mappedChannels",
+                "../../../graphql/query/mappedChannels",
                 {
                     teamId: this.teamId,
                     name: this.channel,
-                })
+                },
+                {},
+                __dirname)
                 .then(result => {
                     const repos = _.get(result, "ChatChannel[0].repos") as graphql.MappedChannels.Repos[] || [];
                     return repos.map(r => `repo:${r.owner}/${r.name}`).join(" ");

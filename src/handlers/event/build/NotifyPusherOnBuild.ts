@@ -13,7 +13,7 @@ import * as graphql from "../../../typings/types";
 import { buildNotification } from "../../../util/notifications";
 
 @EventHandler("Notify pushers of failing builds in Slack",
-    GraphQL.subscriptionFromFile("graphql/subscription/notifyPusherOnBuild"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyPusherOnBuild", __dirname))
 @Tags("lifecycle", "build", "notification")
 export class NotifyPusherOnBuild implements HandleEvent<graphql.NotifyPusherOnBuild.Subscription> {
 

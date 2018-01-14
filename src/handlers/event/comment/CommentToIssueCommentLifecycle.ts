@@ -13,7 +13,7 @@ import { CommentLifecycleHandler } from "./CommentLifecycle";
  * Send a lifecycle message on Comment events.
  */
 @EventHandler("Send a lifecycle message on Comment events",
-    GraphQL.subscriptionFromFile("graphql/subscription/commentToIssueComment"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/commentToIssueComment", __dirname))
 @Tags("lifecycle", "issue comment", "comment")
 export class CommentToIssueCommentLifecycle
     extends CommentLifecycleHandler<graphql.CommentToIssueCommentLifecycle.Subscription> {

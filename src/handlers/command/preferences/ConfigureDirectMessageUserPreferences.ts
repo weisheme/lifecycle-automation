@@ -61,8 +61,10 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
 
         } else {
             return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
-                graphql.ChatId.Variables>("graphql/query/chatId",
-                { teamId: ctx.teamId, chatId: this.requester }, { fetchPolicy: "network-only" })
+                graphql.ChatId.Variables>("../../../graphql/query/chatId",
+                { teamId: ctx.teamId, chatId: this.requester },
+                { fetchPolicy: "network-only" },
+                __dirname)
                 .then(result => {
                     const preferences =
                         _.get(result, "ChatTeam[0].members[0].person.chatId.preferences");

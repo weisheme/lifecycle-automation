@@ -22,7 +22,7 @@ import { reviewerNotification } from "../../../util/notifications";
  * This DM can be disabled via the `@atomist configured dm` command.
  */
 @EventHandler("Notify pull request reviewer about new commits",
-    GraphQL.subscriptionFromFile("graphql/subscription/notifyReviewerOnPush"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyReviewerOnPush", __dirname))
 @Tags("lifecycle", "pr", "notification")
 export class NotifyReviewerOnPush implements HandleEvent<graphql.NotifyReviewerOnPush.Subscription> {
 

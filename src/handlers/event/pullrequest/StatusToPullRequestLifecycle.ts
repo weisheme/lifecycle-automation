@@ -5,7 +5,7 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { ChatTeam, Preferences } from "../../../lifecycle/Lifecycle";
+import { ChatTeam } from "../../../lifecycle/Lifecycle";
 import * as graphql from "../../../typings/types";
 import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 
@@ -13,7 +13,7 @@ import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
  * Send a lifecycle message on Status events.
  */
 @EventHandler("Send a lifecycle message on Status events",
-    GraphQL.subscriptionFromFile("graphql/subscription/statusToPullRequest"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/statusToPullRequest", __dirname))
 @Tags("lifecycle", "pr", "status")
 export class StatusToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.StatusToPullRequestLifecycle.Subscription> {

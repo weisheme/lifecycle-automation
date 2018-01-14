@@ -13,7 +13,7 @@ import * as graphql from "../../../typings/types";
 import { prAuthorReviewNotification } from "../../../util/notifications";
 
 @EventHandler("Notify pull request authors in slack",
-    GraphQL.subscriptionFromFile("graphql/subscription/notifyAuthorOnReview"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyAuthorOnReview", __dirname))
 @Tags("lifecycle", "review", "notification")
 export class NotifyAuthorOnReview implements HandleEvent<graphql.NotifyAuthorOnReview.Subscription> {
 

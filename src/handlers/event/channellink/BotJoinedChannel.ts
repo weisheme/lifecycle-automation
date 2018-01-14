@@ -19,13 +19,20 @@ import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 
 import * as graphql from "../../../typings/types";
-import { repoChannelName, repoSlackLink, repoSlug } from "../../../util/helpers";
+import {
+    repoChannelName,
+    repoSlackLink,
+    repoSlug,
+} from "../../../util/helpers";
 import { LinkOwnerRepo } from "../../command/slack/LinkOwnerRepo";
-import { DefaultBotName, LinkRepo } from "../../command/slack/LinkRepo";
+import {
+    DefaultBotName,
+    LinkRepo,
+} from "../../command/slack/LinkRepo";
 import { NoLinkRepo } from "../../command/slack/NoLinkRepo";
 
 @EventHandler("Display a helpful message when the bot joins a channel",
-    GraphQL.subscriptionFromFile("graphql/subscription/botJoinedChannel"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/botJoinedChannel", __dirname))
 @Tags("enrollment")
 export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Subscription> {
 

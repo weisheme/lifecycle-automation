@@ -14,7 +14,7 @@ import * as graphql from "../../../typings/types";
 import { autoMerge } from "./autoMerge";
 
 @EventHandler("Auto merge reviewed and approved pull requests on Build events",
-    GraphQL.subscriptionFromFile("graphql/subscription/autoMergeOnBuild"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/autoMergeOnBuild", __dirname))
 @Tags("lifecycle", "pr", "automerge")
 export class AutoMergeOnBuild implements HandleEvent<graphql.AutoMergeOnBuild.Subscription> {
 

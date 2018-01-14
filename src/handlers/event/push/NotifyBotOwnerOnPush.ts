@@ -10,7 +10,7 @@ import * as graphql from "../../../typings/types";
 import { AbstractNotifyBotOwner } from "../AbstractNotifyBotOwner";
 
 @EventHandler("Notify the bot owner of GitHub activity in Slack",
-    GraphQL.subscriptionFromFile("graphql/subscription/notifyBotOwnerOnPush"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyBotOwnerOnPush", __dirname))
 @Tags("lifecycle", "notification")
 export class NotifyBotOwnerOnPush extends AbstractNotifyBotOwner<graphql.NotifyBotOwnerOnPush.Subscription> {
 

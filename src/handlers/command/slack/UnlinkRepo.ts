@@ -68,8 +68,10 @@ export class UnlinkRepo implements HandleCommand {
                 } else {
                     return ctx.graphClient.executeMutationFromFile<graphql.UnlinkSlackChannelFromRepo.Mutation,
                         graphql.UnlinkSlackChannelFromRepo.Variables>(
-                        "graphql/mutation/unlinkSlackChannelFromRepo",
-                        { teamId: this.teamId, channelId: this.channelId, repo: this.name, owner: this.owner })
+                        "../../../graphql/mutation/unlinkSlackChannelFromRepo",
+                        { teamId: this.teamId, channelId: this.channelId, repo: this.name, owner: this.owner },
+                        {},
+                        __dirname)
                         .then(() => ctx.messageClient.respond(successMessage(this.name, this.owner),
                             { id: this.msgId }));
                 }

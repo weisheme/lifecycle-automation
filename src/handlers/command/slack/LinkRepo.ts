@@ -35,8 +35,10 @@ export function linkSlackChannelToRepo(
 ): Promise<LinkSlackChannelToRepo.Mutation> {
 
     return ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation, LinkSlackChannelToRepo.Variables>(
-        "graphql/mutation/linkSlackChannelToRepo",
+        "../../../graphql/mutation/linkSlackChannelToRepo",
         { teamId, channelId, repo, owner, providerId },
+        {},
+        __dirname
     );
 }
 
@@ -101,8 +103,10 @@ export class LinkRepo implements HandleCommand {
                 }
                 return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
                     graphql.ProviderIdFromOrg.Variables>(
-                    "graphql/query/providerIdFromOrg",
-                    { owner: this.owner })
+                    "../../../graphql/query/providerIdFromOrg",
+                    { owner: this.owner },
+                    {},
+                    __dirname)
                     .then(result => {
                         const providerId = _.get(result, "Org[0].provider.providerId");
                         return linkSlackChannelToRepo(

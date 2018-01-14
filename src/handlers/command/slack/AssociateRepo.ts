@@ -41,8 +41,10 @@ export function inviteUserToSlackChannel(
 
     return ctx.graphClient.executeMutationFromFile<InviteUserToSlackChannel.Mutation,
         InviteUserToSlackChannel.Variables>(
-        "graphql/mutation/inviteUserToSlackChannel",
+        "../../../graphql/mutation/inviteUserToSlackChannel",
         { teamId, channelId, userId },
+        {},
+        __dirname
     );
 }
 
@@ -98,8 +100,10 @@ export class AssociateRepo implements HandleCommand {
                     .then(() => {
                         return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
                             graphql.ProviderIdFromOrg.Variables>(
-                            "graphql/query/providerIdFromOrg",
-                            { owner: this.owner })
+                            "../../../graphql/query/providerIdFromOrg",
+                            { owner: this.owner },
+                            {},
+                            __dirname)
                             .then(result => {
                                 const providerId = _.get(result, "Org[0].provider.providerId");
                                 return linkSlackChannelToRepo(

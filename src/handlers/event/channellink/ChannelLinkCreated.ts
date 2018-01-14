@@ -30,7 +30,7 @@ import * as github from "../../command/github/gitHubApi";
 import { InstallGitHubOrgWebhook, InstallGitHubRepoWebhook } from "../../command/github/InstallGitHubWebhook";
 
 @EventHandler("Display an unlink message when a channel is linked",
-    GraqhQL.subscriptionFromFile("graphql/subscription/channelLinkCreated"))
+    GraqhQL.subscriptionFromFile("../../../graphql/subscription/channelLinkCreated", __dirname))
 @Tags("enrollment")
 export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreated.Subscription> {
 
@@ -70,8 +70,10 @@ Please use one of the buttons below to install a Webhook in your repository or o
                 return true;
             } else if (repo.org.ownerType === "organization") {
                 return ctx.graphClient.executeQueryFromFile<graphql.Webhook.Query, graphql.Webhook.Variables>(
-                    "graphql/query/webhook",
-                    { owner: repo.owner })
+                    "../../../graphql/query/webhook",
+                    { owner: repo.owner },
+                    {},
+                    __dirname)
                 .then(result => {
                     return _.get(result, "GitHubOrgWebhook[0].url") != null;
                 })

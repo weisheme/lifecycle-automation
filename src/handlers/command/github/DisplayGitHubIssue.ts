@@ -40,8 +40,11 @@ export class DisplayGitHubIssue implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeQueryFromFile<graphql.Issue.Query, graphql.Issue.Variables>("graphql/query/issue",
-            { teamId: ctx.teamId, repoName: this.repo, issueName: this.issue.toString(), orgOwner: this.owner })
+        return ctx.graphClient.executeQueryFromFile<graphql.Issue.Query, graphql.Issue.Variables>(
+            "../../../graphql/query/issue",
+            { teamId: ctx.teamId, repoName: this.repo, issueName: this.issue.toString(), orgOwner: this.owner },
+            {},
+            __dirname)
             .then(result => {
                 const issues: graphql.Issue.Issue[] = _.get(result, "ChatTeam[0].team.orgs[0].repo[0].issue");
                 const handler = new ResponseIssueToIssueLifecycle();

@@ -69,8 +69,10 @@ export class CreateGitHubTag implements HandleCommand {
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-            "graphql/query/chatId",
-            { teamId: ctx.teamId, chatId: this.requester })
+            "../../../graphql/query/chatId",
+            { teamId: ctx.teamId, chatId: this.requester },
+            {},
+            __dirname)
             .then(result => {
                 const person = _.get(result, "ChatTeam[0].members[0].person") as graphql.ChatId.Person;
                 if (person) {

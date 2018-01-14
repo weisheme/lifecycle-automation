@@ -13,7 +13,7 @@ import { PushLifecycleHandler } from "./PushLifecycle";
  * Send a lifecycle message on K8Pod events.
  */
 @EventHandler("Send a lifecycle message on K8Pod events",
-    GraphQL.subscriptionFromFile("graphql/subscription/k8podToPush"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/k8podToPush", __dirname))
 @Tags("lifecycle", "push", "k8pod")
 export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPushLifecycle.Subscription> {
 

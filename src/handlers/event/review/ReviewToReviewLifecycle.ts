@@ -13,7 +13,7 @@ import { ReviewLifecycleHandler } from "./ReviewLifecycle";
  * Send a lifecycle message on Review events.
  */
 @EventHandler("Send a lifecycle message on Review events",
-    GraphQL.subscriptionFromFile("graphql/subscription/reviewToReview"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/reviewToReview", __dirname))
 @Tags("lifecycle", "review")
 export class ReviewToReviewLifecycle extends ReviewLifecycleHandler<graphql.ReviewToReviewLifecycle.Subscription> {
 

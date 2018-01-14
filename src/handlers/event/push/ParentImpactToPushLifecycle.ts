@@ -13,7 +13,7 @@ import { PushLifecycleHandler } from "./PushLifecycle";
  * Send a lifecycle message on ParentImpact events.
  */
 @EventHandler("Send a lifecycle message on ParentImpact events",
-    GraphQL.subscriptionFromFile("graphql/subscription/parentimpactToPush"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/parentimpactToPush", __dirname))
 @Tags("lifecycle", "push", "parentImpact")
 export class ParentImpactToPushLifecycle
     extends PushLifecycleHandler<graphql.ParentImpactToPushLifecycle.Subscription> {

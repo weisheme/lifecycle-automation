@@ -20,7 +20,7 @@ import { CommentGitHubIssue } from "../../command/github/CommentGitHubIssue";
 import { ReactGitHubIssue } from "../../command/github/ReactGitHubIssue";
 
 @EventHandler("Notify mentioned user in slack",
-    GraphQL.subscriptionFromFile("graphql/subscription/notifyMentionedOnIssue"))
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyMentionedOnIssue", __dirname))
 @Tags("lifecycle", "issue", "notification")
 export class NotifyMentionedOnIssue implements HandleEvent<graphql.NotifyMentionedOnIssue.Subscription> {
 

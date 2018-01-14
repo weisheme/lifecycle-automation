@@ -42,9 +42,10 @@ export class ListRepoLinks implements HandleCommand {
 
         return ctx.graphClient.executeQueryFromFile<graphql.ChatChannelByChannelId.Query,
             graphql.ChatChannelByChannelId.Variables>(
-                "graphql/query/chatChannelByChannelId",
+                "../../../graphql/query/chatChannelByChannelId",
                 { teamId: this.teamId, channelName: this.channelName },
-                { fetchPolicy: "network-only" })
+                { fetchPolicy: "network-only" },
+                __dirname)
             .then(result => {
                 const repos = _.get(result, "ChatTeam[0].channels[0].repos");
                 if (repos && repos.length > 0) {
