@@ -284,10 +284,10 @@ export const configuration: any = {
     ws: {
         enabled: true,
         termination: {
-            graceful: true,
+            graceful: notLocal,
         },
     },
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
-initMemoryMonitoring();
+initMemoryMonitoring(`${appRoot.path}/heap`, false);
