@@ -39,11 +39,13 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
 
         let color;
         let text;
+        let fallback;
         let icon;
         const ts = this.normalizeTimestamp(branch.timestamp);
 
         if (state === "deleted") {
             text = `Branch ${bold(url(repoUrl(repo), branchSlug))} deleted`;
+            fallback = `Branch ${branchSlug} deleted`;
             if (prMerged === "merged") {
                 color = "#6E5692";
             } else {
@@ -52,12 +54,13 @@ export class BranchNodeRenderer extends AbstractIdentifiableContribution
             icon = `https://images.atomist.com/rug/pull-request-${prMerged}.png`;
         } else if (state === "created") {
             text = `New branch ${bold(url(branchUrl(repo, branch.name), branchSlug))} created`;
+            fallback = `New Branch ${branchSlug} deleted`;
             color = "#6FC44C";
             icon = `https://images.atomist.com/rug/pull-request-open.png`;
         }
 
         const attachment: Attachment = {
-            fallback: text,
+            fallback,
             text,
             color,
             ts,

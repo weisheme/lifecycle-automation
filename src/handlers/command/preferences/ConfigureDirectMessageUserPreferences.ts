@@ -50,9 +50,9 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
             const msg: SlackMessage = {
                 attachments: [{
                     author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
-                    author_name: "Cancelled configuration",
+                    author_name: "Configuration",
                     title: "Direct Message",
-                    fallback: "Cancelled configuration",
+                    fallback: "Configuration",
                     color: "#45B254",
                 }],
             };

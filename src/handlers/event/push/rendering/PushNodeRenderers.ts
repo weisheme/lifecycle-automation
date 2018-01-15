@@ -150,6 +150,9 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                     return m;
                 }).join("\n");
 
+                const fallback = `${cgba.commits.length} ${(cgba.commits.length > 1 ? "commits" : "commit")}` +
+                    ` to ${slug} by @${a}`;
+
                 const attachment: Attachment = {
                     author_name: `@${a}`,
                     author_link: userUrl(repo, a),
@@ -157,8 +160,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                     text: message,
                     mrkdwn_in: ["text"],
                     color: "#00a5ff",
-                    fallback: `${cgba.commits.length} ${(cgba.commits.length > 1 ? "commits" : "commit")}` +
-                    ` to ${url(branchUrl(repo, push.branch), slug)} by @${a}`,
+                    fallback,
                     actions: [],
                 };
                 attachments.push(attachment);
@@ -480,7 +482,7 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
             text: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
             author_name: domains.indexOf(domain) === 0 ? "Services" : undefined,
             author_icon: domains.indexOf(domain) === 0 ? `https://images.atomist.com/rug/tasks.png` : undefined,
-            fallback: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
+            fallback: `${domain.name} ${domainMessage.join(", ")}`,
             // color: "#767676",
             mrkdwn_in: ["text"],
             actions,
