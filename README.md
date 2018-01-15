@@ -33,7 +33,7 @@ using the `repo` command
 
 ```
 /invite @atomist
-@atomist repo ORG REPO
+@atomist repo owner=ORG repo=REPO
 ```
 
 replacing `ORG` with your GitHub.com organization and `REPO` with the
