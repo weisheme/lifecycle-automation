@@ -25,7 +25,7 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
 
         return Promise.all(chatTeams.map(ct => {
             return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
-                "../../../graphql/query/channels",
+                "../../graphql/query/channels",
                 { teamId: ct.id, first: PageSize, offset: 0 },
                 {},
                 __dirname)
@@ -39,7 +39,7 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
 
                     offset = offset + PageSize;
                     return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
-                        "../../../graphql/query/channels",
+                        "../../graphql/query/channels",
                         {teamId: ct.id, first: PageSize, offset},
                         {},
                         __dirname)
@@ -58,7 +58,7 @@ function handleResult(team: ChatTeam,
                       ctx: HandlerContext): Promise<HandlerResult> {
     if (!mappedRepo) {
         return ctx.graphClient.executeQueryFromFile<graphql.BotOwner.Query, graphql.BotOwner.Variables>(
-            "../../../graphql/query/botOwner",
+            "../../graphql/query/botOwner",
             { teamId: team.id},
             {},
             __dirname)
@@ -76,7 +76,7 @@ function handleResult(team: ChatTeam,
     } else {
         console.log(`Setting team preferences '${PreferenceKey}' to 'true'`);
         return ctx.graphClient.executeMutationFromFile<graphql.SetChatTeamPreference.Mutation,
-                graphql.SetChatTeamPreference.Variables>("../../../graphql/mutation/setChatTeamPreference",
+                graphql.SetChatTeamPreference.Variables>("../../graphql/mutation/setChatTeamPreference",
                 { teamId: team.id, name: PreferenceKey, value: "true" },
                 {},
                 __dirname)
