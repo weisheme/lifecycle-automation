@@ -15,7 +15,6 @@ import {
     AutomationEventListenerSupport,
 } from "@atomist/automation-client/server/AutomationEventListener";
 import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
-import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as appRoot from "app-root-path";
 import { createLogger } from "logzio-nodejs";
 import * as serializeError from "serialize-error";
@@ -42,14 +41,14 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     public commandStarting(payload: CommandInvocation,
                            ctx: HandlerContext) {
-        this.sendOperation("CommandHandler", "operation", "command-handler",
+        this.sendOperation("Command", "operation", "command-handler",
             payload.name, "starting");
     }
 
     public commandSuccessful(payload: CommandInvocation,
                              ctx: HandlerContext,
                              result: HandlerResult): Promise<any> {
-        this.sendOperation("CommandHandler", "operation", "command-handler",
+        this.sendOperation("Command", "operation", "command-handler",
             payload.name, "successful", result);
         return Promise.resolve();
     }
@@ -57,7 +56,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
     public commandFailed(payload: CommandInvocation,
                          ctx: HandlerContext,
                          err: any): Promise<any> {
-        this.sendOperation("CommandHandler", "operation", "command-handler",
+        this.sendOperation("Command", "operation", "command-handler",
             payload.name, "failed", err);
         return Promise.resolve();
     }
@@ -68,21 +67,21 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     public eventStarting(payload: EventFired<any>,
                          ctx: HandlerContext) {
-        this.sendOperation("EventHandler", "operation", "event-handler",
+        this.sendOperation("Event", "operation", "event-handler",
             payload.extensions.operationName, "starting");
     }
 
     public eventSuccessful(payload: EventFired<any>,
                            ctx: HandlerContext,
                            result: HandlerResult[]): Promise<any> {
-        this.sendOperation("EventHandler", "operation", "event-handler",
+        this.sendOperation("Event", "operation", "event-handler",
             payload.extensions.operationName, "successful", result);
         return Promise.resolve();
     }
 
     public eventFailed(payload: EventFired<any>,
                        ctx: HandlerContext, err: any): Promise<any> {
-        this.sendOperation("EventHandler", "operation", "event-handler",
+        this.sendOperation("Event", "operation", "event-handler",
             payload.extensions.operationName, "failed", err);
         return Promise.resolve();
     }
