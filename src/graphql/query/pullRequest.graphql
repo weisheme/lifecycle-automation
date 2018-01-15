@@ -137,6 +137,7 @@ query PullRequest(
                 buildUrl
                 buildId
                 status
+                timestamp
               }
             }
             builds(trigger: pull_request, orderBy: [timestamp_desc]) {
@@ -144,6 +145,7 @@ query PullRequest(
               buildUrl
               buildId
               status
+              timestamp
             }
             reviews {
               state
