@@ -621,7 +621,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
         }
 
         return context.context.graphClient.executeQueryFromFile<graphql.OpenPr.Query, graphql.OpenPr.Variables>(
-            "../../../graphql/query/openPr",
+            "../../../../graphql/query/openPr",
             { repo: repo.name, owner: repo.owner, branch: node.branch },
             {},
             __dirname)
