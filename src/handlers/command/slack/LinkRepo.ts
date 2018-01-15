@@ -91,8 +91,8 @@ export class LinkRepo implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         if (!isChannel(this.channelId)) {
-            const err = "The Atomist Bot can only link repositories to public channels. " +
-                "Please try again in a public channel.";
+            const err = "The Atomist Bot can only link repositories to public or private channels. " +
+                "Please try again in a public or private channel.";
             return ctx.messageClient.addressChannels(err, this.channelName)
                 .then(() => Success, failure);
         }
@@ -113,7 +113,7 @@ export class LinkRepo implements HandleCommand {
                             ctx, this.teamId, this.channelId, this.name, this.owner, providerId)
                             .then(() => {
                                 if (this.msgId) {
-                                    ctx.messageClient.addressChannels(
+                                    return ctx.messageClient.addressChannels(
                                         this.msg, this.channelName, { id: this.msgId });
                                 }
                                 return Success;
