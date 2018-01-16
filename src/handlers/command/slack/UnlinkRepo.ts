@@ -20,6 +20,7 @@ import {
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
 import * as graphql from "../../../typings/types";
+import { success } from "../../../util/messages";
 import {
     checkRepo,
     noRepoMessage,
@@ -64,7 +65,7 @@ export class UnlinkRepo implements HandleCommand {
         return checkRepo(this.githubToken, this.apiUrl, this.name, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
-                    return ctx.messageClient.respond(noRepoMessage(this.name, this.owner));
+                    return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));
                 } else {
                     return ctx.graphClient.executeMutationFromFile<graphql.UnlinkSlackChannelFromRepo.Mutation,
                         graphql.UnlinkSlackChannelFromRepo.Variables>(
@@ -72,26 +73,15 @@ export class UnlinkRepo implements HandleCommand {
                         { teamId: this.teamId, channelId: this.channelId, repo: this.name, owner: this.owner },
                         {},
                         __dirname)
-                        .then(() => ctx.messageClient.respond(successMessage(this.name, this.owner),
-                            { id: this.msgId }));
+                        .then(() => {
+                            const text = `Successfully unlinked repository ${
+                                codeLine(`${this.owner}/${this.name}`)} from this channel`;
+                            const msg = success("Unlink Repository", text);
+                            return ctx.messageClient.respond(msg, { id: this.msgId });
+                        });
                 }
             })
             .then(() => Success, failure);
     }
 
-}
-
-function successMessage(repo: string, owner: string): SlackMessage {
-    const text = `Successfully unlinked repository`;
-    const msg: SlackMessage = {
-        attachments: [{
-            text: `${codeLine(`${owner}/${repo}`)}`,
-            author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
-            author_name: text,
-            fallback: text,
-            mrkdwn_in: ["text"],
-            color: "#45B254",
-        }],
-    };
-    return msg;
 }

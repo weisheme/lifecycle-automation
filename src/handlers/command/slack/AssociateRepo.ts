@@ -15,8 +15,10 @@ import {
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 
+import { codeLine } from "@atomist/slack-messages";
 import { InviteUserToSlackChannel } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
+import { warning } from "../../../util/messages";
 import { isChannel } from "../../../util/slack";
 import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
 import * as github from "../github/gitHubApi";
@@ -28,8 +30,11 @@ export function checkRepo(token: string, url: string, repo: string, owner: strin
         .then(() => true, () => false);
 }
 
-export function noRepoMessage(repo: string, owner: string): slack.SlackMessage {
-    return { text: `The repository ${owner}/${repo} either does not exist or you do not have access to it.` };
+export function noRepoMessage(repo: string, owner: string, ctx: HandlerContext): slack.SlackMessage {
+    return warning(
+        "Link Repository",
+        `The repository ${codeLine(`${owner}/${repo}`)} either does not exist or you do not have access to it.`,
+        ctx);
 }
 
 export function inviteUserToSlackChannel(
@@ -93,7 +98,7 @@ export class AssociateRepo implements HandleCommand {
         return checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
-                    ctx.messageClient.respond(noRepoMessage(this.repo, this.owner));
+                    ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx));
                     return;
                 }
                 return addBotToSlackChannel(ctx, this.teamId, this.channelId)

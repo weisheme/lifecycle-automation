@@ -44,7 +44,8 @@ describe("ChannelLinkCreated", () => {
                     assert((destinations as SlackDestination).channels[0] === "automation-clj");
                     const sm = msg as SlackMessage;
                     assert(sm.attachments[0].text.indexOf("atomisthq/automation-clj") >= 0);
-                    assert(!sm.attachments[0].actions);
+                    assert(sm.attachments[0].actions.length === 1);
+                    assert(sm.attachments[0].actions[0].text === "List Repository Links");
                     messageSend = true;
                     return Promise.resolve();
                 },

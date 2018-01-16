@@ -28,6 +28,7 @@ import {
 import { warning } from "../../../util/messages";
 import * as github from "../../command/github/gitHubApi";
 import { InstallGitHubOrgWebhook, InstallGitHubRepoWebhook } from "../../command/github/InstallGitHubWebhook";
+import { ListRepoLinks } from "../../command/slack/ListRepoLinks";
 
 @EventHandler("Display an unlink message when a channel is linked",
     GraqhQL.subscriptionFromFile("../../../graphql/subscription/channelLinkCreated", __dirname))
@@ -39,6 +40,7 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
 
     public handle(event: EventFired<graphql.ChannelLinkCreated.Subscription>,
                   ctx: HandlerContext): Promise<HandlerResult> {
+        const msgId = guid();
         const channelName = event.data.ChannelLink[0].channel.name || event.data.ChannelLink[0].channel.normalizedName;
         const teamId = event.data.ChannelLink[0].channel.team.id;
         const repo = event.data.ChannelLink[0].repo;
@@ -94,9 +96,12 @@ Please use one of the buttons below to install a Webhook in your repository or o
                         fallback: linkMsg,
                         color: "#45B254",
                         mrkdwn_in: [ "text" ],
+                        actions: [
+                            createListRepoLinksAction(msgId),
+                        ],
                     }],
                 };
-                return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName));
+                return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName), { id: msgId });
             } else {
                 let text;
                 if (repo.org.ownerType === "organization") {
@@ -105,8 +110,10 @@ Please use one of the buttons below to install a Webhook in your repository or o
                     text = noRepoHookMsg;
                 }
                 return ctx.messageClient.send(
-                    warning("Channel Linked", text, ctx, createActions(repo)),
-                    addressSlackChannels(teamId, channelName));
+                    warning("Channel Linked", text, ctx,
+                        [...createActions(repo), createListRepoLinksAction(msgId)]),
+                    addressSlackChannels(teamId, channelName),
+                    { id: msgId });
             }
         })
         .then(() => Success, failure);
@@ -137,4 +144,10 @@ function createActions(repo: graphql.ChannelLinkCreated.Repo): Action[] {
     }
 
     return actions;
+}
+
+function createListRepoLinksAction(msgId: string): Action {
+    const repoList = new ListRepoLinks();
+    repoList.msgId = msgId;
+    return buttonForCommand({ text: "List Repository Links" }, repoList);
 }

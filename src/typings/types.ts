@@ -1099,6 +1099,7 @@ export namespace PullRequest {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Builds = {
@@ -1106,6 +1107,7 @@ export namespace PullRequest {
     buildUrl?: string | null; 
     buildId?: string | null; 
     status?: BuildStatus | null; 
+    timestamp?: string | null; 
   } 
 
   export type Reviews = {
