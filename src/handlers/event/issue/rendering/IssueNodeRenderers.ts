@@ -111,7 +111,7 @@ export class MoreNodeRenderer extends AbstractIdentifiableContribution implement
     public render(node: any, actions: Action[], msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
         if (context.has("show_assign") && actions.length > 0) {
             msg.attachments.push({
-                text: `:busts_in_silhouette: Issue Assignment`,
+                text: `:busts_in_silhouette: Assignees`,
                 fallback: "Issue Assignment",
                 actions,
             });
