@@ -72,21 +72,31 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
 
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
-
-        if (!context.has("show_assign")) {
-            return Promise.resolve([
-                buttonForCommand({ text: "Assign" },
-                "DisplayGitHubIssue",
-                {
-                    repo: repo.name,
-                    owner: repo.owner,
-                    issue: issue.number,
-                    showMore: "assign",
-                }),
-            ]);
-        } else {
-            return Promise.resolve([]);
+        if (context.rendererId === "issue") {
+            if (!context.has("show_assign")) {
+                return Promise.resolve([
+                    buttonForCommand({ text: "Assign \u02C5" },
+                        "DisplayGitHubIssue",
+                        {
+                            repo: repo.name,
+                            owner: repo.owner,
+                            issue: issue.number,
+                            showMore: "assign",
+                        }),
+                ]);
+            } else {
+                return Promise.resolve([
+                    buttonForCommand({ text: "Assign \u02C4" },
+                        "DisplayGitHubIssue",
+                        {
+                            repo: repo.name,
+                            owner: repo.owner,
+                            issue: issue.number,
+                        }),
+                ]);
+            }
         }
+        return Promise.resolve([]);
     }
 
     public menusFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
@@ -177,13 +187,6 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
                     handler.issue = issue.number;
                     return [
                         menuForCommand(menu, handler, "assignee"),
-                        buttonForCommand({ text: "Close" },
-                            "DisplayGitHubIssue",
-                            {
-                                repo: repo.name,
-                                owner: repo.owner,
-                                issue: issue.number,
-                            }),
                     ];
                 });
         }
