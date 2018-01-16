@@ -121,11 +121,10 @@ export class AssociateRepo implements HandleCommand {
                             `${slack.channel(this.channelId)} and invited you to the channel.`;
                         const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
                         if (screenName) {
-                            ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
+                            return ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
                         } else {
-                            ctx.messageClient.respond(msg);
+                            return ctx.messageClient.respond(msg);
                         }
-                        return Success;
                     });
             })
             .then(() => Success, failure);

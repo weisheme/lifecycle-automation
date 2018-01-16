@@ -86,6 +86,7 @@ export class CreateChannel implements HandleCommand {
                     associateRepo.githubToken = this.githubToken;
                     associateRepo.repo = this.repo;
                     associateRepo.msgId = this.msgId;
+                    associateRepo.teamId = this.teamId;
                     return associateRepo.handle(ctx);
                 } else {
                     return ctx.messageClient.respond(
