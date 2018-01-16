@@ -165,17 +165,19 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
                 .then(result => {
                     const assignees = issue.assignees.map(a => a.login);
                     const suggestedAssignees = (_.get(result, "repository.assignableUsers.nodes") || [])
-                        .map(a => a.login).filter(a => !assignees.includes(a));
+                        .map(a => a.login)
+                        .filter(a => !assignees.includes(a))
+                        .sort((a1, a2) => a1.localeCompare(a2));
 
                     const menu: MenuSpecification = {
                         text: "Assign",
                         options: [
                             {
-                                text: "\u2611",
+                                text: "Unassign",
                                 options: assignees.map(l => ({ text: l, value: l })),
                             },
                             {
-                                text: "\u2610",
+                                text: "Assign",
                                 options: suggestedAssignees.map(l => ({ text: l, value: l})),
                             },
                         ],
@@ -233,11 +235,11 @@ export class LabelActionContributor extends AbstractIdentifiableContribution
             const menu: MenuSpecification = {
                 text: "Label",
                 options: [{
-                    text: "\u2611", options: existingLabels.map(l => {
+                    text: "Remove", options: existingLabels.map(l => {
                         return { text: l, value: l };
                     }),
                 },
-                    { text: "\u2610", options: unusedLabels },
+                    { text: "Add", options: unusedLabels },
                 ],
             };
 
