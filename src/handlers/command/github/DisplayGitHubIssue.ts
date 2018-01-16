@@ -107,8 +107,10 @@ class ResponseIssueToIssueLifecycle extends IssueToIssueLifecycle {
     }
 
     protected processLifecycle(lifecycle: Lifecycle, store: Map<string, any>): Lifecycle {
-        if (this.showMore === "assign") {
+        if (this.showMore === "assign_+") {
             store.set("show_assign", true);
+        } else if (this.showMore === "assign_-") {
+            // don't do anything
         } else {
             lifecycle.post = "always";
         }

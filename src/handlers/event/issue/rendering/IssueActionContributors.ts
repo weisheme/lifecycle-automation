@@ -81,7 +81,7 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
                             repo: repo.name,
                             owner: repo.owner,
                             issue: issue.number,
-                            showMore: "assign",
+                            showMore: "assign_+",
                         }),
                 ]);
             } else {
@@ -92,6 +92,7 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
                             repo: repo.name,
                             owner: repo.owner,
                             issue: issue.number,
+                            showMore: "assign_-",
                         }),
                 ]);
             }
