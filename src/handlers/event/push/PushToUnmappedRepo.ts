@@ -48,10 +48,10 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 // strange
                 return Success;
             }
-            if (p.commits.some(c => c.message === "Initial commit")) {
+            /* if (p.commits.some(c => c.message === "Initial commit")) {
                 // not on initial push
                 return Success;
-            }
+            } */
 
             const botNames: { [teamId: string]: string; } = {};
 
