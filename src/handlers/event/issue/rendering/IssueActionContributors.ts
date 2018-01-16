@@ -129,7 +129,7 @@ export class AssignToMeActionContributor extends AbstractIdentifiableContributio
             handler.issue = issue.number;
             handler.assignee = AssignToMe;
             return Promise.resolve([
-                buttonForCommand({ text: "Toggle my Assignment" }, handler),
+                buttonForCommand({ text: "Assign to Me" }, handler),
             ]);
         }
         return Promise.resolve([]);
