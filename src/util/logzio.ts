@@ -1,4 +1,5 @@
 import {
+    AutomationContextAware,
     EventFired,
     HandlerContext,
     HandlerResult,
@@ -9,6 +10,7 @@ import {
     EventIncoming,
 } from "@atomist/automation-client/internal/transport/RequestProcessor";
 import * as nsp from "@atomist/automation-client/internal/util/cls";
+import { AutomationContext } from "@atomist/automation-client/internal/util/cls";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
     AutomationEventListener,
@@ -42,14 +44,14 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
     public commandStarting(payload: CommandInvocation,
                            ctx: HandlerContext) {
         this.sendOperation("Command", "operation", "command-handler",
-            payload.name, "starting");
+            payload.name, "starting", ctx);
     }
 
     public commandSuccessful(payload: CommandInvocation,
                              ctx: HandlerContext,
                              result: HandlerResult): Promise<any> {
         this.sendOperation("Command", "operation", "command-handler",
-            payload.name, "successful", result);
+            payload.name, "successful", ctx, result);
         return Promise.resolve();
     }
 
@@ -57,7 +59,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                          ctx: HandlerContext,
                          err: any): Promise<any> {
         this.sendOperation("Command", "operation", "command-handler",
-            payload.name, "failed", err);
+            payload.name, "failed", ctx, err);
         return Promise.resolve();
     }
 
@@ -68,21 +70,21 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
     public eventStarting(payload: EventFired<any>,
                          ctx: HandlerContext) {
         this.sendOperation("Event", "operation", "event-handler",
-            payload.extensions.operationName, "starting");
+            payload.extensions.operationName, "starting", ctx);
     }
 
     public eventSuccessful(payload: EventFired<any>,
                            ctx: HandlerContext,
                            result: HandlerResult[]): Promise<any> {
         this.sendOperation("Event", "operation", "event-handler",
-            payload.extensions.operationName, "successful", result);
+            payload.extensions.operationName, "successful", ctx, result);
         return Promise.resolve();
     }
 
     public eventFailed(payload: EventFired<any>,
                        ctx: HandlerContext, err: any): Promise<any> {
         this.sendOperation("Event", "operation", "event-handler",
-            payload.extensions.operationName, "failed", err);
+            payload.extensions.operationName, "failed", ctx, err);
         return Promise.resolve();
     }
 
@@ -93,7 +95,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             message,
             destinations,
             options,
-        });
+        }, ctx);
     }
 
     private sendOperation(identifier: string,
@@ -101,22 +103,24 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                           type: string,
                           name: string,
                           status: string,
+                          ctx: HandlerContext,
                           err?: any) {
-        const start = nsp.get().ts;
+        const session = getContext(ctx);
+
         const data: any = {
             "operation-type": type,
             "operation-name": name,
-            "artifact": nsp.get().name,
-            "version": nsp.get().version,
-            "team-id": nsp.get().teamId,
-            "team-name": nsp.get().teamName,
+            "artifact": session.name,
+            "version": session.version,
+            "team-id": session.teamId,
+            "team-name": session.teamName,
             "event-type": eventType,
             "level": status === "failed" ? "error" : "info",
             status,
-            "execution-time": Date.now() - start,
-            "correlation-id": nsp.get().correlationId,
-            "invocation-id": nsp.get().invocationId,
-            "message": `${identifier} ${name} invocation ${status} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
+            "execution-time": Date.now() - session.ts,
+            "correlation-id": session.correlationId,
+            "invocation-id": session.invocationId,
+            "message": `${identifier} ${name} invocation ${status} for ${session.teamName} '${session.teamId}'`,
         };
         if (err) {
             if (status === "failed") {
@@ -132,18 +136,22 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     private sendEvent(identifier: string,
                       type: string,
-                      payload: any) {
+                      payload: any,
+                      ctx?: HandlerContext) {
+
+        const session = getContext(ctx);
+
         const data = {
-            "operation-name": nsp.get().operation,
-            "artifact": nsp.get().name,
-            "version": nsp.get().version,
-            "team-id": nsp.get().teamId,
-            "team-name": nsp.get().teamName,
+            "operation-name": session.operation,
+            "artifact": session.name,
+            "version": session.version,
+            "team-id": session.teamId,
+            "team-name": session.teamName,
             "event-type": type,
             "level": "info",
-            "correlation-id": nsp.get().correlationId,
-            "invocation-id": nsp.get().invocationId,
-            "message": `${identifier} of ${nsp.get().operation} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
+            "correlation-id": session.correlationId,
+            "invocation-id": session.invocationId,
+            "message": `${identifier} of ${session.operation} for ${session.teamName} '${session.teamId}'`,
             "payload": JSON.stringify(payload),
         };
         if (this.logzio) {
@@ -219,4 +227,14 @@ export interface LogzioOptions {
     environmentId: string;
     applicationId: string;
 
+}
+
+function getContext(ctx: HandlerContext) {
+    let session: AutomationContext;
+    if (ctx && (ctx as any).context) {
+        session = (ctx as any as AutomationContextAware).context;
+    } else {
+        session = nsp.get();
+    }
+    return session;
 }
