@@ -68,6 +68,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 const renderers: any[] = [];
                 const store = new Map<string, any>();
 
+                lifecycle = this.processLifecycle(lifecycle, store);
+
                 // Call all NodeRenderers and ButtonContributors
                 lifecycle.renderers.forEach(r => {
                     lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
@@ -135,6 +137,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         chatTeams.forEach(ct => preferences[ct.id] = ct.preferences);
 
         return preferences;
+    }
+
+    protected processLifecycle(lifecycle: Lifecycle, store: Map<string, any>): Lifecycle {
+        return lifecycle;
     }
 
     /**

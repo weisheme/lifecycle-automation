@@ -24,6 +24,9 @@ export class DisplayGitHubIssue implements HandleCommand {
     @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
+    @Parameter({ description: "show more", required: false, displayable: false })
+    public showMore: string;
+
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
 
@@ -47,7 +50,8 @@ export class DisplayGitHubIssue implements HandleCommand {
             __dirname)
             .then(result => {
                 const issues: graphql.Issue.Issue[] = _.get(result, "ChatTeam[0].team.orgs[0].repo[0].issue");
-                const handler = new ResponseIssueToIssueLifecycle();
+                const handler = new ResponseIssueToIssueLifecycle(this.showMore);
+                handler.orgToken = this.githubToken;
 
                 // Hopefully we can find the issue in Neo
                 if (issues && issues.length > 0) {
@@ -98,8 +102,17 @@ export class DisplayGitHubIssue implements HandleCommand {
 
 class ResponseIssueToIssueLifecycle extends IssueToIssueLifecycle {
 
-    protected processLifecycle(lifecycle: Lifecycle): Lifecycle {
-        lifecycle.post = "always";
+    constructor(private showMore: string) {
+        super();
+    }
+
+    protected processLifecycle(lifecycle: Lifecycle, store: Map<string, any>): Lifecycle {
+        if (this.showMore === "assign") {
+            store.set("show_assign", true);
+        } else {
+            lifecycle.post = "always";
+        }
+
         return lifecycle;
     }
 }

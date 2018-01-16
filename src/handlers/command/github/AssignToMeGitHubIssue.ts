@@ -11,22 +11,27 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { logger } from "@atomist/automation-client/internal/util/logger";
 import { loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Assign a GitHub issue to the invoking user", "assign issue to me", "assign github issue to me")
+export const AssignToMe = "$assign_to_me";
+
+@CommandHandler("Assign a GitHub issue to the invoking user or provided assingee",
+    "assign issue to me", "assign github issue to me")
 @Tags("github", "issue")
 export class AssignToMeGitHubIssue implements HandleCommand {
+
+    @Parameter({ description: "issue number", pattern: /^.*$/ })
+    public issue: number;
+
+    @Parameter({ description: "user to assign issue to", required: false})
+    public assignee: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
 
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
-
-    @Parameter({ description: "issue number", pattern: /^.*$/ })
-    public issue: number;
 
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
@@ -38,29 +43,55 @@ export class AssignToMeGitHubIssue implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        // backwards compatibility
+        if (!this.assignee) {
+            this.assignee = AssignToMe;
+        }
+
         const api = github.api(this.githubToken, this.apiUrl);
 
         return api.issues.get({
-            owner: this.owner,
-            repo: this.repo,
-            number: this.issue,
-        })
+                owner: this.owner,
+                repo: this.repo,
+                number: this.issue,
+            })
             .then(issue => {
-                return loadGitHubIdByChatId(ctx, this.requester)
-                    .then(gitHubId => {
-                        if (gitHubId) {
-                            logger.debug(`Resolved Slack user '${this.requester}' to GitHub user '${gitHubId}'`);
-                            const assignees: string[] =
-                                issue.data.assignees ? issue.data.assignees.map(a => a.login) : [];
-                            assignees.push(gitHubId);
-                            return api.issues.edit({
-                                owner: this.owner,
-                                repo: this.repo,
-                                number: this.issue,
-                                assignees,
-                            });
-                        }
+                if (this.assignee === AssignToMe) {
+                    return loadGitHubIdByChatId(ctx, this.requester)
+                        .then(gitHubId => {
+                            if (gitHubId) {
+                                let assignees: string[] =
+                                    issue.data.assignees ? issue.data.assignees.map(a => a.login) : [];
+
+                                if (assignees.some(a => a === gitHubId)) {
+                                    assignees = assignees.filter(a => a !== gitHubId);
+                                } else {
+                                    assignees.push(gitHubId);
+                                }
+
+                                return api.issues.edit({
+                                    owner: this.owner,
+                                    repo: this.repo,
+                                    number: this.issue,
+                                    assignees,
+                                });
+                            }
+                        });
+                } else {
+                    let assignees: string[] =
+                        issue.data.assignees ? issue.data.assignees.map(a => a.login) : [];
+                    if (assignees.some(a => a === this.assignee)) {
+                        assignees = assignees.filter(a => a !== this.assignee);
+                    } else {
+                        assignees.push(this.assignee);
+                    }
+                    return api.issues.edit({
+                        owner: this.owner,
+                        repo: this.repo,
+                        number: this.issue,
+                        assignees,
                     });
+                }
             })
             .then(() => Success)
             .catch(err => {

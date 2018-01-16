@@ -6,11 +6,11 @@ import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/Refer
 import * as graphql from "../../../typings/types";
 import { LifecyclePreferences } from "../preferences";
 import {
-    AssignActionContributor, CloseActionContributor,
-    CommentActionContributor, LabelActionContributor,
+    AssignActionContributor, AssignToMeActionContributor, CloseActionContributor,
+    CommentActionContributor, DisplayAssignActionContributor, LabelActionContributor,
     ReactionActionContributor, ReopenActionContributor,
 } from "./rendering/IssueActionContributors";
-import { IssueNodeRenderer } from "./rendering/IssueNodeRenderers";
+import { IssueNodeRenderer, MoreNodeRenderer } from "./rendering/IssueNodeRenderers";
 
 export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
 
@@ -33,15 +33,18 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
             nodes,
             renderers: [
                 new IssueNodeRenderer(),
+                new MoreNodeRenderer(),
                 new ReferencedIssuesNodeRenderer(),
                 new AttachImagesNodeRenderer(node => node.state === "open"),
                 new FooterNodeRenderer(node => node.title || node.body)],
             contributors: [
-                new AssignActionContributor(),
+                new DisplayAssignActionContributor(),
                 new CommentActionContributor(),
                 new CloseActionContributor(),
                 new LabelActionContributor(),
                 new ReactionActionContributor(),
+                new AssignToMeActionContributor(),
+                new AssignActionContributor(),
                 new ReopenActionContributor(),
             ],
             id: `issue_lifecycle/${repo.owner}/${repo.name}/${issue.number}`,
@@ -57,11 +60,7 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
             },
         };
 
-        return [this.processLifecycle(configuration)];
-    }
-
-    protected processLifecycle(lifecycle: Lifecycle): Lifecycle {
-        return lifecycle;
+        return [configuration];
     }
 
     protected abstract extractNodes(event: EventFired<R>):

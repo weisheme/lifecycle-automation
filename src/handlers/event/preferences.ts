@@ -118,10 +118,16 @@ export const LifecycleActionPreferences = {
     },
 
     issue: {
-        assign: {
-            id: "assign",
+        assigntome: {
+            id: "assigntome",
             name: "Assign To Me",
             description: "Assign GitHub issues to me",
+            enabled: true,
+        },
+        assign: {
+            id: "assign",
+            name: "Assign",
+            description: "Assign GitHub issues",
             enabled: true,
         },
         label: {

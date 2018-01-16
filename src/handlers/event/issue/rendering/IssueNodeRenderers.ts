@@ -97,3 +97,25 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution implemen
             });
     }
 }
+
+export class MoreNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
+
+    constructor() {
+        super("assign");
+    }
+
+    public supports(node: any): boolean {
+        return node.title;
+    }
+
+    public render(node: any, actions: Action[], msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
+        if (context.has("show_assign") && actions.length > 0) {
+            msg.attachments.push({
+                text: "Assignments",
+                fallback: "Assign",
+                actions,
+            });
+        }
+        return Promise.resolve(msg);
+    }
+}
