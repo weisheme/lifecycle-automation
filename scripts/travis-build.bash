@@ -26,11 +26,11 @@ function git-tag () {
         return 10
     fi
 
-    if ! git config --global user.email "travis-ci@atomist.com"; then
+    if ! git config user.email "travis-ci@atomist.com"; then
         err "failed to set git user email"
         return 1
     fi
-    if ! git config --global user.name "Travis CI"; then
+    if ! git config user.name "Travis CI"; then
         err "failed to set git user name"
         return 1
     fi
