@@ -7,7 +7,7 @@ This project contains lifecycle automations that create beautiful,
 correlated, and actionable [Slack][slack] messages for issues,
 pull requests, pushes, builds, and deployments using
 the [`@atomist/automation-client`][client] node module to implement a
-client that connects to the [Atomist][atomist] API.
+client that connects to the [Atomist][atomist] API.  
 
 <p align="center">
   <img alt="Atomist Bot PR Message" height="324" width="481" src="img/pr.png" />
