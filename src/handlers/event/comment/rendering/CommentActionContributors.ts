@@ -85,6 +85,31 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
                                   repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
 }
 
+export class DetailsActionContributor extends AbstractCommentActionContributor
+    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+
+    constructor() {
+        super(LifecycleActionPreferences.comment.details.id, true, false);
+    }
+
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return buttonForCommand({ text: "Details" },
+            "DisplayGitHubIssue",
+            {
+                repo: repo.name,
+                owner: repo.owner,
+                issue: comment.issue.number,
+            });
+    }
+
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+                         labels: graphql.CommentToIssueCommentLifecycle.Labels[],
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+        return null;
+    }
+}
+
 export class AssignActionContributor extends AbstractCommentActionContributor
     implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 

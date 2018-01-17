@@ -12,6 +12,7 @@ import {
     AssignActionContributor,
     CloseActionContributor,
     CommentActionContributor,
+    DetailsActionContributor,
     LabelActionContributor,
     ReactionActionContributor,
 } from "./rendering/CommentActionContributors";
@@ -69,6 +70,7 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
                         }),
                         new FooterNodeRenderer(node => node.body && (node.issue || node.pullRequest))],
                     contributors: [
+                        new DetailsActionContributor(),
                         new AssignActionContributor(),
                         new CommentActionContributor(),
                         new CloseActionContributor(),

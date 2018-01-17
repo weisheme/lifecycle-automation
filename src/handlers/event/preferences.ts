@@ -85,11 +85,17 @@ export const LifecycleActionPreferences = {
     },
 
     comment: {
+        details: {
+            id: "details",
+            name: "Details",
+            description: "Show the GitHub Issue",
+            enabled: true,
+        },
         assign: {
             id: "assign",
             name: "Assign To Me",
             description: "Assign GitHub issues to me",
-            enabled: true,
+            enabled: false,
         },
         label: {
             id: "label",
