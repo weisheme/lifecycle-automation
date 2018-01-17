@@ -141,11 +141,12 @@ export class LabelActionContributor extends AbstractCommentActionContributor
         const menu: MenuSpecification = {
             text: "Label",
             options: [{
-                text: "\u2611", options: existingLabels.map(l => {
-                    return { text: l, value: l };
-                }),
+                text: "Remove",
+                options: existingLabels.map(l => ({ text: l, value: l })),
             },
-            { text: "\u2610", options: unusedLabels },
+            {
+                text: "Add",
+                options: unusedLabels },
             ],
         };
 
