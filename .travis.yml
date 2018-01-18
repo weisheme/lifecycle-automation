@@ -4,7 +4,7 @@ services:
 - docker
 language: node_js
 node_js:
-- 8.7.0
+- 9.4.0
 branches:
   except:
   - "/\\+travis\\.\\d+$/"
@@ -18,7 +18,7 @@ env:
   - secure: ka/IgGCtDjppoGaFAtj4z5o9P5LECKG3RPF/G0svkDUcrToaunnOqJv5rhf1Clf7QK1cZPGbNUBMlDCygBU6U7AA6MC05V67p3tn4dbVcLuJQvGJDvw8jCXPts5/5meDrLrR/I7+QJLtBGjHA4kkSlQVQGowJXWU2zoP6xbG7NoIATtygQzemlTN0xPhw19AQY2zoPATfXf7Y6O84VCx1Kvcbl1wJL055Co3x+6fb0Uw8K/AQiQRtD/3R5jHs4fZZG4gQRHG/BkDjyU1yo1NapKL1xOJvUGdzbo2ijUiWf98qbx2KcUCOeC3U1/eHSs7NkdPN8yT90FUtt5kGQa1Eu037jtBpbhvbxss84chJ1GA6yKHjByeilW/Tj69WJcq0Pp1xdu+XGjsZ+uhDL0cwZM+g+k/qFenTeFD6PMKcQvp7ytD6gsfH3sFrKVLZNzCdYVal87XLJuYemTo18Nr/mYPBYtg9qtXlDL5jdxH8fN0xJugL0Mqyn/5RHMV241+z1mKZXq2o22HryJ5+x2luHeR8G3hEVrj+ZJzDN7vy9lJAJinV1p7v2VK9Z1TF7+UzDe6NKtbXDmi1GXzm2bR65u2KFSZYTJd16OqX+cH1BAz6yJMI/fGAgww10/3qUA6gfuzerspDcnFy7xZaglLzovAoJoikJ7hgCoLqx0oiPo=
 before_install:
 - openssl aes-256-cbc -K $encrypted_195b2e60f131_key -iv $encrypted_195b2e60f131_iv
-  -in scripts/.npmrc.enc -out $HOME/.npmrc -d
+  -in .npmrc.enc -out .npmrc -d
 script: bash scripts/travis-build.bash
 notifications:
   email: false
@@ -30,9 +30,6 @@ notifications:
     on_start: always
     on_cancel: always
     on_error: always
-cache:
-  directories:
-  - "$HOME/.npm"
 before_deploy:
 - touch build/typedoc/.nojekyll
 deploy:
