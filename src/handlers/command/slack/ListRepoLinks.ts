@@ -51,7 +51,6 @@ export class ListRepoLinks implements HandleCommand {
                 if (repos && repos.length > 0) {
 
                     const msg: SlackMessage = {
-                        text: "The following repositories are linked to this channel:",
                         attachments: [],
                     };
 
@@ -70,6 +69,8 @@ export class ListRepoLinks implements HandleCommand {
                         };
                         msg.attachments.push(attachment);
                     });
+
+                    msg.attachments[0].pretext = "The following repositories are linked to this channel:";
 
                     return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId });
                 } else {
