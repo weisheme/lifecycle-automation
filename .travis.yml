@@ -4,13 +4,14 @@ services:
 - docker
 language: node_js
 node_js:
-- 8.7.0
+- 9.4.0
 branches:
   except:
   - "/\\+travis\\.\\d+$/"
   - "/^\\d+\\.\\d+\\.\\d+-.*\\d+$/"
 env:
   global:
+  - SLACK_TEAM=T29E48P34
   - NPM_REGISTRY=https://atomist.jfrog.io/atomist/api/npm/npm-dev-local
   - secure: rdOrSGj3eOCRUEXsKva70Gl5i+LKsGG7gmJe/wH3NT7gtIEZ3UOmDLohNQsJrqV13mJhb3ywgk5HYW/XVreYyrJMSmryjI52utkRxeogFjJ4DtaExQEVu2Ah8BIfzarDj+1bkTV+llwIrVjKI/IzyyNWkaxcfQXV9Jro48Zyieh5kL+2pDheklvJS9quG+E3rF67V5OunZUwrSYEgs5PjggH+AgbdXvzOHHMtcxfHIAMErDSQ9JCK1aDsmIMJMgcRRug5pEt0bGhyM+zPbut9jAY3GtvEqsgdwoj9WfvxkFOEJr8q0yLGfQ3aHIPGb4tNZbUNiJ46+I0z/CeDJNLwMijuD4YU/rwrPtKxoniAVzKWBgOEJpMYfcqzO/kYB+FCBHAhag2GpL5vlu4hT1SMg3QacDfOl4+H3K+kecWiC6uLltWAcbJ39N4KQdwSnDESEU70EJe2oW5VMeXjv5QsfUhOwATmFaADgkvnzZv+lyOP7T41BbFBcbval+ONE7TqFxX0/XGOQDxTElmT4viXEgYlXvMYhHy3VV1k6CTUWUjo7EQR1UUo/nwV4tTIxzcSCqqPDv8OfFH3DLhsdfgAdu0FiLEHu2zYMxTpivD+uee5WX8DeyaiJ22kpJQ8gEF2KsDftKdNOLi2aYVR1mYZLWUoh2ty39khuCvWLh+iEY=
   - DOCKER_REGISTRY=sforzando-dockerv2-local.jfrog.io
@@ -18,21 +19,18 @@ env:
   - secure: ka/IgGCtDjppoGaFAtj4z5o9P5LECKG3RPF/G0svkDUcrToaunnOqJv5rhf1Clf7QK1cZPGbNUBMlDCygBU6U7AA6MC05V67p3tn4dbVcLuJQvGJDvw8jCXPts5/5meDrLrR/I7+QJLtBGjHA4kkSlQVQGowJXWU2zoP6xbG7NoIATtygQzemlTN0xPhw19AQY2zoPATfXf7Y6O84VCx1Kvcbl1wJL055Co3x+6fb0Uw8K/AQiQRtD/3R5jHs4fZZG4gQRHG/BkDjyU1yo1NapKL1xOJvUGdzbo2ijUiWf98qbx2KcUCOeC3U1/eHSs7NkdPN8yT90FUtt5kGQa1Eu037jtBpbhvbxss84chJ1GA6yKHjByeilW/Tj69WJcq0Pp1xdu+XGjsZ+uhDL0cwZM+g+k/qFenTeFD6PMKcQvp7ytD6gsfH3sFrKVLZNzCdYVal87XLJuYemTo18Nr/mYPBYtg9qtXlDL5jdxH8fN0xJugL0Mqyn/5RHMV241+z1mKZXq2o22HryJ5+x2luHeR8G3hEVrj+ZJzDN7vy9lJAJinV1p7v2VK9Z1TF7+UzDe6NKtbXDmi1GXzm2bR65u2KFSZYTJd16OqX+cH1BAz6yJMI/fGAgww10/3qUA6gfuzerspDcnFy7xZaglLzovAoJoikJ7hgCoLqx0oiPo=
 before_install:
 - openssl aes-256-cbc -K $encrypted_195b2e60f131_key -iv $encrypted_195b2e60f131_iv
-  -in scripts/.npmrc.enc -out $HOME/.npmrc -d
+  -in .npmrc.enc -out .npmrc -d
 script: bash scripts/travis-build.bash
 notifications:
   email: false
   webhooks:
     urls:
-    - https://webhook.atomist.com/atomist/travis/teams/T29E48P34
+    - https://webhook.atomist.com/atomist/travis/teams/$SLACK_TEAM
     on_success: always
     on_failure: always
     on_start: always
     on_cancel: always
     on_error: always
-cache:
-  directories:
-  - "$HOME/.npm"
 before_deploy:
 - touch build/typedoc/.nojekyll
 deploy:
