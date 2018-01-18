@@ -10,7 +10,6 @@ import { logger } from "@atomist/automation-client/internal/util/logger";
 import { registerShutdownHook } from "@atomist/automation-client/internal/util/shutdown";
 import { AutomationEventListenerSupport } from "@atomist/automation-client/server/AutomationEventListener";
 import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
-import { SlackMessage } from "@atomist/slack-messages";
 import * as appRoot from "app-root-path";
 import Timer = NodeJS.Timer;
 import * as cluster from "cluster";
