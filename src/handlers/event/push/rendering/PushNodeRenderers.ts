@@ -425,12 +425,10 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
         }
         // Add the release to the message
         if (tag.release) {
-            if (tag.release.name === "") {
-                message = `${message} | ${url(tagUrl(repo, tag), "Release")}`;
-            } else if (tag.release.name !== tag.name) {
-                message = `${message} | ${url(tagUrl(repo, tag.release), `Release ${codeLine(tag.release.name)}`)}`;
+            if (tag.release.name !== tag.name) {
+                message = `${message} | ${url(tagUrl(repo, tag), `Release ${codeLine(tag.release.name)}`)}`;
             } else {
-                message = `${message} | ${url(tagUrl(repo, tag.release), "Release")}`;
+                message = `${message} | ${url(tagUrl(repo, tag), "Release")}`;
             }
         }
 
