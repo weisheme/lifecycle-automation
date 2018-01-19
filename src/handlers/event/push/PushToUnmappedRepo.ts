@@ -12,6 +12,8 @@ import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import {
     addressSlackUsers,
     buttonForCommand,
+    menuForCommand,
+    MenuSpecification,
 } from "@atomist/automation-client/spi/message/MessageClient";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
@@ -48,10 +50,6 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 // strange
                 return Success;
             }
-            /* if (p.commits.some(c => c.message === "Initial commit")) {
-                // not on initial push
-                return Success;
-            } */
 
             const botNames: { [teamId: string]: string; } = {};
 
@@ -60,9 +58,9 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
 
             chatTeams.forEach(ct => {
                 if (ct.members && ct.members.length > 0 && ct.members.some(m => m.isAtomistBot === "true")) {
-                    chatTeams[ct.id] = ct.members.find(m => m.isAtomistBot === "true").screenName;
+                    botNames[ct.id] = ct.members.find(m => m.isAtomistBot === "true").screenName;
                 } else {
-                    chatTeams[ct.id] = DefaultBotName;
+                    botNames[ct.id] = DefaultBotName;
                 }
             });
 
@@ -71,7 +69,7 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
 
             return sendUnMappedRepoMessage(chatIds, p.repo, ctx, botNames);
         }))
-        .then(() => Success, failure);
+            .then(() => Success, failure);
     }
 
 }
@@ -102,7 +100,7 @@ export function sendUnMappedRepoMessage(
             addressSlackUsers(chatId.chatTeam.id, chatId.screenName),
             { id });
     }))
-    .then(() => Success);
+        .then(() => Success);
 }
 
 /**
@@ -176,6 +174,34 @@ export function leaveRepoUnmapped(
     return getDisabledRepos(chatId.preferences).some(r => r === repoStr);
 }
 
+function populateMapCommand(c: CreateChannel, repo: graphql.PushToUnmappedRepo.Repo, msgId: string): CreateChannel {
+    c.apiUrl = (repo.org.provider) ? repo.org.provider.apiUrl : undefined;
+    c.owner = repo.owner;
+    c.repo = repo.name;
+    c.msgId = msgId;
+    return c;
+}
+
+export function fuzzyRepoChannelMatch(
+    repo: string,
+    channels: graphql.PushToUnmappedRepo.Channels[],
+    max: number = 2,
+): graphql.PushToUnmappedRepo.Channels[] {
+
+    const rcName = repoChannelName(repo);
+    const l = rcName.length;
+    const longChannels = channels.filter(c => c.name.includes(rcName)).map(c => ({ c, d: c.name.length - l }));
+    const shortChannels = channels.filter(c => rcName.includes(c.name)).map(c => ({ c, d: l - c.name.length }));
+    const matchesWithDiff = longChannels.concat(shortChannels);
+    return matchesWithDiff.sort((a, b) => {
+        const diff = a.d - b.d;
+        if (diff === 0) {
+            return a.c.name.localeCompare(b.c.name);
+        }
+        return diff;
+    }).slice(0, max).map(cd => cd.c);
+}
+
 export function mapRepoMessage(
     repo: graphql.PushToUnmappedRepo.Repo,
     chatId: graphql.PushToUnmappedRepo.ChatId,
@@ -186,37 +212,58 @@ export function mapRepoMessage(
     const slug = `${repo.owner}/${repo.name}`;
     const slugText = repoSlackLink(repo);
     const msgId = mapRepoMessageId(repo.owner, repo.name, chatId.screenName);
-    botName = botName == null ? DefaultBotName : botName;
+    botName = botName || DefaultBotName;
 
-    let channelText: string;
-    let mapCommand: AssociateRepo | CreateChannel;
-    const channel = repo.org.team.chatTeams
-        .find(ct => ct.id === chatId.chatTeam.id).channels
-        .find(c => c.name === channelName);
+    const mapActions: slack.Action[] = [];
+    const channels = repo.org.team.chatTeams.find(ct => ct.id === chatId.chatTeam.id).channels;
+    const channel = channels.find(c => c.name === channelName);
+    let addSelector = true;
     if (channel) {
-        channelText = slack.channel(channel.channelId);
-        mapCommand = new AssociateRepo();
-        mapCommand.channelId = channel.channelId;
+        const mapCommand = new CreateChannel();
+        mapCommand.channel = channel.name;
+        populateMapCommand(mapCommand, repo, msgId);
+        const mapButtonText = `#${channelName}`;
+        const mapRepoButton = buttonForCommand({ text: mapButtonText, style: "primary" }, mapCommand);
+        mapActions.push(mapRepoButton);
+        addSelector = channels.length > 1;
     } else {
-        channelText = slack.bold(`#${channelName}`);
-        mapCommand = new CreateChannel();
-        mapCommand.channel = channelName;
+        const createCommand = new CreateChannel();
+        createCommand.channel = channelName;
+        populateMapCommand(createCommand, repo, msgId);
+        const createButtonText = `Create #${channelName}`;
+        const createRepoButton = buttonForCommand({ text: createButtonText, style: "primary" }, createCommand);
+        mapActions.push(createRepoButton);
+        const matchyChannels = fuzzyRepoChannelMatch(repo.name, channels);
+        matchyChannels.forEach(c => {
+            const mapCommand = new CreateChannel();
+            mapCommand.channel = c.name;
+            populateMapCommand(mapCommand, repo, msgId);
+            const mapButtonText = `#${c.name}`;
+            const mapRepoButton = buttonForCommand({ text: mapButtonText }, mapCommand);
+            mapActions.push(mapRepoButton);
+        });
+        addSelector = channels.length > matchyChannels.length;
     }
-    mapCommand.apiUrl = (repo.org.provider) ? repo.org.provider.apiUrl : undefined;
-    mapCommand.owner = repo.owner;
-    mapCommand.repo = repo.name;
-    mapCommand.msgId = msgId;
+    if (addSelector) {
+        const menu: MenuSpecification = {
+            text: "Other channel...",
+            options: channels.sort((a, b) => a.name.localeCompare(b.name))
+                .map(c => ({ text: c.name, value: c.name })),
+        };
+        const mapCommand = new CreateChannel();
+        populateMapCommand(mapCommand, repo, msgId);
+        const mapRepoMenu = menuForCommand(menu, mapCommand, "channel");
+        mapActions.push(mapRepoMenu);
+    }
 
-    const mapFallback = `Want to put me to work on ${slug} in #${channelName}?`;
-    const mapText = `Want to put me to work on ${slugText} in ${channelText}?`;
-
-    const mapRepoButton = buttonForCommand({ text: "Go ahead", style: "primary" }, mapCommand);
+    const mapFallback = `Want to put me to work on ${slug} in a channel?`;
+    const mapText = `Want to put me to work on ${slugText} in a channel?`;
     const mapAttachment: slack.Attachment = {
         pretext: mapText,
         fallback: mapFallback,
         text: "",
         mrkdwn_in: ["pretext"],
-        actions: [mapRepoButton],
+        actions: mapActions,
     };
 
     const linkRepoCmd = LinkRepo.linkRepoCommand(botName, repo.owner, repo.name);
