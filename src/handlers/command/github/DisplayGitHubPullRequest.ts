@@ -22,7 +22,7 @@ import * as github from "./gitHubApi";
 @Tags("github", "pr")
 export class DisplayGitHubPullRequest implements HandleCommand {
 
-    @Parameter({ description: "PR number" })
+    @Parameter({ description: "PR number", pattern: /^\d+$/ })
     public prNumber: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
