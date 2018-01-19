@@ -22,8 +22,8 @@ import * as github from "./gitHubApi";
 @Tags("github", "pr")
 export class DisplayGitHubPullRequest implements HandleCommand {
 
-    @Parameter({ description: "PR number", pattern: /^.*$/ })
-    public issue: string;
+    @Parameter({ description: "PR number" })
+    public prNumber: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
@@ -43,7 +43,7 @@ export class DisplayGitHubPullRequest implements HandleCommand {
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeQueryFromFile<graphql.PullRequest.Query, graphql.PullRequest.Variables>(
             "../../../graphql/query/pullRequest",
-            { teamId: ctx.teamId, repoName: this.repo, prName: this.issue, orgOwner: this.owner },
+            { teamId: ctx.teamId, repoName: this.repo, prName: this.prNumber, orgOwner: this.owner },
             {},
             __dirname)
             .then(result => {
