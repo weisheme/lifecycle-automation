@@ -98,8 +98,7 @@ export class AssociateRepo implements HandleCommand {
         return checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
-                    ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx));
-                    return;
+                    return ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx));
                 }
                 return addBotToSlackChannel(ctx, this.teamId, this.channelId)
                     .then(() => {
