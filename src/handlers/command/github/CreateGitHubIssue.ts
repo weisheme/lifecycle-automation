@@ -53,10 +53,10 @@ export class CreateGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
-    @MappedParameter(MappedParameters.SlackChannelName)
+    @MappedParameter(MappedParameters.SlackChannelName, false)
     public channelName: string;
 
-    @MappedParameter(MappedParameters.SlackTeam)
+    @MappedParameter(MappedParameters.SlackTeam, false)
     public teamId: string;
 
     @Secret(Secrets.userToken("repo"))
@@ -77,21 +77,25 @@ export class CreateGitHubIssue implements HandleCommand {
                 });
             })
             .then(result => {
-                // run a graphql query to check whether the current channel is mapped to the repo we are creating the
-                // issue in.
-                return ctx.graphClient.executeQueryFromFile<graphql.ChatChannel.Query, graphql.ChatChannel.Variables>(
-                    "../../../graphql/query/chatChannel",
-                    { teamId: this.teamId, channelName: this.channelName, repoOwner: this.owner, repoName: this.repo },
-                    {},
-                    __dirname)
-                    .then(repoChannelMapping => {
-                        const repo = _.get(repoChannelMapping, "ChatTeam[0].channels[0].repos[0]");
-                        if (!(repo && repo.name === this.repo && repo.owner === this.owner)) {
-                            return result;
-                        } else {
-                            return null;
-                        }
-                    });
+                if (this.channelName && this.teamId) {
+                    // run a graphql query to check whether the current channel is mapped to the repo we are creating the
+                    // issue in.
+                    return ctx.graphClient.executeQueryFromFile<graphql.ChatChannel.Query, graphql.ChatChannel.Variables>(
+                        "../../../graphql/query/chatChannel",
+                        { teamId: this.teamId, channelName: this.channelName, repoOwner: this.owner, repoName: this.repo },
+                        {},
+                        __dirname)
+                        .then(repoChannelMapping => {
+                            const repo = _.get(repoChannelMapping, "ChatTeam[0].channels[0].repos[0]");
+                            if (!(repo && repo.name === this.repo && repo.owner === this.owner)) {
+                                return result;
+                            } else {
+                                return null;
+                            }
+                        });
+                } else {
+                    return null;
+                }
             })
             .then(result => {
                 // if the originating channel isn't mapped to the repo, we render the issue right here
