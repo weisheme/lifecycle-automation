@@ -6,7 +6,7 @@ mutation SetChatUserPreference(
 ) {
   setChatUserPreference(
     chatTeamId: $teamId
-    userId: $userId
+    chatUserId: $userId
     name: $name
     value: $value
   ) {
