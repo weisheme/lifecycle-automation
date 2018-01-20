@@ -66,9 +66,13 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const buttons = [];
 
-        if (!push.commits.some(
-                c => c.tags && c.tags.some(t => t.name.indexOf("+") < 0 && t.release !== null))) {
-            this.createReleaseButton(push, tag, repo, buttons);
+        // Check that there are no releases already
+        const released = push.commits.some(c => c.tags && c.tags.some(t => t.release !== null));
+        // Check that the tag is M.M.P-QUALIFIER
+        const majorMinorPatchTag = !tag.name.includes("+");
+
+        if (!released && majorMinorPatchTag) {
+            buttons.push(this.createReleaseButton(push, tag, repo));
         }
 
         return Promise.resolve(buttons);
@@ -80,8 +84,7 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
 
     private createReleaseButton(push: graphql.PushToPushLifecycle.Push,
                                 tag: graphql.PushToPushLifecycle.Tags,
-                                repo: graphql.PushToPushLifecycle.Repo,
-                                buttons: any[]) {
+                                repo: graphql.PushToPushLifecycle.Repo): Action {
         let commitMessage = "Release created by Atomist Lifecycle Automation";
 
         // We do not have a tag message in our model so let's fallback onto
@@ -103,12 +106,12 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         releaseHandler.owner = repo.owner;
         releaseHandler.repo = repo.name;
 
-        buttons.push(buttonForCommand({
+        return buttonForCommand({
             text: "Release", confirm: {
                 title: "Create Release",
                 text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel",
             },
-        }, releaseHandler));
+        }, releaseHandler);
     }
 }
 
