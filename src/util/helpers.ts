@@ -1,10 +1,15 @@
 import { HandlerContext } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
+import { Attachment, channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
 
+/**
+ * Safely truncate the first line of a commit message to 50 characters
+ * or less.  Only count printable characters, i.e., not link URLs or
+ * markup.
+ */
 export function truncateCommitMessage(message: string, repo: any): string {
     const title = message.split("\n")[0];
     const escapedTitle = escape(title);
@@ -156,6 +161,39 @@ export function isGenerated(node: graphql.PullRequestToPullRequestLifecycle.Pull
     return false;
 }
 
+/**
+ * Find image URLs in a message body, returning an array of Slack
+ * message attachments, one for each image.
+ *
+ * @param body message body
+ * @return array of Slack message Attachments with the `image_url` set
+ *         to the URL of the image and the `text` and `fallback` set
+ *         to the image name.
+ */
+export function extractImageUrls(body: string): Attachment[] {
+    // derived from https://stackoverflow.com/a/6927878/5464956
+    // changed to require HTTP
+    // tslint:disable-next-line:max-line-length
+    const urlRegExp = /\b(https?:\/\/(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+    const imageRegExp = /[^\/]+\.(?:png|jpe?g|gif|bmp)$/i;
+    const attachments: Attachment[] = [];
+    let match: RegExpExecArray;
+    // tslint:disable-next-line:no-conditional-assignment
+    while (match = urlRegExp.exec(body)) {
+        const fullUrl = match[0];
+        const imageMatch = imageRegExp.exec(fullUrl);
+        if (imageMatch) {
+            const image = imageMatch[0];
+            attachments.push({
+                text: image,
+                image_url: fullUrl,
+                fallback: image,
+            });
+        }
+    }
+    return attachments;
+}
+
 export function extractLinkedIssues(body: string,
                                     repo: any,
                                     ignore: string[] = [],
@@ -183,12 +221,12 @@ export function extractLinkedIssues(body: string,
                         result.repo.forEach(rr => {
                             if (rr.issue) {
                                 rr.issue.forEach(i => {
-                                    results.push({type: "issue", result: i});
+                                    results.push({ type: "issue", result: i });
                                 });
                             }
                             if (rr.pullRequest) {
                                 rr.pullRequest.forEach(pr => {
-                                    results.push({type: "pr", result: pr});
+                                    results.push({ type: "pr", result: pr });
                                 });
                             }
                         });
@@ -272,7 +310,7 @@ const gitHubUserMatch = "[a-zA-Z\\d]+(?:-[a-zA-Z\\d]+)*";
  *
  * GitHub usernames may only contain alphanumeric characters or single
  * hyphens, cannot begin or end with a hyphen, and must be 1-36
- * characters.  The maximum lenght is not enforced by this regular
+ * characters.  The maximum length is not enforced by this regular
  * expression, but rather in the getGitHubUsers function.  Mentions
  * must be preceded by an `@` symbol and must not be preceded or
  * followed by any word character.
@@ -496,7 +534,7 @@ export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext
                             if (result.ChatTeam[0].members && result.ChatTeam[0].members.length > 0
                                 && result.ChatTeam[0].members[0].person) {
                                 if (result.ChatTeam[0].members[0].person.gitHubId
-                                && result.ChatTeam[0].members[0].person.gitHubId.login) {
+                                    && result.ChatTeam[0].members[0].person.gitHubId.login) {
                                     const login = result.ChatTeam[0].members[0].person.gitHubId.login;
                                     body = body.split(`<@${m}>`).join(`@${login}`);
                                 } else if (result.ChatTeam[0].members[0].person.chatId

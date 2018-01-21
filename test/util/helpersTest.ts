@@ -4,6 +4,7 @@ import * as assert from "power-assert";
 import { LoggingConfig } from "@atomist/automation-client/internal/util/logger";
 
 import {
+    extractImageUrls,
     getGitHubUsers,
     getIssueMentions,
     isDmDisabled,
@@ -191,6 +192,59 @@ Fixes #1950.
             const e = `Changed &lt;some things&gt; so &amp; issue identified by ` +
                 `<https://github.com/elvis/presley/issues/1929|elv...>`;
             assert(truncateCommitMessage(m, repo) === e);
+        });
+
+    });
+
+    describe("extractImageUrls", () => {
+
+        it("should find nothing", () => {
+            const b = `Nothing to see here.`;
+            const a = extractImageUrls(b);
+            assert(a.length === 0);
+        });
+
+        it("should not find non-image URLs", () => {
+            const b = `What the heck? Ignore https://www.stlouisblues.com/
+and https://www.nhl.com/standings/index.html.`;
+            const a = extractImageUrls(b);
+            assert(a.length === 0);
+        });
+
+        it("should find an image URL", () => {
+            const b = `Look at this http://static.atomist.com/rug/merge.png.`;
+            const a = extractImageUrls(b);
+            assert(a.length === 1);
+            assert.deepStrictEqual(a[0], {
+                text: "merge.png",
+                image_url: "http://static.atomist.com/rug/merge.png",
+                fallback: "merge.png",
+            });
+        });
+
+        it("should find two image URLs", () => {
+            const b = `Look at this http://static.atomist.com/rug/merge.png.  But
+not this https://www.nhl.com/, this is cool https://image.blues.com/img/goal.jpg.
+He shoots, he scores!`;
+            const a = extractImageUrls(b);
+            assert(a.length === 2);
+            assert.deepStrictEqual(a[0], {
+                text: "merge.png",
+                image_url: "http://static.atomist.com/rug/merge.png",
+                fallback: "merge.png",
+            });
+            assert.deepStrictEqual(a[1], {
+                text: "goal.jpg",
+                image_url: "https://image.blues.com/img/goal.jpg",
+                fallback: "goal.jpg",
+            });
+        });
+
+        it("should not find an image in a diabolical case", () => {
+            // tslint:disable-next-line:max-line-length
+            const b = "Here's the original message: https://atomist-community.slack.com/archives/C7GHDARGU/p1515798324000172\r\n\r\nHere's the issue that triggered that message: https://github.com/atomist/lifecycle-automation/issues/103\r\n\r\nHere's the URL causing the issue: https://api.slack.com/docs/messages/builder?msg=%7B%22attachments%22%3A%5B%7B%22mrkdwn_in%22%3A%5B%22text%22%2C%22pretext%22%5D%2C%22color%22%3A%22%2345B254%22%2C%22pretext%22%3A%22Open%20issues%3A%22%2C%22author_name%22%3A%22atomisthq%2Fbot-service%22%2C%22author_link%22%3A%22http%3A%2F%2Fatomist.com%22%2C%22author_icon%22%3A%22https%3A%2F%2Fimages.atomist.com%2Frug%2Fissue-open.png%22%2C%22text%22%3A%22%3Chttp%3A%2F%2Fatomist.com%7C%23826%3A%20Use%20the%20new%20channels%20and%20users%20end%20points%20in%20Neo%3E%5Cn%3Chttp%3A%2F%2Fatomist.com%7C%23824%3A%20Some%20other%20issue%3E%22%7D%2C%7B%22mrkdwn_in%22%3A%5B%22text%22%2C%22pretext%22%5D%2C%22pretext%22%3A%22Closed%20issues%3A%22%2C%22author_name%22%3A%22atomisthq%2Fbot-service%22%2C%22author_link%22%3A%22http%3A%2F%2Fatomist.com%22%2C%22author_icon%22%3A%22https%3A%2F%2Fimages.atomist.com%2Frug%2Fissue-closed.png%22%2C%22color%22%3A%22D94649%22%2C%22text%22%3A%22%3Chttp%3A%2F%2Fatomist.com%7C%23821%3A%20Big%20bug%3E%5Cn%3Chttp%3A%2F%2Fatomist.com%7C%23821%3A%20Some%20other%20bug%3E%5Cn%3Chttp%3A%2F%2Fatomist.com%7C%2381%3A%20Awesome%20feature%3E%22%7D%2C%7B%22mrkdwn_in%22%3A%5B%22text%22%2C%22pretext%22%5D%2C%22author_name%22%3A%22atomisthq%2Fbot-service%22%2C%22author_link%22%3A%22http%3A%2F%2Fatomist.com%22%2C%22author_icon%22%3A%22https%3A%2F%2Fimages.atomist.com%2Frug%2Fpull-request-merged.png%22%2C%22pretext%22%3A%22Reviewed%20PRs%3A%22%2C%22text%22%3A%22%3Chttp%3A%2F%2Fatomist.com%7C%23820%3A%20Add%20something%20useful%3E%20by%20%3C%40kipz%3E%22%7D%5D%7D\r\n";
+            const a = extractImageUrls(b);
+            assert(a.length === 0);
         });
 
     });
