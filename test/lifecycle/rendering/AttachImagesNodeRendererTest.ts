@@ -20,8 +20,8 @@ describe("AttachImagesNodeRenderer", () => {
                 assert(rm.attachments.length === 1);
                 assert(rm.attachments[0].text === "test.png");
                 assert(rm.attachments[0].image_url === "https://image.com/folder/test.png");
-                done();
-            });
+            })
+            .then(() => done(), done);
     });
 
     it("correctly attach multiple images", done => {
@@ -43,8 +43,8 @@ describe("AttachImagesNodeRenderer", () => {
                 assert(rm.attachments[0].image_url === "https://image.com/folder/test1.png");
                 assert(rm.attachments[1].text === "test2.png");
                 assert(rm.attachments[1].image_url === "http://image.de/test2.png");
-                done();
-            });
+            })
+            .then(() => done(), done);
     });
 
     it("correctly attach multiple images embedded in markdown", done => {
@@ -66,8 +66,8 @@ describe("AttachImagesNodeRenderer", () => {
                 assert(rm.attachments[0].image_url === "https://image.com/folder/test1.png");
                 assert(rm.attachments[1].text === "test2.png");
                 assert(rm.attachments[1].image_url === "http://image.de/test2.png");
-                done();
-            });
+            })
+            .then(() => done(), done);
     });
 
     it("correctly attach multiple images embedded in html", done => {
@@ -90,8 +90,8 @@ describe("AttachImagesNodeRenderer", () => {
                 assert(rm.attachments[0].image_url === "https://image.com/folder/test1.png");
                 assert(rm.attachments[1].text === "test2.png");
                 assert(rm.attachments[1].image_url === "http://image.de/test2.png");
-                done();
-            });
+            })
+            .then(() => done(), done);
     });
 
 });

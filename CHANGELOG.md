@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Make sure branch is available on PullRequestToBranchLifecycle
 -   Ensure msgId is set before trying to extract the screen name
+-   Do not match partial image URLs [#104][104]
+
+[104]: https://github.com/atomist/lifecycle-automation/issues/104
 
 ## [0.2.6][] - 2017-11-15
 
