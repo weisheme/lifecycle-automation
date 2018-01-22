@@ -190,8 +190,10 @@ export function fuzzyRepoChannelMatch(
 
     const rcName = repoChannelName(repo);
     const l = rcName.length;
-    const longChannels = channels.filter(c => c.name.includes(rcName)).map(c => ({ c, d: c.name.length - l }));
-    const shortChannels = channels.filter(c => rcName.includes(c.name)).map(c => ({ c, d: l - c.name.length }));
+    const longChannels = channels.filter(c => c && c.name && c.name.includes(rcName))
+        .map(c => ({ c, d: c.name.length - l }));
+    const shortChannels = channels.filter(c => c && c.name && rcName.includes(c.name))
+        .map(c => ({ c, d: l - c.name.length }));
     const matchesWithDiff = longChannels.concat(shortChannels);
     return matchesWithDiff.sort((a, b) => {
         const diff = a.d - b.d;
@@ -247,7 +249,7 @@ export function mapRepoMessage(
     if (addSelector) {
         const menu: MenuSpecification = {
             text: "Other channel...",
-            options: channels.sort((a, b) => a.name.localeCompare(b.name))
+            options: channels.sort((a, b) => a.name.localeCompare(b.name)).slice(0, 100)
                 .map(c => ({ text: c.name, value: c.name })),
         };
         const mapCommand = new CreateChannel();
