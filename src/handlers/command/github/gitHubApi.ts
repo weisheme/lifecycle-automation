@@ -15,6 +15,7 @@ export function api(token: string, apiUrl: string = "https://api.github.com/"): 
 
     const gitHubApi = new GitHubApi({
         host: url.hostname,
+        pathPrefix: url.pathname,
         protocol: url.protocol.slice(0, -1),
         port: +url.port,
     });
