@@ -4,6 +4,7 @@ import {
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
 import {
+    extractImageUrls,
     extractLinkedIssues,
     issueUrl,
     prUrl,
@@ -29,20 +30,7 @@ export class AttachImagesNodeRenderer extends AbstractIdentifiableContribution
     public render(node: any, actions: Action[], msg: SlackMessage, context: RendererContext):
         Promise<SlackMessage> {
 
-        const imageRegExp = /\bhttps?:\/\/\S+\/(\S+?\.(?:png|jpe?g|gif|bmp))\b/gi;
-        let match;
-
-        // tslint:disable-next-line:no-conditional-assignment
-        while (match = imageRegExp.exec(node.body)) {
-            const url = match[0];
-            const image = match[1];
-            msg.attachments.push({
-                text: image,
-                image_url: url,
-                fallback: image,
-            });
-        }
-
+        msg.attachments.push(...extractImageUrls(node.body));
         return Promise.resolve(msg);
     }
 }
