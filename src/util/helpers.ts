@@ -1,6 +1,6 @@
 import { HandlerContext } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { Attachment, channel, emoji, escape, url, user } from "@atomist/slack-messages/SlackMessages";
+import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
@@ -12,7 +12,7 @@ import * as graphql from "../typings/types";
  */
 export function truncateCommitMessage(message: string, repo: any): string {
     const title = message.split("\n")[0];
-    const escapedTitle = escape(title);
+    const escapedTitle = slack.escape(title);
     const linkedTitle = linkIssues(escapedTitle, repo);
 
     if (linkedTitle.length <= 50) {
@@ -100,7 +100,7 @@ export function repoUrl(repo: any): string {
 }
 
 export function repoSlackLink(repo: any): string {
-    return url(repoUrl(repo), repoSlug(repo));
+    return slack.url(repoUrl(repo), repoSlug(repo));
 }
 
 export function userUrl(repo: any, login: string): string {
@@ -162,33 +162,62 @@ export function isGenerated(node: graphql.PullRequestToPullRequestLifecycle.Pull
 }
 
 /**
+ * If the URL is of an image, return a Slack message attachment that
+ * will render that image.  Otherwise return null.
+ *
+ * @param url full URL
+ * @return Slack message attachment for image or null
+ */
+function urlToImageAttachment(url: string): slack.Attachment {
+    const imageRegExp = /[^\/]+\.(?:png|jpe?g|gif|bmp)$/i;
+    const imageMatch = imageRegExp.exec(url);
+    if (imageMatch) {
+        const image = imageMatch[0];
+        return {
+            text: image,
+            image_url: url,
+            fallback: image,
+        };
+    } else {
+        return null;
+    }
+}
+
+/**
  * Find image URLs in a message body, returning an array of Slack
- * message attachments, one for each image.
+ * message attachments, one for each image.  It expects the message to
+ * be in Slack message markup.
  *
  * @param body message body
  * @return array of Slack message Attachments with the `image_url` set
  *         to the URL of the image and the `text` and `fallback` set
  *         to the image name.
  */
-export function extractImageUrls(body: string): Attachment[] {
+export function extractImageUrls(body: string): slack.Attachment[] {
+    const slackLinkRegExp = /<(https?:\/\/.*?)(?:\|.*?)?>/g;
     // derived from https://stackoverflow.com/a/6927878/5464956
     // changed to require HTTP
     // tslint:disable-next-line:max-line-length
     const urlRegExp = /\b(https?:\/\/(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
-    const imageRegExp = /[^\/]+\.(?:png|jpe?g|gif|bmp)$/i;
-    const attachments: Attachment[] = [];
-    let match: RegExpExecArray;
-    // tslint:disable-next-line:no-conditional-assignment
-    while (match = urlRegExp.exec(body)) {
-        const fullUrl = match[0];
-        const imageMatch = imageRegExp.exec(fullUrl);
-        if (imageMatch) {
-            const image = imageMatch[0];
-            attachments.push({
-                text: image,
-                image_url: fullUrl,
-                fallback: image,
-            });
+    const attachments: slack.Attachment[] = [];
+    const bodyParts = body.split(slackLinkRegExp);
+    for (let i = 0; i < bodyParts.length; i++) {
+        if (i % 2 === 0) {
+            let match: RegExpExecArray;
+            // tslint:disable-next-line:no-conditional-assignment
+            while (match = urlRegExp.exec(bodyParts[i])) {
+                const url = match[0];
+                const attachment = urlToImageAttachment(url);
+                if (attachment) {
+                    attachments.push(attachment);
+                }
+            }
+        } else {
+            const url = bodyParts[i];
+            const attachment = urlToImageAttachment(url);
+            if (attachment) {
+                attachments.push(attachment);
+            }
         }
     }
     return attachments;
@@ -292,7 +321,7 @@ export function linkIssues(body: string, repo: any): string {
             const iRegExp = new RegExp(`(${iMatchPrefix})${i}(?!\\w)`, "g");
             const iSlug = (i.indexOf("#") === 0) ? `${repo.owner}/${repo.name}${i}` : i;
             const iUrlPath = iSlug.replace("#", "/issues/");
-            const iLink = url(`${baseUrl}/${iUrlPath}`, i);
+            const iLink = slack.url(`${baseUrl}/${iUrlPath}`, i);
             newPart = newPart.replace(iRegExp, `\$1${iLink}`);
         });
         bodyParts[j] = newPart;
@@ -505,7 +534,7 @@ export function linkGitHubUsers(body: string = "", context: HandlerContext): Pro
             if (notifier) {
                 notifier.forEach(n => {
                     const mentionRegExp = gitHubUserMentionRegExp(n.login);
-                    body = body.replace(mentionRegExp, "$1" + user(n.person.chatId.screenName));
+                    body = body.replace(mentionRegExp, "$1" + slack.user(n.person.chatId.screenName));
                 });
             }
             return body;
@@ -572,8 +601,8 @@ export function getChatIds(str: string): string[] {
 
 export function repoAndChannelFooter(repo: any): string {
     const channels = (repo.channels != null && repo.channels.length > 0 ? " - " + repo.channels.map(c =>
-        channel(c.channelId, c.name)).join(" ") : "");
-    return `${url(repoUrl(repo), repoSlug(repo))}${channels}`;
+        slack.channel(c.channelId, c.name)).join(" ") : "");
+    return `${slack.url(repoUrl(repo), repoSlug(repo))}${channels}`;
 }
 
 /**
@@ -603,14 +632,14 @@ export function isDmDisabled(chatId: ChatId, type?: string): boolean {
 
 export function repoAndlabelsAndAssigneesFooter(repo: any, labels: any, assignees: any[]): string {
 
-    let footer = url(repoUrl(repo), `${repo.owner}/${repo.name}`);
+    let footer = slack.url(repoUrl(repo), `${repo.owner}/${repo.name}`);
     if (labels != null && labels.length > 0) {
         footer += " - "
-            + labels.map(l => `${emoji("label")} ${l.name}`).join(" ");
+            + labels.map(l => `${slack.emoji("label")} ${l.name}`).join(" ");
     }
     if (assignees != null && assignees.length > 0) {
         footer += " - " + assignees.map(a =>
-            `${emoji("bust_in_silhouette")} ${a.login}`).join(" ");
+            `${slack.emoji("bust_in_silhouette")} ${a.login}`).join(" ");
     }
     return footer;
 }

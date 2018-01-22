@@ -211,8 +211,52 @@ and https://www.nhl.com/standings/index.html.`;
             assert(a.length === 0);
         });
 
+        it("should find the image when that is all", () => {
+            const b = `http://static.atomist.com/rug/merge.jpeg`;
+            const a = extractImageUrls(b);
+            assert(a.length === 1);
+            assert.deepStrictEqual(a[0], {
+                text: "merge.jpeg",
+                image_url: "http://static.atomist.com/rug/merge.jpeg",
+                fallback: "merge.jpeg",
+            });
+        });
+
+        it("should find the image in only Slack markup", () => {
+            const b = `<http://static.atomist.com/rug/merge.jpeg>`;
+            const a = extractImageUrls(b);
+            assert(a.length === 1);
+            assert.deepStrictEqual(a[0], {
+                text: "merge.jpeg",
+                image_url: "http://static.atomist.com/rug/merge.jpeg",
+                fallback: "merge.jpeg",
+            });
+        });
+
+        it("should find the image in named Slack markup", () => {
+            const b = `<http://static.atomist.com/rug/merge.jpeg|merge>`;
+            const a = extractImageUrls(b);
+            assert(a.length === 1);
+            assert.deepStrictEqual(a[0], {
+                text: "merge.jpeg",
+                image_url: "http://static.atomist.com/rug/merge.jpeg",
+                fallback: "merge.jpeg",
+            });
+        });
+
         it("should find an image URL", () => {
             const b = `Look at this http://static.atomist.com/rug/merge.png.`;
+            const a = extractImageUrls(b);
+            assert(a.length === 1);
+            assert.deepStrictEqual(a[0], {
+                text: "merge.png",
+                image_url: "http://static.atomist.com/rug/merge.png",
+                fallback: "merge.png",
+            });
+        });
+
+        it("should find an image in Slack markup", () => {
+            const b = `Look at this <http://static.atomist.com/rug/merge.png>.`;
             const a = extractImageUrls(b);
             assert(a.length === 1);
             assert.deepStrictEqual(a[0], {
