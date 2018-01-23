@@ -303,6 +303,7 @@ describe("K8PodNodeRenderer", () => {
         })
         .then(done, done);
     });
+
     /* tslint:disable */
     const singleImageWithManyContainers = `{
   "data": {
@@ -529,6 +530,7 @@ describe("K8PodNodeRenderer", () => {
             .then(done, done);
     });
 
+    /* tslint:disable */
     const multipleImages = `{
   "data": {
     "Status": [
