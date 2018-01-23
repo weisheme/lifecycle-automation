@@ -18,6 +18,7 @@ import {
 } from "@atomist/automation-client/server/AutomationEventListener";
 import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import * as appRoot from "app-root-path";
+import * as cluster from "cluster";
 import { createLogger } from "logzio-nodejs";
 import * as serializeError from "serialize-error";
 
@@ -174,6 +175,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                 "environment": options.environmentId,
                 "application-id": options.applicationId,
                 "process-id": process.pid,
+                "cluster-role": cluster.isMaster ? "master" : "worker",
             },
         };
         // create the logzio event logger
