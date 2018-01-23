@@ -33,7 +33,7 @@ export type _GitHubProviderOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_a
 export type _TeamOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc";
 
 /* Ordering Enum for Person */
-export type _PersonOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "forename_asc" | "forename_desc" | "surname_asc" | "surname_desc";
+export type _PersonOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "forename_asc" | "forename_desc" | "surname_asc" | "surname_desc" | "name_asc" | "name_desc";
 
 /* Enum for OwnerType */
 export type OwnerType = "user" | "organization";
