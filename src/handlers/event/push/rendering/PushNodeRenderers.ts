@@ -491,61 +491,72 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
+interface Environment {
+    name: string;
+    pods: PodContainerState[];
+}
+
+interface PodContainerState {
+    name: string;
+    running: number;
+    waiting: number;
+    terminated: number;
+}
+
 export class K8PodNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.K8PodToPushLifecycle.Pushes> {
 
     constructor() {
         super("k8pod");
     }
 
     public supports(node: any): boolean {
-        return node.after
-            && node.commits.filter(c => c.tags != null)
-                .some(c => c.tags.some(t => t.containers && t.containers.length > 0));
+        return node.after && node.after.images && node.after.images.length > 0;
     }
 
-    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[],
+    public render(push: graphql.K8PodToPushLifecycle.Pushes, actions: Action[],
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
-        const images = {};
-        push.commits.filter(c => c.tags != null).forEach(c => c.tags.filter(t => t.containers != null)
-            .forEach(t => t.containers.forEach(con => {
-                const image = con.image;
-                if (images[image]) {
-                    images[image].push(con);
-                } else {
-                    images[image] = [con];
-                }
-            })));
-
+        const images = push.after.images;
         const messages = [];
-        // tslint:disable-next-line:forin
-        for (const image in images) {
-            images[image].forEach(i => {
-
-                const pulling = i.pods.filter(j => j.state === "Pulling").length;
-                const created = i.pods.filter(j => j.state === "Created").length;
-                const pulled = i.pods.filter(j => j.state === "Pulled").length;
-                const scheduled = i.pods.filter(j => j.state === "Scheduled").length;
-                const started = i.pods.filter(j => j.state === "Started").length;
-                const unhealthy = i.pods.filter(j => j.state === "Unhealthy").length;
-                const killing = i.pods.filter(j => j.state === "Killing").length;
-
-                const imageMessages = [];
-                if (pulling > 0 || scheduled > 0) {
-                    imageMessages.push(`${pulling + scheduled} starting`);
+        images.forEach(image => {
+            const pods = image.pods;
+            const envs: Environment[] = [];
+            if (_.isEmpty(pods)) { return; }
+            pods.forEach(pod => {
+                let env = envs.find(e => e.name === pod.environment);
+                if (_.isUndefined(env)) {
+                    env = {
+                        name: pod.environment,
+                        pods: [],
+                    };
+                    envs.push(env);
                 }
-                if (created > 0 || pulled > 0 || started > 0) {
-                    imageMessages.push(`${created + pulled + started} started`);
-                }
-                if (unhealthy > 0) {
-                    imageMessages.push(`${unhealthy} stopping`);
-                }
-                if (killing > 0) {
-                    imageMessages.push(`${killing} stopped`);
-                }
-                messages.push(`${codeLine(i.image.split("/")[1])} ${imageMessages.join(", ")}`);
+                const podContainerState: PodContainerState = {
+                    name: pod.name,
+                    running: 0,
+                    waiting: 0,
+                    terminated: 0,
+                };
+                env.pods.push(podContainerState);
+                pod.containers.forEach(c => {
+                    if (c.state === "running") {
+                        podContainerState.running++;
+                    } else if (c.state === "waiting") {
+                        podContainerState.waiting++;
+                    } else if (c.state === "terminated") {
+                        podContainerState.terminated++;
+                    }
+                });
             });
-        }
+            envs.forEach(env => {
+                env.pods.forEach(p => {
+                    const terminatedCountMsg = p.terminated > 0 ? ", " + p.terminated + " terminated" : "";
+                    const waitingCountMsg = p.waiting > 0 ? ", " + p.waiting + " waiting" : "";
+                    const stateOfContainers = `${p.running} running${waitingCountMsg}${terminatedCountMsg}`;
+                    messages.push(`${codeLine(image.imageName)} ${env.name}.${p.name}: ${stateOfContainers}`);
+                });
+            });
+        });
 
         const attachment: Attachment = {
             text: escape(messages.join("\n")),
@@ -560,6 +571,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
 
         return Promise.resolve(msg);
     }
+
 }
 
 export class IssueNodeRenderer extends AbstractIdentifiableContribution
