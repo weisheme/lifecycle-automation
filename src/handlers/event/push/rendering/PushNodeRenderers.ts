@@ -491,7 +491,6 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-
 interface Environment {
     name: string;
     pods: PodContainerState[];
@@ -522,23 +521,23 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
         images.forEach(image => {
             const pods = image.pods;
             const envs: Environment[] = [];
-            if (_.isEmpty(pods)) return;
+            if (_.isEmpty(pods)) { return; }
             pods.forEach(pod => {
-                let e = envs.find(e => e.name === pod.environment);
-                if (_.isUndefined(e)) {
-                    e = {
+                let env = envs.find(e => e.name === pod.environment);
+                if (_.isUndefined(env)) {
+                    env = {
                         name: pod.environment,
                         pods: [],
-                    }
-                    envs.push(e);
+                    };
+                    envs.push(env);
                 }
                 const podContainerState: PodContainerState = {
                     name: pod.name,
                     running: 0,
                     waiting: 0,
                     terminated: 0,
-                }
-                e.pods.push(podContainerState);
+                };
+                env.pods.push(podContainerState);
                 pod.containers.forEach(c => {
                     if (c.state === "running") {
                         podContainerState.running++;
@@ -547,7 +546,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
                     } else if (c.state === "terminated") {
                         podContainerState.terminated++;
                     }
-                })
+                });
             });
             envs.forEach(env => {
                 env.pods.forEach(p => {
