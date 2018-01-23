@@ -78,16 +78,13 @@ export type _TagOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_d
 export type _ReleaseOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for DockerImage */
-export type _DockerImageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "image_asc" | "image_desc";
-
-/* Ordering Enum for K8Spec */
-export type _K8SpecOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "kind_asc" | "kind_desc" | "curHash_asc" | "curHash_desc" | "fsha_asc" | "fsha_desc" | "timestamp_asc" | "timestamp_desc";
+export type _DockerImageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "image_asc" | "image_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for K8Pod */
-export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "state_asc" | "state_desc" | "host_asc" | "host_desc" | "timestamp_asc" | "timestamp_desc";
+export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "phase_asc" | "phase_desc" | "environment_asc" | "environment_desc" | "timestamp_asc" | "timestamp_desc" | "baseName_asc" | "baseName_desc" | "namespace_asc" | "namespace_desc" | "statusJSON_asc" | "statusJSON_desc" | "host_asc" | "host_desc" | "state_asc" | "state_desc" | "specsJSON_asc" | "specsJSON_desc" | "envJSON_asc" | "envJSON_desc" | "metadataJSON_asc" | "metadataJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc";
 
-/* Ordering Enum for Environment */
-export type _EnvironmentOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "vpcName_asc" | "vpcName_desc";
+/* Ordering Enum for K8Container */
+export type _K8ContainerOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc" | "environment_asc" | "environment_desc" | "containerJSON_asc" | "containerJSON_desc" | "state_asc" | "state_desc" | "ready_asc" | "ready_desc" | "restartCount_asc" | "restartCount_desc" | "statusJSON_asc" | "statusJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc";
 
 /* Ordering Enum for SpinnakerPipeline */
 export type _SpinnakerPipelineOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "executionId_asc" | "executionId_desc" | "application_asc" | "application_desc" | "eventType_asc" | "eventType_desc" | "taskName_asc" | "taskName_desc" | "stageName_asc" | "stageName_desc" | "stageType_asc" | "stageType_desc" | "waitingForJudgement_asc" | "waitingForJudgement_desc";
@@ -134,8 +131,8 @@ export type _CommentOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "
 /* Ordering Enum for DeletedBranch */
 export type _DeletedBranchOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "timestamp_asc" | "timestamp_desc";
 
-/* Ordering Enum for K8Cluster */
-export type _K8ClusterOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "availabilityZone_asc" | "availabilityZone_desc";
+/* Ordering Enum for ImageLinked */
+export type _ImageLinkedOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for PushImpact */
 export type _PushImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "url_asc" | "url_desc" | "data_asc" | "data_desc";
@@ -4011,15 +4008,11 @@ export namespace K8PodToPushLifecycle {
   } 
 
   export type Images = {
-    tag?: Tag | null; 
-  } 
-
-  export type Tag = {
-    commit?: Commit | null; 
+    commits?: Commits[] | null; 
     timestamp?: string | null; 
   } 
 
-  export type Commit = {
+  export type Commits = {
     pushes?: Pushes[] | null; 
     timestamp?: string | null; 
   } 
@@ -4029,7 +4022,7 @@ export namespace K8PodToPushLifecycle {
     before?: Before | null; 
     after?: After | null; 
     repo?: Repo | null; 
-    commits?: Commits[] | null; 
+    commits?: _Commits[] | null; 
     timestamp?: string | null; 
     branch?: string | null; 
   } 
@@ -4040,12 +4033,12 @@ export namespace K8PodToPushLifecycle {
     name?: string | null; 
     provider?: string | null; 
     status?: BuildStatus | null; 
-    commit?: _Commit | null; 
+    commit?: Commit | null; 
     timestamp?: string | null; 
     workflow?: Workflow | null; 
   } 
 
-  export type _Commit = {
+  export type Commit = {
     sha?: string | null; 
   } 
 
@@ -4076,6 +4069,7 @@ export namespace K8PodToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    image?: Image | null; 
   } 
 
   export type Statuses = {
@@ -4102,6 +4096,39 @@ export namespace K8PodToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Image = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -4152,7 +4179,7 @@ export namespace K8PodToPushLifecycle {
     value?: string | null; 
   } 
 
-  export type Commits = {
+  export type _Commits = {
     sha?: string | null; 
     message?: string | null; 
     resolves?: Resolves[] | null; 
@@ -4185,19 +4212,19 @@ export namespace K8PodToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 

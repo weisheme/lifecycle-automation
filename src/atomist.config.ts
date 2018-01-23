@@ -290,4 +290,4 @@ export const configuration: any = {
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
-initMemoryMonitoring(`${appRoot.path}/heap`, false);
+initMemoryMonitoring(`${appRoot.path}/heap`);
