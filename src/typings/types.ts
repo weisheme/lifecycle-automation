@@ -4069,7 +4069,7 @@ export namespace K8PodToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
-    image?: Image | null; 
+    images?: _Images[] | null; 
   } 
 
   export type Statuses = {
@@ -4098,7 +4098,7 @@ export namespace K8PodToPushLifecycle {
     timestamp?: string | null; 
   } 
 
-  export type Image = {
+  export type _Images = {
     _id?: Long | null; 
     image?: string | null; 
     imageName?: string | null; 

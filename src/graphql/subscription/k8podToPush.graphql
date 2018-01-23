@@ -58,7 +58,7 @@ subscription K8PodToPushLifecycle {
                 timestamp
               }
             }
-            image {
+            images {
               _id
               image
               imageName

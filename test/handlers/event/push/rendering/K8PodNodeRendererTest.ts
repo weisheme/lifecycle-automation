@@ -185,36 +185,38 @@ describe("K8PodNodeRenderer", () => {
                     "name": "2.2.0-20170928175629"
                   }
                 ],
-                "image": {
-                  "_id": 123,
-                  "image": null,
-                  "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                  "pods": [
+                "images": [
                     {
-                      "_id": 456,
-                      "baseName": "srv1",
-                      "name": "srv1-asdf",
-                      "resourceVersion": 42,
-                      "phase": "Deleted",
-                      "containers": [
+                      "_id": 123,
+                      "image": null,
+                      "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                      "pods": [
                         {
-                          "_id": 789,
-                          "ready": true,
-                          "name": "srv1",
-                          "restartCount": 0,
-                          "resourceVersion": 111,
-                          "state": "running",
+                          "_id": 456,
+                          "baseName": "srv1",
+                          "name": "srv1-asdf",
+                          "resourceVersion": 42,
+                          "phase": "Deleted",
+                          "containers": [
+                            {
+                              "_id": 789,
+                              "ready": true,
+                              "name": "srv1",
+                              "restartCount": 0,
+                              "resourceVersion": 111,
+                              "state": "running",
+                              "environment": "prod",
+                              "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                              "timestamp": "2018-01-16T11:39:36.842Z"
+                            }
+                          ],
                           "environment": "prod",
-                          "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                          "timestamp": "2018-01-16T11:39:36.842Z"
+                          "timestamp": "2018-01-16T11:39:57Z",
+                          "namespace": ""
                         }
-                      ],
-                      "environment": "prod",
-                      "timestamp": "2018-01-16T11:39:57Z",
-                      "namespace": ""
+                      ]
                     }
-                  ]
-                }
+                ]
               },
               "repo": {
                 "owner": "atomisthq",
@@ -350,92 +352,94 @@ describe("K8PodNodeRenderer", () => {
                     "name": "2.2.0-20170928175629"
                   }
                 ],
-                "image": {
-                  "_id": 123,
-                  "image": null,
-                  "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                  "pods": [
+                "images": [
                     {
-                      "_id": 456,
-                      "baseName": "srv1",
-                      "name": "srv1-asdf",
-                      "resourceVersion": 42,
-                      "phase": "Deleted",
-                      "containers": [
+                      "_id": 123,
+                      "image": null,
+                      "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                      "pods": [
                         {
-                          "_id": 789,
-                          "ready": true,
-                          "name": "srv1",
-                          "restartCount": 0,
-                          "resourceVersion": 111,
-                          "state": "waiting",
+                          "_id": 456,
+                          "baseName": "srv1",
+                          "name": "srv1-asdf",
+                          "resourceVersion": 42,
+                          "phase": "Deleted",
+                          "containers": [
+                            {
+                              "_id": 789,
+                              "ready": true,
+                              "name": "srv1",
+                              "restartCount": 0,
+                              "resourceVersion": 111,
+                              "state": "waiting",
+                              "environment": "prod",
+                              "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                              "timestamp": "2018-01-16T11:39:36.842Z"
+                            },
+                            {
+                              "_id": 789,
+                              "ready": true,
+                              "name": "srv1",
+                              "restartCount": 0,
+                              "resourceVersion": 111,
+                              "state": "waiting",
+                              "environment": "prod",
+                              "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                              "timestamp": "2018-01-16T11:39:36.842Z"
+                            },
+                            {
+                              "_id": 789,
+                              "ready": true,
+                              "name": "srv1",
+                              "restartCount": 0,
+                              "resourceVersion": 111,
+                              "state": "terminated",
+                              "environment": "prod",
+                              "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                              "timestamp": "2018-01-16T11:39:36.842Z"
+                            },
+                            {
+                              "_id": 789,
+                              "ready": true,
+                              "name": "srv1",
+                              "restartCount": 0,
+                              "resourceVersion": 111,
+                              "state": "terminated",
+                              "environment": "prod",
+                              "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                              "timestamp": "2018-01-16T11:39:36.842Z"
+                            },
+                            {
+                              "_id": 789,
+                              "ready": true,
+                              "name": "srv1",
+                              "restartCount": 0,
+                              "resourceVersion": 111,
+                              "state": "terminated",
+                              "environment": "prod",
+                              "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                              "timestamp": "2018-01-16T11:39:36.842Z"
+                            }
+                          ],
                           "environment": "prod",
-                          "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                          "timestamp": "2018-01-16T11:39:36.842Z"
+                          "timestamp": "2018-01-16T11:39:57Z",
+                          "namespace": ""
                         },
                         {
-                          "_id": 789,
-                          "ready": true,
-                          "name": "srv1",
-                          "restartCount": 0,
-                          "resourceVersion": 111,
-                          "state": "waiting",
-                          "environment": "prod",
-                          "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                          "timestamp": "2018-01-16T11:39:36.842Z"
-                        },
-                        {
-                          "_id": 789,
-                          "ready": true,
-                          "name": "srv1",
-                          "restartCount": 0,
-                          "resourceVersion": 111,
-                          "state": "terminated",
-                          "environment": "prod",
-                          "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                          "timestamp": "2018-01-16T11:39:36.842Z"
-                        },
-                        {
-                          "_id": 789,
-                          "ready": true,
-                          "name": "srv1",
-                          "restartCount": 0,
-                          "resourceVersion": 111,
-                          "state": "terminated",
-                          "environment": "prod",
-                          "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                          "timestamp": "2018-01-16T11:39:36.842Z"
-                        },
-                        {
-                          "_id": 789,
-                          "ready": true,
-                          "name": "srv1",
-                          "restartCount": 0,
-                          "resourceVersion": 111,
-                          "state": "terminated",
-                          "environment": "prod",
-                          "imageName": "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
-                          "timestamp": "2018-01-16T11:39:36.842Z"
+                          "_id": 456,
+                          "baseName": "srv1",
+                          "name": "srv1-asdf",
+                          "resourceVersion": 42,
+                          "phase": "Deleted",
+                          "containers": [
+                          ],
+                          "environment": "staging",
+                          "timestamp": "2018-01-16T11:39:57Z",
+                          "namespace": ""
                         }
-                      ],
-                      "environment": "prod",
-                      "timestamp": "2018-01-16T11:39:57Z",
-                      "namespace": ""
-                    },
-                    {
-                      "_id": 456,
-                      "baseName": "srv1",
-                      "name": "srv1-asdf",
-                      "resourceVersion": 42,
-                      "phase": "Deleted",
-                      "containers": [
-                      ],
-                      "environment": "staging",
-                      "timestamp": "2018-01-16T11:39:57Z",
-                      "namespace": ""
+                      ]
                     }
-                  ]
-                }
+                ]
               },
               "repo": {
                 "owner": "atomisthq",
