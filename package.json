@@ -27,6 +27,7 @@
     "@atomist/slack-messages": "^0.12.1",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
+    "axios": "https://atomist.jfrog.io/atomist/npm-dev/axios/-/axios-0.17.1-proxy-fix-20180111160124.tgz",
     "base64-js": "^1.2.1",
     "cf-nodejs-client": "^0.13.0",
     "cfenv": "^1.0.4",
