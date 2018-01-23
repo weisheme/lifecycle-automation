@@ -516,7 +516,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
 
     public render(push: graphql.K8PodToPushLifecycle.Pushes, actions: Action[],
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
-        const images = [push.after.image];
+        const images = push.after.images;
         const messages = [];
         images.forEach(image => {
             const pods = image.pods;
