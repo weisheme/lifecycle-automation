@@ -64,12 +64,16 @@ export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRep
                 }
             });
 
-            const chatIds = p.commits.filter(c => c.author && c.author.person && c.author.person.chatId)
+            const chatIds = p.commits.filter(c => c.author &&
+                c.author.person &&
+                c.author.person.chatId &&
+                c.author.person.chatId.chatTeam &&
+                c.author.person.chatId.chatTeam.id)
                 .map(c => c.author.person.chatId);
 
             return sendUnMappedRepoMessage(chatIds, p.repo, ctx, botNames);
         }))
-            .then(() => Success, failure);
+        .then(() => Success, failure);
     }
 
 }
@@ -100,7 +104,7 @@ export function sendUnMappedRepoMessage(
             addressSlackUsers(chatId.chatTeam.id, chatId.screenName),
             { id });
     }))
-        .then(() => Success);
+    .then(() => Success);
 }
 
 /**
