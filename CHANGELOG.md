@@ -14,8 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Make sure branch is available on PullRequestToBranchLifecycle
 -   Ensure msgId is set before trying to extract the screen name
 -   Do not match partial image URLs [#104][104]
+-   Provide path to GitHubApi for GHE instances [#121][121]
+-   Account for channels without names [#123][123]
 
 [104]: https://github.com/atomist/lifecycle-automation/issues/104
+[121]: https://github.com/atomist/lifecycle-automation/issues/121
+[123]: https://github.com/atomist/lifecycle-automation/issues/123
 
 ## [0.2.6][] - 2017-11-15
 

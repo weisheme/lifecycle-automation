@@ -193,6 +193,26 @@ describe("PushToUnmappedRepo", () => {
             assert(matches[1].name === "gram-parsonsx");
         });
 
+        it("should find the best two matches when some channel names are null", () => {
+            const repo = "gram-parsons";
+            const channels: graphql.PushToUnmappedRepo.Channels[] = [
+                { name: "parsons" },
+                { name: "emmylou-harris" },
+                {},
+                { name: "gram-parsons-and-the-fallen-angels" },
+                { name: "gram-parson" },
+                { name: "chris-hillman" },
+                { name: "gram" },
+                { name: null },
+                { name: "gram-parsonsx" },
+                { name: "gram-par" },
+            ];
+            const matches = fuzzyRepoChannelMatch(repo, channels);
+            assert(matches.length === 2);
+            assert(matches[0].name === "gram-parson");
+            assert(matches[1].name === "gram-parsonsx");
+        });
+
     });
 
     describe("mapRepoMessage", () => {
