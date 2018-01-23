@@ -289,7 +289,8 @@ describe("K8PodNodeRenderer", () => {
     /* tslint:enable */
 
     it("should render single image with one running container", done => {
-        const event = JSON.parse(singleImageWithRunningContainer) as EventFired<graphql.StatusToPushLifecycle.Subscription>;
+        const event = JSON.parse(singleImageWithRunningContainer)as
+            EventFired<graphql.StatusToPushLifecycle.Subscription>;
         const status = event.data.Status[0];
         const push = status.commit.pushes[0];
         const renderer = new K8PodNodeRenderer();
@@ -509,7 +510,8 @@ describe("K8PodNodeRenderer", () => {
     /* tslint:enable */
 
     it("should render single image with many containers", done => {
-        const event = JSON.parse(singleImageWithManyContainers) as EventFired<graphql.StatusToPushLifecycle.Subscription>;
+        const event = JSON.parse(singleImageWithManyContainers) as
+            EventFired<graphql.StatusToPushLifecycle.Subscription>;
         const status = event.data.Status[0];
         const push = status.commit.pushes[0];
         const renderer = new K8PodNodeRenderer();
