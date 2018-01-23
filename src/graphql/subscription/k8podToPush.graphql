@@ -4,143 +4,169 @@ subscription K8PodToPushLifecycle {
     name
     state
     images {
-      tag {
-        commit {
-          pushes {
-            builds {
-              id
-              buildUrl
-              name
-              provider
-              status
-              commit {
-                sha
-              }
-              timestamp
-              workflow {
-                id
-                name
-                provider
-                config
-                builds {
-                  jobId
-                  jobName
-                  finishedAt
-                  startedAt
-                  status
-                  id
-                  buildUrl
-                }
-              }
-            }
-            before {
+      commits {
+        pushes {
+          builds {
+            id
+            buildUrl
+            name
+            provider
+            status
+            commit {
               sha
-            }
-            after {
-              sha
-              message
-              statuses {
-                context
-                description
-                targetUrl
-                state
-              }
-              tags {
-                name
-                release {
-                  name
-                }
-                builds {
-                  buildId
-                  buildUrl
-                  name
-                  provider
-                  status
-                  timestamp
-                }
-              }
-            }
-            repo {
-              owner
-              name
-              channels {
-                name
-                team {
-                  id
-                }
-              }
-              labels {
-                name
-              }
-              org {
-                provider {
-                  url
-                  apiUrl
-                  gitUrl
-                }
-                team {
-                  id
-                  chatTeams {
-                    id
-                    preferences {
-                      name
-                      value
-                    }
-                  }
-                }
-              }
-              defaultBranch
-            }
-            commits {
-              sha
-              message
-              resolves {
-                number
-                name
-                title
-                state
-              }
-              impact {
-                data
-                url
-              }
-              apps {
-                state
-                host
-                domain
-                data
-              }
-              tags {
-                name
-                release {
-                  name
-                }
-                containers {
-                  pods {
-                    host
-                    state
-                    name
-                  }
-                  image
-                }
-              }
-              author {
-                login
-                person {
-                  chatId {
-                    screenName
-                  }
-                }
-              }
-              timestamp
             }
             timestamp
-            branch
+            workflow {
+              id
+              name
+              provider
+              config
+              builds {
+                jobId
+                jobName
+                finishedAt
+                startedAt
+                status
+                id
+                buildUrl
+              }
+            }
+          }
+          before {
+            sha
+          }
+          after {
+            sha
+            message
+            statuses {
+              context
+              description
+              targetUrl
+              state
+            }
+            tags {
+              name
+              release {
+                name
+              }
+              builds {
+                buildId
+                buildUrl
+                name
+                provider
+                status
+                timestamp
+              }
+            }
+            images {
+              _id
+              image
+              imageName
+              pods {
+                _id
+                name
+                phase
+                environment
+                timestamp
+                baseName
+                namespace
+                resourceVersion
+                containers {
+                  _id
+                  name
+                  imageName
+                  timestamp
+                  environment
+                  state
+                  ready
+                  restartCount
+                  statusJSON
+                  resourceVersion
+                }
+              }
+              timestamp
+            }
+          }
+          repo {
+            owner
+            name
+            channels {
+              name
+              team {
+                id
+              }
+            }
+            labels {
+              name
+            }
+            org {
+              provider {
+                url
+                apiUrl
+                gitUrl
+              }
+              team {
+                id
+                chatTeams {
+                  id
+                  preferences {
+                    name
+                    value
+                  }
+                }
+              }
+            }
+            defaultBranch
+          }
+          commits {
+            sha
+            message
+            resolves {
+              number
+              name
+              title
+              state
+            }
+            impact {
+              data
+              url
+            }
+            apps {
+              state
+              host
+              domain
+              data
+            }
+            tags {
+              name
+              release {
+                name
+              }
+              containers {
+                pods {
+                  host
+                  state
+                  name
+                }
+                image
+              }
+            }
+            author {
+              login
+              person {
+                chatId {
+                  screenName
+                }
+              }
+            }
+            timestamp
           }
           timestamp
+          branch
         }
         timestamp
       }
+      timestamp
     }
     timestamp
   }
