@@ -297,9 +297,20 @@ describe("K8PodNodeRenderer", () => {
         const push = status.commit.pushes[0];
         const renderer = new K8PodNodeRenderer();
         renderer.render(push, [], {attachments: []}, undefined).then(msg => {
-            const actual = msg.attachments[0].text;
-            const expected = "`sforzando-dockerv2-local.jfrog.io/srv1:0.1.0` prod.srv1-asdf: 1 running";
-            assert.deepEqual(actual, expected);
+            const expected = [
+                {
+                    actions: [],
+                    author_icon: "https://images.atomist.com/rug/kubes.png",
+                    author_name: "prod Containers",
+                    fallback: "1 running",
+                    footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "1 running",
+                },
+            ];
+            assert.deepEqual(msg.attachments, expected);
         })
         .then(done, done);
     });
@@ -521,11 +532,31 @@ describe("K8PodNodeRenderer", () => {
         const push = status.commit.pushes[0];
         const renderer = new K8PodNodeRenderer();
         renderer.render(push, [], {attachments: []}, undefined).then(msg => {
-            const actual = msg.attachments[0].text;
-            const expected = ""
-                + "`sforzando-dockerv2-local.jfrog.io/srv1:0.1.0` prod.srv1-asdf: 0 running, 2 waiting, 3 terminated\n"
-                + "`sforzando-dockerv2-local.jfrog.io/srv1:0.1.0` staging.srv1-asdf: 0 running";
-            assert.deepEqual(actual, expected);
+            const expected = [
+                {
+                    actions: [],
+                    author_icon: "https://images.atomist.com/rug/kubes.png",
+                    author_name: "prod Containers",
+                    fallback: "0 running, 2 waiting, 3 terminated",
+                    footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "0 running, 2 waiting, 3 terminated",
+                },
+                {
+                    actions: [],
+                    author_icon: "https://images.atomist.com/rug/kubes.png",
+                    author_name: "staging Containers",
+                    fallback: "0 running",
+                    footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "0 running",
+                },
+            ];
+            assert.deepEqual(msg.attachments, expected);
         })
             .then(done, done);
     });
@@ -703,18 +734,38 @@ describe("K8PodNodeRenderer", () => {
 }`;
     /* tslint:enable */
 
-    it("should render single image with many containers", done => {
+    it("should render multiple images", done => {
         const event = JSON.parse(multipleImages) as
             EventFired<graphql.StatusToPushLifecycle.Subscription>;
         const status = event.data.Status[0];
         const push = status.commit.pushes[0];
         const renderer = new K8PodNodeRenderer();
         renderer.render(push, [], {attachments: []}, undefined).then(msg => {
-            const actual = msg.attachments[0].text;
-            const expected = ""
-                + "`sforzando-dockerv2-local.jfrog.io/srv1:0.1.0` prod.srv1-asdf: 1 running\n"
-                + "`sforzando-dockerv2-local.jfrog.io/srv1:0.2.0` prod.srv1-asdf: 0 running";
-            assert.deepEqual(actual, expected);
+            const expected = [
+                {
+                    actions: [],
+                    author_icon: "https://images.atomist.com/rug/kubes.png",
+                    author_name: "prod Containers",
+                    fallback: "1 running",
+                    footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "1 running",
+                },
+                {
+                    actions: [],
+                    author_icon: "https://images.atomist.com/rug/kubes.png",
+                    author_name: "prod Containers",
+                    fallback: "0 running",
+                    footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.2.0",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "0 running",
+                },
+            ];
+            assert.deepEqual(msg.attachments, expected);
         })
             .then(done, done);
     });
