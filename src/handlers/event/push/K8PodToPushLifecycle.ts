@@ -27,6 +27,6 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
 
     protected extractChatTeams(event: EventFired<graphql.K8PodToPushLifecycle.Subscription>)
         : ChatTeam[] {
-        return _.get(event, "data.K8Pod[0].images[0].commit[0].pushes[0].repo.org.team.chatTeams");
+        return _.get(event, "data.K8Pod[0].images[0].commits[0].pushes[0].repo.org.team.chatTeams");
     }
 }
