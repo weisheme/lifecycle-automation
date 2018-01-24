@@ -9,7 +9,9 @@ import * as GitHubApi from "github";
 import * as URL from "url";
 import { error } from "../../../util/messages";
 
-export function api(token: string, apiUrl: string = "https://api.github.com/"): GitHubApi {
+export const DefaultGitHubApiUrl = "https://api.github.com/";
+
+export function api(token: string, apiUrl: string = DefaultGitHubApiUrl): GitHubApi {
     // separate the url
     const url = URL.parse(apiUrl);
 

@@ -2,6 +2,7 @@ import { HandlerContext } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
+import { DefaultGitHubApiUrl } from "../handlers/command/github/gitHubApi";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
 
@@ -91,7 +92,7 @@ export function apiUrl(repo: any): string {
         }
         return providerUrl;
     } else {
-        return "https://api.github.com";
+        return DefaultGitHubApiUrl;
     }
 }
 

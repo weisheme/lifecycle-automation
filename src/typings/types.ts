@@ -1748,6 +1748,7 @@ export namespace BotJoinedChannel {
 
   export type Orgs = {
     owner?: string | null; 
+    ownerType?: OwnerType | null; 
     provider?: _Provider | null; 
     repo?: Repo[] | null; 
   } 

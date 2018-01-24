@@ -186,6 +186,18 @@ function populateMapCommand(c: CreateChannel, repo: graphql.PushToUnmappedRepo.R
     return c;
 }
 
+/**
+ * Find the best `max` channel name matches with `repo`.  To
+ * match either the repository name must be contained in the channel
+ * name or vice versa.  Matches are rated more highly if the
+ * difference in length between the channel and repository names is
+ * smaller, sorting matches with the same length difference by name.
+ *
+ * @param repo name of repository
+ * @param channels channels to search for matches
+ * @param max maximum number of repositories to return
+ * @return array of `max` matching channels
+ */
 export function fuzzyRepoChannelMatch(
     repo: string,
     channels: graphql.PushToUnmappedRepo.Channels[],

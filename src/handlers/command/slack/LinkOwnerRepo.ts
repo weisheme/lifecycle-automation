@@ -14,9 +14,10 @@ import {
 } from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
+import { DefaultGitHubApiUrl } from "../github/gitHubApi";
 import { LinkRepo } from "./LinkRepo";
 
-@CommandHandler("Link a repository, provided as an owner/repo slug, and channel")
+@CommandHandler("Link a repository, provided as an owner/repo|api slug, and channel")
 @Tags("slack", "repo")
 export class LinkOwnerRepo implements HandleCommand {
 
@@ -26,18 +27,15 @@ export class LinkOwnerRepo implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
-    @MappedParameter(MappedParameters.GitHubApiUrl)
-    public apiUrl: string;
-
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     @Parameter({
         displayName: "Repository Slug",
         description: "'owner/name' of the repository to link",
-        pattern: /^[-.\w]+\/[-.\w]+$/,
+        pattern: /^[-.\w]+\/[-.\w]+\|\S*$/,
         minLength: 1,
-        maxLength: 200,
+        maxLength: 512,
         required: true,
     })
     public slug: string;
@@ -49,9 +47,18 @@ export class LinkOwnerRepo implements HandleCommand {
     public msg: string = "";
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        const slugParts = this.slug.split("/", 2);
+        const slugApiParts = this.slug.split("|");
+        if (!slugApiParts || slugApiParts.length !== 2 || !slugApiParts[0]) {
+            const err = `failed to parse slug '${this.slug}' into slug and API, ` +
+                `not linking to #${this.channelName}`;
+            console.error(err);
+            return ctx.messageClient.respond(err)
+                .then(() => Success, failure);
+        }
+        const apiUrl = (slugApiParts[1]) ? slugApiParts[1] : DefaultGitHubApiUrl;
+        const slugParts = slugApiParts[0].split("/");
         if (!slugParts || slugParts.length !== 2 || !slugParts[0] || !slugParts[1]) {
-            const err = `failed to parse repo slug '${this.slug}' into owner and name, ` +
+            const err = `failed to parse repo slug '${slugApiParts[0]}' into owner and name, ` +
                 `not linking to #${this.channelName}`;
             console.error(err);
             return ctx.messageClient.respond(err)
@@ -62,7 +69,7 @@ export class LinkOwnerRepo implements HandleCommand {
         const linkRepo = new LinkRepo();
         linkRepo.channelId = this.channelId;
         linkRepo.channelName = this.channelName;
-        linkRepo.apiUrl = this.apiUrl;
+        linkRepo.apiUrl = apiUrl;
         linkRepo.githubToken = this.githubToken;
         linkRepo.name = name;
         linkRepo.owner = owner;
