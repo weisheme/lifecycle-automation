@@ -123,8 +123,15 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 
         let author = null;
         let commitsByAuthor: any = {};
+        let unkonwCommitter = false;
         for (const commit of commits) {
-            const ca = (commit.author != null ? commit.author.login : "(unknown)");
+            const ca = (commit.author != null && commit.author.login && commit.author.login != ""
+                ? commit.author.login : "(unknown)");
+
+            if (ca === "(unknown)") {
+                unkonwCommitter = true;
+            }
+
             if (author == null || author !== ca) {
                 commitsByAuthor = {
                     author: ca,
@@ -183,13 +190,18 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         if (attachments.length > 0) {
             const lastAttachment = attachments[attachments.length - 1];
             lastAttachment.actions = actions;
-            lastAttachment.footer_icon = "https://images.atomist.com/rug/commit.png";
-            if (lastAttachment.footer != null) {
-                lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
+            if (unkonwCommitter) {
+                lastAttachment.footer_icon = "https://images.atomist.com/rug/question.png";
+                lastAttachment.footer = `Unrecognized author. Please use a known email address to commit.`;
             } else {
-                lastAttachment.footer = url(repoUrl(repo), repoSlug(repo));
+                lastAttachment.footer_icon = "https://images.atomist.com/rug/commit.png";
+                if (lastAttachment.footer != null) {
+                    lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
+                } else {
+                    lastAttachment.footer = url(repoUrl(repo), repoSlug(repo));
+                }
+                lastAttachment.ts = Math.floor(Date.parse(push.timestamp) / 1000);
             }
-            lastAttachment.ts = Math.floor(Date.parse(push.timestamp) / 1000);
         }
 
         msg.attachments = msg.attachments.concat(attachments);
