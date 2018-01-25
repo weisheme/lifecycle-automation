@@ -265,7 +265,7 @@ export function mapRepoMessage(
     if (addSelector) {
         const menu: MenuSpecification = {
             text: "Other channel...",
-            options: channels.sort((a, b) => a.name.localeCompare(b.name)).slice(0, 100)
+            options: channels.filter(a => a.name).sort((a, b) => a.name.localeCompare(b.name)).slice(0, 100)
                 .map(c => ({ text: c.name, value: c.name })),
         };
         const mapCommand = new CreateChannel();
