@@ -1252,6 +1252,7 @@ export namespace ApplicationToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -1278,6 +1279,39 @@ export namespace ApplicationToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -1361,19 +1395,19 @@ export namespace ApplicationToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -2174,6 +2208,7 @@ export namespace BuildToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -2200,6 +2235,39 @@ export namespace BuildToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -2283,19 +2351,19 @@ export namespace BuildToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -3852,6 +3920,7 @@ export namespace IssueToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -3878,6 +3947,39 @@ export namespace IssueToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -3961,19 +4063,19 @@ export namespace IssueToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -5018,6 +5120,7 @@ export namespace ParentImpactToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -5044,6 +5147,39 @@ export namespace ParentImpactToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -5127,19 +5263,19 @@ export namespace ParentImpactToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -5712,6 +5848,7 @@ export namespace PushToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -5738,6 +5875,39 @@ export namespace PushToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -5821,19 +5991,19 @@ export namespace PushToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -6024,6 +6194,7 @@ export namespace ReleaseToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -6050,6 +6221,39 @@ export namespace ReleaseToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -6133,19 +6337,19 @@ export namespace ReleaseToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: __Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type __Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -6909,6 +7113,7 @@ export namespace StatusToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -6935,6 +7140,39 @@ export namespace StatusToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -7018,19 +7256,19 @@ export namespace StatusToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
@@ -7120,6 +7358,7 @@ export namespace TagToPushLifecycle {
     message?: string | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
+    images?: Images[] | null; 
   } 
 
   export type Statuses = {
@@ -7146,6 +7385,39 @@ export namespace TagToPushLifecycle {
     provider?: string | null; 
     status?: BuildStatus | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
   } 
 
   export type Repo = {
@@ -7229,19 +7501,19 @@ export namespace TagToPushLifecycle {
   export type _Tags = {
     name?: string | null; 
     release?: _Release | null; 
-    containers?: Containers[] | null; 
+    containers?: _Containers[] | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
   } 
 
-  export type Containers = {
-    pods?: Pods[] | null; 
+  export type _Containers = {
+    pods?: _Pods[] | null; 
     image?: string | null; 
   } 
 
-  export type Pods = {
+  export type _Pods = {
     host?: string | null; 
     state?: string | null; 
     name?: string | null; 
