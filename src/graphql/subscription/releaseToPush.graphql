@@ -56,6 +56,34 @@ subscription ReleaseToPushLifecycle {
                 timestamp
               }
             }
+            images {
+              _id
+              image
+              imageName
+              pods {
+                _id
+                name
+                phase
+                environment
+                timestamp
+                baseName
+                namespace
+                resourceVersion
+                containers {
+                  _id
+                  name
+                  imageName
+                  timestamp
+                  environment
+                  state
+                  ready
+                  restartCount
+                  statusJSON
+                  resourceVersion
+                }
+              }
+              timestamp
+            }
           }
           repo {
             owner
