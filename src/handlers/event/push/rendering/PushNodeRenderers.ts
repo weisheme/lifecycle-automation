@@ -505,11 +505,6 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
 
 interface Environment {
     name: string;
-    pods: PodContainerState[];
-}
-
-interface PodContainerState {
-    name: string;
     running: number;
     waiting: number;
     terminated: number;
@@ -529,7 +524,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
     public render(push: graphql.K8PodToPushLifecycle.Pushes, actions: Action[],
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
         const images = push.after.images;
-        const messages = [];
+        let isInitialEnv = true;
         images.forEach(image => {
             const pods = image.pods;
             const envs: Environment[] = [];
@@ -539,48 +534,41 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
                 if (_.isUndefined(env)) {
                     env = {
                         name: pod.environment,
-                        pods: [],
+                        running: 0,
+                        waiting: 0,
+                        terminated: 0,
                     };
                     envs.push(env);
                 }
-                const podContainerState: PodContainerState = {
-                    name: pod.name,
-                    running: 0,
-                    waiting: 0,
-                    terminated: 0,
-                };
-                env.pods.push(podContainerState);
                 pod.containers.forEach(c => {
                     if (c.state === "running") {
-                        podContainerState.running++;
+                        env.running++;
                     } else if (c.state === "waiting") {
-                        podContainerState.waiting++;
+                        env.waiting++;
                     } else if (c.state === "terminated") {
-                        podContainerState.terminated++;
+                        env.terminated++;
                     }
                 });
             });
-            envs.forEach(env => {
-                env.pods.forEach(p => {
-                    const terminatedCountMsg = p.terminated > 0 ? ", " + p.terminated + " terminated" : "";
-                    const waitingCountMsg = p.waiting > 0 ? ", " + p.waiting + " waiting" : "";
-                    const stateOfContainers = `${p.running} running${waitingCountMsg}${terminatedCountMsg}`;
-                    messages.push(`${codeLine(image.imageName)} ${env.name}.${p.name}: ${stateOfContainers}`);
-                });
+            envs.forEach(e => {
+                    const terminatedCountMsg = e.terminated > 0 ? ", " + e.terminated + " terminated" : "";
+                    const waitingCountMsg = e.waiting > 0 ? ", " + e.waiting + " waiting" : "";
+                    const stateOfContainers = `${e.running} running${waitingCountMsg}${terminatedCountMsg}`;
+                    const attachment: Attachment = {
+                        text: escape(`\`${e.name}\` ${stateOfContainers}`),
+                        fallback: escape(`${e.name} - ${stateOfContainers}`),
+                        mrkdwn_in: ["text"],
+                        footer: image.imageName,
+                        actions,
+                    };
+                    if (isInitialEnv) {
+                        isInitialEnv = false;
+                        attachment.author_name = `Containers`;
+                        attachment.author_icon = `https://images.atomist.com/rug/kubes.png`;
+                    }
+                    msg.attachments.push(attachment);
             });
         });
-
-        const attachment: Attachment = {
-            text: escape(messages.join("\n")),
-            author_name: "Containers",
-            author_icon: `https://images.atomist.com/rug/kubes.png`,
-            fallback: escape(messages.join("\n")),
-            // color: "#767676",
-            mrkdwn_in: ["text"],
-            actions,
-        };
-        msg.attachments.push(attachment);
-
         return Promise.resolve(msg);
     }
 
