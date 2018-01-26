@@ -524,6 +524,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
     public render(push: graphql.K8PodToPushLifecycle.Pushes, actions: Action[],
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
         const images = push.after.images;
+        let isInitialEnv = true;
         images.forEach(image => {
             const pods = image.pods;
             const envs: Environment[] = [];
@@ -554,14 +555,17 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
                     const waitingCountMsg = e.waiting > 0 ? ", " + e.waiting + " waiting" : "";
                     const stateOfContainers = `${e.running} running${waitingCountMsg}${terminatedCountMsg}`;
                     const attachment: Attachment = {
-                        text: escape(stateOfContainers),
-                        author_name: `${e.name} Containers`,
-                        author_icon: `https://images.atomist.com/rug/kubes.png`,
-                        fallback: escape(stateOfContainers),
+                        text: escape(`\`${e.name}\` ${stateOfContainers}`),
+                        fallback: escape(`${e.name} - ${stateOfContainers}`),
                         mrkdwn_in: ["text"],
                         footer: image.imageName,
                         actions,
                     };
+                    if (isInitialEnv) {
+                        isInitialEnv = false;
+                        attachment.author_name = `Containers`;
+                        attachment.author_icon = `https://images.atomist.com/rug/kubes.png`;
+                    }
                     msg.attachments.push(attachment);
             });
         });

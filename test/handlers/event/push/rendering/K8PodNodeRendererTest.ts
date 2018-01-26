@@ -301,13 +301,13 @@ describe("K8PodNodeRenderer", () => {
                 {
                     actions: [],
                     author_icon: "https://images.atomist.com/rug/kubes.png",
-                    author_name: "prod Containers",
-                    fallback: "1 running",
+                    author_name: "Containers",
+                    fallback: "prod - 1 running",
                     footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
                     mrkdwn_in: [
                         "text",
                     ],
-                    text: "1 running",
+                    text: "`prod` 1 running",
                 },
             ];
             assert.deepEqual(msg.attachments, expected);
@@ -536,24 +536,22 @@ describe("K8PodNodeRenderer", () => {
                 {
                     actions: [],
                     author_icon: "https://images.atomist.com/rug/kubes.png",
-                    author_name: "prod Containers",
-                    fallback: "0 running, 2 waiting, 3 terminated",
+                    author_name: "Containers",
+                    fallback: "prod - 0 running, 2 waiting, 3 terminated",
                     footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
                     mrkdwn_in: [
                         "text",
                     ],
-                    text: "0 running, 2 waiting, 3 terminated",
+                    text: "`prod` 0 running, 2 waiting, 3 terminated",
                 },
                 {
                     actions: [],
-                    author_icon: "https://images.atomist.com/rug/kubes.png",
-                    author_name: "staging Containers",
-                    fallback: "0 running",
+                    fallback: "staging - 0 running",
                     footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
                     mrkdwn_in: [
                         "text",
                     ],
-                    text: "0 running",
+                    text: "`staging` 0 running",
                 },
             ];
             assert.deepEqual(msg.attachments, expected);
@@ -745,24 +743,22 @@ describe("K8PodNodeRenderer", () => {
                 {
                     actions: [],
                     author_icon: "https://images.atomist.com/rug/kubes.png",
-                    author_name: "prod Containers",
-                    fallback: "1 running",
+                    author_name: "Containers",
+                    fallback: "prod - 1 running",
                     footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.1.0",
                     mrkdwn_in: [
                         "text",
                     ],
-                    text: "1 running",
+                    text: "`prod` 1 running",
                 },
                 {
                     actions: [],
-                    author_icon: "https://images.atomist.com/rug/kubes.png",
-                    author_name: "prod Containers",
-                    fallback: "0 running",
+                    fallback: "prod - 0 running",
                     footer: "sforzando-dockerv2-local.jfrog.io/srv1:0.2.0",
                     mrkdwn_in: [
                         "text",
                     ],
-                    text: "0 running",
+                    text: "`prod` 0 running",
                 },
             ];
             assert.deepEqual(msg.attachments, expected);
