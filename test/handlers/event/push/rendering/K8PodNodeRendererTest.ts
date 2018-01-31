@@ -766,4 +766,306 @@ describe("K8PodNodeRenderer", () => {
             .then(done, done);
     });
 
+    /* tslint:disable */
+    const multiplePods = `{
+	"data": {
+		"Status": [{
+			"commit": {
+				"pushes": [{
+					"after": {
+						"images": [{
+							"_id": 1395189,
+							"image": null,
+							"imageName": "sforzando-dockerv2-local.jfrog.io/lifecycle-automation:0.3.2-20180126144143",
+							"pods": [{
+								"_id": 1430758,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-848533275-zd7i4",
+								"resourceVersion": 3279283,
+								"phase": "Running",
+								"containers": [{
+									"_id": 1395277,
+									"ready": false,
+									"name": "lifecycle-automation",
+									"restartCount": 0,
+									"resourceVersion": 2147483647,
+									"state": "terminated",
+									"environment": "prod"
+								}],
+								"environment": "prod",
+								"timestamp": "2018-01-30T23:11:07Z",
+								"namespace": ""
+							}, {
+								"_id": 1430753,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-848533275-mblhi",
+								"resourceVersion": 3249955,
+								"phase": "Running",
+								"containers": [{
+									"_id": 1395277,
+									"ready": false,
+									"name": "lifecycle-automation",
+									"restartCount": 0,
+									"resourceVersion": 2147483647,
+									"state": "terminated",
+									"environment": "prod"
+								}],
+								"environment": "prod",
+								"timestamp": "2018-01-30T23:10:49Z",
+								"namespace": ""
+							}, {
+								"_id": 1430750,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-848533275-7z1qs",
+								"resourceVersion": 3280972,
+								"phase": "Running",
+								"containers": [{
+									"_id": 1395277,
+									"ready": false,
+									"name": "lifecycle-automation",
+									"restartCount": 0,
+									"resourceVersion": 2147483647,
+									"state": "terminated",
+									"environment": "prod"
+								}],
+								"environment": "prod",
+								"timestamp": "2018-01-30T23:10:35Z",
+								"namespace": ""
+							}, {
+								"_id": 1429038,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-1681691298-ub53o",
+								"resourceVersion": 6158492,
+								"phase": "Running",
+								"containers": [{
+									"_id": 1395226,
+									"ready": true,
+									"name": "lifecycle-automation",
+									"restartCount": 9,
+									"resourceVersion": 6158492,
+									"state": "running",
+									"environment": "staging"
+								}],
+								"environment": "staging",
+								"timestamp": "2018-01-30T20:45:47Z",
+								"namespace": ""
+							}, {
+								"_id": 1395286,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-619812634-0xnoq",
+								"resourceVersion": 2147483647,
+								"phase": "Deleted",
+								"containers": [{
+									"_id": 1395277,
+									"ready": false,
+									"name": "lifecycle-automation",
+									"restartCount": 0,
+									"resourceVersion": 2147483647,
+									"state": "terminated",
+									"environment": "prod"
+								}],
+								"environment": "prod",
+								"timestamp": "2018-01-26T14:51:10Z",
+								"namespace": ""
+							}, {
+								"_id": 1395282,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-619812634-uucu9",
+								"resourceVersion": 2147483647,
+								"phase": "Deleted",
+								"containers": [{
+									"_id": 1395277,
+									"ready": false,
+									"name": "lifecycle-automation",
+									"restartCount": 0,
+									"resourceVersion": 2147483647,
+									"state": "terminated",
+									"environment": "prod"
+								}],
+								"environment": "prod",
+								"timestamp": "2018-01-26T14:51:05Z",
+								"namespace": ""
+							}, {
+								"_id": 1395276,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-619812634-v9ry0",
+								"resourceVersion": 2147483647,
+								"phase": "Deleted",
+								"containers": [{
+									"_id": 1395277,
+									"ready": false,
+									"name": "lifecycle-automation",
+									"restartCount": 0,
+									"resourceVersion": 2147483647,
+									"state": "terminated",
+									"environment": "prod"
+								}],
+								"environment": "prod",
+								"timestamp": "2018-01-26T14:50:51Z",
+								"namespace": ""
+							}, {
+								"_id": 1395225,
+								"baseName": "lifecycle-automation",
+								"name": "lifecycle-automation-1681691298-vfj9j",
+								"resourceVersion": 2147483647,
+								"phase": "Deleted",
+								"containers": [{
+									"_id": 1395226,
+									"ready": true,
+									"name": "lifecycle-automation",
+									"restartCount": 9,
+									"resourceVersion": 6158492,
+									"state": "running",
+									"environment": "staging"
+								}],
+								"environment": "staging",
+								"timestamp": "2018-01-26T14:45:07Z",
+								"namespace": ""
+							}],
+							"timestamp": "2018-01-26T14:42:44.912Z"
+						}],
+						"message": "rev version",
+						"sha": "d35e974637d5537dba18e8c84cef39bcb57efced",
+						"tags": [{
+							"builds": [],
+							"name": "0.3.2-20180126144143+travis.793",
+							"release": null
+						}, {
+							"builds": [],
+							"name": "0.3.2-20180126144143",
+							"release": {
+								"name": "0.3.2-20180126144143"
+							}
+						}]
+					},
+					"before": {
+						"sha": "74ff5fe277c9ff9c7f96e64ccc24831c80d0ea1f"
+					},
+					"branch": "master",
+					"builds": [{
+						"buildUrl": "https://travis-ci.org/atomist/lifecycle-automation/builds/333749345",
+						"commit": {
+							"sha": "d35e974637d5537dba18e8c84cef39bcb57efced"
+						},
+						"id": "T29E48P34_333749345",
+						"name": "793",
+						"provider": "travis",
+						"status": "passed",
+						"timestamp": "2018-01-26T14:42:48.337Z",
+						"workflow": null
+					}],
+					"commits": [{
+						"apps": [{
+							"data": null,
+							"domain": "k8.staging",
+							"host": "lifecycle-automation-1681691298-ub53o",
+							"state": "started"
+						}],
+						"author": {
+							"login": "cdupuis",
+							"person": {
+								"chatId": {
+									"screenName": "cd"
+								}
+							}
+						},
+						"impact": null,
+						"message": "rev version",
+						"resolves": [],
+						"sha": "d35e974637d5537dba18e8c84cef39bcb57efced",
+						"tags": [{
+							"containers": [],
+							"name": "0.3.2-20180126144143+travis.793",
+							"release": null
+						}, {
+							"containers": [],
+							"name": "0.3.2-20180126144143",
+							"release": {
+								"name": "0.3.2-20180126144143"
+							}
+						}],
+						"timestamp": "2018-01-26T14:38:55Z"
+					}],
+					"repo": {
+						"channels": [{
+							"name": "lifecycle-automation",
+							"team": {
+								"id": "T29E48P34"
+							}
+						}],
+						"defaultBranch": "master",
+						"labels": [{
+							"name": "duplicate"
+						}, {
+							"name": "question"
+						}, {
+							"name": "atomist:auto-merge"
+						}, {
+							"name": "bug"
+						}, {
+							"name": "enhancement"
+						}, {
+							"name": "invalid"
+						}, {
+							"name": "wontfix"
+						}, {
+							"name": "help wanted"
+						}],
+						"name": "lifecycle-automation",
+						"org": {
+							"provider": null,
+							"team": {
+								"id": "T29E48P34"
+							}
+						},
+						"owner": "atomist"
+					},
+					"timestamp": "2018-01-26T14:39:09.630Z"
+				}]
+			}
+		}]
+	},
+	"extensions": {
+		"type": "READ_ONLY",
+		"operationName": "StatusToPushLifecycle",
+		"team_id": "T095SFFBK",
+		"correlation_id": "d6e489ed-c251-4318-9f18-af6d68a11c97"
+	}
+}`;
+    /* tslint:enable */
+
+    it("should render multiple pods", done => {
+        const event = JSON.parse(multiplePods) as
+            EventFired<graphql.StatusToPushLifecycle.Subscription>;
+        const status = event.data.Status[0];
+        const push = status.commit.pushes[0];
+        const renderer = new K8PodNodeRenderer();
+        renderer.render(push, [], {attachments: []}, undefined).then(msg => {
+            const expected = [
+                {
+                    actions: [],
+                    author_icon: "https://images.atomist.com/rug/kubes.png",
+                    author_name: "Containers",
+                    fallback: "prod - 0 running, 6 terminated",
+                    footer: "sforzando-dockerv2-local.jfrog.io/lifecycle-automation:0.3.2-20180126144143",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "`prod` 0 running, 6 terminated",
+                },
+                {
+                    actions: [],
+                    fallback: "staging - 2 running",
+                    footer: "sforzando-dockerv2-local.jfrog.io/lifecycle-automation:0.3.2-20180126144143",
+                    mrkdwn_in: [
+                        "text",
+                    ],
+                    text: "`staging` 2 running",
+                },
+            ];
+            assert.deepEqual(msg.attachments, expected);
+        })
+            .then(done, done);
+    });
+
 });
