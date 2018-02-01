@@ -286,7 +286,7 @@ export const configuration: any = {
         termination: {
             graceful: notLocal,
         },
-        compress: true,
+        compress: false,
     },
 };
 
