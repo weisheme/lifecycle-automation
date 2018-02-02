@@ -6,6 +6,7 @@ import {
     HandlerResult,
     MappedParameter,
     MappedParameters,
+    Parameter,
     Secret,
     Secrets,
     Success,
@@ -165,6 +166,49 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                 return ctx.messageClient.respond(handleResponse(result, this.webUrl, this.owner, ctx, this.repo))
                     .then(() => Success, failure);
             });
+    }
+}
+
+@CommandHandler("Install webhook for a repositories")
+@Tags("github", "webhook")
+export class InstallGitHubReposWebhook implements HandleCommand {
+
+    @Parameter({
+        displayName: "repositories",
+        description: "comma separated list of repository names",
+        required: true})
+    public repos: string;
+
+    @MappedParameter(MappedParameters.GitHubOwner)
+    public owner: string;
+
+    @MappedParameter(MappedParameters.GitHubWebHookUrl)
+    public url: string;
+
+    @MappedParameter(MappedParameters.GitHubApiUrl)
+    public apiUrl: string;
+
+    @Secret(Secrets.userToken("repo"))
+    public githubToken: string;
+
+    public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        const o = this.owner;
+        const promises = this.repos.split(",").map(r => () => {
+            const payload = {
+                owner: o,
+                repo: r.trim(),
+                name: "web",
+                events: ["*"],
+                active: true,
+                config: {
+                    url: this.url,
+                    content_type: "json",
+                },
+            };
+            return (github.api(this.githubToken, this.apiUrl).repos as any).createHook(payload);
+        });
+        return promises.reduce((p, f) => p.then(f), Promise.resolve())
+            .then(() => Success, failure);
     }
 }
 

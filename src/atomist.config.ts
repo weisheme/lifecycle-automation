@@ -20,6 +20,7 @@ import { DisplayGitHubPullRequest } from "./handlers/command/github/DisplayGitHu
 import { EnableGitHubPullRequestAutoMerge } from "./handlers/command/github/EnableGitHubPullRequestAutoMerge";
 import {
     InstallGitHubOrgWebhook,
+    InstallGitHubReposWebhook,
     InstallGitHubRepoWebhook,
 } from "./handlers/command/github/InstallGitHubWebhook";
 import { ListMyGitHubIssues } from "./handlers/command/github/ListMyGitHubIssues";
@@ -161,6 +162,7 @@ export const configuration: any = {
         () => new EnableGitHubPullRequestAutoMerge(),
         () => new InstallGitHubOrgWebhook(),
         () => new InstallGitHubRepoWebhook(),
+        () => new InstallGitHubReposWebhook(),
         () => new ListMyGitHubIssues(),
         () => new MergeGitHubPullRequest(),
         () => new RaiseGitHubPullRequest(),
