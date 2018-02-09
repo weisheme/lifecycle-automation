@@ -13,6 +13,7 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { isGenerated } from "../../../../util/helpers";
+import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
 import { isPrTagged } from "../autoMerge";
 
@@ -327,7 +328,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
         if (context.rendererId === "pull_request") {
             if (repo.org &&
                 repo.org.provider &&
-                repo.org.provider.apiUrl === "https://api.github.com/" &&
+                repo.org.provider.apiUrl === DefaultGitHubApiUrl &&
                 context.orgToken) {
                 return this.assiggnReviewMenu(pr, repo, context.orgToken);
             } else {
