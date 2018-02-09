@@ -266,9 +266,6 @@ export namespace BotOwner {
   } 
 
   export type Members = {
-    isOwner?: string | null; 
-    isAdmin?: string | null; 
-    isPrimaryOwner?: string | null; 
     screenName?: string | null; 
   } 
 }

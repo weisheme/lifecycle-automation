@@ -1,9 +1,6 @@
 query BotOwner($teamId: ID!) {
   ChatTeam(id: $teamId) {
-    members(isPrimaryOwner: "true") @required {
-      isOwner
-      isAdmin
-      isPrimaryOwner
+    members(isOwner: "true") @required {
       screenName
     }
   }

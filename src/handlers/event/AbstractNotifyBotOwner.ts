@@ -67,10 +67,12 @@ function handleResult(team: ChatTeam,
                 return members.map(c => c.screenName);
             })
             .then(owners => {
-                console.log(`Notifying '${owners.join(", ")}' about GitHub activity`);
-                return ctx.messageClient.send(
-                    Message, addressSlackUsers(team.id, ...owners),
-                    { id: `bot_owner/github/notification`, ttl: 1000 * 60 * 60 * 24 * 7});
+                if (owners && owners.length > 0) {
+                    console.log(`Notifying '${owners.join(", ")}' about GitHub activity`);
+                    return ctx.messageClient.send(
+                        Message, addressSlackUsers(team.id, ...owners),
+                        { id: `bot_owner/github/notification`, ttl: 1000 * 60 * 60 * 24 * 7});
+                }
             })
             .then(() => Success, failure);
     } else {
