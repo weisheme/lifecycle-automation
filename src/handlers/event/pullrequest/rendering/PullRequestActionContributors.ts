@@ -325,7 +325,10 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
         const repo = context.lifecycle.extract("repo") as graphql.PullRequestToPullRequestLifecycle.Repo;
 
         if (context.rendererId === "pull_request") {
-            if (repo.org && repo.org.provider == null && context.orgToken) {
+            if (repo.org &&
+                repo.org.provider &&
+                repo.org.provider.apiUrl === "https://api.github.com/" &&
+                context.orgToken) {
                 return this.assiggnReviewMenu(pr, repo, context.orgToken);
             } else {
                 return Promise.resolve(this.assignReviewrButton(pr, repo));
