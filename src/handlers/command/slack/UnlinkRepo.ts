@@ -12,12 +12,10 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { guid } from "@atomist/automation-client/internal/util/string";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 
 import {
     codeLine,
-    SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
 import * as graphql from "../../../typings/types";
 import { success } from "../../../util/messages";
