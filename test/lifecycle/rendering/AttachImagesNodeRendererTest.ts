@@ -24,6 +24,26 @@ describe("AttachImagesNodeRenderer", () => {
             .then(() => done(), done);
     });
 
+    it("correctly attach 1 image from a link", done => {
+
+        const renderer = new AttachImagesNodeRenderer();
+        const node = {
+            body: "![https://media2.giphy.com/media/qilPKODIJZUgo/giphy.gif]" +
+            "(https://media2.giphy.com/media/qilPKODIJZUgo/giphy.gif)",
+        };
+        const msg: SlackMessage = {
+            attachments: [],
+        };
+
+        renderer.render(node, [], msg, null)
+            .then(rm => {
+                assert(rm.attachments.length === 1);
+                assert(rm.attachments[0].text === "giphy.gif");
+                assert(rm.attachments[0].image_url === "https://media2.giphy.com/media/qilPKODIJZUgo/giphy.gif");
+            })
+            .then(() => done(), done);
+    });
+
     it("correctly attach multiple images", done => {
 
         const renderer = new AttachImagesNodeRenderer();
