@@ -17,11 +17,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Provide path to GitHubApi for GHE instances [#121][121]
 -   Account for channels without names [#123][123]
 -   Fetch repositories from GitHub [#59][59]
+-   Catastrophic backtracking in image URL regular expression [#136][136]
 
 [104]: https://github.com/atomist/lifecycle-automation/issues/104
 [121]: https://github.com/atomist/lifecycle-automation/issues/121
 [123]: https://github.com/atomist/lifecycle-automation/issues/123
 [59]: https://github.com/atomist/lifecycle-automation/issues/59
+[136]: https://github.com/atomist/lifecycle-automation/issues/136
 
 ## [0.2.6][] - 2017-11-15
 
