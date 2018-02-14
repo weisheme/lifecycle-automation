@@ -196,10 +196,8 @@ function urlToImageAttachment(url: string): slack.Attachment {
  */
 export function extractImageUrls(body: string): slack.Attachment[] {
     const slackLinkRegExp = /<(https?:\/\/.*?)(?:\|.*?)?>/g;
-    // derived from https://stackoverflow.com/a/6927878/5464956
-    // changed to require HTTP
-    // tslint:disable-next-line:max-line-length
-    const urlRegExp = /\b(https?:\/\/(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+    // inspired by https://stackoverflow.com/a/6927878/5464956
+    const urlRegExp = /\bhttps?:\/\/[^\s<>\[\]]+[^\s`!()\[\]{};:'".,<>?«»“”‘’]/gi;
     const attachments: slack.Attachment[] = [];
     const bodyParts = body.split(slackLinkRegExp);
     for (let i = 0; i < bodyParts.length; i++) {
@@ -221,7 +219,13 @@ export function extractImageUrls(body: string): slack.Attachment[] {
             }
         }
     }
-    return attachments;
+    const uniqueAttachments: slack.Attachment[] = [];
+    attachments.forEach(a => {
+        if (!uniqueAttachments.some(ua => ua.image_url === a.image_url)) {
+            uniqueAttachments.push(a);
+        }
+    });
+    return uniqueAttachments;
 }
 
 export function extractLinkedIssues(body: string,
