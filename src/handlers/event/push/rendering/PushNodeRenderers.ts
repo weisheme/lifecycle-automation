@@ -337,7 +337,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.buildUrl;
+        return node.status;
     }
 
     public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
@@ -389,7 +389,11 @@ export function renderDecorator(build: graphql.PushToPushLifecycle.Builds, build
             title = `Build #${build.name}`;
         }
 
-        messages[0] = `${messages[0]} ${emoji} ${url(build.buildUrl, title)}`;
+        if (build.buildUrl) {
+            messages[0] = `${messages[0]} ${emoji} ${url(build.buildUrl, title)}`;
+        } else {
+            messages[0] = `${messages[0]} ${emoji} ${title}`;
+        }
         message = messages.join("\n");
 
         if (emojiStyle === "default") {
