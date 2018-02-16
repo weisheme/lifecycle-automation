@@ -1,3 +1,4 @@
+import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     Action,
     Attachment,
@@ -10,9 +11,11 @@ import {
     NodeRenderer,
     RendererContext,
 } from "../../../../lifecycle/Lifecycle";
+import * as graphql from "../../../../typings/types";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
-export class StatusesNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
+export class StatusesNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";
@@ -34,7 +37,10 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution imple
         }
     }
 
-    public render(push: any, actions: Action[], msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
+    public render(push: graphql.PushToPushLifecycle.Push,
+                  actions: Action[],
+                  msg: SlackMessage,
+                  context: RendererContext): Promise<SlackMessage> {
 
         // List all the statuses on the after commit
         const commit = push.after;
@@ -65,6 +71,89 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution imple
         const summary = summarizeStatusCounts(pending, success, error);
 
         const attachment: Attachment = {
+            author_name: lines.length > 1 ? "Checks" : "Check",
+            author_icon: `https://images.atomist.com/rug/status.png?random=${guid()}`,
+            color,
+            fallback: summary,
+            actions,
+            text: lines.join("\n"),
+        };
+        msg.attachments.push(attachment);
+
+        return Promise.resolve(msg);
+    }
+
+    private emoji(state: string): string {
+        switch (state) {
+            case "pending":
+                return EMOJI_SCHEME[this.emojiStyle].build.started;
+            case "success":
+                return EMOJI_SCHEME[this.emojiStyle].build.passed;
+            default:
+                return EMOJI_SCHEME[this.emojiStyle].build.failed;
+        }
+    }
+}
+
+export class PhaseNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    public showOnPush: boolean;
+    public emojiStyle: "default" | "atomist";
+
+    constructor() {
+        super("phases");
+    }
+
+    public configure(configuration: LifecycleConfiguration) {
+        this.showOnPush = configuration.configuration["show-statuses-on-push"] || true;
+        this.emojiStyle = configuration.configuration["emoji-style"] || "default";
+    }
+
+    public supports(node: any): boolean {
+        if (node.after) {
+            return this.showOnPush && node.after.statuses && node.after.statuses.length > 0;
+        } else {
+            return false;
+        }
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push,
+                  actions: Action[],
+                  msg: SlackMessage,
+                  context: RendererContext): Promise<SlackMessage> {
+
+        // List all the statuses on the after commit
+        const commit = push.after;
+        // exclude build statuses already displayed
+        const statuses = commit.statuses.filter(status => status.context.includes("sdm/"));
+        if (statuses.length === 0) {
+            return Promise.resolve(msg);
+        }
+
+        const pending = statuses.filter(s => s.state === "pending").length;
+        const success = statuses.filter(s => s.state === "success").length;
+        const error = statuses.length - pending - success;
+
+        // Now each one
+        const lines = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+            if (s.targetUrl != null && s.targetUrl.length > 0) {
+                return `${this.emoji(s.state)} ${url(s.targetUrl, s.description)}`;
+            } else {
+                return `${this.emoji(s.state)} ${s.description}`;
+            }
+        });
+
+        const color =
+            pending > 0 ? "#cccc00" :
+                error > 0 ? "#D94649" :
+                    "#45B254";
+
+        const summary = summarizeStatusCounts(pending, success, error);
+
+        const attachment: Attachment = {
+            author_name: lines.length > 1 ? "Phases" : "Phase",
+            author_icon: "https://images.atomist.com/rug/phases.png",
             color,
             fallback: summary,
             actions,
@@ -98,6 +187,9 @@ function notAlreadyDisplayed(push: any, status: any): boolean {
     }
     if (status.context.indexOf("jenkins") >= 0 && push.builds != null &&
         push.builds.some(b => b.provider === "jenkins")) {
+        return false;
+    }
+    if (status.context.indexOf("sdm/") >= 0) {
         return false;
     }
     return true;

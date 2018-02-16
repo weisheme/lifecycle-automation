@@ -13,7 +13,7 @@ import { PushToPushLifecycle } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
 import { LifecyclePreferences } from "../preferences";
 import {
-    ApplicationActionContributor,
+    ApplicationActionContributor, ApprovePhaseActionContributor,
     BuildActionContributor,
     PullRequestActionContributor,
     ReleaseActionContributor, sortTagsByName, TagPushActionContributor,
@@ -29,7 +29,7 @@ import {
     PushNodeRenderer,
     TagNodeRenderer,
 } from "./rendering/PushNodeRenderers";
-import { StatusesNodeRenderer } from "./rendering/StatusesNodeRenderer";
+import { PhaseNodeRenderer, StatusesNodeRenderer } from "./rendering/StatusesNodeRenderer";
 import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
@@ -85,6 +85,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new PushNodeRenderer(),
                     new CommitNodeRenderer(),
                     new StatusesNodeRenderer(),
+                    new PhaseNodeRenderer(),
                     new WorkflowNodeRenderer(),
                     new IssueNodeRenderer(),
                     new PullRequestNodeRenderer(),
@@ -100,6 +101,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new ReleaseActionContributor(),
                     new BuildActionContributor(),
                     new PullRequestActionContributor(),
+                    new ApprovePhaseActionContributor(),
                     new ApplicationActionContributor(),
                 ],
                 id: `push_lifecycle/${push.repo.owner}/${push.repo.name}/${push.branch}/${push.after.sha}`,

@@ -4,6 +4,7 @@ import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as semver from "semver";
+import * as urijs from "urijs";
 import {
     AbstractIdentifiableContribution,
     ActionContributor,
@@ -11,6 +12,10 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
+import {
+    ApprovalGateParam,
+    ApproveGitHubPhaseStatus,
+} from "../../../command/github/ApproveGitHubPhaseStatus";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { LifecycleActionPreferences } from "../../preferences";
@@ -377,5 +382,57 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
 
     public menusFor(node: Domain, context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
+    }
+}
+
+export class ApprovePhaseActionContributor extends AbstractIdentifiableContribution
+    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super(LifecycleActionPreferences.push.approve_phase.id);
+    }
+
+    public supports(node: any): boolean {
+        if (node.after) {
+            const push = node as graphql.PushToPushLifecycle.Push;
+            return push.after.statuses && push.after.statuses.length > 0;
+        } else {
+            return false;
+        }
+    }
+
+    public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const buttons = [];
+
+        if (context.rendererId === "phases") {
+            push.after.statuses.filter(s => {
+                const url = urijs(s.targetUrl);
+                return url.hasQuery(ApprovalGateParam);
+            }).forEach(s => this.createStatusButton(s, push, repo, buttons));
+        }
+
+        return Promise.resolve(buttons);
+    }
+
+    public menusFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+        return Promise.resolve([]);
+    }
+
+    private createStatusButton(status: graphql.PushToPushLifecycle.Statuses,
+                               push: graphql.PushToPushLifecycle.Push,
+                               repo: graphql.PushToPushLifecycle.Repo,
+                               buttons: any[]) {
+
+        // Add the approve button
+        const approveHandler = new ApproveGitHubPhaseStatus();
+        approveHandler.sha = push.after.sha;
+        approveHandler.repo = repo.name;
+        approveHandler.owner = repo.owner;
+        approveHandler.targetUrl = status.targetUrl;
+        approveHandler.context = status.context;
+        approveHandler.description = status.description;
+
+        buttons.push(buttonForCommand({ text: `Approve '${status.description}'` }, approveHandler));
     }
 }
