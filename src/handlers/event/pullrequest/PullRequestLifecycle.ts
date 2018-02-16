@@ -42,6 +42,9 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
         if (pullrequest == null || repo == null) {
             console.debug(`Lifecycle event is missing pullrequest and/or repo node`);
             return null;
+        } else if (pullrequest.merged && !pullrequest.merger) {
+            console.debug(`Lifecycle event is missing merger for merged pullrequest`);
+            return null;
         }
 
         const configuration: Lifecycle = {
