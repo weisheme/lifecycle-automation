@@ -61,7 +61,7 @@ export class DisplayGitHubIssue implements HandleCommand {
                     name: this.channelName,
                     team: {
                         id: this.teamId,
-                    }
+                    },
                 }];
 
                 // Hopefully we can find the issue in Neo

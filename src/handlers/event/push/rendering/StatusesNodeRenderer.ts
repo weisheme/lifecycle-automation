@@ -1,4 +1,3 @@
-import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     Action,
     Attachment,
