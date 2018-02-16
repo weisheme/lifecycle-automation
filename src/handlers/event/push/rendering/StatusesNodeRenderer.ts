@@ -71,8 +71,8 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution
         const summary = summarizeStatusCounts(pending, success, error);
 
         const attachment: Attachment = {
-            author_name: lines.length > 1 ? "Checks" : "Check",
-            author_icon: `https://images.atomist.com/rug/status.png?random=${guid()}`,
+            // author_name: lines.length > 1 ? "Checks" : "Check",
+            // author_icon: `https://images.atomist.com/rug/status.png?random=${guid()}`,
             color,
             fallback: summary,
             actions,
