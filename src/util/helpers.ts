@@ -2,7 +2,7 @@ import { HandlerContext } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
-import { DefaultGitHubApiUrl } from "../handlers/command/github/gitHubApi";
+import { DefaultGitHubApiUrl, DefaultGitHubUrl } from "../handlers/command/github/gitHubApi";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
 
@@ -109,7 +109,10 @@ export function userUrl(repo: any, login: string): string {
 }
 
 export function avatarUrl(repo: any, login: string): string {
-    if (repo.org != null && repo.org.provider != null && repo.org.provider.url != null) {
+    if (repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.url != null &&
+        repo.org.provider.url !== DefaultGitHubUrl) {
         return `${htmlUrl(repo)}/avatars/${login}`;
     } else {
         return `https://avatars.githubusercontent.com/${login}`;

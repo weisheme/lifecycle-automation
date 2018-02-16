@@ -10,6 +10,7 @@ import * as URL from "url";
 import { error } from "../../../util/messages";
 
 export const DefaultGitHubApiUrl = "https://api.github.com/";
+export const DefaultGitHubUrl = "https://github.com/";
 
 export function api(token: string, apiUrl: string = DefaultGitHubApiUrl): GitHubApi {
     // separate the url
