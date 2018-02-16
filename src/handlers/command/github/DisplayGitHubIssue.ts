@@ -39,6 +39,9 @@ export class DisplayGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.SlackChannelName)
     public channelName: string;
 
+    @MappedParameter(MappedParameters.SlackTeam)
+    public teamId: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -49,12 +52,23 @@ export class DisplayGitHubIssue implements HandleCommand {
             {},
             __dirname)
             .then(result => {
-                const issues: graphql.Issue.Issue[] = _.get(result, "ChatTeam[0].team.orgs[0].repo[0].issue");
+                const issues: graphql.Issue.Issue[] =
+                    _.cloneDeep(_.get(result, "ChatTeam[0].team.orgs[0].repo[0].issue"));
                 const handler = new ResponseIssueToIssueLifecycle(this.showMore);
                 handler.orgToken = this.githubToken;
 
+                const channels = [{
+                    name: this.channelName,
+                    team: {
+                        id: this.teamId,
+                    }
+                }];
+
                 // Hopefully we can find the issue in Neo
                 if (issues && issues.length > 0) {
+                    // Overwrite the channels to send this message to
+                    issues.forEach(i => i.repo.channels = channels);
+
                     return handler.handle({
                         data: { Issue: issues as any },
                         extensions: { operationName: "DisplayGitHubIssue" },
@@ -72,9 +86,7 @@ export class DisplayGitHubIssue implements HandleCommand {
                             repo: {
                                 name: this.repo,
                                 owner: this.owner,
-                                channels: [{
-                                   name: this.channelName,
-                                }],
+                                channels,
                             },
                             name: this.issue.toString(),
                             number: this.issue,
