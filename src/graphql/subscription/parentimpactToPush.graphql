@@ -83,6 +83,11 @@ subscription ParentImpactToPushLifecycle {
             }
             timestamp
           }
+          fingerprints {
+            name
+            sha
+            data
+          }
         }
         repo {
           owner

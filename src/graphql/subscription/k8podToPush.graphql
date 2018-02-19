@@ -86,6 +86,11 @@ subscription K8PodToPushLifecycle {
               }
               timestamp
             }
+            fingerprints {
+              name
+              sha
+              data
+            }
           }
           repo {
             owner

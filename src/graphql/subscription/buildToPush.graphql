@@ -82,6 +82,11 @@ subscription BuildToPushLifecycle {
           }
           timestamp
         }
+        fingerprints {
+          name
+          sha
+          data
+        }
       }
       repo {
         owner

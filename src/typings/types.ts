@@ -1250,6 +1250,7 @@ export namespace ApplicationToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -1309,6 +1310,12 @@ export namespace ApplicationToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -2206,6 +2213,7 @@ export namespace BuildToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -2265,6 +2273,12 @@ export namespace BuildToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -3918,6 +3932,7 @@ export namespace IssueToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -3977,6 +3992,12 @@ export namespace IssueToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -4170,6 +4191,7 @@ export namespace K8PodToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: _Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -4229,6 +4251,12 @@ export namespace K8PodToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -5118,6 +5146,7 @@ export namespace ParentImpactToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -5177,6 +5206,12 @@ export namespace ParentImpactToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -5846,6 +5881,7 @@ export namespace PushToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -5905,6 +5941,12 @@ export namespace PushToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -6192,6 +6234,7 @@ export namespace ReleaseToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -6251,6 +6294,12 @@ export namespace ReleaseToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -7111,6 +7160,7 @@ export namespace StatusToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -7170,6 +7220,12 @@ export namespace StatusToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
@@ -7356,6 +7412,7 @@ export namespace TagToPushLifecycle {
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
   } 
 
   export type Statuses = {
@@ -7415,6 +7472,12 @@ export namespace TagToPushLifecycle {
     restartCount?: Long | null; 
     statusJSON?: string | null; 
     resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 
   export type Repo = {
