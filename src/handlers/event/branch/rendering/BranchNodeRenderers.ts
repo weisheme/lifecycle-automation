@@ -17,7 +17,7 @@ import {
 } from "../../../../util/helpers";
 
 export class BranchNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.BranchToBranchLifecycle.Branch> {
+    implements NodeRenderer<graphql.BranchToBranchLifecycle.Branch, SlackMessage> {
 
     constructor() {
         super("branch");

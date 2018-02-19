@@ -11,8 +11,16 @@ import {
     ReactionActionContributor, ReopenActionContributor,
 } from "./rendering/IssueActionContributors";
 import { IssueNodeRenderer, MoreNodeRenderer } from "./rendering/IssueNodeRenderers";
+import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const nodes: any[] = [];

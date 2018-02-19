@@ -22,7 +22,7 @@ import {
 } from "../../../../util/helpers";
 
 export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.IssueToIssueCommentLifecycle.Comments> {
+    implements NodeRenderer<graphql.IssueToIssueCommentLifecycle.Comments, SlackMessage> {
 
     constructor() {
         super("issue_comment");
@@ -67,7 +67,7 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestCommentLifecycle.Comments> {
+    implements NodeRenderer<graphql.PullRequestToPullRequestCommentLifecycle.Comments, SlackMessage> {
 
     constructor() {
         super("pullrequest_comment");

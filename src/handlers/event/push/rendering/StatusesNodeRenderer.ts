@@ -14,7 +14,7 @@ import * as graphql from "../../../../typings/types";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
 export class StatusesNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push, SlackMessage> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";
@@ -95,7 +95,7 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class PhaseNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push, SlackMessage> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";

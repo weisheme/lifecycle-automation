@@ -20,8 +20,16 @@ import {
     IssueCommentNodeRenderer,
     PullRequestCommentNodeRenderer,
 } from "./rendering/CommentNodeRenderers";
+import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const [comments, issue, pullRequest, repo, updateOnly] = this.extractNodes(event);

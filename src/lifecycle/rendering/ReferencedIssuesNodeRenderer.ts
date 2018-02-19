@@ -16,7 +16,7 @@ import {
 } from "../Lifecycle";
 
 export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<any> {
+    implements NodeRenderer<any, SlackMessage> {
 
     constructor() {
         super("referencedissues");

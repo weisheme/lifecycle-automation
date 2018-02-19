@@ -31,8 +31,16 @@ import {
 } from "./rendering/PushNodeRenderers";
 import { PhaseNodeRenderer, StatusesNodeRenderer } from "./rendering/StatusesNodeRenderer";
 import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
+import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const pushes = this.extractNodes(event);

@@ -32,7 +32,7 @@ import { renderDecorator } from "../../push/rendering/PushNodeRenderers";
 import { summarizeStatusCounts } from "../../push/rendering/StatusesNodeRenderer";
 
 export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
 
     constructor() {
         super("pull_request");
@@ -109,7 +109,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class CommitNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
 
     public emojiStyle: "default" | "atomist";
 
@@ -201,7 +201,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class StatusNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
 
     constructor() {
         super("status");
@@ -279,7 +279,7 @@ export class StatusNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class ReviewNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
 
     constructor() {
         super("review");
@@ -389,7 +389,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class BuildNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
 
     constructor() {
         super("build");

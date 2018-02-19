@@ -11,8 +11,16 @@ import {
     ReviewDetailNodeRenderer,
     ReviewNodeRenderer,
 } from "./rendering/ReviewNodeRenderers";
+import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class ReviewLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const [reviews, timestamp] = this.extractNodes(event);

@@ -12,7 +12,7 @@ import {
 import { HandlerContext } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
-    addressSlackChannels,
+    addressSlackChannels, isSlackMessage,
     MessageClient,
     MessageOptions,
 } from "@atomist/automation-client/spi/message/MessageClient";
@@ -70,7 +70,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
                 lifecycle = this.processLifecycle(lifecycle, store);
 
-                // Call all NodeRenderers and ButtonContributors
+                // Call all NodeRenderers and ActionContributors
                 lifecycle.renderers.forEach(r => {
                     lifecycle.nodes.filter(n => r.supports(n)).forEach(n => {
                         // First collect all buttons/actions for the given node
@@ -91,7 +91,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                                 }));
                         });
 
-                        // Secondly trigger rendering
+                        // Second trigger rendering
                         renderers.push(msg => {
                             return Promise.all(contributors)
                                 .then(contributorResults => {
@@ -105,14 +105,10 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                 });
 
                 // Prepare message and instructions
-                const message: SlackMessage = {
-                    text: null,
-                    attachments: [],
-                };
+                const message = this.prepareMessage();
 
                 return renderers.reduce((p, f) => p.then(f), Promise.resolve(message))
                     .then(msg => {
-                        // Finally create the UpdatableMessage from the populated SlackMessage
                         return this.createAndSendMessage(msg, lifecycle, channels, ctx.messageClient);
                     });
             });
@@ -150,6 +146,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     protected abstract prepareLifecycle(event: EventFired<R>): Lifecycle[];
 
     /**
+     * Extension point to create an empty starting point for the lifecycle message.
+     * @returns {any}
+     */
+    protected abstract prepareMessage(): any;
+
+    /**
      * Extension point for handlers to extract preferences from ChatId or ChatTeam nodes.
      * @param {EventFired<R>} event
      * @returns {Preferences[]}
@@ -175,7 +177,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return {} as LifecycleConfiguration;
     }
 
-    private createAndSendMessage(message: SlackMessage,
+    private createAndSendMessage(message: any,
                                  lifecycle: Lifecycle,
                                  channels: { teamId: string, channels: string[] },
                                  messageClient: MessageClient): Promise<any> {
@@ -194,7 +196,12 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
-        return this.sendMessage(message, options, channels, messageClient);
+        if (isSlackMessage(message)) {
+            return this.sendMessage(message, options, channels, messageClient);
+        } else {
+            // TODO CD hook in card sending
+            return SuccessPromise;
+        }
     }
 
     private sendMessage(slackMessage: SlackMessage,
@@ -325,13 +332,13 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return contributors;
     }
 
-    private configureRenderers(renderers: Array<NodeRenderer<any>>,
+    private configureRenderers(renderers: Array<NodeRenderer<any, any>>,
                                configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                name: string,
                                channels: { teamId: string, channels: string[] },
-                               preferences: { [teamId: string]: Preferences[] }): Array<NodeRenderer<any>> {
+                               preferences: { [teamId: string]: Preferences[] }): Array<NodeRenderer<any, any>> {
         renderers = this.filterAndSortContributions("renderer", renderers, configuration.renderers,
-            name, channels, preferences) as Array<NodeRenderer<any>>;
+            name, channels, preferences) as Array<NodeRenderer<any, any>>;
         renderers.forEach(c => {
             if (c.configure) {
                 c.configure(configuration);
@@ -471,7 +478,7 @@ export interface Lifecycle {
      * The NodeRenderers to use for rendering.
      * The order of renderers in the returned array determines the rendering order.
      */
-    renderers: Array<NodeRenderer<any>>;
+    renderers: Array<NodeRenderer<any, any>>;
 
     /**
      * The ActionContributor to use for adding buttons to messages.
@@ -502,7 +509,7 @@ export interface IdentifiableContribution {
  * A NodeRenderer is responsible to render a given and supported cortex node into the provided
  * SlackMessage.
  */
-export interface NodeRenderer<T> extends IdentifiableContribution {
+export interface NodeRenderer<T, M> extends IdentifiableContribution {
 
     /**
      * Indicate if a NodeRenderer supports a provided cortex node.
@@ -512,7 +519,7 @@ export interface NodeRenderer<T> extends IdentifiableContribution {
     /**
      * Render the given node and actions into the given SlackMessage.
      */
-    render(node: T, actions: Action[], msg: SlackMessage, context: RendererContext): Promise<SlackMessage>;
+    render(node: T, actions: Action[], msg: M, context: RendererContext): Promise<M>;
 }
 
 /**

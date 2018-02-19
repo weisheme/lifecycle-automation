@@ -22,8 +22,16 @@ import {
     ReviewNodeRenderer,
     StatusNodeRenderer,
 } from "./rendering/PullRequestNodeRenderers";
+import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const nodes = [];

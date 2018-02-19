@@ -24,7 +24,7 @@ import {
 } from "../../../../util/helpers";
 
 export class ReviewNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review> {
+    implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review, SlackMessage> {
 
     constructor() {
         super("review");
@@ -52,7 +52,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class ReviewDetailNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review> {
+    implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review, SlackMessage> {
 
     constructor() {
         super("reviewdetail");

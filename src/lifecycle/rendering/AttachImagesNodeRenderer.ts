@@ -17,7 +17,7 @@ import {
 } from "../Lifecycle";
 
 export class AttachImagesNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<any> {
+    implements NodeRenderer<any, SlackMessage> {
 
     constructor(private callback: (node: any) => boolean = () => true) {
         super("attachimages");

@@ -20,7 +20,8 @@ import {
     userUrl,
 } from "../../../../util/helpers";
 
-export class IssueNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
+export class IssueNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<any, SlackMessage> {
 
     constructor() {
         super("issue");
@@ -98,7 +99,8 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution implemen
     }
 }
 
-export class MoreNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
+export class MoreNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<any, SlackMessage> {
 
     constructor() {
         super("assign");

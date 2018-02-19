@@ -63,7 +63,7 @@ export const EMOJI_SCHEME = {
 };
 
 export class PushNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push, SlackMessage> {
 
     constructor() {
         super("push");
@@ -86,7 +86,7 @@ export class PushNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class CommitNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push, SlackMessage> {
 
     public style: "fingerprint-inline" | "fingerprint-multi-line";
 
@@ -324,7 +324,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class BuildNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Builds> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Builds, SlackMessage> {
 
     public emojiStyle: "default" | "atomist";
 
@@ -407,7 +407,7 @@ export function renderDecorator(build: graphql.PushToPushLifecycle.Builds, build
 }
 
 export class TagNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Tags> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Tags, SlackMessage> {
 
     public emojiStyle: "default" | "atomist";
 
@@ -463,7 +463,7 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<Domain> {
+    implements NodeRenderer<Domain, SlackMessage> {
 
     constructor() {
         super("application");
@@ -515,7 +515,7 @@ interface Environment {
 }
 
 export class K8PodNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.K8PodToPushLifecycle.Pushes> {
+    implements NodeRenderer<graphql.K8PodToPushLifecycle.Pushes, SlackMessage> {
 
     constructor() {
         super("k8pod");
@@ -579,7 +579,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class IssueNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push, SlackMessage> {
 
     constructor() {
         super("issue");
@@ -615,7 +615,7 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push, SlackMessage> {
 
     constructor() {
         super("pullrequest");

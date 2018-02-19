@@ -9,7 +9,7 @@ import {
     RendererContext,
 } from "../Lifecycle";
 
-export class FooterNodeRenderer implements NodeRenderer<any> {
+export class FooterNodeRenderer implements NodeRenderer<any, SlackMessage> {
 
     constructor(private matches: (node: any) => boolean) { }
 
