@@ -29,7 +29,7 @@ export class NotifyMentionedOnPullRequest implements HandleEvent<graphql.NotifyM
         const repo = pr.repo;
 
         return prNotification(pr.number.toString(), "New mention in pull request",
-            pr.body, pr.author.login, pr, repo, ctx)
+            pr.body, pr.author, pr, repo, ctx)
             .then(_ => {
                 if (pr.assignees) {
                     return Promise.all(pr.assignees.map(a =>

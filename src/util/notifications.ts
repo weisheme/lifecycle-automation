@@ -87,11 +87,10 @@ export function issueNotification(id: string,
 export function prNotification(id: string,
                                prefix: string,
                                body: string,
-                               login: string,
+                               author: graphql.NotifyMentionedOnPullRequest.Author,
                                pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
                                repo: graphql.NotifyMentionedOnPullRequest.Repo,
                                ctx: HandlerContext): Promise<any[]> {
-
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
     const matches = getGitHubUsers(body);
@@ -101,7 +100,8 @@ export function prNotification(id: string,
                 return loadChatIdByGitHubId(ctx, _.uniq(matches))
                     .then(notifiers => {
                         return Promise.all(notifiers.map(n => {
-                            if (n.login !== login
+                            if (author
+                                && n.login !== author.login
                                 && !isDmDisabled(n.person.chatId, DirectMessagePreferences.mention.id)) {
                                 // tslint:disable-next-line:variable-name
                                 const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
@@ -112,8 +112,8 @@ export function prNotification(id: string,
                                     attachments: [
                                         {
                                             author_name: `@${pr.author.login}`,
-                                            author_link: userUrl(repo, login),
-                                            author_icon: avatarUrl(repo, login),
+                                            author_link: userUrl(repo, author.login),
+                                            author_icon: avatarUrl(repo, author.login),
                                             text: linkIssues(b, repo),
                                             mrkdwn_in: ["text"],
                                             fallback: `${prefix} #${pr.number}: ${pr.title}`,

@@ -26,7 +26,7 @@ export class NotifyMentionedOnPullRequestComment
 
         if (pr) {
             return prNotification(`${pr.number}/${comment._id}`, "New mention in comment on pull request",
-                comment.body, comment.by.login, pr, pr.repo, ctx)
+                comment.body, comment.by, pr, pr.repo, ctx)
                 .then(_ => Success, failure);
         } else {
             return Promise.resolve(Success);
