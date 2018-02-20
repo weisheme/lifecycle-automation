@@ -83,6 +83,11 @@ subscription ApplicationToPushLifecycle {
             }
             timestamp
           }
+          fingerprints {
+            name
+            sha
+            data
+          }
         }
         repo {
           owner

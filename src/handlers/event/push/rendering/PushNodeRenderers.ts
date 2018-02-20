@@ -664,3 +664,35 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
             });
     }
 }
+
+export class BlackDuckFingerprintNodeRenderer extends AbstractIdentifiableContribution
+    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("blackduck");
+    }
+
+    public supports(node: any): boolean {
+        return node.after && node.after.fingerprints && node.after.fingerprints.length > 0;
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
+                  context: RendererContext): Promise<SlackMessage> {
+        const riskProfileFingerprint = push.after.fingerprints.find(s => s.name === "BlackDuckRiskProfile");
+        if (riskProfileFingerprint) {
+            const riskProfile = JSON.parse(riskProfileFingerprint.data);
+            const v = riskProfile.categories.VULNERABILITY;
+            const rpMsg = `Security Risks - ${v.HIGH} High, ${v.MEDIUM} Medium, ${v.LOW} Low`;
+            const attachment: Attachment = {
+                author_name: `Black Duck`,
+                author_icon: `https://images.atomist.com/rug/blackduck.jpg`,
+                text: escape(rpMsg),
+                fallback: escape(rpMsg),
+                mrkdwn_in: ["text"],
+                actions,
+            };
+            msg.attachments.push(attachment);
+        }
+        return Promise.resolve(msg);
+    }
+}
