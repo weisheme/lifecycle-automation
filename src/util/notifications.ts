@@ -197,7 +197,8 @@ export function prAssigneeNotification(id: string,
     return linkGitHubUsers(githubToSlack(body), ctx)
         .then(b => {
             const screenName = _.get(assignee, "person.chatId.screenName");
-            if (!isAssigner(pr, assignee.login)
+            if (pr.author
+                && !isAssigner(pr, assignee.login)
                 && screenName
                 && pr.author.login !== assignee.login
                 && !isDmDisabled(assignee.person.chatId, DirectMessagePreferences.assignee.id)) {
@@ -246,6 +247,7 @@ export function prRevieweeNotification(id: string,
         .then(b => {
             const login = _.get(review, "person.chatId.screenName");
             if (login
+                && pr.author
                 && pr.author.login !== login
                 && !isDmDisabled(review.person.chatId, DirectMessagePreferences.reviewee.id)) {
                 // tslint:disable-next-line:variable-name
@@ -289,7 +291,8 @@ export function prAuthorMergeNotification(id: string,
     const body = pr.body ? githubToSlack(pr.body) : undefined;
     return linkGitHubUsers(body, ctx)
         .then(b => {
-            if (_.get(pr, "author.person.chatId.screenName")
+            if (pr.author
+                &&_.get(pr, "author.person.chatId.screenName")
                 && !isDmDisabled(pr.author.person.chatId, DirectMessagePreferences.merge.id)
                 && pr.merger && pr.merger.login !== pr.author.login) {
                 const login = pr.author.person.chatId.screenName;
