@@ -2,11 +2,11 @@ import { EventFired } from "@atomist/automation-client/HandleEvent";
 import "mocha";
 import * as assert from "power-assert";
 import {
-    FingerprintNodeRenderer,
+    BlackDuckFingerprintNodeRenderer,
 } from "../../../../../src/handlers/event/push/rendering/PushNodeRenderers";
 import * as graphql from "../../../../../src/typings/types";
 
-describe("FingerprintNodeRenderer", () => {
+describe("BlackDuckFingerprintNodeRenderer", () => {
 
     /* tslint:disable */
     const noFingerprint = `{
@@ -54,7 +54,7 @@ describe("FingerprintNodeRenderer", () => {
 
     it("should pass through with no fingerprints", () => {
         const push = JSON.parse(noFingerprint) as graphql.PushToPushLifecycle.Push;
-        const renderer = new FingerprintNodeRenderer();
+        const renderer = new BlackDuckFingerprintNodeRenderer();
         assert(!renderer.supports(push));
     });
 
@@ -73,7 +73,7 @@ describe("FingerprintNodeRenderer", () => {
 
     it("should render risk profile fingerprint", done => {
         const push = JSON.parse(riskProfileFingerprint) as graphql.PushToPushLifecycle.Push;
-        const renderer = new FingerprintNodeRenderer();
+        const renderer = new BlackDuckFingerprintNodeRenderer();
         assert(renderer.supports(push));
         renderer.render(push, [], {attachments: []}, undefined).then(msg => {
             const expected = [

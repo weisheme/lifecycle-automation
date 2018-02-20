@@ -21,8 +21,9 @@ import {
 } from "./rendering/PushActionContributors";
 import {
     ApplicationNodeRenderer,
+    BlackDuckFingerprintNodeRenderer,
     BuildNodeRenderer,
-    CommitNodeRenderer, FingerprintNodeRenderer,
+    CommitNodeRenderer,
     IssueNodeRenderer,
     K8PodNodeRenderer,
     PullRequestNodeRenderer,
@@ -94,7 +95,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new BuildNodeRenderer(),
                     new ApplicationNodeRenderer(),
                     new K8PodNodeRenderer(),
-                    new FingerprintNodeRenderer(),
+                    new BlackDuckFingerprintNodeRenderer(),
                     new FooterNodeRenderer((node: any) => node.after)],
                 contributors: [
                     new TagPushActionContributor(),

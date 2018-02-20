@@ -665,11 +665,11 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-export class FingerprintNodeRenderer extends AbstractIdentifiableContribution
+export class BlackDuckFingerprintNodeRenderer extends AbstractIdentifiableContribution
     implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
-        super("fingerprint");
+        super("blackduck");
     }
 
     public supports(node: any): boolean {
