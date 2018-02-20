@@ -292,7 +292,7 @@ export function prAuthorMergeNotification(id: string,
     return linkGitHubUsers(body, ctx)
         .then(b => {
             if (pr.author
-                &&_.get(pr, "author.person.chatId.screenName")
+                && _.get(pr, "author.person.chatId.screenName")
                 && !isDmDisabled(pr.author.person.chatId, DirectMessagePreferences.merge.id)
                 && pr.merger && pr.merger.login !== pr.author.login) {
                 const login = pr.author.person.chatId.screenName;
