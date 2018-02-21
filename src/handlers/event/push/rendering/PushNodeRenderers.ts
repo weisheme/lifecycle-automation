@@ -678,7 +678,7 @@ export class BlackDuckFingerprintNodeRenderer extends AbstractIdentifiableContri
 
     public render(push: graphql.PushToPushLifecycle.Push, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
-        const riskProfileFingerprint = push.after.fingerprints.find(s => s.name === "BlackDuckRiskProfile");
+        const riskProfileFingerprint = push.after.fingerprints.find(f => f.name === "BlackDuckRiskProfile");
         if (riskProfileFingerprint) {
             const riskProfile = JSON.parse(riskProfileFingerprint.data);
             const v = riskProfile.categories.VULNERABILITY;
@@ -691,6 +691,14 @@ export class BlackDuckFingerprintNodeRenderer extends AbstractIdentifiableContri
                 mrkdwn_in: ["text"],
                 actions,
             };
+            const blackDuckStatus = push.after.statuses.find(s => s.context === "black-duck/hub-detect");
+            if (blackDuckStatus) {
+                const refUrl = riskProfile._meta.href;
+                const matches = refUrl.match(/\/versions\/(.*)\/risk-profile/);
+                const versionId = matches[1];
+                const bdLink = `${blackDuckStatus.targetUrl}/ui/versions/id:${versionId}/view:bom`;
+                attachment.author_link = bdLink;
+            }
             msg.attachments.push(attachment);
         }
         return Promise.resolve(msg);
