@@ -18,7 +18,8 @@ export function api(token: string, apiUrl: string = DefaultGitHubApiUrl): GitHub
 
     const gitHubApi = new GitHubApi({
         host: url.hostname,
-        pathPrefix: url.pathname,
+        // latest @octokit/rest can't deal with a single / as context; it will create invalid urls with //
+        pathPrefix: url.pathname !== "/" ? url.pathname : undefined,
         protocol: url.protocol.slice(0, -1),
         port: +url.port,
     });
