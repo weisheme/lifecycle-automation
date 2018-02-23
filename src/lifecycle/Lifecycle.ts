@@ -12,7 +12,9 @@ import {
 import { HandlerContext } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
-    addressSlackChannels, isSlackMessage,
+    addressEvent,
+    addressSlackChannels, CommandReferencingAction,
+    isSlackMessage,
     MessageClient,
     MessageOptions,
 } from "@atomist/automation-client/spi/message/MessageClient";
@@ -28,6 +30,11 @@ import {
     LifecyclePreferences,
     LifecycleRendererPreferences,
 } from "../handlers/event/preferences";
+import {
+    Action as CardAction,
+    CardMessage,
+    isCardMessage,
+} from "./card";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -41,7 +48,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
     public handle(event: EventFired<R>, ctx: HandlerContext): Promise<HandlerResult> {
         // Let the concrete handler configure the lifecycle message
-        const lifecycles = this.prepareLifecycle(event);
+        const lifecycles = this.prepareLifecycle(event, ctx);
         const preferences = this.extractPreferences(event);
 
         // Bail out if something isn't correctly linked up
@@ -109,7 +116,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
                 return renderers.reduce((p, f) => p.then(f), Promise.resolve(message))
                     .then(msg => {
-                        return this.createAndSendMessage(msg, lifecycle, channels, ctx.messageClient);
+                        return this.createAndSendMessage(msg, lifecycle, channels, ctx);
                     });
             });
 
@@ -124,39 +131,23 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             });
     }
 
-    protected extractPreferences(event: EventFired<any>): { [teamId: string]: Preferences[] } {
-        const preferences: {
-                [teamId: string]: Preferences[];
-            } = {};
-
-        const chatTeams = this.extractChatTeams(event) || [];
-        chatTeams.forEach(ct => preferences[ct.id] = ct.preferences);
-
-        return preferences;
-    }
-
     protected processLifecycle(lifecycle: Lifecycle, store: Map<string, any>): Lifecycle {
         return lifecycle;
     }
+
+    protected abstract extractPreferences(event: EventFired<R>): { [teamId: string]: Preferences[] };
 
     /**
      * Extension point to configure nodes and rendering of those nodes for a given path expression match.
      * @param event the cortex event the path expression matched
      */
-    protected abstract prepareLifecycle(event: EventFired<R>): Lifecycle[];
+    protected abstract prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[];
 
     /**
      * Extension point to create an empty starting point for the lifecycle message.
      * @returns {any}
      */
     protected abstract prepareMessage(): any;
-
-    /**
-     * Extension point for handlers to extract preferences from ChatId or ChatTeam nodes.
-     * @param {EventFired<R>} event
-     * @returns {Preferences[]}
-     */
-    protected abstract extractChatTeams(event: EventFired<R>): ChatTeam[];
 
     private prepareConfiguration(name: string,
                                  channels: { teamId: string, channels: string[] },
@@ -180,10 +171,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private createAndSendMessage(message: any,
                                  lifecycle: Lifecycle,
                                  channels: { teamId: string, channels: string[] },
-                                 messageClient: MessageClient): Promise<any> {
-        message.unfurl_links = false;
-        message.unfurl_media = true;
-
+                                 ctx: HandlerContext): Promise<any> {
         let ts = this.normalizeTimestamp(lifecycle.timestamp);
         if (ts == null) {
             ts = Date.now().toString();
@@ -196,12 +184,42 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             post: lifecycle.post,
         };
 
-        if (isSlackMessage(message)) {
-            return this.sendMessage(message, options, channels, messageClient);
-        } else {
-            // TODO CD hook in card sending
-            return SuccessPromise;
+        if (isCardMessage(message)) {
+            return this.sendCard(message, options, ctx);
+        } else if (isSlackMessage(message)) {
+            message.unfurl_links = false;
+            message.unfurl_media = true;
+            return this.sendMessage(message, options, channels, ctx.messageClient);
         }
+    }
+
+    private sendCard(card: CardMessage,
+                     options: MessageOptions,
+                     ctx: HandlerContext): Promise<any> {
+        // Add globabl actions into the top level
+        card.events.filter(e => e.actions).forEach(e => {
+            e.actions.filter(a => (a as any).global).forEach(a => card.actions.push(a));
+        });
+
+        if (!card.id) {
+            card.id = options.id;
+        }
+        if (!card.ts) {
+            card.ts = options.ts;
+        }
+        if (!card.ttl) {
+            card.ttl = options.ttl;
+        }
+        if (!card.post) {
+            card.post = options.post;
+        }
+
+        return ctx.messageClient.send(card, addressEvent("Card"))
+            .then(() => {
+                logger.info("Sending lifecycle card '%s'", options.id);
+                return Success;
+            })
+            .catch(failure);
     }
 
     private sendMessage(slackMessage: SlackMessage,
@@ -317,13 +335,13 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return new Date().getTime().toString();
     }
 
-    private configureContributors(contributors: Array<ActionContributor<any>>,
+    private configureContributors(contributors: Array<ActionContributor<any, any>>,
                                   configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                   name: string,
                                   channels: { teamId: string, channels: string[] },
                                   preferences: { [teamId: string]: Preferences[] }) {
         contributors = this.filterAndSortContributions("action", contributors, configuration.contributors,
-            name, channels, preferences) as Array<ActionContributor<any>>;
+            name, channels, preferences) as Array<ActionContributor<any, any>>;
         contributors.forEach(c => {
            if (c.configure) {
                c.configure(configuration);
@@ -332,13 +350,13 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
         return contributors;
     }
 
-    private configureRenderers(renderers: Array<NodeRenderer<any, any>>,
+    private configureRenderers(renderers: Array<NodeRenderer<any, any, any>>,
                                configuration: LifecycleConfiguration = {} as LifecycleConfiguration,
                                name: string,
                                channels: { teamId: string, channels: string[] },
-                               preferences: { [teamId: string]: Preferences[] }): Array<NodeRenderer<any, any>> {
+                               preferences: { [teamId: string]: Preferences[] }): Array<NodeRenderer<any, any, any>> {
         renderers = this.filterAndSortContributions("renderer", renderers, configuration.renderers,
-            name, channels, preferences) as Array<NodeRenderer<any, any>>;
+            name, channels, preferences) as Array<NodeRenderer<any, any, any>>;
         renderers.forEach(c => {
             if (c.configure) {
                 c.configure(configuration);
@@ -478,12 +496,12 @@ export interface Lifecycle {
      * The NodeRenderers to use for rendering.
      * The order of renderers in the returned array determines the rendering order.
      */
-    renderers: Array<NodeRenderer<any, any>>;
+    renderers: Array<NodeRenderer<any, any, any>>;
 
     /**
      * The ActionContributor to use for adding buttons to messages.
      */
-    contributors?: Array<ActionContributor<any>>;
+    contributors?: Array<ActionContributor<any, any>>;
 
     /**
      * The NodeExtractor to help extract nodes from the root
@@ -509,7 +527,7 @@ export interface IdentifiableContribution {
  * A NodeRenderer is responsible to render a given and supported cortex node into the provided
  * SlackMessage.
  */
-export interface NodeRenderer<T, M> extends IdentifiableContribution {
+export interface NodeRenderer<T, M, A> extends IdentifiableContribution {
 
     /**
      * Indicate if a NodeRenderer supports a provided cortex node.
@@ -519,13 +537,19 @@ export interface NodeRenderer<T, M> extends IdentifiableContribution {
     /**
      * Render the given node and actions into the given SlackMessage.
      */
-    render(node: T, actions: Action[], msg: M, context: RendererContext): Promise<M>;
+    render(node: T, actions: A[], msg: M, context: RendererContext): Promise<M>;
+}
+
+export interface SlackNodeRenderer<T> extends NodeRenderer<T, SlackMessage, Action> {
+}
+
+export interface CardNodeRenderer<T> extends NodeRenderer<T, CardMessage, CardAction> {
 }
 
 /**
  * A ActionContributor can add one or multiple buttons/actions for a given cortex node.
  */
-export interface ActionContributor<T> extends IdentifiableContribution {
+export interface ActionContributor<T, A> extends IdentifiableContribution {
 
     /**
      * Indicate if a ActionContributor supports a provided cortex node.
@@ -535,12 +559,18 @@ export interface ActionContributor<T> extends IdentifiableContribution {
     /**
      * Create buttons for the provided node.
      */
-    buttonsFor(node: T, context: RendererContext): Promise<Action[]>;
+    buttonsFor(node: T, context: RendererContext): Promise<A[]>;
 
     /**
      * Create menus for the provided node.
      */
-    menusFor(node: T, context: RendererContext): Promise<Action[]>;
+    menusFor(node: T, context: RendererContext): Promise<A[]>;
+}
+
+export interface SlackActionContributor<T> extends ActionContributor<T, Action> {
+}
+
+export interface CardActionContributor<T> extends ActionContributor<T, CardAction> {
 }
 
 export class RendererContext {
@@ -572,5 +602,101 @@ export abstract class AbstractIdentifiableContribution implements IdentifiableCo
 
     public id(): string {
         return this._id;
+    }
+}
+
+export class CardActionContributorWrapper implements CardActionContributor<any> {
+
+    constructor(private delegate: SlackActionContributor<any>) {
+    }
+
+    public supports(node: any): boolean {
+        return this.delegate.supports(node);
+    }
+
+    public buttonsFor(node: any, context: RendererContext): Promise<CardAction[]> {
+        return this.delegate.buttonsFor(node, context)
+            .then(as => {
+                const actions: CardAction[] = as.map(a => {
+                    const cra = a as any as CommandReferencingAction;
+
+                    const parameters = [];
+                    for (const key in cra.command.parameters) {
+                        if (cra.command.parameters.hasOwnProperty(key)) {
+                            parameters.push({
+                                name: key,
+                                value: cra.command.parameters[key] ? cra.command.parameters[key].toString() : undefined,
+                            });
+                        }
+                    }
+
+                    const action: CardAction = {
+                        text: cra.text,
+                        type: "button",
+                        registration: "@atomist/lifecycle-automation",
+                        command: cra.command.name,
+                        parameters,
+                    };
+                    if ((a as any).global) {
+                        (action as any).global = (a as any).global;
+                    }
+                    return action;
+                });
+                return actions as CardAction[];
+            });
+    }
+
+    public menusFor(node: any, context: RendererContext): Promise<CardAction[]> {
+        return this.delegate.menusFor(node, context)
+            .then(as => {
+                const actions: CardAction[] = as.map(a => {
+                    const cra = a as any as CommandReferencingAction;
+
+                    const parameters = [];
+                    for (const key in cra.command.parameters) {
+                        if (cra.command.parameters.hasOwnProperty(key)) {
+                            parameters.push({
+                                name: key,
+                                value: cra.command.parameters[key] ? cra.command.parameters[key].toString() : undefined,
+                            });
+                        }
+                    }
+
+                    const action: CardAction = {
+                        text: cra.text,
+                        type: "menu",
+                        registration: "@atomist/lifecycle-automation",
+                        command: cra.command.name,
+                        parameters,
+                        parameterName: cra.command.parameterName,
+                        parameterOptions: cra.options ? cra.options.map(o => ({
+                            name: o.text,
+                            value: o.value,
+                        })) : undefined,
+                        parameterOptionGroups: cra.option_groups ? cra.option_groups.map(o => ({
+                            name: o.text,
+                            options: o.options.map(op => ({
+                                name: op.text,
+                                value: op.value,
+                            })),
+                        })) : undefined,
+                    };
+                    if ((a as any).global) {
+                        (action as any).global = (a as any).global;
+                    }
+                    return action;
+                });
+                return actions as CardAction[];
+            });
+    }
+
+    public id(): string {
+        return this.delegate.id();
+    }
+
+    public configure?(configuration: LifecycleConfiguration) {
+        if (this.delegate.configure) {
+            this.delegate.configure(configuration);
+        }
     }
 }

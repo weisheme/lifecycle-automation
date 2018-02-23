@@ -8,8 +8,8 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import {
     AbstractIdentifiableContribution,
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
@@ -22,7 +22,7 @@ import {
 } from "../../../../util/helpers";
 
 export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.IssueToIssueCommentLifecycle.Comments, SlackMessage> {
+    implements SlackNodeRenderer<graphql.IssueToIssueCommentLifecycle.Comments> {
 
     constructor() {
         super("issue_comment");
@@ -67,7 +67,7 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestCommentLifecycle.Comments, SlackMessage> {
+    implements SlackNodeRenderer<graphql.PullRequestToPullRequestCommentLifecycle.Comments> {
 
     constructor() {
         super("pullrequest_comment");

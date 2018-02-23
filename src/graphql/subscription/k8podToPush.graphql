@@ -38,16 +38,26 @@ subscription K8PodToPushLifecycle {
           after {
             sha
             message
+            author {
+              login
+              person {
+                chatId {
+                  screenName
+                }
+              }
+            }
             statuses {
               context
               description
               targetUrl
               state
+              timestamp
             }
             tags {
               name
               release {
                 name
+                timestamp
               }
               builds {
                 buildId
@@ -57,6 +67,7 @@ subscription K8PodToPushLifecycle {
                 status
                 timestamp
               }
+              timestamp
             }
             images {
               _id
@@ -126,6 +137,9 @@ subscription K8PodToPushLifecycle {
               name
               title
               state
+              openedBy {
+                login
+              }
             }
             impact {
               data

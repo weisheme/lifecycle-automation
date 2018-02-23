@@ -5,7 +5,8 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { ChatTeam } from "../../../lifecycle/Lifecycle";
+import { Preferences } from "../../../lifecycle/Lifecycle";
+import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import { ReviewLifecycleHandler } from "./ReviewLifecycle";
 
@@ -23,8 +24,9 @@ export class ReviewToReviewLifecycle extends ReviewLifecycleHandler<graphql.Revi
         return [event.data.Review, _.get(event, "data.Review[0].timestamp")];
     }
 
-    protected extractChatTeams(event: EventFired<graphql.ReviewToReviewLifecycle.Subscription>)
-        : ChatTeam[] {
-        return _.get(event, "data.Review[0].pullRequest.repo.org.team.chatTeams");
+    protected extractPreferences(
+        event: EventFired<graphql.ReviewToReviewLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return chatTeamsToPreferences(_.get(event, "data.Review[0].pullRequest.repo.org.team.chatTeams"));
     }
 }

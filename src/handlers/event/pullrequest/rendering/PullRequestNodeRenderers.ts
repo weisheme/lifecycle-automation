@@ -10,9 +10,10 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import {
-    AbstractIdentifiableContribution, LifecycleConfiguration,
-    NodeRenderer,
+    AbstractIdentifiableContribution,
+    LifecycleConfiguration,
     RendererContext,
+    SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
@@ -32,7 +33,7 @@ import { renderDecorator } from "../../push/rendering/PushNodeRenderers";
 import { summarizeStatusCounts } from "../../push/rendering/StatusesNodeRenderer";
 
 export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
+    implements SlackNodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super("pull_request");
@@ -109,7 +110,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class CommitNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
+    implements SlackNodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     public emojiStyle: "default" | "atomist";
 
@@ -201,7 +202,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class StatusNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
+    implements SlackNodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super("status");
@@ -279,7 +280,7 @@ export class StatusNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class ReviewNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
+    implements SlackNodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super("review");
@@ -389,7 +390,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class BuildNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest, SlackMessage> {
+    implements SlackNodeRenderer<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super("build");

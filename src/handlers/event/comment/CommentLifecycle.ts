@@ -1,4 +1,5 @@
 import { EventFired } from "@atomist/automation-client";
+import { SlackMessage } from "@atomist/slack-messages";
 import {
     Lifecycle,
     LifecycleHandler,
@@ -20,7 +21,6 @@ import {
     IssueCommentNodeRenderer,
     PullRequestCommentNodeRenderer,
 } from "./rendering/CommentNodeRenderers";
-import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
 

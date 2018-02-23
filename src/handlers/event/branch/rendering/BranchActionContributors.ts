@@ -2,15 +2,15 @@ import { buttonForCommand } from "@atomist/automation-client/spi/message/Message
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import {
     AbstractIdentifiableContribution,
-    ActionContributor,
     RendererContext,
+    SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { RaiseGitHubPullRequest } from "../../../command/github/RaiseGitHubPullRequest";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export class RaisePrActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.BranchToBranchLifecycle.Branch> {
+    implements SlackActionContributor<graphql.BranchToBranchLifecycle.Branch> {
 
     constructor() {
         super(LifecycleActionPreferences.branch.raise_pullrequest.id);

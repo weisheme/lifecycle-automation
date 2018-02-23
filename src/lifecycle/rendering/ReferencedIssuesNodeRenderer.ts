@@ -11,12 +11,12 @@ import {
 } from "../../util/helpers";
 import {
     AbstractIdentifiableContribution,
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../Lifecycle";
 
 export class ReferencedIssuesNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<any, SlackMessage> {
+    implements SlackNodeRenderer<any> {
 
     constructor() {
         super("referencedissues");

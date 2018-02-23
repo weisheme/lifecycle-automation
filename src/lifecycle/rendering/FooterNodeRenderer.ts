@@ -5,11 +5,11 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import * as base64 from "../../util/base64";
 import {
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../Lifecycle";
 
-export class FooterNodeRenderer implements NodeRenderer<any, SlackMessage> {
+export class FooterNodeRenderer implements SlackNodeRenderer<any> {
 
     constructor(private matches: (node: any) => boolean) { }
 

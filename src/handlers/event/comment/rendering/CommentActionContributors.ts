@@ -5,14 +5,15 @@ import {
 } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import {
-    AbstractIdentifiableContribution, ActionContributor,
+    AbstractIdentifiableContribution,
     RendererContext,
+    SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractCommentActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<any> {
+    implements SlackActionContributor<any> {
 
     constructor(private identifier: string, private forIssue: boolean, private forPr: boolean) {
         super(identifier);
@@ -86,7 +87,7 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
 }
 
 export class DetailsActionContributor extends AbstractCommentActionContributor
-    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+    implements SlackActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
         super(LifecycleActionPreferences.comment.details.id, true, false);
@@ -111,7 +112,7 @@ export class DetailsActionContributor extends AbstractCommentActionContributor
 }
 
 export class AssignActionContributor extends AbstractCommentActionContributor
-    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+    implements SlackActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
         super(LifecycleActionPreferences.comment.assign.id, true, false);
@@ -134,7 +135,7 @@ export class AssignActionContributor extends AbstractCommentActionContributor
 }
 
 export class LabelActionContributor extends AbstractCommentActionContributor
-    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+    implements SlackActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
         super(LifecycleActionPreferences.comment.label.id, true, false);
@@ -184,7 +185,7 @@ export class LabelActionContributor extends AbstractCommentActionContributor
 }
 
 export class CloseActionContributor extends AbstractCommentActionContributor
-    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+    implements SlackActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
         super(LifecycleActionPreferences.comment.close.id, true, false);
@@ -207,7 +208,7 @@ export class CloseActionContributor extends AbstractCommentActionContributor
 }
 
 export class CommentActionContributor extends AbstractCommentActionContributor
-    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+    implements SlackActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
         super(LifecycleActionPreferences.comment.comment.id, true, true);
@@ -230,7 +231,7 @@ export class CommentActionContributor extends AbstractCommentActionContributor
 }
 
 export class ReactionActionContributor extends AbstractCommentActionContributor
-    implements ActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
+    implements SlackActionContributor<graphql.CommentToIssueCommentLifecycle.Comment> {
 
     constructor() {
         super(LifecycleActionPreferences.comment.thumps_up.id, true, true);

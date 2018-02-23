@@ -3,12 +3,12 @@ import { Action } from "@atomist/slack-messages/SlackMessages";
 import {
     AbstractIdentifiableContribution,
     ActionContributor,
-    RendererContext,
+    RendererContext, SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 
 export class CommentActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super("comment");

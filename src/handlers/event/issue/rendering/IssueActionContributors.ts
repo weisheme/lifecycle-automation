@@ -8,15 +8,15 @@ import { Action } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import {
     AbstractIdentifiableContribution,
-    ActionContributor,
     RendererContext,
+    SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { AssignToMe, AssignToMeGitHubIssue } from "../../../command/github/AssignToMeGitHubIssue";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractIssueActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     public supports(node: any): boolean {
         return node.title && node.state === "open";
@@ -60,7 +60,7 @@ export abstract class AbstractIssueActionContributor extends AbstractIdentifiabl
 }
 
 export class DisplayAssignActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.assign.id);
@@ -106,7 +106,7 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
 }
 
 export class AssignToMeActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.assign.id);
@@ -138,7 +138,7 @@ export class AssignToMeActionContributor extends AbstractIdentifiableContributio
 }
 
 export class AssignActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.assign.id);
@@ -198,7 +198,7 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
 }
 
 export class LabelActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.label.id);
@@ -255,7 +255,7 @@ export class LabelActionContributor extends AbstractIdentifiableContribution
 }
 
 export class CloseActionContributor extends AbstractIssueActionContributor
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.close.id);
@@ -269,7 +269,7 @@ export class CloseActionContributor extends AbstractIssueActionContributor
 }
 
 export class CommentActionContributor extends AbstractIssueActionContributor
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.comment.id);
@@ -283,7 +283,7 @@ export class CommentActionContributor extends AbstractIssueActionContributor
 }
 
 export class ReactionActionContributor extends AbstractIssueActionContributor
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.thumps_up.id);
@@ -297,7 +297,7 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
 }
 
 export class ReopenActionContributor extends AbstractIssueActionContributor
-    implements ActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
         super(LifecycleActionPreferences.issue.reopen.id);

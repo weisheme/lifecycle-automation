@@ -7,8 +7,8 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import {
     AbstractIdentifiableContribution,
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
@@ -17,7 +17,7 @@ import {
 } from "../../../../util/helpers";
 
 export class BranchNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.BranchToBranchLifecycle.Branch, SlackMessage> {
+    implements SlackNodeRenderer<graphql.BranchToBranchLifecycle.Branch> {
 
     constructor() {
         super("branch");

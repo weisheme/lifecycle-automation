@@ -1,4 +1,5 @@
 import { EventFired } from "@atomist/automation-client";
+import { SlackMessage } from "@atomist/slack-messages";
 import {
     Lifecycle,
     LifecycleHandler,
@@ -11,7 +12,6 @@ import {
     ReviewDetailNodeRenderer,
     ReviewNodeRenderer,
 } from "./rendering/ReviewNodeRenderers";
-import { SlackMessage } from "@atomist/slack-messages";
 
 export abstract class ReviewLifecycleHandler<R> extends LifecycleHandler<R> {
 
