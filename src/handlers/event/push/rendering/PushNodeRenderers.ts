@@ -666,7 +666,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class BlackDuckFingerprintNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
         super("blackduck");

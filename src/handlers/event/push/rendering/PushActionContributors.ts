@@ -7,8 +7,8 @@ import * as semver from "semver";
 import * as urijs from "urijs";
 import {
     AbstractIdentifiableContribution,
-    ActionContributor,
-    RendererContext, SlackActionContributor,
+    RendererContext,
+    SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
