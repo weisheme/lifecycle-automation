@@ -1,8 +1,9 @@
-export function newCardMessage(): CardMessage {
+export function newCardMessage(type: string, ts: number = Date.now()): CardMessage {
     return {
         id: null,
-        ts: Date.now(),
+        ts,
         ttl: null,
+        type,
         correlations: [],
         collaborators: [],
         events: [],
@@ -33,6 +34,12 @@ export interface CardMessage {
     ts: number;
     ttl: number;
     post?: "update_only" | "always";
+    type: string;
+
+    repository?: {
+        owner: string;
+        name: string;
+    };
 
     title?: {
         icon: string;

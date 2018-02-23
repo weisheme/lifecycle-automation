@@ -60,8 +60,15 @@ import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
 
 export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): CardMessage {
-        return newCardMessage();
+    protected prepareMessage(lifecycle: Lifecycle): CardMessage {
+        const msg = newCardMessage("push");
+        const repo = lifecycle.extract("repo");
+        msg.repository = {
+            owner: repo.owner,
+            name: repo.name,
+        };
+        msg.ts = +lifecycle.timestamp;
+        return msg;
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
