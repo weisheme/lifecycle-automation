@@ -21,8 +21,9 @@ import * as graphql from "../../../../typings/types";
 import {
     avatarUrl,
     branchUrl,
-    commitUrl,
-    issueUrl, prUrl,
+    commitIcon,
+    commitUrl, issueUrl,
+    prUrl,
     repoSlug,
     repoUrl,
     tagUrl,
@@ -195,7 +196,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
                 lastAttachment.footer_icon = "https://images.atomist.com/rug/question.png";
                 lastAttachment.footer = `Unrecognized author. Please use a known email address to commit.`;
             } else {
-                lastAttachment.footer_icon = "https://images.atomist.com/rug/commit.png";
+                lastAttachment.footer_icon = commitIcon(repo);
                 if (lastAttachment.footer != null) {
                     lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
                 } else {

@@ -84,6 +84,17 @@ export function htmlUrl(repo: any): string {
     }
 }
 
+export function commitIcon(repo: any): string {
+    if (repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.url != null &&
+        repo.org.provider.url === DefaultGitHubUrl) {
+        return "https://images.atomist.com/rug/github_grey.png";
+    } else {
+        return "https://images.atomist.com/rug/commit.png";
+    }
+}
+
 export function apiUrl(repo: any): string {
     if (repo.org && repo.org.provider && repo.org.provider.url) {
         let providerUrl = repo.org.provider.apiUrl;

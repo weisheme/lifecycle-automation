@@ -12,7 +12,7 @@ import { RestartTravisBuild } from "../handlers/command/travis/RestartTravisBuil
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
 import {
-    avatarUrl,
+    avatarUrl, commitIcon,
     commitUrl,
     getGitHubUsers,
     isAssigner,
@@ -427,7 +427,7 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
                 fallback: `Build #${build.name} of your push failed`,
                 color: "#D94649",
                 footer: repoAndChannelFooter(repo),
-                footer_icon: "https://images.atomist.com/rug/commit.png",
+                footer_icon: commitIcon(repo),
                 ts: Math.floor(Date.now() / 1000),
                 actions,
             },
