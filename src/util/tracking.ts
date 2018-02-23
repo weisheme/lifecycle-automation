@@ -1,7 +1,9 @@
 import * as namespace from "@atomist/automation-client/internal/util/cls";
+import { isSlackMessage } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as shortId from "shortid";
+import { CardMessage, isCardMessage } from "../lifecycle/card";
 import { encode } from "./base64";
 import { secret } from "./secrets";
 
@@ -13,24 +15,45 @@ import { secret } from "./secrets";
  * @param messageId
  * @returns {SlackMessage}
  */
-export function wrapLinks(message: SlackMessage, event: string):
-    [SlackMessage, Array<[string, string]>] {
+export function wrapLinks(message: SlackMessage | CardMessage, event: string):
+    [SlackMessage | CardMessage, Array<[string, string]>] {
 
     const clonedMessage = _.cloneDeep(message);
     const hashToUrl: Array<[string, string]> = [];
 
-    clonedMessage.text = wrapLinksInText(clonedMessage.text, `${event}/text`, hashToUrl);
-    if (clonedMessage.attachments) {
-        clonedMessage.attachments.forEach(a => {
-            a.author_link = trackableAndShortenedLink(a.author_link, `${event}/attachment/author_link`, hashToUrl);
-            a.title_link = trackableAndShortenedLink(a.title_link, `${event}/attachment/title_link`, hashToUrl);
+    if (isCardMessage(clonedMessage)) {
+        clonedMessage.title.text = wrapLinksInText(clonedMessage.title.text, `${event}/title/text`, hashToUrl);
+        clonedMessage.body.text = wrapLinksInText(clonedMessage.body.text, `${event}/body/text`, hashToUrl);
+        if (clonedMessage.correlations) {
+            clonedMessage.correlations.forEach(c => {
+                c.title = wrapLinksInText(c.title, `${event}/correlations/title`, hashToUrl);
+                if (c.body) {
+                    c.body.forEach(b => {
+                        b.text = wrapLinksInText(b.text, `${event}/correlations/body/text`, hashToUrl);
+                    });
+                }
+                c.link = trackableAndShortenedLink(c.link, `${event}/correlations/link`, hashToUrl);
+            });
+        }
+        if (clonedMessage.events) {
+            clonedMessage.events.forEach(e => {
+                e.text = wrapLinksInText(e.text, `${event}/events/text`, hashToUrl);
+            });
+        }
+    } else if (isSlackMessage(clonedMessage)) {
+        clonedMessage.text = wrapLinksInText(clonedMessage.text, `${event}/text`, hashToUrl);
+        if (clonedMessage.attachments) {
+            clonedMessage.attachments.forEach(a => {
+                a.author_link = trackableAndShortenedLink(a.author_link, `${event}/attachment/author_link`, hashToUrl);
+                a.title_link = trackableAndShortenedLink(a.title_link, `${event}/attachment/title_link`, hashToUrl);
 
-            a.footer = wrapLinksInText(a.footer, `${event}/attachment/footer`, hashToUrl);
-            a.title = wrapLinksInText(a.title, `${event}/attachment/title`, hashToUrl);
-            a.text = wrapLinksInText(a.text, `${event}/attachment/text`, hashToUrl);
-            a.pretext = wrapLinksInText(a.pretext, `${event}/attachment/pretext`, hashToUrl);
-            a.fallback = wrapLinksInText(a.fallback, `${event}/attachment/fallback`, hashToUrl);
-        });
+                a.footer = wrapLinksInText(a.footer, `${event}/attachment/footer`, hashToUrl);
+                a.title = wrapLinksInText(a.title, `${event}/attachment/title`, hashToUrl);
+                a.text = wrapLinksInText(a.text, `${event}/attachment/text`, hashToUrl);
+                a.pretext = wrapLinksInText(a.pretext, `${event}/attachment/pretext`, hashToUrl);
+                a.fallback = wrapLinksInText(a.fallback, `${event}/attachment/fallback`, hashToUrl);
+            });
+        }
     }
     return [clonedMessage, hashToUrl];
 }

@@ -1,4 +1,5 @@
 import { EventFired } from "@atomist/automation-client";
+import { SlackMessage } from "@atomist/slack-messages";
 import {
     Lifecycle,
     LifecycleHandler,
@@ -9,7 +10,9 @@ import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/Refer
 import * as graphql from "../../../typings/types";
 import { LifecyclePreferences } from "../preferences";
 import {
-    ApproveActionContributor, AssignReviewerActionContributor, AutoMergeActionContributor,
+    ApproveActionContributor,
+    AssignReviewerActionContributor,
+    AutoMergeActionContributor,
     CommentActionContributor,
     DeleteActionContributor,
     MergeActionContributor,
@@ -24,6 +27,13 @@ import {
 } from "./rendering/PullRequestNodeRenderers";
 
 export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const nodes = [];

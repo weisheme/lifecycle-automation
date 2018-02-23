@@ -1,23 +1,18 @@
 import {
     Action,
-    Attachment,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
 import {
     extractImageUrls,
-    extractLinkedIssues,
-    issueUrl,
-    prUrl,
-    truncateCommitMessage,
 } from "../../util/helpers";
 import {
     AbstractIdentifiableContribution,
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../Lifecycle";
 
 export class AttachImagesNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<any> {
+    implements SlackNodeRenderer<any> {
 
     constructor(private callback: (node: any) => boolean = () => true) {
         super("attachimages");

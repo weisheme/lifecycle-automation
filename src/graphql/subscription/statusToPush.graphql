@@ -35,16 +35,26 @@ subscription StatusToPushLifecycle {
         after {
           sha
           message
+          author {
+            login
+            person {
+              chatId {
+                screenName
+              }
+            }
+          }
           statuses {
             context
             description
             targetUrl
             state
+            timestamp
           }
           tags {
             name
             release {
               name
+              timestamp
             }
             builds {
               buildId
@@ -54,6 +64,7 @@ subscription StatusToPushLifecycle {
               status
               timestamp
             }
+            timestamp
           }
           images {
             _id
@@ -128,6 +139,9 @@ subscription StatusToPushLifecycle {
             name
             title
             state
+            openedBy {
+              login
+            }
           }
           impact {
             data

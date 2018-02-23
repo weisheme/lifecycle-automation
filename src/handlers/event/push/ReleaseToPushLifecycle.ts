@@ -5,9 +5,10 @@ import {
 } from "@atomist/automation-client";
 import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
-import { ChatTeam } from "../../../lifecycle/Lifecycle";
+import { Preferences } from "../../../lifecycle/Lifecycle";
+import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PushLifecycleHandler } from "./PushLifecycle";
+import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
 
 /**
  * Send a lifecycle message on Release events.
@@ -22,8 +23,30 @@ export class ReleaseToPushLifecycle extends PushLifecycleHandler<graphql.Release
         return event.data.Release[0].tag.commit.pushes;
     }
 
-    protected extractChatTeams(event: EventFired<graphql.ReleaseToPushLifecycle.Subscription>)
-        : ChatTeam[] {
-        return _.get(event, "data.Release[0].tag.commit.pushes[0].repo.org.team.chatTeams");
+    protected extractPreferences(
+        event: EventFired<graphql.ReleaseToPushLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return chatTeamsToPreferences(
+            _.get(event, "data.Release[0].tag.commit.pushes[0].repo.org.team.chatTeams"));
+    }
+}
+
+/**
+ * Send a lifecycle card on Release events.
+ */
+@EventHandler("Send a lifecycle card on Release events",
+    GraphQL.subscriptionFromFile("../../../graphql/subscription/releaseToPush", __dirname))
+@Tags("lifecycle", "push", "release")
+export class ReleaseToPushCardLifecycle extends PushCardLifecycleHandler<graphql.ReleaseToPushLifecycle.Subscription> {
+
+    protected extractNodes(event: EventFired<graphql.ReleaseToPushLifecycle.Subscription>):
+    graphql.PushToPushLifecycle.Push[] {
+        return event.data.Release[0].tag.commit.pushes;
+    }
+
+    protected extractPreferences(
+        event: EventFired<graphql.ReleaseToPushLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return {};
     }
 }

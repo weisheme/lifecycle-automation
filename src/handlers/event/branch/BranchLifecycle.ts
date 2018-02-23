@@ -1,4 +1,5 @@
 import { EventFired } from "@atomist/automation-client";
+import { SlackMessage } from "@atomist/slack-messages";
 import {
     Lifecycle,
     LifecycleHandler,
@@ -10,6 +11,13 @@ import { RaisePrActionContributor } from "./rendering/BranchActionContributors";
 import { BranchNodeRenderer } from "./rendering/BranchNodeRenderers";
 
 export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(): SlackMessage {
+        return {
+            text: null,
+            attachments: [],
+        };
+    }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
         const [branches, repo, deleted] = this.extractNodes(event);

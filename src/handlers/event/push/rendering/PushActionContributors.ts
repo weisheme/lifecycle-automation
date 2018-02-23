@@ -8,7 +8,7 @@ import * as urijs from "urijs";
 import {
     AbstractIdentifiableContribution,
     ActionContributor,
-    RendererContext,
+    RendererContext, SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
@@ -22,7 +22,7 @@ import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Builds> {
+    implements SlackActionContributor<graphql.PushToPushLifecycle.Builds> {
 
     constructor() {
         super(LifecycleActionPreferences.push.restart_build.id);
@@ -50,13 +50,22 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
     }
 
     private travisRestartAction(build: graphql.PushToPushLifecycle.Builds, repo: any): Action {
-        return buttonForCommand({ text: "Restart" },
-            "RestartTravisBuild", { buildId: build.buildId, repo: repo.name, org: repo.owner });
+        return buttonForCommand(
+            {
+                text: "Restart",
+                global: true,
+             },
+            "RestartTravisBuild",
+            {
+                buildId: build.buildId,
+                repo: repo.name,
+                org: repo.owner,
+            });
     }
 }
 
 export class ReleaseActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
+    implements SlackActionContributor<graphql.PushToPushLifecycle.Tags> {
 
     constructor() {
         super(LifecycleActionPreferences.push.release.id);
@@ -112,7 +121,9 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         releaseHandler.repo = repo.name;
 
         return buttonForCommand({
-            text: "Release", confirm: {
+            text: "Release",
+            global: true,
+            confirm: {
                 title: "Create Release",
                 text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel",
             },
@@ -121,7 +132,7 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
 }
 
 export class TagPushActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+    implements SlackActionContributor<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
         super(LifecycleActionPreferences.push.new_tag.id);
@@ -162,7 +173,11 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
         tagHandler.repo = repo.name;
         tagHandler.owner = repo.owner;
 
-        buttons.push(buttonForCommand({ text: "Tag" }, tagHandler));
+        buttons.push(buttonForCommand(
+            {
+                text: "Tag",
+                global: true },
+            tagHandler));
     }
 }
 
@@ -173,7 +188,7 @@ export function sortTagsByName(tags: graphql.PushToPushLifecycle.Tags[]) {
 }
 
 export class TagTagActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Tags> {
+    implements SlackActionContributor<graphql.PushToPushLifecycle.Tags> {
 
     constructor() {
         super(LifecycleActionPreferences.push.tag.id);
@@ -217,7 +232,12 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
                 tagHandler.repo = repo.name;
                 tagHandler.owner = repo.owner;
 
-                buttons.push(buttonForCommand({ text: `Tag ${version}` }, tagHandler));
+                buttons.push(buttonForCommand(
+                    {
+                        text: `Tag ${version}`,
+                        global: true,
+                    },
+                    tagHandler));
 
             }
         }
@@ -240,7 +260,7 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
 }
 
 export class PullRequestActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+    implements SlackActionContributor<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
         super(LifecycleActionPreferences.push.raise_pullrequest.id);
@@ -292,7 +312,8 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
                             body = msg.slice(1).join("\n").split("\r\n").join("\n").split("\r").join("");
                         }
 
-                        buttons.push(buttonForCommand({ text: "Raise PR" },
+                        buttons.push(buttonForCommand(
+                            { text: "Raise PR", global: true },
                             "RaiseGitHubPullRequest", {
                                 org: repo.owner,
                                 repo: repo.name,
@@ -319,7 +340,7 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
 }
 
 export class ApplicationActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<Domain> {
+    implements SlackActionContributor<Domain> {
 
     constructor() {
         super(LifecycleActionPreferences.push.cf_application.id);
@@ -386,7 +407,7 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
 }
 
 export class ApprovePhaseActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PushToPushLifecycle.Push> {
+    implements SlackActionContributor<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
         super(LifecycleActionPreferences.push.approve_phase.id);
@@ -433,6 +454,10 @@ export class ApprovePhaseActionContributor extends AbstractIdentifiableContribut
         approveHandler.context = status.context;
         approveHandler.description = status.description;
 
-        buttons.push(buttonForCommand({ text: `Approve '${status.description}'` }, approveHandler));
+        buttons.push(buttonForCommand(
+            {
+                text: `Approve '${status.description}'`,
+                global: true },
+            approveHandler));
     }
 }

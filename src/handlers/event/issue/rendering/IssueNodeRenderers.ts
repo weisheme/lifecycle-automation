@@ -8,8 +8,8 @@ import {
 } from "@atomist/slack-messages/SlackMessages";
 import {
     AbstractIdentifiableContribution,
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import {
     avatarUrl,
@@ -20,7 +20,8 @@ import {
     userUrl,
 } from "../../../../util/helpers";
 
-export class IssueNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
+export class IssueNodeRenderer extends AbstractIdentifiableContribution
+    implements SlackNodeRenderer<any> {
 
     constructor() {
         super("issue");
@@ -98,7 +99,8 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution implemen
     }
 }
 
-export class MoreNodeRenderer extends AbstractIdentifiableContribution implements NodeRenderer<any> {
+export class MoreNodeRenderer extends AbstractIdentifiableContribution
+    implements SlackNodeRenderer<any> {
 
     constructor() {
         super("assign");

@@ -753,6 +753,7 @@ export namespace IssueOrPr {
     name?: string | null; 
     title?: string | null; 
     repo?: _Repo | null; 
+    author?: Author | null; 
   } 
 
   export type _Repo = {
@@ -771,6 +772,10 @@ export namespace IssueOrPr {
     gitUrl?: string | null; 
   } 
 
+  export type Author = {
+    login?: string | null; 
+  } 
+
   export type Issue = {
     _id?: Long | null; 
     name?: string | null; 
@@ -778,6 +783,7 @@ export namespace IssueOrPr {
     state?: IssueState | null; 
     number?: number | null; 
     repo: __Repo; 
+    openedBy?: OpenedBy | null; 
   } 
 
   export type __Repo = {
@@ -794,6 +800,10 @@ export namespace IssueOrPr {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 }
 export namespace MappedChannels {
@@ -1247,10 +1257,24 @@ export namespace ApplicationToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -1258,16 +1282,19 @@ export namespace ApplicationToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -1373,7 +1400,7 @@ export namespace ApplicationToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -1382,6 +1409,11 @@ export namespace ApplicationToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -1417,16 +1449,16 @@ export namespace ApplicationToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -2210,10 +2242,24 @@ export namespace BuildToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -2221,16 +2267,19 @@ export namespace BuildToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -2336,7 +2385,7 @@ export namespace BuildToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -2345,6 +2394,11 @@ export namespace BuildToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -2380,16 +2434,16 @@ export namespace BuildToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -3647,10 +3701,13 @@ export namespace IssueToIssueLifecycle {
   } 
 
   export type ResolvingCommits = {
+    sha?: string | null; 
+    message?: string | null; 
     author?: Author | null; 
   } 
 
   export type Author = {
+    login?: string | null; 
     person?: Person | null; 
   } 
 
@@ -3929,10 +3986,24 @@ export namespace IssueToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -3940,16 +4011,19 @@ export namespace IssueToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -4055,7 +4129,7 @@ export namespace IssueToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -4064,6 +4138,11 @@ export namespace IssueToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -4099,16 +4178,16 @@ export namespace IssueToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -4188,10 +4267,24 @@ export namespace K8PodToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: _Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -4199,16 +4292,19 @@ export namespace K8PodToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -4314,7 +4410,7 @@ export namespace K8PodToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -4323,6 +4419,11 @@ export namespace K8PodToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -4358,16 +4459,16 @@ export namespace K8PodToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -5143,10 +5244,24 @@ export namespace ParentImpactToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -5154,16 +5269,19 @@ export namespace ParentImpactToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -5269,7 +5387,7 @@ export namespace ParentImpactToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -5278,6 +5396,11 @@ export namespace ParentImpactToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -5313,16 +5436,16 @@ export namespace ParentImpactToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -5878,10 +6001,24 @@ export namespace PushToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -5889,16 +6026,19 @@ export namespace PushToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -6004,7 +6144,7 @@ export namespace PushToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -6013,6 +6153,11 @@ export namespace PushToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -6048,16 +6193,16 @@ export namespace PushToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -6231,10 +6376,24 @@ export namespace ReleaseToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -6242,16 +6401,19 @@ export namespace ReleaseToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: _Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -6357,7 +6519,7 @@ export namespace ReleaseToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -6366,6 +6528,11 @@ export namespace ReleaseToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -6401,16 +6568,16 @@ export namespace ReleaseToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -7157,10 +7324,24 @@ export namespace StatusToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -7168,16 +7349,19 @@ export namespace StatusToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -7283,7 +7467,7 @@ export namespace StatusToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -7292,6 +7476,11 @@ export namespace StatusToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -7327,16 +7516,16 @@ export namespace StatusToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }
@@ -7409,10 +7598,24 @@ export namespace TagToPushLifecycle {
   export type After = {
     sha?: string | null; 
     message?: string | null; 
+    author?: Author | null; 
     statuses?: Statuses[] | null; 
     tags?: Tags[] | null; 
     images?: Images[] | null; 
     fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
   } 
 
   export type Statuses = {
@@ -7420,16 +7623,19 @@ export namespace TagToPushLifecycle {
     description?: string | null; 
     targetUrl?: string | null; 
     state?: StatusState | null; 
+    timestamp?: string | null; 
   } 
 
   export type Tags = {
     name?: string | null; 
     release?: Release | null; 
     builds?: __Builds[] | null; 
+    timestamp?: string | null; 
   } 
 
   export type Release = {
     name?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type __Builds = {
@@ -7535,7 +7741,7 @@ export namespace TagToPushLifecycle {
     impact?: Impact | null; 
     apps?: Apps[] | null; 
     tags?: _Tags[] | null; 
-    author?: Author | null; 
+    author?: _Author | null; 
     timestamp?: string | null; 
   } 
 
@@ -7544,6 +7750,11 @@ export namespace TagToPushLifecycle {
     name?: string | null; 
     title?: string | null; 
     state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
   } 
 
   export type Impact = {
@@ -7579,16 +7790,16 @@ export namespace TagToPushLifecycle {
     name?: string | null; 
   } 
 
-  export type Author = {
+  export type _Author = {
     login?: string | null; 
-    person?: Person | null; 
+    person?: _Person | null; 
   } 
 
-  export type Person = {
-    chatId?: ChatId | null; 
+  export type _Person = {
+    chatId?: _ChatId | null; 
   } 
 
-  export type ChatId = {
+  export type _ChatId = {
     screenName?: string | null; 
   } 
 }

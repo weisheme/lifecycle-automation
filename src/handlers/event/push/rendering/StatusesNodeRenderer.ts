@@ -4,17 +4,18 @@ import {
     SlackMessage,
     url,
 } from "@atomist/slack-messages/SlackMessages";
+import { Action as CardAction, CardMessage } from "../../../../lifecycle/card";
 import {
-    AbstractIdentifiableContribution,
+    AbstractIdentifiableContribution, CardNodeRenderer,
     LifecycleConfiguration,
-    NodeRenderer,
     RendererContext,
+    SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
 export class StatusesNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";
@@ -94,8 +95,80 @@ export class StatusesNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
+export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
+    implements CardNodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("statuses");
+    }
+
+    public supports(node: any): boolean {
+        if (node.after) {
+            return node.after.statuses && node.after.statuses.length > 0;
+        } else {
+            return false;
+        }
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push,
+                  actions: CardAction[],
+                  msg: CardMessage,
+                  context: RendererContext): Promise<CardMessage> {
+
+        // List all the statuses on the after commit
+        const commit = push.after;
+        // exclude build statuses already displayed
+        const statuses = commit.statuses.filter(status => notAlreadyDisplayed(push, status));
+        if (statuses.length === 0) {
+            return Promise.resolve(msg);
+        }
+
+        const success = statuses.filter(s => s.state === "success").length;
+
+        // Now each one
+        const body = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+
+            let icon;
+            if (s.state === "success") {
+                icon = "https://images.atomist.com/rug/atomist_build_passed";
+            } else if (s.state === "pending") {
+                icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+            } else {
+                icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+            }
+
+            let text;
+            if (s.targetUrl != null && s.targetUrl.length > 0) {
+                text = `${s.description} | ${url(s.targetUrl, s.context)}`;
+            } else {
+                text = `${s.description} | ${s.context}`;
+            }
+
+            msg.events.push({
+               icon,
+               text,
+               ts: Date.parse(s.timestamp),
+            });
+
+            return {
+                icon,
+                text,
+            };
+        });
+
+        msg.correlations.push({
+            type: "status",
+            icon: "https://images.atomist.com/rug/status.png",
+            title: `${success}/${statuses.length}`,
+            body,
+        });
+
+        return Promise.resolve(msg);
+    }
+}
+
 export class PhaseNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";
@@ -172,6 +245,80 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
             default:
                 return EMOJI_SCHEME[this.emojiStyle].build.failed;
         }
+    }
+}
+
+export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
+    implements CardNodeRenderer<graphql.PushToPushLifecycle.Push> {
+
+    constructor() {
+        super("phases");
+    }
+
+    public supports(node: any): boolean {
+        if (node.after) {
+            return node.after.statuses && node.after.statuses.length > 0;
+        } else {
+            return false;
+        }
+    }
+
+    public render(push: graphql.PushToPushLifecycle.Push,
+                  actions: CardAction[],
+                  msg: CardMessage,
+                  context: RendererContext): Promise<CardMessage> {
+
+        // List all the statuses on the after commit
+        const commit = push.after;
+        // exclude build statuses already displayed
+        const statuses = commit.statuses.filter(status => status.context.includes("sdm/"));
+        if (statuses.length === 0) {
+            return Promise.resolve(msg);
+        }
+
+        const success = statuses.filter(s => s.state === "success").length;
+
+        // Now each one
+        const body = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+
+            let icon;
+            if (s.state === "success") {
+                icon = "https://images.atomist.com/rug/atomist_build_passed";
+            } else if (s.state === "pending") {
+                icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+            } else {
+                icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+            }
+
+            let text;
+            if (s.targetUrl != null && s.targetUrl.length > 0) {
+                text = `${url(s.targetUrl, s.description)}`;
+            } else {
+                text = `${s.description}`;
+            }
+
+            msg.events.push({
+                icon,
+                text,
+                ts: Date.parse(s.timestamp),
+            });
+
+            return {
+                icon,
+                text,
+            };
+        });
+
+        msg.correlations.push({
+            type: "status",
+            icon: "`https://images.atomist.com/rug/phases.png`",
+            title: `${success}/${status.length}`,
+            body,
+        });
+
+        msg.actions.push(...actions);
+
+        return Promise.resolve(msg);
     }
 }
 

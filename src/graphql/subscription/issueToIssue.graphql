@@ -10,7 +10,10 @@ subscription IssueToIssueLifecycle {
     updatedAt
     closedAt
     resolvingCommits {
+      sha
+      message
       author {
+        login
         person {
           chatId {
             screenName

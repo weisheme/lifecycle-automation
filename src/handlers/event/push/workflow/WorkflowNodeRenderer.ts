@@ -5,14 +5,14 @@ import {
 import {
     AbstractIdentifiableContribution,
     NodeRenderer,
-    RendererContext,
+    RendererContext, SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { chartUrlFromWorkflow } from "./ChartUrl";
 import {circleWorkflowtoStages, PushTrigger} from "./CircleWorkflow";
 
 export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.PushToPushLifecycle.Builds> {
+    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Builds> {
 
     constructor() {
         super("workflow");

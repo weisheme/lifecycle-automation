@@ -10,7 +10,7 @@ import * as _ from "lodash";
 import {
     AbstractIdentifiableContribution,
     NodeRenderer,
-    RendererContext,
+    RendererContext, SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
@@ -24,7 +24,7 @@ import {
 } from "../../../../util/helpers";
 
 export class ReviewNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review> {
+    implements SlackNodeRenderer<graphql.ReviewToReviewLifecycle.Review> {
 
     constructor() {
         super("review");
@@ -52,7 +52,7 @@ export class ReviewNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class ReviewDetailNodeRenderer extends AbstractIdentifiableContribution
-    implements NodeRenderer<graphql.ReviewToReviewLifecycle.Review> {
+    implements SlackNodeRenderer<graphql.ReviewToReviewLifecycle.Review> {
 
     constructor() {
         super("reviewdetail");

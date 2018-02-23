@@ -18,23 +18,24 @@ import {
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import axios from "axios";
 import * as cluster from "cluster";
+import { CardMessage } from "../lifecycle/card";
 import { wrapLinks } from "./tracking";
 
-function shortenUrls(slackMessage: SlackMessage,
-                     options: MessageOptions,
-                     ctx: AutomationContextAware): Promise<SlackMessage> {
+export function shortenUrls(message: SlackMessage | CardMessage,
+                            options: MessageOptions,
+                            ctx: AutomationContextAware): Promise<SlackMessage | CardMessage> {
 
     // Check if this message was already shortened
-    if (isShortened(slackMessage)) {
-        return Promise.resolve(slackMessage);
+    if (isShortened(message)) {
+        return Promise.resolve(message);
     }
 
     if (!ctx || !ctx.context) {
-        return Promise.resolve(slackMessage);
+        return Promise.resolve(message);
     }
 
     logger.debug("Starting url shortening");
-    const [wrappedSlackMessage, hashesToUrl] = wrapLinks(slackMessage, ctx.context.operation);
+    const [wrappedSlackMessage, hashesToUrl] = wrapLinks(message, ctx.context.operation);
 
     if (hashesToUrl.length === 0) {
         logger.debug("No urls shortened");
@@ -56,20 +57,20 @@ function shortenUrls(slackMessage: SlackMessage,
             return markShortened(wrappedSlackMessage);
         }, err => {
             console.warn(`Error shortening urls: '${err.message}'`);
-            return markShortened(slackMessage);
+            return markShortened(message);
         });
 }
 
-function markShortened(slackMessage: SlackMessage): SlackMessage {
+function markShortened(message: any): SlackMessage {
     if (cluster.isWorker) {
-        (slackMessage as any).__shortened = true;
+        (message as any).__shortened = true;
     }
-    return slackMessage;
+    return message;
 }
 
-function isShortened(slackMessage: SlackMessage): boolean {
-    if ((slackMessage as any).__shortened === true) {
-        delete (slackMessage as any).__shortened;
+function isShortened(message: any): boolean {
+    if ((message as any).__shortened === true) {
+        delete (message as any).__shortened;
         return true;
     } else {
         return false;

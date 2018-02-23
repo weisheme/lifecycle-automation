@@ -1,7 +1,7 @@
 {
   "name": "@atomist/lifecycle-automation",
   "description": "Atomist automations displaying development and operations lifecycle messages in chat",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Atomist",
   "license": "GPL-3.0",
   "repository": {
@@ -23,8 +23,9 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://r.atomist.com/H1EvohvWvf",
+    "@atomist/automation-client": "https://r.atomist.com/SyE_uIi2PM",
     "@atomist/slack-messages": "^0.12.1",
+    "@types/zen-observable": "0.5.3",
     "app-root-path": "^2.0.1",
     "async-exit-hook": "^2.0.1",
     "base64-js": "^1.2.1",
@@ -40,11 +41,13 @@
     "lodash": "^4.17.4",
     "logzio-nodejs": "^0.4.4",
     "promise-each": "^2.2.0",
+    "pusher": "^1.5.1",
     "semver": "^5.4.1",
     "shortid": "^2.2.8",
     "stripchar": "^1.2.1",
     "urijs": "^1.19.1",
-    "winston-logzio": "^1.0.3"
+    "winston-logzio": "^1.0.3",
+    "zen-observable": "^0.8.0"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",

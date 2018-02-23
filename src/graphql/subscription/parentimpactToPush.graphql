@@ -35,16 +35,26 @@ subscription ParentImpactToPushLifecycle {
         after {
           sha
           message
+          author {
+            login
+            person {
+              chatId {
+                screenName
+              }
+            }
+          }
           statuses {
             context
             description
             targetUrl
             state
+            timestamp
           }
           tags {
             name
             release {
               name
+              timestamp
             }
             builds {
               buildId
@@ -54,6 +64,7 @@ subscription ParentImpactToPushLifecycle {
               status
               timestamp
             }
+            timestamp
           }
           images {
             _id
@@ -128,6 +139,9 @@ subscription ParentImpactToPushLifecycle {
             name
             title
             state
+            openedBy {
+              login
+            }
           }
           impact {
             data

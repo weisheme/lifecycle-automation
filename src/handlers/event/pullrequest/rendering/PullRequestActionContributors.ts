@@ -8,8 +8,8 @@ import { Action } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import {
     AbstractIdentifiableContribution,
-    ActionContributor,
     RendererContext,
+    SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { isGenerated } from "../../../../util/helpers";
@@ -18,7 +18,7 @@ import { LifecycleActionPreferences } from "../../preferences";
 import { isPrTagged } from "../autoMerge";
 
 export class MergeActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.merge.id);
@@ -106,7 +106,7 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
 }
 
 export class AutoMergeActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.auto_merge.id);
@@ -147,7 +147,7 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
 }
 
 export class ApproveActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.approve.id);
@@ -199,7 +199,7 @@ export class ApproveActionContributor extends AbstractIdentifiableContribution
 }
 
 export class DeleteActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.delete.id);
@@ -236,7 +236,7 @@ export class DeleteActionContributor extends AbstractIdentifiableContribution
 }
 
 export class CommentActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.comment.id);
@@ -271,7 +271,7 @@ export class CommentActionContributor extends AbstractIdentifiableContribution
 }
 
 export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.thumps_up.id);
@@ -306,7 +306,7 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
 }
 
 export class AssignReviewerActionContributor extends AbstractIdentifiableContribution
-    implements ActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
 
     constructor() {
         super(LifecycleActionPreferences.pull_request.assign_reviewer.id);
@@ -330,9 +330,9 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
                 repo.org.provider &&
                 repo.org.provider.apiUrl === DefaultGitHubApiUrl &&
                 context.orgToken) {
-                return this.assiggnReviewMenu(pr, repo, context.orgToken);
+                return this.assignReviewMenu(pr, repo, context.orgToken);
             } else {
-                return Promise.resolve(this.assignReviewrButton(pr, repo));
+                return Promise.resolve(this.assignReviewButton(pr, repo));
             }
         }
         return Promise.resolve([]);
@@ -343,9 +343,9 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
         return Promise.resolve([]);
     }
 
-    private assiggnReviewMenu(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-                              repo: graphql.PullRequestToPullRequestLifecycle.Repo,
-                              orgToken: string): Promise<Action[]> {
+    private assignReviewMenu(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
+                             repo: graphql.PullRequestToPullRequestLifecycle.Repo,
+                             orgToken: string): Promise<Action[]> {
 
         const client = new ApolloGraphClient("https://api.github.com/graphql",
             { Authorization: `bearer ${orgToken}` });
@@ -375,17 +375,17 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
                         { issue: pr.number, repo: repo.name, owner: repo.owner }) ];
 
                 } else {
-                    return this.assignReviewrButton(pr, repo);
+                    return this.assignReviewButton(pr, repo);
                 }
 
             })
             .catch(() => {
-                return this.assignReviewrButton(pr, repo);
+                return this.assignReviewButton(pr, repo);
             });
     }
 
-    private assignReviewrButton(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-                                repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
+    private assignReviewButton(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
+                               repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
         return [ buttonForCommand({ text: "Request Review" }, "AssignGitHubPullRequestReviewer",
             { issue: pr.number, repo: repo.name, owner: repo.owner }) ];
     }

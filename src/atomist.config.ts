@@ -61,7 +61,7 @@ import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/No
 import {
     PullRequestToPullRequestCommentLifecycle,
 } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
-import { IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
+import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
 import { StatusOnParentImpact } from "./handlers/event/parentimpact/StatusOnParentImpact";
 import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild";
@@ -76,21 +76,51 @@ import { NotifyMentionedOnPullRequest } from "./handlers/event/pullrequest/Notif
 import { PullRequestToPullRequestLifecycle } from "./handlers/event/pullrequest/PullRequestToPullRequestLifecycle";
 import { ReviewToPullRequestLifecycle } from "./handlers/event/pullrequest/ReviewToPullRequestLifecycle";
 import { StatusToPullRequestLifecycle } from "./handlers/event/pullrequest/StatusToPullRequestLifecycle";
-import { ApplicationToPushLifecycle } from "./handlers/event/push/ApplicationToPushLifecycle";
-import { BuildToPushLifecycle } from "./handlers/event/push/BuildToPushLifecycle";
-import { IssueToPushLifecycle } from "./handlers/event/push/IssueToPushLifecycle";
-import { K8PodToPushLifecycle } from "./handlers/event/push/K8PodToPushLifecycle";
+import {
+    ApplicationToPushCardLifecycle,
+    ApplicationToPushLifecycle,
+} from "./handlers/event/push/ApplicationToPushLifecycle";
+import {
+    BuildToPushCardLifecycle,
+    BuildToPushLifecycle,
+} from "./handlers/event/push/BuildToPushLifecycle";
+import {
+    IssueToPushCardLifecycle,
+    IssueToPushLifecycle,
+} from "./handlers/event/push/IssueToPushLifecycle";
+import {
+    K8PodToPushCardLifecycle,
+    K8PodToPushLifecycle,
+} from "./handlers/event/push/K8PodToPushLifecycle";
 import { NotifyBotOwnerOnPush } from "./handlers/event/push/NotifyBotOwnerOnPush";
 import { NotifyReviewerOnPush } from "./handlers/event/push/NotifyReviewerOnPush";
-import { ParentImpactToPushLifecycle } from "./handlers/event/push/ParentImpactToPushLifecycle";
-import { PushToPushLifecycle } from "./handlers/event/push/PushToPushLifecycle";
+import {
+    ParentImpactToPushCardLifecycle,
+    ParentImpactToPushLifecycle,
+} from "./handlers/event/push/ParentImpactToPushLifecycle";
+import {
+    PushToPushCardLifecycle,
+    PushToPushLifecycle,
+} from "./handlers/event/push/PushToPushLifecycle";
 import { PushToUnmappedRepo } from "./handlers/event/push/PushToUnmappedRepo";
-import { ReleaseToPushLifecycle } from "./handlers/event/push/ReleaseToPushLifecycle";
-import { StatusToPushLifecycle } from "./handlers/event/push/StatusToPushLifecycle";
-import { TagToPushLifecycle } from "./handlers/event/push/TagToPushLifecycle";
+import {
+    ReleaseToPushCardLifecycle,
+    ReleaseToPushLifecycle,
+} from "./handlers/event/push/ReleaseToPushLifecycle";
+import {
+    StatusToPushCardLifecycle,
+    StatusToPushLifecycle,
+} from "./handlers/event/push/StatusToPushLifecycle";
+import {
+    TagToPushCardLifecycle,
+    TagToPushLifecycle,
+} from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
-import { DatadogAutomationEventListener, DatadogOptions } from "./util/datadog";
+import {
+    DatadogAutomationEventListener,
+    DatadogOptions,
+} from "./util/datadog";
 import {
     LogzioAutomationEventListener,
     LogzioOptions,
@@ -211,20 +241,30 @@ export const configuration: any = {
 
         // push
         () => new ApplicationToPushLifecycle(),
+        () => new ApplicationToPushCardLifecycle(),
         () => new BuildToPushLifecycle(),
+        () => new BuildToPushCardLifecycle(),
         () => new IssueToPushLifecycle(),
+        () => new IssueToPushCardLifecycle(),
         () => new K8PodToPushLifecycle(),
+        () => new K8PodToPushCardLifecycle(),
         () => new NotifyBotOwnerOnPush(),
         () => new NotifyReviewerOnPush(),
         () => new ParentImpactToPushLifecycle(),
+        () => new ParentImpactToPushCardLifecycle(),
         () => new PushToPushLifecycle(),
+        () => new PushToPushCardLifecycle(),
         () => new PushToUnmappedRepo(),
         () => new ReleaseToPushLifecycle(),
+        () => new ReleaseToPushCardLifecycle(),
         () => new StatusToPushLifecycle(),
+        () => new StatusToPushCardLifecycle(),
         () => new TagToPushLifecycle(),
+        () => new TagToPushCardLifecycle(),
 
         // issue
         () => new IssueToIssueLifecycle(),
+        () => new IssueToIssueCardLifecycle(),
         () => new NotifyMentionedOnIssue(),
 
         // pullRequest

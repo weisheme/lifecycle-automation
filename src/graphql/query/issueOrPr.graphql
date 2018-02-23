@@ -20,6 +20,9 @@ query IssueOrPr($owner: String!, $repo: String!, $names: [String]!) {
             }
           }
         }
+        author {
+          login
+        }
       }
       issue(names: $names) {
         _id
@@ -37,6 +40,9 @@ query IssueOrPr($owner: String!, $repo: String!, $names: [String]!) {
               gitUrl
             }
           }
+        }
+        openedBy {
+          login
         }
       }
     }

@@ -5,8 +5,9 @@
     "graphql": "https://automation-staging.atomist.services/graphql/team",
     "events": "https://app-staging.atomist.services/v1/lifecycle"
   },
-  "groups": null,
+  "groups": null, // [ "all" ],
   "teamIds": [ "T1L0VDKJP" ],
+  // "teamIds": [  ],
   "policy": null,
   "http": {
     "auth": {
