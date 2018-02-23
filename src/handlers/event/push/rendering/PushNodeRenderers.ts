@@ -12,9 +12,10 @@ import {
 import * as config from "config";
 import * as _ from "lodash";
 import {
-    AbstractIdentifiableContribution, LifecycleConfiguration,
-    NodeRenderer,
-    RendererContext, SlackNodeRenderer,
+    AbstractIdentifiableContribution,
+    LifecycleConfiguration,
+    RendererContext,
+    SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
