@@ -165,6 +165,26 @@ if (notLocal) {
 
 const AdminTeam = "atomist-automation";
 
+const cardHandlers = [];
+
+if (process.env.NODE_ENV !== "production") {
+    cardHandlers.push(
+        // push
+        () => new ApplicationToPushCardLifecycle(),
+        () => new BuildToPushCardLifecycle(),
+        () => new IssueToPushCardLifecycle(),
+        () => new K8PodToPushCardLifecycle(),
+        () => new ParentImpactToPushCardLifecycle(),
+        () => new PushToPushCardLifecycle(),
+        () => new ReleaseToPushCardLifecycle(),
+        () => new StatusToPushCardLifecycle(),
+        () => new TagToPushCardLifecycle(),
+
+        // issue
+        () => new IssueToIssueCardLifecycle(),
+    );
+}
+
 export const configuration: any = {
     name: pj.name,
     version: pj.version,
@@ -241,30 +261,20 @@ export const configuration: any = {
 
         // push
         () => new ApplicationToPushLifecycle(),
-        () => new ApplicationToPushCardLifecycle(),
         () => new BuildToPushLifecycle(),
-        () => new BuildToPushCardLifecycle(),
         () => new IssueToPushLifecycle(),
-        () => new IssueToPushCardLifecycle(),
         () => new K8PodToPushLifecycle(),
-        () => new K8PodToPushCardLifecycle(),
         () => new NotifyBotOwnerOnPush(),
         () => new NotifyReviewerOnPush(),
         () => new ParentImpactToPushLifecycle(),
-        () => new ParentImpactToPushCardLifecycle(),
         () => new PushToPushLifecycle(),
-        () => new PushToPushCardLifecycle(),
         () => new PushToUnmappedRepo(),
         () => new ReleaseToPushLifecycle(),
-        () => new ReleaseToPushCardLifecycle(),
         () => new StatusToPushLifecycle(),
-        () => new StatusToPushCardLifecycle(),
         () => new TagToPushLifecycle(),
-        () => new TagToPushCardLifecycle(),
 
         // issue
         () => new IssueToIssueLifecycle(),
-        () => new IssueToIssueCardLifecycle(),
         () => new NotifyMentionedOnIssue(),
 
         // pullRequest
@@ -296,6 +306,9 @@ export const configuration: any = {
 
         // webhook
         () => new GitHubWebhookCreated(),
+
+        // add card handlers
+        ...cardHandlers,
     ],
     listeners,
     token,

@@ -5,7 +5,7 @@ import {
     Success,
 } from "@atomist/automation-client";
 import { HandlerError } from "@atomist/automation-client/HandlerResult";
-import * as GitHubApi from "github";
+import * as GitHubApi from "@octokit/rest";
 import * as URL from "url";
 import { error } from "../../../util/messages";
 

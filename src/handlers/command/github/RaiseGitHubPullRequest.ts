@@ -11,6 +11,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
+import { PullRequestsCreateParams } from "@octokit/rest";
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
@@ -62,7 +63,7 @@ export class RaiseGitHubPullRequest implements HandleCommand {
                     body,
                     head: this.head,
                     base: this.base,
-                });
+                } as any as PullRequestsCreateParams);
             })
             .catch(err => {
                 return github.handleError("Raise Pull Request", err, ctx);
