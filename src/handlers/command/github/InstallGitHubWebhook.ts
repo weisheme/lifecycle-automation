@@ -47,6 +47,12 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubUrl)
     public webUrl: string;
 
+    @MappedParameter(MappedParameters.GitHubUserLogin)
+    public login: string;
+
+    @MappedParameter(MappedParameters.GitHubRepositoryProvider)
+    public provider: string;
+
     @Secret(Secrets.userToken("admin:org_hook"))
     public githubToken: string;
 
@@ -64,11 +70,21 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
         };
 
         return (github.api(this.githubToken, this.apiUrl).orgs as any).createHook(payload)
-            .then(() => {
-                return ctx.messageClient.respond(
-                    success("Organization Webhook", `Successfully installed webhook for ${url(
-                        orgHookUrl(this.webUrl, this.owner), codeLine(this.owner))}`))
-                    .then(() => Success)
+            .then(result => {
+                return ctx.graphClient.executeMutationFromFile<graphql.SetOwnerLogin.Mutation,
+                    graphql.SetOwnerLogin.Variables>(
+                        "../../../graphql/mutation/setOwnerLogin",
+                        {
+                            login: this.login,
+                            owner: this.owner,
+                            providerId: this.provider,
+                        },
+                        {},
+                        __dirname)
+                    .then(() => ctx.messageClient.respond(
+                        success("Organization Webhook", `Successfully installed webhook for ${url(
+                        orgHookUrl(this.webUrl, this.owner), codeLine(this.owner))}`)))
+                    .then(() => result)
                     .catch(err => failure(err));
             })
             .catch(result => {
