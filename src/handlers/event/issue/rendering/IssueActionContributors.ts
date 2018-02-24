@@ -277,7 +277,7 @@ export class CommentActionContributor extends AbstractIssueActionContributor
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
                            repo: graphql.IssueToIssueLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Comment" },
+        return buttonForCommand({ text: "Comment", role: "comment" },
             "CommentGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
     }
 }
@@ -291,7 +291,7 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
                            repo: graphql.IssueToIssueLifecycle.Repo): Action {
-        return buttonForCommand({ text: ":+1:" },
+        return buttonForCommand({ text: ":+1:", role: "react" },
             "ReactGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner, reaction: "+1" });
     }
 }

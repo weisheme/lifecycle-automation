@@ -53,7 +53,7 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
         return buttonForCommand(
             {
                 text: "Restart",
-                global: true,
+                role: "global",
              },
             "RestartTravisBuild",
             {
@@ -122,7 +122,7 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
 
         return buttonForCommand({
             text: "Release",
-            global: true,
+            role: "global",
             confirm: {
                 title: "Create Release",
                 text: `Create release of tag ${tag.name}?`, ok_text: "Ok", dismiss_text: "Cancel",
@@ -176,7 +176,8 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
         buttons.push(buttonForCommand(
             {
                 text: "Tag",
-                global: true },
+                role: "global",
+            },
             tagHandler));
     }
 }
@@ -235,7 +236,7 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
                 buttons.push(buttonForCommand(
                     {
                         text: `Tag ${version}`,
-                        global: true,
+                        role: "global",
                     },
                     tagHandler));
 
@@ -313,7 +314,10 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
                         }
 
                         buttons.push(buttonForCommand(
-                            { text: "Raise PR", global: true },
+                            {
+                                text: "Raise PR",
+                                role: "global",
+                            },
                             "RaiseGitHubPullRequest", {
                                 org: repo.owner,
                                 repo: repo.name,
@@ -457,7 +461,8 @@ export class ApprovePhaseActionContributor extends AbstractIdentifiableContribut
         buttons.push(buttonForCommand(
             {
                 text: `Approve '${status.description}'`,
-                global: true },
+                role: "global",
+            },
             approveHandler));
     }
 }

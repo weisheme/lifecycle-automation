@@ -106,6 +106,8 @@ export interface Action {
     parameterName?: string;
     parameterOptions?: Option[];
     parameterOptionGroups?: OptionGroup[];
+
+    role?: "global" | "comment" | "react";
 }
 
 export interface Option {

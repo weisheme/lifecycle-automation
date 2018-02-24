@@ -637,8 +637,8 @@ export class CardActionContributorWrapper implements CardActionContributor<any> 
                         command: cra.command.name,
                         parameters,
                     };
-                    if ((a as any).global) {
-                        (action as any).global = (a as any).global;
+                    if ((a as any).role) {
+                        action.role = (a as any).role;
                     }
                     return action;
                 });
@@ -681,8 +681,8 @@ export class CardActionContributorWrapper implements CardActionContributor<any> 
                             })),
                         })) : undefined,
                     };
-                    if ((a as any).global) {
-                        (action as any).global = (a as any).global;
+                    if ((a as any).role) {
+                        action.role = (a as any).role;
                     }
                     return action;
                 });
