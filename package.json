@@ -3,7 +3,7 @@
   "description": "Atomist automations displaying development and operations lifecycle messages in chat",
   "version": "0.4.0",
   "author": "Atomist",
-  "license": "GPL-3.0",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/atomist/lifecycle-automation.git"
