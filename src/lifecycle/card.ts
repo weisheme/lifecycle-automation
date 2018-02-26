@@ -80,6 +80,7 @@ export interface Body {
     login: string;
     text: string;
     hint?: string;
+    ts: number;
 }
 
 export interface Correlation {

@@ -46,8 +46,6 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<CardMessage> {
         const repo = context.lifecycle.extract("repo");
 
-        msg.ts = Date.parse(push.timestamp);
-
         msg.title = {
             icon: "https://images.atomist.com/rug/commit.png",
             text: `${url(userUrl(repo, push.after.author.login),
@@ -95,6 +93,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
             text: renderCommitMessage(push.after, repo),
             hint: (commits.length > 2
                 ? `+ ${commits.length - 1 } more commits` : (commits.length === 2 ? "+ 1 more commit" : "")),
+            ts: Date.parse(push.timestamp),
         };
 
         msg.correlations.push({

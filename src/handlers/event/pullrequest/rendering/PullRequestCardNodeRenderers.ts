@@ -59,8 +59,6 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
         return linkGitHubUsers(githubToSlack(pr.body), context.context)
             .then(body => {
 
-                msg.ts = Date.parse(pr.timestamp);
-
                 msg.title = {
                     icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
                     text,
@@ -72,6 +70,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                     avatar: avatarUrl(repo, pr.author.login),
                     login: pr.author.login,
                     text: body,
+                    ts: Date.parse(pr.timestamp),
                 };
 
                 msg.correlations.push({
