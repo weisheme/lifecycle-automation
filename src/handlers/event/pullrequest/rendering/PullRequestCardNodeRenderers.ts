@@ -12,8 +12,8 @@ import {
 import * as graphql from "../../../../typings/types";
 import {
     avatarUrl,
-    branchUrl,
-    linkGitHubUsers,
+    branchUrl, issueUrl,
+    linkGitHubUsers, prUrl,
     userUrl,
 } from "../../../../util/helpers";
 import { renderCommitMessage } from "../../push/rendering/PushCardNodeRenderers";
@@ -65,6 +65,8 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                     icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
                     text,
                 };
+
+                msg.shortTitle = `PR ${url(prUrl(repo, pr), `#${pr.number}: ${pr.title}`)}`;
 
                 msg.body = {
                     avatar: avatarUrl(repo, pr.author.login),
@@ -142,7 +144,8 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.baseBranchName;
+        return node.baseBranchName && node.commits
+            && node.commits.length > 0 && node.commits.some(c => c.statuses && c.statuses.length > 0);
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: CardMessage,
@@ -267,7 +270,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         let icon;
         if (running) {
-            icon = "https://images.atomist.com/rug/atomist_build_passed";
+            icon = "https://images.atomist.com/rug/atomist_build_passed.png";
         } else if (failed) {
             icon = "https://images.atomist.com/rug/atomist_build_failed.png";
         } else {

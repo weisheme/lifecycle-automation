@@ -74,6 +74,8 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     text: title,
                 };
 
+                msg.shortTitle = `Issue ${url(issueUrl(repo, node), `#${node.number}: ${node.title}`)}`;
+
                 msg.body = {
                     avatar: avatarUrl(repo, node.openedBy.login),
                     login: node.openedBy.login,

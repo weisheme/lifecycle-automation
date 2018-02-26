@@ -45,6 +45,8 @@ export interface CardMessage {
         name: string;
     };
 
+    shortTitle?: string;
+
     title?: {
         icon: string;
         text: string;

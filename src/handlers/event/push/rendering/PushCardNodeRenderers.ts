@@ -56,6 +56,9 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
             `to ${bold(url(branchUrl(repo, push.branch), `${repoSlug(repo)}/${push.branch}`))}`,
         };
 
+        msg.shortTitle = `Push of ${push.commits.length} ${push.commits.length > 1 ? 
+            "commits" : "commit"} to ${url(branchUrl(repo, push.branch), push.branch)}`;
+
         msg.correlations.push({
             type: "repository",
             icon: "https://images.atomist.com/rug/database.png",

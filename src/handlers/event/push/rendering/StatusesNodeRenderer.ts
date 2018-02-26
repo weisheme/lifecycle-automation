@@ -283,7 +283,7 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "https://images.atomist.com/rug/atomist_build_passed";
+                icon = "https://images.atomist.com/rug/atomist_build_passed.png";
             } else if (s.state === "pending") {
                 icon = "https://images.atomist.com/rug/atomist_build_started.gif";
             } else {
