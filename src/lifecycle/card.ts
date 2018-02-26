@@ -46,12 +46,7 @@ export interface CardMessage {
         text: string;
     };
 
-    body?: {
-        avatar: string;
-        login: string;
-        text: string;
-        hint?: string;
-    };
+    body?: Body;
 
     correlations?: Correlation[];
 
@@ -65,6 +60,20 @@ export interface CardMessage {
 
     actions?: Action[];
     actionGroups?: ActionGroup[];
+
+    comments?: Body[];
+    reactions?: Array<{
+        avatar: string;
+        login: string;
+        reaction: string;
+    }>
+}
+
+export interface Body {
+    avatar: string;
+    login: string;
+    text: string;
+    hint?: string;
 }
 
 export interface Correlation {

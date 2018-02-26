@@ -103,6 +103,9 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     })),
                 });
 
+                msg.comments = [];
+                msg.reactions = [];
+
                 msg.actions.push(...actions);
 
                 return Promise.resolve(msg);
