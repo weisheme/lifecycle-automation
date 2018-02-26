@@ -15,6 +15,7 @@ import {
     RendererContext,
     SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
+import { normalizeTimestamp } from "../../../../lifecycle/util";
 import * as graphql from "../../../../typings/types";
 import {
     avatarUrl,
@@ -87,25 +88,12 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                     fallback: `#${pr.number} ${escape(pr.title)}`,
                     mrkdwn_in: ["text"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, pr.labels, pr.assignees),
-                    ts: this.normalizeTimestamp(ts),
+                    ts: normalizeTimestamp(ts),
                     actions,
                 };
                 msg.attachments.push(attachment);
                 return Promise.resolve(msg);
             });
-    }
-
-    private normalizeTimestamp(timestamp: string): number {
-        let pd = new Date().getTime();
-        try {
-            const date = Date.parse(timestamp);
-            if (!isNaN(date)) {
-                pd = date;
-            }
-        } catch (e) {
-            // Ignore
-        }
-        return Math.floor(pd / 1000);
     }
 }
 

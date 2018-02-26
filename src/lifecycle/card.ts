@@ -20,9 +20,9 @@ export function addCollaborator(collaborator: { avatar: string, login: string, l
     if (!card.collaborators) {
         card.collaborators = [];
     }
-    if (card.body && card.body.login === collaborator.login) {
+    /** if (card.body && card.body.login === collaborator.login) {
         return;
-    }
+    }*/
     if (!card.collaborators.some(c => c.login === collaborator.login)) {
         card.collaborators.push(collaborator);
     }

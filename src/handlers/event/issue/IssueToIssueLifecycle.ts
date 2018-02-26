@@ -23,7 +23,7 @@ export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueTo
 
         const issue = event.data.Issue[0];
         const repo = event.data.Issue[0].repo;
-        return [issue, repo, new Date().getTime().toString()];
+        return [issue, repo, Date.parse(issue.timestamp).toString()];
     }
 
     protected extractPreferences(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>)
@@ -41,10 +41,10 @@ export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueTo
 export class IssueToIssueCardLifecycle extends IssueCardLifecycleHandler<graphql.IssueToIssueLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>):
-    [   graphql.IssueToIssueLifecycle.Issue, graphql.IssueToIssueLifecycle.Repo, string] {
+        [graphql.IssueToIssueLifecycle.Issue, graphql.IssueToIssueLifecycle.Repo, string] {
         const issue = event.data.Issue[0];
         const repo = event.data.Issue[0].repo;
-        return [issue, repo, new Date().getTime().toString()];
+        return [issue, repo, Date.parse(issue.timestamp).toString()];
     }
 
     protected extractPreferences(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>)

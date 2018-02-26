@@ -24,7 +24,6 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
             const comment = node as any;
             return (comment.issue != null && comment.issue.state === "open")
                 || (comment.pullRequest != null && comment.pullRequest.state === "open");
-
         } else {
             return false;
         }
@@ -120,7 +119,7 @@ export class AssignActionContributor extends AbstractCommentActionContributor
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
                            repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Assign to Me" }, "AssignToMeGitHubIssue", {
+        return buttonForCommand({ text: "Assign to Me", role: "global" }, "AssignToMeGitHubIssue", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
@@ -174,6 +173,7 @@ export class LabelActionContributor extends AbstractCommentActionContributor
                 text: "Add",
                 options: unusedLabels },
             ],
+            role: "global",
         };
 
         return menuForCommand(menu, "ToggleLabelGitHubIssue", "label", {
@@ -193,7 +193,7 @@ export class CloseActionContributor extends AbstractCommentActionContributor
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
                            repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Close" }, "CloseGitHubIssue", {
+        return buttonForCommand({ text: "Close", role: "global" }, "CloseGitHubIssue", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
@@ -216,7 +216,7 @@ export class CommentActionContributor extends AbstractCommentActionContributor
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
                            repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Comment" }, "CommentGitHubIssue", {
+        return buttonForCommand({ text: "Comment", role: "comment" }, "CommentGitHubIssue", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
@@ -239,7 +239,7 @@ export class ReactionActionContributor extends AbstractCommentActionContributor
 
     protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
                            repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: ":+1:" }, "ReactGitHubIssueComment", {
+        return buttonForCommand({ text: ":+1:", role: "react" }, "ReactGitHubIssueComment", {
             comment: comment.gitHubId,
             repo: repo.name,
             owner: repo.owner,

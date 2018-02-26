@@ -1,0 +1,71 @@
+subscription CommentToIssueLifecycle {
+  Comment {
+    _id
+    issue {
+      _id
+      name
+      title
+      body
+      state
+      number
+      createdAt
+      updatedAt
+      closedAt
+      resolvingCommits {
+        sha
+        message
+        author {
+          login
+          person {
+            chatId {
+              screenName
+            }
+          }
+        }
+      }
+      openedBy {
+        login
+      }
+      closedBy {
+        login
+      }
+      assignees {
+        login
+      }
+      repo {
+        name
+        owner
+        labels {
+          name
+        }
+        channels {
+          name
+          team {
+            id
+          }
+        }
+        org {
+          provider {
+            apiUrl
+            gitUrl
+            url
+          }
+          team {
+            id
+            chatTeams {
+              id
+              preferences {
+                name
+                value
+              }
+            }
+          }
+        }
+      }
+      labels {
+        name
+      }
+      timestamp
+    }
+  }
+}

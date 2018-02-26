@@ -53,14 +53,24 @@ import { PullRequestToBranchLifecycle } from "./handlers/event/branch/PullReques
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
-import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
-import { CommentToPullRequestCommentLifecycle } from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
-import { IssueToIssueCommentLifecycle } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
+import {
+    CommentToIssueCommentCardLifecycle,
+    CommentToIssueCommentLifecycle,
+} from "./handlers/event/comment/CommentToIssueCommentLifecycle";
+import {
+    CommentToPullRequestCommentCardLifecycle,
+    CommentToPullRequestCommentLifecycle
+} from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
+import {
+    IssueToIssueCommentCardLifecycle,
+    IssueToIssueCommentLifecycle
+} from "./handlers/event/comment/IssueToIssueCommentLifecycle";
 import { NotifyMentionedOnIssueComment } from "./handlers/event/comment/NotifyMentionedOnIssueComment";
 import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/NotifyMentionedOnPullRequestComment";
 import {
     PullRequestToPullRequestCommentLifecycle,
 } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
+import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
 import { StatusOnParentImpact } from "./handlers/event/parentimpact/StatusOnParentImpact";
@@ -182,6 +192,12 @@ if (process.env.NODE_ENV !== "production") {
 
         // issue
         () => new IssueToIssueCardLifecycle(),
+        () => new CommentToIssueCardLifecycle(),
+
+        // comment
+        () => new CommentToIssueCommentCardLifecycle(),
+        () => new CommentToPullRequestCommentCardLifecycle(),
+        () => new IssueToIssueCommentCardLifecycle(),
     );
 }
 
