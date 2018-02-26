@@ -84,27 +84,20 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                         const context = new RendererContext(
                             r.id(), lifecycle, configuration, this.orgToken, ctx, store);
 
-                        const contributors: any[] = [];
-                        lifecycle.contributors.filter(c => c.supports(n)).forEach(c => {
-
-                            contributors.push(
-                                c.buttonsFor(n, context).then(buttons => {
-                                    return buttons;
-                                }));
-
-                            contributors.push(
-                                c.menusFor(n, context).then(selects => {
-                                    return selects;
-                                }));
-                        });
-
                         // Second trigger rendering
                         renderers.push(msg => {
-                            return Promise.all(contributors)
-                                .then(contributorResults => {
-                                    const actions = [];
-                                    contributorResults.filter(cr => cr && cr.length > 0)
-                                        .forEach(cr => actions.push(...cr));
+                            return lifecycle.contributors.filter(c => c.supports(n)).reduce((p, f) => {
+                                return p.then(actions => {
+                                    return f.buttonsFor(n, context)
+                                        .then(buttons => {
+                                            return f.menusFor(n, context)
+                                                .then(menus => {
+                                                    return [...(actions || []), ...(buttons || []), ...(menus || [])];
+                                                });
+                                        });
+                                });
+                            }, Promise.resolve([]))
+                                .then(actions => {
                                     return r.render(n, actions, msg, context);
                                 });
                         });

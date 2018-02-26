@@ -108,7 +108,7 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
 export class AssignToMeActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
-    constructor() {
+    constructor(private rendererId = "assign") {
         super(LifecycleActionPreferences.issue.assign.id);
     }
 
@@ -123,7 +123,7 @@ export class AssignToMeActionContributor extends AbstractIdentifiableContributio
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
 
-        if (context.rendererId === "assign" && context.has("show_assign")) {
+        if (context.rendererId === this.rendererId && context.has("show_assign")) {
             const handler = new AssignToMeGitHubIssue();
             handler.repo = repo.name;
             handler.owner = repo.owner;
@@ -140,7 +140,7 @@ export class AssignToMeActionContributor extends AbstractIdentifiableContributio
 export class AssignActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
-    constructor() {
+    constructor(private rendererId = "assign") {
         super(LifecycleActionPreferences.issue.assign.id);
     }
 
@@ -155,7 +155,7 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
     public menusFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
 
-        if (context.rendererId === "assign" && context.has("show_assign")) {
+        if (context.rendererId === this.rendererId && context.has("show_assign")) {
             const client = new ApolloGraphClient("https://api.github.com/graphql",
                 { Authorization: `bearer ${context.orgToken}` });
 

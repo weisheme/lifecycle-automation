@@ -4,7 +4,7 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import {
-    Action,
+    Action, addCollaborator,
     CardMessage,
 } from "../../../../lifecycle/card";
 import {
@@ -122,9 +122,17 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                 .then(result => {
                     card.reactions = (result.data || []).map(r => ({
                         avatar: r.user.avatar_url,
-                        login: r.login,
+                        login: r.user.login,
                         reaction: "+1",
                     }));
+
+                    (result.data || []).forEach(c => addCollaborator(
+                        {
+                            login: c.user.login,
+                            avatar: c.user.avatar_url,
+                            link: c.user.html_url,
+                        }, card));
+
                     return card;
                 })
                 .catch(err => msg);
@@ -142,6 +150,14 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                         login: c.user.login,
                         text: c.body,
                     }));
+
+                    (result.data || []).forEach(c => addCollaborator(
+                        {
+                            login: c.user.login,
+                            avatar: c.user.avatar_url,
+                            link: c.user.html_url,
+                        }, card));
+
                     return card;
                 })
                 .catch(err => msg);
