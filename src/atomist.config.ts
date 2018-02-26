@@ -59,11 +59,11 @@ import {
 } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
 import {
     CommentToPullRequestCommentCardLifecycle,
-    CommentToPullRequestCommentLifecycle
+    CommentToPullRequestCommentLifecycle,
 } from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
 import {
     IssueToIssueCommentCardLifecycle,
-    IssueToIssueCommentLifecycle
+    IssueToIssueCommentLifecycle,
 } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
 import { NotifyMentionedOnIssueComment } from "./handlers/event/comment/NotifyMentionedOnIssueComment";
 import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/NotifyMentionedOnPullRequestComment";
