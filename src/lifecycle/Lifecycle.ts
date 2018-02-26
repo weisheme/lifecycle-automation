@@ -201,8 +201,8 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             e.actions.filter(a => (a as any).global).forEach(a => card.actions.push(a));
         });
 
-        if (!card.id) {
-            card.id = options.id;
+        if (!card.key) {
+            card.key = options.id;
         }
         if (!card.ts) {
             card.ts = options.ts;

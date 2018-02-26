@@ -367,7 +367,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
                                 return { text: l, value: l };
                             }),
                         },
-                            { text: "Everybody", options: [{ text: "<request different reviewer>", value: "_"}]},
+                            { text: "Everybody", options: [{ text: "request different reviewer", value: "_"}]},
                         ],
                     };
                     return [ menuForCommand(menu,
