@@ -59,7 +59,7 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
                 };
 
                 msg.shortTitle = `Issue Comment ${url(issueUrl(repo, issue, node),
-                    `#${issue.number}: ${issue.title}`)}`
+                    `#${issue.number}: ${issue.title}`)}`;
 
                 msg.body = {
                     avatar: avatarUrl(repo, node.by.login),
@@ -155,7 +155,7 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
                         `#${pr.number}: ${pr.title}`))}`,
                 };
 
-                msg.shortTitle = `PR Comment ${url(issueUrl(repo, pr, node),`#${pr.number}: ${pr.title}`)}`
+                msg.shortTitle = `PR Comment ${url(issueUrl(repo, pr, node), `#${pr.number}: ${pr.title}`)}`;
 
                 msg.body = {
                     avatar: avatarUrl(repo, node.by.login),
