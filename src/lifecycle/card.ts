@@ -66,7 +66,7 @@ export interface CardMessage {
         avatar: string;
         login: string;
         reaction: string;
-    }>
+    }>;
 }
 
 export interface Body {

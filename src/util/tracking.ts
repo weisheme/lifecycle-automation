@@ -96,11 +96,13 @@ export function trackableAndShortenedLink(url: string, event: string, hashToUrl:
         return url;
     }
 
-    if (secret("mixpanel.token")) {
+    /* tslint:disable */
+    /** if (secret("mixpanel.token")) {
         const data = encodePayload(url, event);
         const encodedUrl = encodeURIComponent(url);
         url = `https://api.mixpanel.com/track/?data=${data}&ip=1&redirect=${encodedUrl}`;
-    }
+    }*/
+    /* tslint:enable */
 
     const [hash, shortUrl] = generateHash();
     hashToUrl.push([hash, url]);
