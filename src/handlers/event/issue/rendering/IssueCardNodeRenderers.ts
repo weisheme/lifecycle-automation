@@ -14,12 +14,13 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
-    avatarUrl, branchUrl,
+    avatarUrl,
     issueUrl,
     linkGitHubUsers,
     linkIssues, repoUrl,
     userUrl,
 } from "../../../../util/helpers";
+import * as github from "../../../command/github/gitHubApi";
 import { renderCommitMessage } from "../../push/rendering/PushCardNodeRenderers";
 
 export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
@@ -108,7 +109,42 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
 
                 msg.actions.push(...actions);
 
-                return Promise.resolve(msg);
+                return msg;
+            })
+            .then(card => {
+                const api = github.api(context.orgToken);
+                return api.reactions.getForIssue({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    number: node.number,
+                    content: "+1",
+                })
+                .then(result => {
+                    card.reactions = (result.data || []).map(r => ({
+                        avatar: r.user.avatar_url,
+                        login: r.login,
+                        reaction: "+1",
+                    }));
+                    return card;
+                })
+                .catch(err => msg);
+            })
+            .then(card => {
+                const api = github.api(context.orgToken);
+                return api.issues.getComments({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    number: node.number,
+                })
+                .then(result => {
+                    card.comments = (result.data || []).map(c => ({
+                        avatar: c.user.avatar_url,
+                        login: c.user.login,
+                        text: c.body,
+                    }));
+                    return card;
+                })
+                .catch(err => msg);
             });
     }
 }
