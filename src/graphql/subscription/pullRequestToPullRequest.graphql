@@ -107,6 +107,7 @@ subscription PullRequestToPullRequestLifecycle {
         description
         context
         targetUrl
+        timestamp
       }
       author {
         login
@@ -141,6 +142,7 @@ subscription PullRequestToPullRequestLifecycle {
       by {
         login
       }
+      body
     }
     repo {
       name

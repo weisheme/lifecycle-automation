@@ -2111,6 +2111,7 @@ export namespace BranchToPullRequestLifecycle {
     description?: string | null; 
     context?: string | null; 
     targetUrl?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Author = {
@@ -2152,6 +2153,7 @@ export namespace BranchToPullRequestLifecycle {
   export type Reviews = {
     state?: ReviewState | null; 
     by?: By[] | null; 
+    body?: string | null; 
   } 
 
   export type By = {
@@ -2938,6 +2940,7 @@ export namespace CommentToPullRequestLifecycle {
     description?: string | null; 
     context?: string | null; 
     targetUrl?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Author = {
@@ -2979,6 +2982,7 @@ export namespace CommentToPullRequestLifecycle {
   export type Reviews = {
     state?: ReviewState | null; 
     by?: By[] | null; 
+    body?: string | null; 
   } 
 
   export type By = {
@@ -3683,6 +3687,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
     description?: string | null; 
     context?: string | null; 
     targetUrl?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Author = {
@@ -3724,6 +3729,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
   export type Reviews = {
     state?: ReviewState | null; 
     by?: By[] | null; 
+    body?: string | null; 
   } 
 
   export type By = {
@@ -5784,6 +5790,7 @@ export namespace PullRequestToPullRequestLifecycle {
     description?: string | null; 
     context?: string | null; 
     targetUrl?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Author = {
@@ -5825,6 +5832,7 @@ export namespace PullRequestToPullRequestLifecycle {
   export type Reviews = {
     state?: ReviewState | null; 
     by?: By[] | null; 
+    body?: string | null; 
   } 
 
   export type By = {
@@ -6904,6 +6912,7 @@ export namespace ReviewToPullRequestLifecycle {
     description?: string | null; 
     context?: string | null; 
     targetUrl?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Author = {
@@ -6945,6 +6954,7 @@ export namespace ReviewToPullRequestLifecycle {
   export type Reviews = {
     state?: ReviewState | null; 
     by?: By[] | null; 
+    body?: string | null; 
   } 
 
   export type By = {
@@ -7303,6 +7313,7 @@ export namespace StatusToPullRequestLifecycle {
     description?: string | null; 
     context?: string | null; 
     targetUrl?: string | null; 
+    timestamp?: string | null; 
   } 
 
   export type _Author = {
@@ -7344,6 +7355,7 @@ export namespace StatusToPullRequestLifecycle {
   export type Reviews = {
     state?: ReviewState | null; 
     by?: By[] | null; 
+    body?: string | null; 
   } 
 
   export type By = {

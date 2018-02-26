@@ -1,10 +1,13 @@
-import { EventFired } from "@atomist/automation-client";
+import { EventFired, HandlerContext } from "@atomist/automation-client";
 import { SlackMessage } from "@atomist/slack-messages";
+import { CardMessage, newCardMessage } from "../../../lifecycle/card";
 import {
+    CardActionContributorWrapper,
     Lifecycle,
     LifecycleHandler,
 } from "../../../lifecycle/Lifecycle";
 import { AttachImagesNodeRenderer } from "../../../lifecycle/rendering/AttachImagesNodeRenderer";
+import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/CollaboratorCardNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
@@ -19,12 +22,97 @@ import {
     ThumbsUpActionContributor,
 } from "./rendering/PullRequestActionContributors";
 import {
+    BuildCardNodeRenderer, CommitCardNodeRenderer,
+    PullRequestCardNodeRenderer, ReviewCardNodeRenderer, StatusCardNodeRenderer,
+} from "./rendering/PullRequestCardNodeRenderers";
+import {
     BuildNodeRenderer,
     CommitNodeRenderer,
     PullRequestNodeRenderer,
     ReviewNodeRenderer,
     StatusNodeRenderer,
 } from "./rendering/PullRequestNodeRenderers";
+
+export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandler<R> {
+
+    protected prepareMessage(lifecycle: Lifecycle): CardMessage {
+        const msg = newCardMessage("pullrequest");
+        const repo = lifecycle.extract("repo");
+        msg.repository = {
+            owner: repo.owner,
+            name: repo.name,
+        };
+        msg.ts = +lifecycle.timestamp;
+        return msg;
+    }
+
+    protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
+        const nodes = [];
+        const [pullrequest, repo, timestamp, updateOnly] = this.extractNodes(event);
+
+        if (repo != null) {
+            nodes.push(repo);
+        }
+
+        // PullRequest lifecycle starts with, drum roll, a PullRequest
+        if (pullrequest != null) {
+            nodes.push(pullrequest);
+        }
+
+        // Verify that there is at least a pullrequest and repo node
+        if (pullrequest == null || repo == null) {
+            console.debug(`Lifecycle event is missing pullrequest and/or repo node`);
+            return null;
+        } else if (pullrequest.merged && !pullrequest.merger) {
+            console.debug(`Lifecycle event is missing merger for merged pullrequest`);
+            return null;
+        }
+
+        const configuration: Lifecycle = {
+            name: LifecyclePreferences.pull_request.id,
+            nodes,
+            renderers: [
+                new PullRequestCardNodeRenderer(),
+                new CommitCardNodeRenderer(),
+                new BuildCardNodeRenderer(),
+                new StatusCardNodeRenderer(),
+                new ReviewCardNodeRenderer(),
+                new CollaboratorCardNodeRenderer(node => node.baseBranchName),
+            ],
+            contributors: [
+                new CardActionContributorWrapper(new MergeActionContributor()),
+                new CardActionContributorWrapper(new AssignReviewerActionContributor()),
+                new CardActionContributorWrapper(new AutoMergeActionContributor()),
+                new CardActionContributorWrapper(new CommentActionContributor()),
+                new CardActionContributorWrapper(new ThumbsUpActionContributor()),
+                new CardActionContributorWrapper(new ApproveActionContributor()),
+                new CardActionContributorWrapper(new DeleteActionContributor()),
+            ],
+            id: `pullrequest_lifecycle/${repo.owner}/${repo.name}/${pullrequest.number}`,
+            timestamp,
+            // ttl: (1000 * 60 * 60 * 8).toString(),
+            post: updateOnly ? "update_only" : undefined,
+            channels: [{
+                name: "atomist:dashboard",
+                teamId: ctx.teamId,
+            }],
+            extract: (type: string) => {
+                if (type === "repo") {
+                    return pullrequest.repo;
+                }
+                return null;
+            },
+        };
+
+        return [configuration];
+    }
+
+    protected abstract extractNodes(event: EventFired<R>):
+    [graphql.PullRequestToPullRequestLifecycle.PullRequest,
+        graphql.PullRequestToPullRequestLifecycle.Repo,
+        string,
+        boolean];
+}
 
 export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R> {
 

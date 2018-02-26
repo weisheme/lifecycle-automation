@@ -66,6 +66,9 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
 
         return linkGitHubUsers(githubToSlack(node.body), context.context)
             .then(body => {
+
+                msg.ts = Date.parse(node.timestamp);
+
                 msg.title = {
                     icon,
                     text: title,

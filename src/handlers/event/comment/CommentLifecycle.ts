@@ -1,4 +1,4 @@
-import { EventFired } from "@atomist/automation-client";
+import { EventFired, HandlerContext } from "@atomist/automation-client";
 import { SlackMessage } from "@atomist/slack-messages";
 import {
     CardMessage,
@@ -42,7 +42,7 @@ export abstract class CommentCardLifecycleHandler<R> extends LifecycleHandler<R>
         return msg;
     }
 
-    protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {
+    protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
         const [comments, issue, pullRequest, repo, updateOnly] = this.extractNodes(event);
 
         if (comments != null) {
@@ -89,7 +89,10 @@ export abstract class CommentCardLifecycleHandler<R> extends LifecycleHandler<R>
                     id: `comment_lifecycle/${repo.owner}/${repo.name}/${id}/${comment.gitHubId}`,
                     timestamp: Date.now().toString(),
                     post: updateOnly ? "update_only" : undefined,
-                    channels: repo.channels.map(c => ({ name: c.name, teamId: c.team.id })),
+                    channels: [{
+                        name: "atomist:dashboard",
+                        teamId: ctx.teamId,
+                    }],
                     extract: (type: string) => {
                         if (type === "repo") {
                             return repo;

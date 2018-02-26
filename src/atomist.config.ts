@@ -83,7 +83,10 @@ import { CommentToPullRequestLifecycle } from "./handlers/event/pullrequest/Comm
 import { CommitToPullRequestLifecycle } from "./handlers/event/pullrequest/CommitToPullRequestLifecycle";
 import { DeletedBranchToPullRequestLifecycle } from "./handlers/event/pullrequest/DeletedBranchToPullRequestLifecycle";
 import { NotifyMentionedOnPullRequest } from "./handlers/event/pullrequest/NotifyMentionedOnPullRequest";
-import { PullRequestToPullRequestLifecycle } from "./handlers/event/pullrequest/PullRequestToPullRequestLifecycle";
+import {
+    PullRequestToPullRequestCardLifecycle,
+    PullRequestToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/PullRequestToPullRequestLifecycle";
 import { ReviewToPullRequestLifecycle } from "./handlers/event/pullrequest/ReviewToPullRequestLifecycle";
 import { StatusToPullRequestLifecycle } from "./handlers/event/pullrequest/StatusToPullRequestLifecycle";
 import {
@@ -189,6 +192,9 @@ if (process.env.NODE_ENV !== "production") {
         () => new ReleaseToPushCardLifecycle(),
         () => new StatusToPushCardLifecycle(),
         () => new TagToPushCardLifecycle(),
+
+        // pullRequest
+        () => new PullRequestToPullRequestCardLifecycle(),
 
         // issue
         () => new IssueToIssueCardLifecycle(),

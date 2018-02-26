@@ -87,16 +87,18 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
 
         _.forIn(mergeMethods, (v, k) => {
             if (v) {
-                buttons.push(buttonForCommand({ text: v.method }, "MergeGitHubPullRequest",
-                {
-                    issue: pr.number,
-                    repo: repo.name,
-                    owner: repo.owner,
-                    title: pr.title,
-                    message: v.commitMessage,
-                    mergeMethod: k,
-                    sha: pr.head.sha,
-                }));
+                buttons.push(buttonForCommand(
+                    { text: v.method, role: "global" },
+                    "MergeGitHubPullRequest",
+                    {
+                        issue: pr.number,
+                        repo: repo.name,
+                        owner: repo.owner,
+                        title: pr.title,
+                        message: v.commitMessage,
+                        mergeMethod: k,
+                        sha: pr.head.sha,
+                    }));
             }
         });
 
@@ -129,7 +131,9 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
         const buttons = [];
 
         if (context.rendererId === "pull_request") {
-            buttons.push(buttonForCommand({ text: "Enable Auto Merge" }, "EnableGitHubPullRequestAutoMerge",
+            buttons.push(buttonForCommand(
+                { text: "Enable Auto Merge", role: "global" },
+                "EnableGitHubPullRequestAutoMerge",
                 {
                     repo: repo.name,
                     owner: repo.owner,
@@ -177,7 +181,9 @@ export class ApproveActionContributor extends AbstractIdentifiableContribution
             if (commits.length > 0 && commits[0].statuses != null) {
                 const commit = commits[0];
                 commit.statuses.filter(s => s.context === "fingerprint/atomist" && s.state === "failure").forEach(s => {
-                    buttons.push(buttonForCommand({ text: "Approve" }, "ApproveGitHubCommit",
+                    buttons.push(buttonForCommand(
+                        { text: "Approve", role: "global" },
+                        "ApproveGitHubCommit",
                         {
                             repo: repo.name,
                             owner: repo.owner,
@@ -222,7 +228,7 @@ export class DeleteActionContributor extends AbstractIdentifiableContribution
         const buttons = [];
 
         if (context.rendererId === "pull_request") {
-            buttons.push(buttonForCommand({ text: "Delete Branch" }, "DeleteGitHubBranch",
+            buttons.push(buttonForCommand({ text: "Delete Branch", role: "global" }, "DeleteGitHubBranch",
                 { branch: pr.branch.name, repo: repo.name, owner: repo.owner }));
         }
 
@@ -257,7 +263,7 @@ export class CommentActionContributor extends AbstractIdentifiableContribution
         const buttons = [];
 
         if (context.rendererId === "pull_request") {
-            buttons.push(buttonForCommand({ text: "Comment" }, "CommentGitHubIssue",
+            buttons.push(buttonForCommand({ text: "Comment", role: "comment" }, "CommentGitHubIssue",
                 { issue: pr.number, repo: repo.name, owner: repo.owner }));
         }
 
@@ -292,7 +298,7 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
         const buttons = [];
 
         if (context.rendererId === "pull_request") {
-            buttons.push(buttonForCommand({ text: ":+1:" }, "ReactGitHubIssue",
+            buttons.push(buttonForCommand({ text: ":+1:", role: "react" }, "ReactGitHubIssue",
                 { reaction: "+1", issue: pr.number, repo: repo.name, owner: repo.owner }));
         }
 
@@ -369,6 +375,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
                         },
                             { text: "Everybody", options: [{ text: "request different reviewer", value: "_"}]},
                         ],
+                        role: "global",
                     };
                     return [ menuForCommand(menu,
                         "AssignGitHubPullRequestReviewer", "reviewer",

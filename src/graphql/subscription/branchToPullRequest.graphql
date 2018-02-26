@@ -108,6 +108,7 @@ subscription BranchToPullRequestLifecycle {
           description
           context
           targetUrl
+          timestamp
         }
         author {
           login
@@ -142,6 +143,7 @@ subscription BranchToPullRequestLifecycle {
         by {
           login
         }
+        body
       }
       repo {
         name

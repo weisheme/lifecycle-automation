@@ -108,6 +108,7 @@ subscription CommentToPullRequestLifecycle {
           description
           context
           targetUrl
+          timestamp
         }
         author {
           login
@@ -142,6 +143,7 @@ subscription CommentToPullRequestLifecycle {
         by {
           login
         }
+        body
       }
       repo {
         name

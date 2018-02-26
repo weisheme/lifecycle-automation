@@ -50,6 +50,8 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
         return linkGitHubUsers(githubToSlack(node.body), context.context)
             .then(body => {
 
+                msg.ts = Date.parse(node.timestamp);
+
                 msg.title = {
                     icon,
                     text: `New comment on ${issue.state} issue ${bold(url(issueUrl(repo, issue, node),
@@ -141,6 +143,8 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
 
         return linkGitHubUsers(githubToSlack(node.body), context.context)
             .then(body => {
+
+                msg.ts = Date.parse(node.timestamp);
 
                 msg.title = {
                     icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
