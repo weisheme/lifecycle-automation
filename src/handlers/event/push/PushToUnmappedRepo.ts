@@ -302,7 +302,7 @@ ${slack.codeLine(linkRepoCmd)}`;
     stopAllParams.key = "dm";
     stopAllParams.name = `disable_for_${DirectMessagePreferences.mapRepo.id}`;
     stopAllParams.value = "true";
-    stopAllParams.label = `${DirectMessagePreferences.mapRepo.id} direct messages disabled`;
+    stopAllParams.label = `'${DirectMessagePreferences.mapRepo.name}' direct messages disabled`;
     stopAllParams.id = msgId;
     const stopAllButton = buttonForCommand({ text: "All Repositories" }, stopAllParams);
 
