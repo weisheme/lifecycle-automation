@@ -164,11 +164,11 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://icon-status-check green";
+                icon = "css://icon-status-check success";
             } else if (s.state === "pending") {
-                icon = "css://icon-status-check yellow";
+                icon = "css://icon-status-check alert";
             } else {
-                icon = "css://icon-status-check red";
+                icon = "css://icon-status-check fail";
             }
 
             let text;
@@ -269,11 +269,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         let icon;
         if (running) {
-            icon = "css://icon-circle-check green";
+            icon = "css://icon-circle-check success";
         } else if (failed) {
-            icon = "css://icon-circle-check yellow";
+            icon = "css://icon-circle-check alert";
         } else {
-            icon = "css://icon-circle-check red";
+            icon = "css://icon-circle-check fail";
         }
 
         msg.correlations.push({
@@ -283,11 +283,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
             body: (pr.builds || []).map(b => {
                 let i;
                 if (b.status === "passed") {
-                    i = "css://icon-circle-check green";
+                    i = "css://icon-circle-check success";
                 } else if (b.status === "started") {
-                    i = "css://icon-circle-check yellow";
+                    i = "css://icon-circle-check alert";
                 } else {
-                    i = "css://icon-circle-check red";
+                    i = "css://icon-circle-check fail";
                 }
 
                 let title;

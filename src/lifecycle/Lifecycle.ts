@@ -30,12 +30,12 @@ import {
     LifecyclePreferences,
     LifecycleRendererPreferences,
 } from "../handlers/event/preferences";
+import { encode } from "../util/base64";
 import {
     Action as CardAction,
     CardMessage,
     isCardMessage,
 } from "./card";
-import { encode } from "../util/base64";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.

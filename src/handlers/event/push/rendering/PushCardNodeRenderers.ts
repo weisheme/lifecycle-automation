@@ -139,11 +139,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<CardMessage> {
         let icon;
         if (build.status === "passed") {
-            icon = "css://icon-circle-check green";
+            icon = "css://icon-circle-check success";
         } else if (build.status === "started") {
-            icon = "css://icon-oval-icon yellow";
+            icon = "css://icon-oval-icon alert";
         } else {
-            icon = "css://icon-circle-x red";
+            icon = "css://icon-circle-x fail";
         }
 
         let title;
