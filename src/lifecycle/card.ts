@@ -1,6 +1,6 @@
 export function newCardMessage(type: string, ts: number = Date.now()): CardMessage {
     return {
-        key: null,
+        id: null,
         ts,
         ttl: null,
         type,
@@ -33,7 +33,7 @@ export function addCollaborator(collaborator: { avatar: string, login: string, l
 }
 
 export interface CardMessage {
-    key: string;
+    id: string;
 
     ts: number;
     ttl: number;
