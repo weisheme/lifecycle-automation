@@ -18,7 +18,10 @@ import {
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import axios from "axios";
 import * as cluster from "cluster";
-import { CardMessage } from "../lifecycle/card";
+import {
+    CardMessage,
+    isCardMessage,
+} from "../lifecycle/card";
 import { wrapLinks } from "./tracking";
 
 export function shortenUrls(message: SlackMessage | CardMessage,
@@ -84,7 +87,7 @@ class ShortenUrlMessageClient extends MessageClientSupport {
     }
 
     protected doSend(msg: any, destinations: Destination[], options?: MessageOptions): Promise<any> {
-        if (isSlackMessage(msg)) {
+        if (isSlackMessage(msg) || isCardMessage(msg)) {
              return shortenUrls(msg as SlackMessage, options, (this.ctx as any) as AutomationContextAware)
                  .then(message => this.sendMessage(message, destinations, options));
         } else {

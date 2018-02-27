@@ -40,6 +40,11 @@ export function wrapLinks(message: SlackMessage | CardMessage, event: string):
                 e.text = wrapLinksInText(e.text, `${event}/events/text`, hashToUrl);
             });
         }
+        if (clonedMessage.collaborators) {
+            clonedMessage.collaborators.forEach(e => {
+                e.link = wrapLinksInText(e.link, `${event}/collaborators/link`, hashToUrl);
+            });
+        }
     } else if (isSlackMessage(clonedMessage)) {
         clonedMessage.text = wrapLinksInText(clonedMessage.text, `${event}/text`, hashToUrl);
         if (clonedMessage.attachments) {
