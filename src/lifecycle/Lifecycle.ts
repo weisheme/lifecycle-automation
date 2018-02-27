@@ -208,7 +208,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             card.post = options.post;
         }
 
-        return ctx.messageClient.send(card, addressEvent("Card"))
+        return ctx.messageClient.send(card, addressEvent("Card"), options)
             .then(() => {
                 logger.info("Sending lifecycle card '%s'", options.id);
                 return Success;

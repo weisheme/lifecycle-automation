@@ -33,7 +33,7 @@ export class AssignToMeGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
-    @MappedParameter(MappedParameters.SlackUser)
+    @MappedParameter(MappedParameters.SlackUser, false)
     public requester: string;
 
     @MappedParameter(MappedParameters.GitHubApiUrl)
