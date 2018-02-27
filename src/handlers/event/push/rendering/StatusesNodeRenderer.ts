@@ -130,11 +130,11 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "https://images.atomist.com/rug/atomist_build_passed.png";
+                icon = "css://far fa-check-circle";
             } else if (s.state === "pending") {
-                icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+                icon = "css://far fa-play-circle";
             } else {
-                icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+                icon = "css://far fa-exclamation-circle";
             }
 
             let text;
@@ -158,7 +158,7 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "status",
-            icon: "https://images.atomist.com/rug/status.png",
+            icon: "css://far fa-bolt",
             title: `${success}/${statuses.length}`,
             body,
         });
@@ -283,11 +283,11 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "https://images.atomist.com/rug/atomist_build_passed.png";
+                icon = "css://far fa-check-circle";
             } else if (s.state === "pending") {
-                icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+                icon = "css://far fa-play-circle";
             } else {
-                icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+                icon = "css://far fa-exclamation-circle";
             }
 
             let text;
@@ -311,7 +311,7 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "status",
-            icon: "`https://images.atomist.com/rug/phases.png`",
+            icon: "css://far fa-box",
             title: `${success}/${status.length}`,
             body,
         });
