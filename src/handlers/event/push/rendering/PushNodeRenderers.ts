@@ -493,11 +493,14 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
         if (unhealthy.length > 0) {
             domainMessage.push(`${unhealthy.length} unhealthy (\`${unhealthy.join(", ")}\`)`);
         }
+
+        const ix = domains.indexOf(domains.find(d => d.name === domain.name));
+
         // sort the domains by name and render an attachment per domain
         const attachment: Attachment = {
             text: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
-            author_name: domains.indexOf(domain) === 0 ? "Services" : undefined,
-            author_icon: domains.indexOf(domain) === 0 ? `https://images.atomist.com/rug/tasks.png` : undefined,
+            author_name: ix === 0 ? "Services" : undefined,
+            author_icon: ix === 0 ? `https://images.atomist.com/rug/tasks.png` : undefined,
             fallback: `${domain.name} ${domainMessage.join(", ")}`,
             // color: "#767676",
             mrkdwn_in: ["text"],
