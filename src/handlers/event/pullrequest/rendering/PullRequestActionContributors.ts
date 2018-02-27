@@ -14,6 +14,7 @@ import {
 import * as graphql from "../../../../typings/types";
 import { isGenerated } from "../../../../util/helpers";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
+import * as github from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
 import { isPrTagged } from "../autoMerge";
 
@@ -295,14 +296,31 @@ export class ThumbsUpActionContributor extends AbstractIdentifiableContribution
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):
         Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
-        const buttons = [];
 
         if (context.rendererId === "pull_request") {
-            buttons.push(buttonForCommand({ text: ":+1:", role: "react" }, "ReactGitHubIssue",
-                { reaction: "+1", issue: pr.number, repo: repo.name, owner: repo.owner }));
+
+            const api = github.api(context.orgToken);
+            return api.reactions.getForIssue({
+                owner: repo.owner,
+                repo: repo.name,
+                number: pr.number,
+                content: "+1",
+            })
+            .then(result =>
+                [buttonForCommand(
+                    { text: `:+1:${result.data.length > 0 ? " " + result.data.length : ""}`, role: "react" },
+                    "ReactGitHubIssue",
+                    { reaction: "+1", issue: pr.number, repo: repo.name, owner: repo.owner })],
+            )
+            .catch(() =>
+                [buttonForCommand(
+                    { text: ":+1:", role: "react" },
+                    "ReactGitHubIssue",
+                    { reaction: "+1", issue: pr.number, repo: repo.name, owner: repo.owner })],
+            );
         }
 
-        return Promise.resolve(buttons);
+        return Promise.resolve([]);
     }
 
     public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,

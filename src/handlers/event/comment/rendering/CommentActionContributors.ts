@@ -10,6 +10,7 @@ import {
     SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import * as github from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractCommentActionContributor extends AbstractIdentifiableContribution
@@ -35,22 +36,20 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
         const issue = context.lifecycle.extract("issue");
         const pr = context.lifecycle.extract("pullrequest");
 
-        const buttons = [];
-
         if (context.rendererId === "issue_comment" || context.rendererId === "pullrequest_comment") {
             let button;
 
             if (this.forIssue && issue != null) {
-                button = this.createButton(comment, issue.number, repo);
+                button = this.createButton(comment, issue.number, repo, context);
             } else if (this.forPr && pr != null) {
-                button = this.createButton(comment, pr.number, repo);
+                button = this.createButton(comment, pr.number, repo, context);
             }
 
             if (button != null) {
-                buttons.push(button);
+                return button;
             }
         }
-        return Promise.resolve(buttons);
+        return Promise.resolve([]);
     }
 
     public menusFor(comment: any, context: RendererContext)
@@ -59,30 +58,32 @@ export abstract class AbstractCommentActionContributor extends AbstractIdentifia
         const issue = context.lifecycle.extract("issue");
         const pr = context.lifecycle.extract("pullrequest");
 
-        const menues = [];
-
         if (context.rendererId === "issue_comment" || context.rendererId === "pullrequest_comment") {
             let menu;
 
             if (this.forIssue && issue != null) {
-                menu = this.createMenu(comment, issue.number, issue.labels, repo);
+                menu = this.createMenu(comment, issue.number, issue.labels, repo, context);
             } else if (this.forPr && pr != null) {
-                menu = this.createMenu(comment, pr.number, (pr as any).labels, repo);
+                menu = this.createMenu(comment, pr.number, (pr as any).labels, repo, context);
             }
 
             if (menu != null) {
-                menues.push(menu);
+                return menu;
             }
         }
-        return Promise.resolve(menues);
+        return Promise.resolve([]);
     }
 
-    protected abstract createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                                    repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
+    protected abstract createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                                    id: number,
+                                    repo: graphql.CommentToIssueCommentLifecycle.Repo,
+                                    context: RendererContext): Promise<Action[]>;
 
-    protected abstract createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected abstract createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                                  id: number,
                                   labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                                  repo: graphql.CommentToIssueCommentLifecycle.Repo): Action;
+                                  repo: graphql.CommentToIssueCommentLifecycle.Repo,
+                                  context: RendererContext): Promise<Action[]>;
 }
 
 export class DetailsActionContributor extends AbstractCommentActionContributor
@@ -92,20 +93,22 @@ export class DetailsActionContributor extends AbstractCommentActionContributor
         super(LifecycleActionPreferences.comment.details.id, true, false);
     }
 
-    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Details" },
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                           id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Details" },
             "DisplayGitHubIssue",
             {
                 repo: repo.name,
                 owner: repo.owner,
                 issue: comment.issue.number,
-            });
+            })]);
     }
 
-    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                         id: number,
                          labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         return null;
     }
 }
@@ -117,18 +120,20 @@ export class AssignActionContributor extends AbstractCommentActionContributor
         super(LifecycleActionPreferences.comment.assign.id, true, false);
     }
 
-    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Assign to Me", role: "global" }, "AssignToMeGitHubIssue", {
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                           id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Assign to Me", role: "global" }, "AssignToMeGitHubIssue", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
-        });
+        })]);
     }
 
-    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                         id: number,
                          labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         return null;
     }
 }
@@ -140,14 +145,16 @@ export class LabelActionContributor extends AbstractCommentActionContributor
         super(LifecycleActionPreferences.comment.label.id, true, false);
     }
 
-    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                           id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         return null;
     }
 
-    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                         id: number,
                          labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         let options = [];
         if (repo.labels != null && repo.labels.length > 0) {
             repo.labels.sort((l1, l2) => l1.name.localeCompare(l2.name))
@@ -176,11 +183,11 @@ export class LabelActionContributor extends AbstractCommentActionContributor
             role: "global",
         };
 
-        return menuForCommand(menu, "ToggleLabelGitHubIssue", "label", {
+        return Promise.resolve([menuForCommand(menu, "ToggleLabelGitHubIssue", "label", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
-        });
+        })]);
     }
 }
 
@@ -191,18 +198,20 @@ export class CloseActionContributor extends AbstractCommentActionContributor
         super(LifecycleActionPreferences.comment.close.id, true, false);
     }
 
-    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Close", role: "global" }, "CloseGitHubIssue", {
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                           id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Close", role: "global" }, "CloseGitHubIssue", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
-        });
+        })]);
     }
 
-    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                         id: number,
                          labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         return null;
     }
 }
@@ -214,18 +223,20 @@ export class CommentActionContributor extends AbstractCommentActionContributor
         super(LifecycleActionPreferences.comment.comment.id, true, true);
     }
 
-    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Comment", role: "comment" }, "CommentGitHubIssue", {
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                           id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Comment", role: "comment" }, "CommentGitHubIssue", {
             issue: id,
             repo: repo.name,
             owner: repo.owner,
-        });
+        })]);
     }
 
-    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                         id: number,
                          labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         return null;
     }
 }
@@ -237,19 +248,45 @@ export class ReactionActionContributor extends AbstractCommentActionContributor
         super(LifecycleActionPreferences.comment.thumps_up.id, true, true);
     }
 
-    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
-                           repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
-        return buttonForCommand({ text: ":+1:", role: "react" }, "ReactGitHubIssueComment", {
-            comment: comment.gitHubId,
-            repo: repo.name,
+    protected createButton(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                           id: number,
+                           repo: graphql.CommentToIssueCommentLifecycle.Repo,
+                           context: RendererContext): Promise<Action[]> {
+        const api = github.api(context.orgToken);
+        return api.reactions.getForIssueComment({
             owner: repo.owner,
-            reaction: "+1",
-        });
+            repo: repo.name,
+            id: comment.gitHubId,
+            content: "+1",
+        })
+        .then(result =>
+            [buttonForCommand(
+                { text: `:+1:${result.data.length > 0 ? " " + result.data.length : ""}`, role: "react" },
+                "ReactGitHubIssueComment",
+                {
+                    comment: comment.gitHubId,
+                    repo: repo.name,
+                    owner: repo.owner,
+                    reaction: "+1",
+                })],
+        )
+        .catch(() =>
+            [buttonForCommand(
+                { text: `:+1:`, role: "react" },
+                "ReactGitHubIssueComment",
+                {
+                    comment: comment.gitHubId,
+                    repo: repo.name,
+                    owner: repo.owner,
+                    reaction: "+1",
+                })],
+        );
     }
 
-    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment, id: number,
+    protected createMenu(comment: graphql.CommentToIssueCommentLifecycle.Comment,
+                         id: number,
                          labels: graphql.CommentToIssueCommentLifecycle.Labels[],
-                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Action {
+                         repo: graphql.CommentToIssueCommentLifecycle.Repo): Promise<Action[]> {
         return null;
     }
 }

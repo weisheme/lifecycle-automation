@@ -13,6 +13,7 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { AssignToMe, AssignToMeGitHubIssue } from "../../../command/github/AssignToMeGitHubIssue";
+import * as github from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractIssueActionContributor extends AbstractIdentifiableContribution
@@ -24,37 +25,37 @@ export abstract class AbstractIssueActionContributor extends AbstractIdentifiabl
 
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
-        const buttons = [];
 
         if (context.rendererId === "issue") {
-            const button = this.createButton(issue, repo);
+            const button = this.createButton(issue, repo, context);
             if (button != null) {
-                buttons.push(button);
+                return button;
             }
         }
-        return Promise.resolve(buttons);
+        return Promise.resolve([]);
     }
 
     public menusFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
-        const menus = [];
 
         if (context.rendererId === "issue") {
-            const menu = this.createMenu(issue, repo);
+            const menu = this.createMenu(issue, repo, context);
             if (menu != null) {
-                menus.push(menu);
+                return menu;
             }
         }
-        return Promise.resolve(menus);
+        return Promise.resolve([]);
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                           repo: graphql.IssueToIssueLifecycle.Repo,
+                           context: RendererContext): Promise<Action[]> {
         return null;
     }
 
     protected createMenu(issue: graphql.IssueToIssueLifecycle.Issue,
-                         repo: graphql.IssueToIssueLifecycle.Repo): Action {
+                         repo: graphql.IssueToIssueLifecycle.Repo,
+                         context: RendererContext): Promise<Action[]> {
         return null;
     }
 }
@@ -262,9 +263,9 @@ export class CloseActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Close" },
-            "CloseGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
+                           repo: graphql.IssueToIssueLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Close" },
+            "CloseGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner })]);
     }
 }
 
@@ -276,9 +277,9 @@ export class CommentActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Comment", role: "comment" },
-            "CommentGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
+                           repo: graphql.IssueToIssueLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Comment", role: "comment" },
+            "CommentGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner })]);
     }
 }
 
@@ -290,9 +291,27 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
-        return buttonForCommand({ text: ":+1:", role: "react" },
-            "ReactGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner, reaction: "+1" });
+                           repo: graphql.IssueToIssueLifecycle.Repo,
+                           context: RendererContext): Promise<Action[]> {
+
+        const api = github.api(context.orgToken);
+        return api.reactions.getForIssue({
+            owner: repo.owner,
+            repo: repo.name,
+            number: issue.number,
+            content: "+1",
+        })
+        .then(result =>
+            [buttonForCommand(
+                { text: `:+1:${result.data.length > 0 ? " " + result.data.length : ""}`, role: "react" },
+                "ReactGitHubIssue",
+                { issue: issue.number, repo: repo.name, owner: repo.owner, reaction: "+1" })],
+        )
+        .catch(() =>
+                [buttonForCommand({ text: `:+1:`, role: "react" },
+                    "ReactGitHubIssue",
+                    { issue: issue.number, repo: repo.name, owner: repo.owner, reaction: "+1" })],
+        );
     }
 }
 
@@ -308,8 +327,8 @@ export class ReopenActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Action {
-        return buttonForCommand({ text: "Reopen" },
-            "ReopenGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner });
+                           repo: graphql.IssueToIssueLifecycle.Repo): Promise<Action[]> {
+        return Promise.resolve([buttonForCommand({ text: "Reopen" },
+            "ReopenGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner })]);
     }
 }
