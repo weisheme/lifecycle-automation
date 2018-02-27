@@ -42,9 +42,9 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
         // tslint:disable-next-line:variable-name
         let icon;
         if (issue.state === "open") {
-            icon = "https://images.atomist.com/rug/issue-open.png";
+            icon = "css://far fa-exclamation-circle";
         } else if (issue.state === "closed") {
-            icon = "https://images.atomist.com/rug/issue-closed.png";
+            icon = "css://far fa-exclamation-circle";
         }
 
         return linkGitHubUsers(githubToSlack(node.body), context.context)
@@ -68,7 +68,7 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "https://images.atomist.com/rug/database.png",
+                    icon: "css://far fa-book",
                     title: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
@@ -82,10 +82,10 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
 
                 msg.correlations.push({
                     type: "label",
-                    icon: "https://images.atomist.com/rug/tag.png",
+                    icon: "css://far fa-tag",
                     title: issue.labels.length <= 2 ? issue.labels.map(l => l.name).join(", ") : "Labels",
                     body: issue.labels.map(l => ({
-                        icon: "https://images.atomist.com/rug/tag.png",
+                        icon: "css://far fa-tag",
                         text: l.name,
                     })),
                 });
@@ -147,7 +147,7 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
             .then(body => {
 
                 msg.title = {
-                    icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
+                    icon: `css://far fa-code-merge`,
                     text: `New comment on ${state} pull request ${bold(url(issueUrl(repo, pr, node),
                         `#${pr.number}: ${pr.title}`))}`,
                 };
@@ -163,14 +163,14 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "https://images.atomist.com/rug/database.png",
+                    icon: "css://far fa-book",
                     title: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
 
                 msg.correlations.push({
-                    type: "issue",
-                    icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
+                    type: "pr",
+                    icon: `css://far fa-code-merge`,
                     title: `#${pr.number}`,
                     link: prUrl(repo, pr),
                 });

@@ -43,7 +43,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
         let title = `${bold(url(issueUrl(repo, node), `#${node.number.toString()}: ${node.title}`))}`;
         let icon;
         if (node.state === "open") {
-            icon = "https://images.atomist.com/rug/issue-open.png";
+            icon = "css://far fa-exclamation-circle";
             if (node.createdAt === node.updatedAt) {
                 title = `${url(userUrl(repo, node.openedBy.login),
                     `@${node.openedBy.login}`)} created issue ${title}`;
@@ -51,7 +51,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                 title = `Updated issue ${title}`;
             }
         } else if (node.state === "closed") {
-            icon = "https://images.atomist.com/rug/issue-closed.png";
+            icon = "css://far fa-exclamation-circle";
             if (node.closedAt === node.updatedAt) {
                 if (node.closedBy != null && node.closedBy.login != null) {
                     title = `${url(userUrl(repo, node.closedBy.login),
@@ -83,14 +83,14 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "https://images.atomist.com/rug/database.png",
+                    icon: "css://fal fa-book",
                     title: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
 
                 msg.correlations.push({
                     type: "commit",
-                    icon: "https://images.atomist.com/rug/commit.png",
+                    icon: "css://far fa-code-commit",
                     title: node.resolvingCommits ? node.resolvingCommits.length.toString() : "0",
                     body: node.resolvingCommits ? node.resolvingCommits.map(c => ({
                         icon: avatarUrl(repo, c.author.login),
@@ -100,10 +100,10 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
 
                 msg.correlations.push({
                     type: "label",
-                    icon: "https://images.atomist.com/rug/tag.png",
+                    icon: "css://far fa-tag",
                     title: node.labels.length <= 2 ? node.labels.map(l => l.name).join(", ") : "Labels",
                     body: node.labels.map(l => ({
-                        icon: "https://images.atomist.com/rug/tag.png",
+                        icon: "css://far fa-tag",
                         text: l.name,
                     })),
                 });

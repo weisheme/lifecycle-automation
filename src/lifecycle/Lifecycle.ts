@@ -196,6 +196,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
         if (!card.id) {
             card.id = options.id;
+            card.key = options.id;
         }
         if (!card.ts) {
             card.ts = options.ts;

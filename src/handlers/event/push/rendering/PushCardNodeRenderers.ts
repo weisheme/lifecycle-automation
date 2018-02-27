@@ -47,7 +47,7 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
 
         msg.title = {
-            icon: "https://images.atomist.com/rug/commit.png",
+            icon: "css://far fa-code-commit",
             text: `${url(userUrl(repo, push.after.author.login),
                 `@${push.after.author.login}`)} pushed ${push.commits.length} new ${
                 (push.commits.length > 1 ? "commits" : "commit")} ` +
@@ -59,7 +59,7 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "repository",
-            icon: "https://images.atomist.com/rug/database.png",
+            icon: "css://far fa-book",
             title: `${repo.owner}/${repo.name}/${push.branch}`,
             link: branchUrl(repo, push.branch),
         });
@@ -99,7 +99,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "commit",
             title: commits.length.toString(),
-            icon: "https://images.atomist.com/rug/commit.png",
+            icon: "css://far fa-code-commit",
             body: commits.map(c => ({
                 icon: avatarUrl(repo, c.author.login),
                 text: renderCommitMessage(c, repo),
@@ -139,11 +139,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<CardMessage> {
         let icon;
         if (build.status === "passed") {
-            icon = "https://images.atomist.com/rug/atomist_build_passed.png";
+            icon = "css://far fa-check-circle";
         } else if (build.status === "started") {
-            icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+            icon = "css://far fa-play-circle";
         } else {
-            icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+            icon = "css://far fa-exclamation-circle";
         }
 
         let title;
@@ -192,7 +192,7 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "tag",
-            icon: "https://images.atomist.com/rug/tag-outline.png",
+            icon: "css://far fa-tag",
             title: push.after.tags ? push.after.tags.length.toString() : "0",
             body: push.after.tags.map(t => ({
                 text: `${url(tagUrl(repo, t))}`,
@@ -200,13 +200,13 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
         });
 
         msg.events.push(...push.after.tags.map(t => ({
-            icon: "https://images.atomist.com/rug/tag-outline.png",
+            icon: "css://far fa-tag",
             text: url(tagUrl(repo, t), `Tag ${t.name}`),
             ts: Date.parse(t.timestamp),
         })));
 
         msg.events.push(...push.after.tags.filter(t => t.release).map(t => ({
-            icon: "https://images.atomist.com/rug/tag-outline.png", // TODO CD fix icon
+            icon: "css://far fa-archive",
             text: url(tagUrl(repo, t), `Release ${t.release.name}`),
             ts: Date.parse(t.release.timestamp),
         })));
@@ -248,7 +248,7 @@ export class ApplicationCardNodeRenderer extends AbstractIdentifiableContributio
 
         msg.correlations.push({
             type: "application",
-            icon: "https://images.atomist.com/rug/tasks.png",
+            icon: "css://far fa-server",
             title: `${domain.name}`,
             body: domainMessage.map(d => ({
                 text: d,
@@ -288,7 +288,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     if (issues.indexOf(i.number) < 0) {
                         body.push({
                             text: `#${i.number}: ${truncateCommitMessage(i.title, repo)}`,
-                            icon: `https://images.atomist.com/rug/issue-${i.state}.png`,
+                            icon: `css://far fa-exclamation-circle`,
                         });
                         totalCount++;
                         if (i.state === "closed") {
@@ -309,7 +309,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                         const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
                         body.push({
                             text: `#${pr.number}: ${truncateCommitMessage(pr.title, repo)}`,
-                            icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
+                            icon: `css://far fa-code-merge`,
                         });
                         totalCount++;
                         if (pr.state === "closed") {
@@ -329,7 +329,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                 if (totalCount > 0) {
                     msg.correlations.push({
                         type: "issue",
-                        icon: "https://images.atomist.com/rug/issue-open.png",
+                        icon: "css://far fa-exclamation-circle",
                         title: `${closedCount}/${totalCount}`,
                         body,
                     });
@@ -373,7 +373,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
 
                     msg.correlations.push({
                        type: "pullrequest",
-                       icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
+                       icon: `css://far fa-code-merge`,
                        title: `#${pr.number}`,
                        link: prUrl(repo, pr),
                     });

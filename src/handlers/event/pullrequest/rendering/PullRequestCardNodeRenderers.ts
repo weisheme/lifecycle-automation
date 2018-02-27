@@ -60,7 +60,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
             .then(body => {
 
                 msg.title = {
-                    icon: `https://images.atomist.com/rug/pull-request-${state}.png`,
+                    icon: `css://far fa-code-merge`,
                     text,
                 };
 
@@ -75,7 +75,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "https://images.atomist.com/rug/database.png",
+                    icon: "css://far fa-book",
                     title: `${repo.owner}/${repo.name}/${pr.branch.name}`,
                     link: branchUrl(repo, pr.branch.name),
                 });
@@ -112,7 +112,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "commit",
             title: commits.length.toString(),
-            icon: "https://images.atomist.com/rug/commit.png",
+            icon: "css://far fa-code-commit",
             body: commits.map(c => ({
                 icon: avatarUrl(repo, c.author.login),
                 text: renderCommitMessage(c, repo),
@@ -164,11 +164,11 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "https://images.atomist.com/rug/atomist_build_passed.png";
+                icon = "css://far fa-check-circle";
             } else if (s.state === "pending") {
-                icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+                icon = "css://far fa-play-circle";
             } else {
-                icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+                icon = "css://far fa-exclamation-circle";
             }
 
             let text;
@@ -192,7 +192,7 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "status",
-            icon: "https://images.atomist.com/rug/status.png",
+            icon: "css://far fa-bolt",
             title: `${success}/${statuses.length}`,
             body,
         });
@@ -230,7 +230,7 @@ export class ReviewCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "review",
-            icon: "https://images.atomist.com/rug/question.png",
+            icon: "css://far fa-question-circle",
             title: `${success}/${reviews.length}`,
             body: reviews.map(r => ({
                 icon: avatarUrl(repo, r.by[0].login),
@@ -269,11 +269,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         let icon;
         if (running) {
-            icon = "https://images.atomist.com/rug/atomist_build_passed.png";
+            icon = "css://far fa-check-circle";
         } else if (failed) {
-            icon = "https://images.atomist.com/rug/atomist_build_failed.png";
+            icon = "css://far fa-exclamation-circle";
         } else {
-            icon = "https://images.atomist.com/rug/atomist_build_started.gif";
+            icon = "css://far fa-play-circle";
         }
 
         msg.correlations.push({
@@ -283,11 +283,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
             body: (pr.builds || []).map(b => {
                 let i;
                 if (b.status === "passed") {
-                    i = "https://images.atomist.com/rug/atomist_build_passed.png";
+                    i = "css://far fa-check-circle";
                 } else if (b.status === "started") {
-                    i = "https://images.atomist.com/rug/atomist_build_started.gif";
+                    i = "css://far fa-play-circle";
                 } else {
-                    i = "https://images.atomist.com/rug/atomist_build_failed.png";
+                    i = "css://far fa-exclamation-circle";
                 }
 
                 let title;
