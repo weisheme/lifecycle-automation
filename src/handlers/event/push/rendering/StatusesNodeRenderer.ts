@@ -130,11 +130,11 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://far fa-check-circle";
+                icon = "css://icon-status-check green";
             } else if (s.state === "pending") {
-                icon = "css://far fa-play-circle";
+                icon = "css://icon-status-check yellow";
             } else {
-                icon = "css://far fa-exclamation-circle";
+                icon = "css://icon-status-check red";
             }
 
             let text;
@@ -158,7 +158,7 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "status",
-            icon: "css://far fa-bolt",
+            icon: "css://icon-status-check",
             title: `${success}/${statuses.length}`,
             body,
         });
@@ -283,11 +283,11 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://far fa-check-circle";
+                icon = "css://icon-status-check green";
             } else if (s.state === "pending") {
-                icon = "css://far fa-play-circle";
+                icon = "css://icon-status-check yellow";
             } else {
-                icon = "css://far fa-exclamation-circle";
+                icon = "css://icon-status-check red";
             }
 
             let text;

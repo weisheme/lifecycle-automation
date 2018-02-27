@@ -35,6 +35,7 @@ import {
     CardMessage,
     isCardMessage,
 } from "./card";
+import { encode } from "../util/base64";
 
 /**
  * Base Event Handler implementation that handles rendering of lifecycle messages.
@@ -189,6 +190,9 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private sendCard(card: CardMessage,
                      options: MessageOptions,
                      ctx: HandlerContext): Promise<any> {
+
+        options.id = encode(options.id);
+
         // Add globabl actions into the top level
         card.events.filter(e => e.actions).forEach(e => {
             e.actions.filter(a => (a as any).global).forEach(a => card.actions.push(a));

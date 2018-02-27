@@ -60,7 +60,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
             .then(body => {
 
                 msg.title = {
-                    icon: `css://far fa-code-merge`,
+                    icon: `css://icon-merge`,
                     text,
                 };
 
@@ -75,7 +75,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "css://far fa-book",
+                    icon: "css://icon-repo",
                     title: `${repo.owner}/${repo.name}/${pr.branch.name}`,
                     link: branchUrl(repo, pr.branch.name),
                 });
@@ -112,7 +112,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "commit",
             title: commits.length.toString(),
-            icon: "css://far fa-code-commit",
+            icon: "css://icon-git-commit",
             body: commits.map(c => ({
                 icon: avatarUrl(repo, c.author.login),
                 text: renderCommitMessage(c, repo),
@@ -164,11 +164,11 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://far fa-check-circle";
+                icon = "css://icon-status-check green";
             } else if (s.state === "pending") {
-                icon = "css://far fa-play-circle";
+                icon = "css://icon-status-check yellow";
             } else {
-                icon = "css://far fa-exclamation-circle";
+                icon = "css://icon-status-check red";
             }
 
             let text;
@@ -192,7 +192,7 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "status",
-            icon: "css://far fa-bolt",
+            icon: "css://icon-status-check",
             title: `${success}/${statuses.length}`,
             body,
         });
@@ -230,7 +230,7 @@ export class ReviewCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "review",
-            icon: "css://far fa-question-circle",
+            icon: "css://icon-review",
             title: `${success}/${reviews.length}`,
             body: reviews.map(r => ({
                 icon: avatarUrl(repo, r.by[0].login),
@@ -269,11 +269,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         let icon;
         if (running) {
-            icon = "css://far fa-check-circle";
+            icon = "css://icon-circle-check green";
         } else if (failed) {
-            icon = "css://far fa-exclamation-circle";
+            icon = "css://icon-circle-check yellow";
         } else {
-            icon = "css://far fa-play-circle";
+            icon = "css://icon-circle-check red";
         }
 
         msg.correlations.push({
@@ -283,11 +283,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
             body: (pr.builds || []).map(b => {
                 let i;
                 if (b.status === "passed") {
-                    i = "css://far fa-check-circle";
+                    i = "css://icon-circle-check green";
                 } else if (b.status === "started") {
-                    i = "css://far fa-play-circle";
+                    i = "css://icon-circle-check yellow";
                 } else {
-                    i = "css://far fa-exclamation-circle";
+                    i = "css://icon-circle-check red";
                 }
 
                 let title;

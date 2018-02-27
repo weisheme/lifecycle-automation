@@ -42,9 +42,9 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
         // tslint:disable-next-line:variable-name
         let icon;
         if (issue.state === "open") {
-            icon = "css://far fa-exclamation-circle";
+            icon = "css://icon-issue-opened";
         } else if (issue.state === "closed") {
-            icon = "css://far fa-exclamation-circle";
+            icon = "css://icon-issue-closed";
         }
 
         return linkGitHubUsers(githubToSlack(node.body), context.context)
@@ -68,7 +68,7 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "css://far fa-book",
+                    icon: "css://icon-repo",
                     title: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
@@ -82,10 +82,10 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
 
                 msg.correlations.push({
                     type: "label",
-                    icon: "css://far fa-tag",
+                    icon: "css://icon-tag",
                     title: issue.labels.length <= 2 ? issue.labels.map(l => l.name).join(", ") : "Labels",
                     body: issue.labels.map(l => ({
-                        icon: "css://far fa-tag",
+                        icon: "css://icon-tag",
                         text: l.name,
                     })),
                 });
@@ -147,7 +147,7 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
             .then(body => {
 
                 msg.title = {
-                    icon: `css://far fa-code-merge`,
+                    icon: `css://icon-merge`,
                     text: `New comment on ${state} pull request ${bold(url(issueUrl(repo, pr, node),
                         `#${pr.number}: ${pr.title}`))}`,
                 };
@@ -163,14 +163,14 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "css://far fa-book",
+                    icon: "css://icon-repo",
                     title: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
 
                 msg.correlations.push({
                     type: "pr",
-                    icon: `css://far fa-code-merge`,
+                    icon: `css://icon-merge`,
                     title: `#${pr.number}`,
                     link: prUrl(repo, pr),
                 });

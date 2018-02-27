@@ -43,15 +43,16 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
         let title = `${bold(url(issueUrl(repo, node), `#${node.number.toString()}: ${node.title}`))}`;
         let icon;
         if (node.state === "open") {
-            icon = "css://far fa-exclamation-circle";
+            icon = "css://icon-issue-opened";
             if (node.createdAt === node.updatedAt) {
                 title = `${url(userUrl(repo, node.openedBy.login),
                     `@${node.openedBy.login}`)} created issue ${title}`;
             } else {
+                icon = "css://icon-issue-reopened";
                 title = `Updated issue ${title}`;
             }
         } else if (node.state === "closed") {
-            icon = "css://far fa-exclamation-circle";
+            icon = "css://icon-issue-closed";
             if (node.closedAt === node.updatedAt) {
                 if (node.closedBy != null && node.closedBy.login != null) {
                     title = `${url(userUrl(repo, node.closedBy.login),
@@ -60,6 +61,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     title = `Closed issue ${title}`;
                 }
             } else {
+                icon = "css://icon-issue-reopened";
                 title = `Updated issue ${title}`;
             }
         }
@@ -83,14 +85,14 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
 
                 msg.correlations.push({
                     type: "repository",
-                    icon: "css://fal fa-book",
+                    icon: "css://icon-repo",
                     title: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
 
                 msg.correlations.push({
                     type: "commit",
-                    icon: "css://far fa-code-commit",
+                    icon: "css://icon-git-commit",
                     title: node.resolvingCommits ? node.resolvingCommits.length.toString() : "0",
                     body: node.resolvingCommits ? node.resolvingCommits.map(c => ({
                         icon: avatarUrl(repo, c.author.login),
@@ -100,7 +102,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
 
                 msg.correlations.push({
                     type: "label",
-                    icon: "css://far fa-tag",
+                    icon: "css://icon-tag",
                     title: node.labels.length <= 2 ? node.labels.map(l => l.name).join(", ") : "Labels",
                     body: node.labels.map(l => ({
                         icon: "css://far fa-tag",
