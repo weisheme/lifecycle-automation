@@ -130,7 +130,7 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://icon-status-check success";
+                icon = "css://icon-status-check";
             } else if (s.state === "pending") {
                 icon = "css://icon-status-check alert";
             } else {
@@ -283,7 +283,7 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://icon-status-check success";
+                icon = "css://icon-status-check";
             } else if (s.state === "pending") {
                 icon = "css://icon-status-check alert";
             } else {

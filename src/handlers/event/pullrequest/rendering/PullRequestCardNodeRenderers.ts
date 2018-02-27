@@ -164,7 +164,7 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
             let icon;
             if (s.state === "success") {
-                icon = "css://icon-status-check success";
+                icon = "css://icon-status-check";
             } else if (s.state === "pending") {
                 icon = "css://icon-status-check alert";
             } else {
@@ -269,7 +269,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         let icon;
         if (running) {
-            icon = "css://icon-circle-check success";
+            icon = "css://icon-circle-check";
         } else if (failed) {
             icon = "css://icon-circle-check alert";
         } else {
@@ -283,7 +283,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
             body: (pr.builds || []).map(b => {
                 let i;
                 if (b.status === "passed") {
-                    i = "css://icon-circle-check success";
+                    i = "css://icon-circle-check";
                 } else if (b.status === "started") {
                     i = "css://icon-circle-check alert";
                 } else {
