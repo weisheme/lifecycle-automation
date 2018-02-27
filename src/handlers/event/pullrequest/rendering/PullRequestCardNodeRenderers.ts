@@ -192,7 +192,7 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "status",
-            icon: "css://icon-status-check",
+            icon: `css://icon-status-check`,
             title: `${success}/${statuses.length}`,
             body,
         });
@@ -269,11 +269,11 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         let icon;
         if (running) {
-            icon = "css://icon-circle-check";
-        } else if (failed) {
             icon = "css://icon-circle-check alert";
-        } else {
+        } else if (failed) {
             icon = "css://icon-circle-check fail";
+        } else {
+            icon = "css://icon-circle-check";
         }
 
         msg.correlations.push({
