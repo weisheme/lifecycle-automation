@@ -307,7 +307,7 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "status",
             icon: "css://icon-panels",
-            shortTitle: `${success}/${status.length}`,
+            shortTitle: `${success}/${statuses.length}`,
             title: `${status.length} Phase`,
             body,
         });
