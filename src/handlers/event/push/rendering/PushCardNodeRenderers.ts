@@ -106,7 +106,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
             title: `${commits.length.toString()} Commit`,
             icon: "css://icon-git-commit",
             body: commits.map(c => ({
-                icon: avatarUrl(repo, c.author.login),
+                icon: avatarUrl(repo, c.author ? c.author.login : "(unknown)"),
                 text: renderCommitMessage(c, repo),
             })),
         });
