@@ -26,7 +26,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
     }
 
     public supports(node: any): boolean {
-        return node.baseBranchName;
+        return node.baseBranchName && node.author;
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: CardMessage,
