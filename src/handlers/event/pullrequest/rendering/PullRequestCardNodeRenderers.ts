@@ -78,7 +78,7 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                     icon: "css://icon-repo",
                     title: `Repository ${repo.owner}/${repo.name}`,
                     shortTitle: `${repo.owner}/${repo.name}`,
-                    link: branchUrl(repo, pr.branch.name),
+                    link: branchUrl(repo, pr.branchName),
                 });
 
                 msg.actions.push(...actions);
