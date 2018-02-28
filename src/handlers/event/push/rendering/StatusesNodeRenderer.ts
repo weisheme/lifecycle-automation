@@ -308,7 +308,7 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
             type: "status",
             icon: "css://icon-panels",
             shortTitle: `${success}/${statuses.length}`,
-            title: `${status.length} Phase`,
+            title: `${statuses.length} Phase`,
             body,
         });
 
