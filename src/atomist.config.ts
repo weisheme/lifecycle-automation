@@ -54,11 +54,13 @@ import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild"
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
 import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
-import { CommentToPullRequestCommentLifecycle}  from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
+import { CommentToPullRequestCommentLifecycle} from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
 import { IssueToIssueCommentLifecycle } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
 import { NotifyMentionedOnIssueComment } from "./handlers/event/comment/NotifyMentionedOnIssueComment";
 import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/NotifyMentionedOnPullRequestComment";
-import { PullRequestToPullRequestCommentLifecycle } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
+import {
+    PullRequestToPullRequestCommentLifecycle,
+} from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";

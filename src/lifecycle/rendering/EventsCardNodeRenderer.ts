@@ -1,16 +1,16 @@
 import { url } from "@atomist/slack-messages";
 import { renderCommitMessage } from "../../handlers/event/push/rendering/PushCardNodeRenderers";
+import * as graphql from "../../typings/types";
 import { avatarUrl, tagUrl } from "../../util/helpers";
 import {
     Action,
-    CardMessage
+    CardMessage,
 } from "../card";
 import {
     AbstractIdentifiableContribution,
     CardNodeRenderer,
     RendererContext,
 } from "../Lifecycle";
-import * as graphql from "../../typings/types";
 
 export class EventsCardNodeRenderer extends AbstractIdentifiableContribution
     implements CardNodeRenderer<any> {
@@ -127,4 +127,3 @@ export class EventsCardNodeRenderer extends AbstractIdentifiableContribution
         });
     }
 }
-

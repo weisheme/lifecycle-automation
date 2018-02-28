@@ -34,4 +34,3 @@ export class CommentToPullRequestCommentLifecycle
         return chatTeamsToPreferences(_.get(event, "data.Comment[0].pullRequest.repo.org.team.chatTeams"));
     }
 }
-

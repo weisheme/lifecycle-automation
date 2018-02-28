@@ -32,4 +32,3 @@ export class CommentToIssueCommentLifecycle
         return chatTeamsToPreferences(_.get(event, "data.Comment[0].issue.repo.org.team.chatTeams"));
     }
 }
-

@@ -181,7 +181,8 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
                 return {
                     icon: i,
                     text: b.buildUrl ? url(b.buildUrl, title) : title,
-                }}),
+                };
+            }),
         });
 
         /*msg.events.push({
