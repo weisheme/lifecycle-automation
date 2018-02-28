@@ -1,6 +1,10 @@
 subscription CommentToIssueLifecycle {
-  Comment {
+  Comment(commentType: issue) {
     _id
+    by {
+      login
+    }
+    body
     issue {
       _id
       name
@@ -11,6 +15,12 @@ subscription CommentToIssueLifecycle {
       createdAt
       updatedAt
       closedAt
+      comments {
+        by {
+          login
+        }
+        body
+      }
       resolvingCommits {
         sha
         message
@@ -67,5 +77,6 @@ subscription CommentToIssueLifecycle {
       }
       timestamp
     }
+    timestamp
   }
 }

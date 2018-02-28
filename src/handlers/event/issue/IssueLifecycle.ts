@@ -14,6 +14,7 @@ import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/Colla
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
+import { CommentCardLifecycleHandler } from "../comment/CommentLifecycle";
 import { LifecyclePreferences } from "../preferences";
 import {
     AssignActionContributor,
@@ -25,7 +26,11 @@ import {
     ReactionActionContributor,
     ReopenActionContributor,
 } from "./rendering/IssueActionContributors";
-import { IssueCardNodeRenderer, MoreCardNodeRenderer } from "./rendering/IssueCardNodeRenderers";
+import {
+    CommentCardNodeRenderer,
+    CorrelationsCardNodeRenderer,
+    IssueCardNodeRenderer, ReferencedIssueCardNodeRenderer,
+} from "./rendering/IssueCardNodeRenderers";
 import {
     IssueNodeRenderer,
     MoreNodeRenderer,
@@ -46,10 +51,14 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
         const nodes: any[] = [];
-        const [issue, repo, timestamp] = this.extractNodes(event);
+        const [issue, repo, comment, timestamp] = this.extractNodes(event);
 
         if (issue != null) {
             nodes.push(issue);
+        }
+
+        if (comment != null) {
+            nodes.push(comment);
         }
 
         // Verify that there is at least a issue and repo node
@@ -63,6 +72,9 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
             nodes,
             renderers: [
                 new IssueCardNodeRenderer(),
+                new CommentCardNodeRenderer(),
+                new CorrelationsCardNodeRenderer(),
+                new ReferencedIssueCardNodeRenderer(),
                 new CollaboratorCardNodeRenderer(node => node.body),
             ],
             contributors: [
@@ -83,6 +95,8 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
             extract: (type: string) => {
                 if (type === "repo") {
                     return repo;
+                } else if (type === "comment") {
+                    return comment;
                 }
                 return null;
             },
@@ -97,7 +111,10 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
     }
 
     protected abstract extractNodes(event: EventFired<R>):
-        [graphql.IssueToIssueLifecycle.Issue, graphql.IssueToIssueLifecycle.Repo, string];
+        [graphql.IssueToIssueLifecycle.Issue,
+            graphql.IssueToIssueLifecycle.Repo,
+            graphql.CommentToIssueLifecycle.Comment,
+            string];
 }
 
 export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {

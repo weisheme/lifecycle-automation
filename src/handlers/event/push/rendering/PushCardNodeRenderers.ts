@@ -60,7 +60,8 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "repository",
             icon: "css://icon-repo",
-            title: `${repo.owner}/${repo.name}/${push.branch}`,
+            title: `Repository ${repo.owner}/${repo.name}/${push.branch}`,
+            shortTitle: `${repo.owner}/${repo.name}/${push.branch}`,
             link: branchUrl(repo, push.branch),
         });
 
@@ -98,7 +99,8 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "commit",
-            title: commits.length.toString(),
+            shortTitle: commits.length.toString(),
+            title: `${commits.length.toString()} Commit`,
             icon: "css://icon-git-commit",
             body: commits.map(c => ({
                 icon: avatarUrl(repo, c.author.login),
@@ -158,6 +160,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "build",
             title,
+            shortTitle: title,
             link: build.buildUrl,
             icon,
         });
@@ -193,7 +196,8 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "tag",
             icon: "css://icon-tag",
-            title: push.after.tags ? push.after.tags.length.toString() : "0",
+            shortTitle: push.after.tags ? push.after.tags.length.toString() : "0",
+            title: `${push.after.tags ? push.after.tags.length.toString() : "0"} Tag`,
             body: push.after.tags.map(t => ({
                 text: `${url(tagUrl(repo, t))}`,
             })),
@@ -230,7 +234,6 @@ export class ApplicationCardNodeRenderer extends AbstractIdentifiableContributio
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
 
-        const domains = context.lifecycle.extract("domains") as Domain[];
         const running = domain.apps.filter(a => a.state === "started" || a.state === "healthy").length;
         const stopped = domain.apps.filter(a => a.state === "stopping").length;
         const unhealthy = domain.apps.filter(a => a.state === "unhealthy").map(a => a.host);
@@ -250,6 +253,7 @@ export class ApplicationCardNodeRenderer extends AbstractIdentifiableContributio
             type: "application",
             icon: "css://icon-servers",
             title: `${domain.name}`,
+            shortTitle: `${domain.name}`,
             body: domainMessage.map(d => ({
                 text: d,
             })),
@@ -330,7 +334,8 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     msg.correlations.push({
                         type: "issue",
                         icon: "css://icon-issue-opened",
-                        title: `${closedCount}/${totalCount}`,
+                        shortTitle: `${closedCount}/${totalCount}`,
+                        title: `${totalCount} Issue`,
                         body,
                     });
                 }
@@ -374,7 +379,8 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                     msg.correlations.push({
                        type: "pullrequest",
                        icon: `css://icon-merge`,
-                       title: `#${pr.number}`,
+                       title: `PR #${pr.number}`,
+                       shortTitle: `PR #${pr.number}`,
                        link: prUrl(repo, pr),
                     });
 

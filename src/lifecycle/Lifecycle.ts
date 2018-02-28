@@ -190,16 +190,16 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
     private sendCard(card: CardMessage,
                      options: MessageOptions,
                      ctx: HandlerContext): Promise<any> {
-
-        options.id = encode(options.id);
-
         // Add globabl actions into the top level
         card.events.filter(e => e.actions).forEach(e => {
             e.actions.filter(a => (a as any).global).forEach(a => card.actions.push(a));
         });
 
         if (!card.id) {
-            card.id = options.id;
+            card.id = encode(options.id);
+            card.key = options.id;
+        }
+        if (!card.key) {
             card.key = options.id;
         }
         if (!card.ts) {

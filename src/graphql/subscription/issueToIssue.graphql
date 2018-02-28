@@ -9,6 +9,12 @@ subscription IssueToIssueLifecycle {
     createdAt
     updatedAt
     closedAt
+    comments {
+      by {
+        login
+      }
+      body
+    }
     resolvingCommits {
       sha
       message

@@ -89,6 +89,7 @@ export interface Correlation {
     type: string;
     icon: string;
     title: string;
+    shortTitle: string;
     link?: string;
     body?: Array<{
         icon?: string;

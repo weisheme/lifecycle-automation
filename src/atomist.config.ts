@@ -201,9 +201,9 @@ if (process.env.NODE_ENV !== "production") {
         () => new CommentToIssueCardLifecycle(),
 
         // comment
-        () => new CommentToIssueCommentCardLifecycle(),
+        // () => new CommentToIssueCommentCardLifecycle(),
         () => new CommentToPullRequestCommentCardLifecycle(),
-        () => new IssueToIssueCommentCardLifecycle(),
+        // () => new IssueToIssueCommentCardLifecycle(),
     );
 }
 

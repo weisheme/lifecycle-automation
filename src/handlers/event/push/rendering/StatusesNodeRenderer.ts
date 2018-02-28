@@ -159,7 +159,8 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "status",
             icon: "css://icon-status-check",
-            title: `${success}/${statuses.length}`,
+            shortTitle: `${success}/${statuses.length}`,
+            title: `${statuses.length} Check`,
             body,
         });
 
@@ -312,7 +313,8 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "status",
             icon: "css://icon-panels",
-            title: `${success}/${status.length}`,
+            shortTitle: `${success}/${status.length}`,
+            title: `${status.length} Phase`,
             body,
         });
 

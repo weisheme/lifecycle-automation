@@ -42,7 +42,7 @@ export function wrapLinks(message: SlackMessage | CardMessage, event: string):
         }
         if (clonedMessage.collaborators) {
             clonedMessage.collaborators.forEach(e => {
-                e.link = wrapLinksInText(e.link, `${event}/collaborators/link`, hashToUrl);
+                e.link = trackableAndShortenedLink(e.link, `${event}/collaborators/link`, hashToUrl);
             });
         }
     } else if (isSlackMessage(clonedMessage)) {

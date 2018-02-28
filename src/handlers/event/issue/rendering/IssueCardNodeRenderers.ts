@@ -14,10 +14,10 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
-    avatarUrl,
+    avatarUrl, extractLinkedIssues,
     issueUrl,
     linkGitHubUsers,
-    linkIssues, repoUrl,
+    linkIssues, repoUrl, truncateCommitMessage,
     userUrl,
 } from "../../../../util/helpers";
 import * as github from "../../../command/github/gitHubApi";
@@ -40,6 +40,12 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                   context: RendererContext): Promise<CardMessage> {
         const repo = context.lifecycle.extract("repo");
 
+        const comment = context.lifecycle.extract("comment");
+        if (comment) {
+            msg.actions.push(...actions);
+            return Promise.resolve(msg);
+        }
+
         let title = `${bold(url(issueUrl(repo, node), `#${node.number.toString()}: ${node.title}`))}`;
         let icon;
         if (node.state === "open") {
@@ -61,7 +67,6 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     title = `Closed issue ${title}`;
                 }
             } else {
-                icon = "css://icon-issue-reopened";
                 title = `Updated issue ${title}`;
             }
         }
@@ -82,36 +87,6 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     text: linkIssues(body, repo),
                     ts: Date.parse(node.createdAt),
                 };
-
-                msg.correlations.push({
-                    type: "repository",
-                    icon: "css://icon-repo",
-                    title: `${repo.owner}/${repo.name}`,
-                    link: repoUrl(repo),
-                });
-
-                msg.correlations.push({
-                    type: "commit",
-                    icon: "css://icon-git-commit",
-                    title: node.resolvingCommits ? node.resolvingCommits.length.toString() : "0",
-                    body: node.resolvingCommits ? node.resolvingCommits.map(c => ({
-                        icon: avatarUrl(repo, c.author.login),
-                        text: renderCommitMessage(c, repo),
-                    })) : undefined,
-                });
-
-                msg.correlations.push({
-                    type: "label",
-                    icon: "css://icon-tag",
-                    title: node.labels.length <= 2 ? node.labels.map(l => l.name).join(", ") : "Labels",
-                    body: node.labels.map(l => ({
-                        icon: "css://far fa-tag",
-                        text: l.name,
-                    })),
-                });
-
-                msg.comments = [];
-                msg.reactions = [];
 
                 msg.actions.push(...actions);
 
@@ -171,22 +146,294 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-export class MoreCardNodeRenderer extends AbstractIdentifiableContribution
+export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
+    implements CardNodeRenderer<graphql.CommentToIssueLifecycle.Comment> {
+
+    constructor() {
+        super("issue");
+    }
+
+    public supports(node: any): boolean {
+        return node.issue;
+    }
+
+    public render(node: graphql.CommentToIssueLifecycle.Comment,
+                  actions: Action[],
+                  msg: CardMessage,
+                  context: RendererContext): Promise<CardMessage> {
+        const repo = context.lifecycle.extract("repo");
+        const issue = node.issue;
+
+        let title = `${bold(url(issueUrl(repo, node), `#${issue.number.toString()}: ${issue.title}`))}`;
+        title = `${url(avatarUrl(repo, node.by.login), `@${node.by.login}`)} commented on ${title}`;
+
+        let icon;
+        if (issue.state === "open") {
+            icon = "css://icon-issue-opened";
+        } else if (issue.state === "closed") {
+            icon = "css://icon-issue-closed";
+        }
+
+        return linkGitHubUsers(githubToSlack(node.body), context.context)
+            .then(body => {
+
+                msg.title = {
+                    icon,
+                    text: title,
+                };
+
+                msg.shortTitle = `Issue ${url(issueUrl(repo, node), `#${issue.number}: ${issue.title}`)}`;
+
+                msg.body = {
+                    avatar: avatarUrl(repo, node.by.login),
+                    login: node.by.login,
+                    text: linkIssues(body, repo),
+                    ts: Date.parse(node.timestamp),
+                };
+
+                msg.actions.push(...actions);
+
+                return msg;
+            })
+            .then(card => {
+                const api = github.api(context.orgToken);
+                return api.reactions.getForIssue({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    number: issue.number,
+                    content: "+1",
+                })
+                .then(result => {
+                    card.reactions = (result.data || []).map(r => ({
+                        avatar: r.user.avatar_url,
+                        login: r.user.login,
+                        reaction: "+1",
+                    }));
+
+                    (result.data || []).forEach(c => addCollaborator(
+                        {
+                            login: c.user.login,
+                            avatar: c.user.avatar_url,
+                            link: c.user.html_url,
+                        }, card));
+
+                    return card;
+                })
+                .catch(err => msg);
+            })
+            .then(card => {
+                const api = github.api(context.orgToken);
+                return api.issues.getComments({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    number: issue.number,
+                })
+                .then(result => {
+                    card.comments = (result.data || []).map(c => ({
+                        avatar: c.user.avatar_url,
+                        login: c.user.login,
+                        text: c.body,
+                    }));
+
+                    (result.data || []).forEach(c => addCollaborator(
+                        {
+                            login: c.user.login,
+                            avatar: c.user.avatar_url,
+                            link: c.user.html_url,
+                        }, card));
+
+                    return card;
+                })
+                .catch(err => msg);
+            });
+    }
+}
+
+export class CorrelationsCardNodeRenderer extends AbstractIdentifiableContribution
     implements CardNodeRenderer<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super("assign");
+        super("issue");
     }
 
     public supports(node: any): boolean {
         return node.title;
     }
 
-    public render(node: graphql.IssueToIssueLifecycle.Issue,
+    public render(issue: graphql.IssueToIssueLifecycle.Issue,
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        msg.actions.push(...actions);
-        return Promise.resolve(msg);
+        const repo = context.lifecycle.extract("repo");
+
+        msg.comments = [];
+        msg.reactions = [];
+
+        msg.correlations.push({
+            type: "repository",
+            icon: "css://icon-repo",
+            title: `Repository ${repo.owner}/${repo.name}`,
+            shortTitle: `${repo.owner}/${repo.name}`,
+            link: repoUrl(repo),
+        });
+
+        msg.correlations.push({
+            type: "commit",
+            icon: "css://icon-git-commit",
+            shortTitle: issue.resolvingCommits ? issue.resolvingCommits.length.toString() : "0",
+            title: `${issue.resolvingCommits ? issue.resolvingCommits.length.toString() : "0"} Commit`,
+            body: issue.resolvingCommits ? issue.resolvingCommits.map(c => ({
+                icon: avatarUrl(repo, c.author.login),
+                text: renderCommitMessage(c, repo),
+            })) : undefined,
+        });
+
+        msg.correlations.push({
+            type: "label",
+            icon: "css://icon-tag",
+            title: `${issue.labels.length} Label`,
+            shortTitle: issue.labels.length === 0 ? "0" :
+                (issue.labels.length <= 2 ? issue.labels.map(l => l.name).join(", ") : issue.labels.length.toString()),
+            body: issue.labels.map(l => ({
+                icon: "css://far fa-tag",
+                text: l.name,
+            })),
+        });
+
+        const api = github.api(context.orgToken);
+        return api.issues.getEventsTimeline({
+            owner: repo.owner,
+            repo: repo.name,
+            issue_number: issue.number,
+        })
+        .then(result => {
+            result.data.forEach(e => {
+                switch (e.event) {
+                    case "assigned":
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: e.actor.login === e.assignee.login ?
+                                `@${e.assignee.login} self-assigned` :
+                                `@${e.actor.login} assigned @${e.assignee.login}`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    case "commented": {
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: `@${e.actor.login} ${url(e.html_url, "commented")}`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    }
+                    case "labeled": {
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: `@${e.actor.login} added ${e.label.name} label`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    }
+                    case "unlabeled": {
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: `@${e.actor.login} removed ${e.label.name} label`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    }
+                    case "renamed": {
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: `@${e.actor.login} change title`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    }
+                }
+            });
+            return Promise.resolve(msg);
+        });
+    }
+}
+
+export class ReferencedIssueCardNodeRenderer extends AbstractIdentifiableContribution
+    implements CardNodeRenderer<graphql.IssueToIssueLifecycle.Issue> {
+
+    constructor() {
+        super("referencedissue");
+    }
+
+    public supports(node: any): boolean {
+        return node.title;
+    }
+
+    public render(issue: graphql.IssueToIssueLifecycle.Issue,
+                  actions: Action[],
+                  msg: CardMessage,
+                  context: RendererContext): Promise<CardMessage> {
+        const repo = context.lifecycle.extract("repo");
+        const message = `${issue.title} ${issue.body} ${(issue.comments || []).map(c => c.body).join("\n")}`;
+
+        const issues = [];
+        return extractLinkedIssues(message, repo, issues, context.context)
+            .then(ri => {
+                let totalCount = 0;
+                let closedCount = 0;
+
+                const body = [];
+                ri.issues.forEach(i => {
+                    if (issues.indexOf(i.number) < 0) {
+                        body.push({
+                            text: `#${i.number}: ${truncateCommitMessage(i.title, repo)}`,
+                            icon: i.state === "open" ? "css://icon-issue-opened" : "css://icon-issue-closed",
+                        });
+                        totalCount++;
+                        if (i.state === "closed") {
+                            closedCount++;
+                        }
+                        issues.push(i.number);
+                        addCollaborator(
+                            {
+                                avatar: avatarUrl(repo, i.openedBy.login),
+                                link: userUrl(repo, i.openedBy.login),
+                                login: i.openedBy.login,
+                            },
+                            msg);
+                    }
+                });
+                ri.prs.forEach(pr => {
+                    if (issues.indexOf(pr.number) < 0) {
+                        const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
+                        body.push({
+                            text: `#${pr.number}: ${truncateCommitMessage(pr.title, repo)}`,
+                            icon: `css://icon-merge`,
+                        });
+                        totalCount++;
+                        if (pr.state === "closed") {
+                            closedCount++;
+                        }
+                        issues.push(pr.number);
+                        addCollaborator(
+                            {
+                                avatar: avatarUrl(repo, pr.author.login),
+                                link: userUrl(repo, pr.author.login),
+                                login: pr.author.login,
+                            },
+                            msg);
+                    }
+                });
+
+                if (totalCount > 0) {
+                    msg.correlations.push({
+                        type: "issue",
+                        icon: "css://icon-issue-opened",
+                        shortTitle: `${closedCount}/${totalCount}`,
+                        title: `${totalCount} Issue`,
+                        body,
+                    });
+                }
+                return Promise.resolve(msg);
+            });
     }
 }

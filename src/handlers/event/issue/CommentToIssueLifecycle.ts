@@ -19,9 +19,12 @@ export class CommentToIssueCardLifecycle
     extends IssueCardLifecycleHandler<graphql.CommentToIssueLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.CommentToIssueLifecycle.Subscription>):
-        [graphql.CommentToIssueLifecycle.Issue, graphql.CommentToIssueLifecycle.Repo, string] {
+        [graphql.CommentToIssueLifecycle.Issue,
+            graphql.CommentToIssueLifecycle.Repo,
+            graphql.CommentToIssueLifecycle.Comment,
+            string] {
         const issue = _.get(event.data, "Comment[0].issue") as graphql.CommentToIssueLifecycle.Issue;
-        return [issue, _.get(event.data, "Comment[0].issue.repo"),
+        return [issue, _.get(event.data, "Comment[0].issue.repo"), _.get(event.data, "Comment[0]"),
             (issue ? Date.parse(issue.timestamp).toString() : Date.now().toString())];
     }
 

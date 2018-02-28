@@ -41,10 +41,13 @@ export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueTo
 export class IssueToIssueCardLifecycle extends IssueCardLifecycleHandler<graphql.IssueToIssueLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>):
-        [graphql.IssueToIssueLifecycle.Issue, graphql.IssueToIssueLifecycle.Repo, string] {
+        [graphql.IssueToIssueLifecycle.Issue,
+            graphql.IssueToIssueLifecycle.Repo,
+            graphql.CommentToIssueLifecycle.Comment,
+            string] {
         const issue = event.data.Issue[0];
         const repo = event.data.Issue[0].repo;
-        return [issue, repo, Date.now().toString()];
+        return [issue, repo, null, Date.now().toString()];
     }
 
     protected extractPreferences(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>)

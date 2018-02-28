@@ -69,21 +69,25 @@ export class IssueCommentCardNodeRenderer extends AbstractIdentifiableContributi
                 msg.correlations.push({
                     type: "repository",
                     icon: "css://icon-repo",
-                    title: `${repo.owner}/${repo.name}`,
+                    title: `Repository ${repo.owner}/${repo.name}`,
+                    shortTitle: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
 
                 msg.correlations.push({
                     type: "issue",
                     icon,
-                    title: `#${issue.number}`,
+                    shortTitle: `#${issue.number}`,
+                    title: `Issue #${issue.number}`,
                     link: issueUrl(repo, issue),
                 });
 
                 msg.correlations.push({
                     type: "label",
                     icon: "css://icon-tag",
-                    title: issue.labels.length <= 2 ? issue.labels.map(l => l.name).join(", ") : "Labels",
+                    title: `${issue.labels.length} Label`,
+                    shortTitle: issue.labels.length <= 2 ?
+                        issue.labels.map(l => l.name).join(", ") : issue.labels.length.toString(),
                     body: issue.labels.map(l => ({
                         icon: "css://icon-tag",
                         text: l.name,
@@ -164,14 +168,16 @@ export class PullRequestCommentCardNodeRenderer extends AbstractIdentifiableCont
                 msg.correlations.push({
                     type: "repository",
                     icon: "css://icon-repo",
-                    title: `${repo.owner}/${repo.name}`,
+                    title: `Repository ${repo.owner}/${repo.name}`,
+                    shortTitle: `${repo.owner}/${repo.name}`,
                     link: repoUrl(repo),
                 });
 
                 msg.correlations.push({
                     type: "pr",
                     icon: `css://icon-merge`,
-                    title: `#${pr.number}`,
+                    shortTitle: `#${pr.number}`,
+                    title: `PR #${pr.number}`,
                     link: prUrl(repo, pr),
                 });
 

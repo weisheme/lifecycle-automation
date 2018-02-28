@@ -76,7 +76,8 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                 msg.correlations.push({
                     type: "repository",
                     icon: "css://icon-repo",
-                    title: `${repo.owner}/${repo.name}/${pr.branch.name}`,
+                    title: `Repository ${repo.owner}/${repo.name}`,
+                    shortTitle: `${repo.owner}/${repo.name}`,
                     link: branchUrl(repo, pr.branch.name),
                 });
 
@@ -111,7 +112,8 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "commit",
-            title: commits.length.toString(),
+            title: `${commits.length.toString()} Commit`,
+            shortTitle: commits.length.toString(),
             icon: "css://icon-git-commit",
             body: commits.map(c => ({
                 icon: avatarUrl(repo, c.author.login),
@@ -193,7 +195,8 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "status",
             icon: `css://icon-status-check`,
-            title: `${success}/${statuses.length}`,
+            shortTitle: `${success}/${statuses.length}`,
+            title: `${statuses.length} Check`,
             body,
         });
 
@@ -231,7 +234,8 @@ export class ReviewCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "review",
             icon: "css://icon-review",
-            title: `${success}/${reviews.length}`,
+            shortTitle: `${success}/${reviews.length}`,
+            title: `${reviews.length} Review`,
             body: reviews.map(r => ({
                 icon: avatarUrl(repo, r.by[0].login),
                 text: r.body,
@@ -279,7 +283,8 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "build",
             icon,
-            title: `${passed.length}/${pr.builds.length}`,
+            title: `${pr.builds.length} Build`,
+            shortTitle: `${passed.length}/${pr.builds.length}`,
             body: (pr.builds || []).map(b => {
                 let i;
                 if (b.status === "passed") {

@@ -2525,7 +2525,14 @@ export namespace CommentToIssueLifecycle {
 
   export type Comment = {
     _id?: Long | null; 
+    by?: By | null; 
+    body?: string | null; 
     issue?: Issue | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type By = {
+    login?: string | null; 
   } 
 
   export type Issue = {
@@ -2538,6 +2545,7 @@ export namespace CommentToIssueLifecycle {
     createdAt?: string | null; 
     updatedAt?: string | null; 
     closedAt?: string | null; 
+    comments?: Comments[] | null; 
     resolvingCommits?: ResolvingCommits[] | null; 
     openedBy?: OpenedBy | null; 
     closedBy?: ClosedBy | null; 
@@ -2545,6 +2553,15 @@ export namespace CommentToIssueLifecycle {
     repo: Repo; 
     labels?: _Labels[] | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Comments = {
+    by?: _By | null; 
+    body?: string | null; 
+  } 
+
+  export type _By = {
+    login?: string | null; 
   } 
 
   export type ResolvingCommits = {
@@ -3837,6 +3854,7 @@ export namespace IssueToIssueLifecycle {
     createdAt?: string | null; 
     updatedAt?: string | null; 
     closedAt?: string | null; 
+    comments?: Comments[] | null; 
     resolvingCommits?: ResolvingCommits[] | null; 
     openedBy?: OpenedBy | null; 
     closedBy?: ClosedBy | null; 
@@ -3844,6 +3862,15 @@ export namespace IssueToIssueLifecycle {
     repo: Repo; 
     labels?: _Labels[] | null; 
     timestamp?: string | null; 
+  } 
+
+  export type Comments = {
+    by?: By | null; 
+    body?: string | null; 
+  } 
+
+  export type By = {
+    login?: string | null; 
   } 
 
   export type ResolvingCommits = {
