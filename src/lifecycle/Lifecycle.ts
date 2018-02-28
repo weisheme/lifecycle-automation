@@ -30,7 +30,6 @@ import {
     LifecyclePreferences,
     LifecycleRendererPreferences,
 } from "../handlers/event/preferences";
-import { encode } from "../util/base64";
 import {
     Action as CardAction,
     CardMessage,
@@ -192,10 +191,6 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
             e.actions.filter(a => (a as any).global).forEach(a => card.actions.push(a));
         });
 
-        if (!card.id) {
-            card.id = encode(options.id);
-            card.key = options.id;
-        }
         if (!card.key) {
             card.key = options.id;
         }
