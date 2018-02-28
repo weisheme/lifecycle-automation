@@ -89,10 +89,11 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const commits = _.uniqBy(push.commits, c => c.sha)
             .sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp));
+        const author = push.after && push.after.author ? push.after.author.login : "(unknown)";
 
         msg.body = {
-            avatar: avatarUrl(repo, push.after.author.login),
-            login: push.after.author.login,
+            avatar: avatarUrl(repo, author),
+            login: author,
             text: renderCommitMessage(push.after, repo),
             hint: (commits.length > 2
                 ? `+ ${commits.length - 1 } more commits` : (commits.length === 2 ? "+ 1 more commit" : "")),
