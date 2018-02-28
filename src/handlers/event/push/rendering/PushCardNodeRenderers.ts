@@ -46,11 +46,12 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
         const repo = context.lifecycle.extract("repo");
+        const author = push.after && push.after.author ? push.after.author.login : "(unknown)";
 
         msg.title = {
             icon: "css://icon-git-commit",
-            text: `${url(userUrl(repo, push.after.author.login),
-                `@${push.after.author.login}`)} pushed ${push.commits.length} new ${
+            text: `${url(userUrl(repo, author),
+                `@${author}`)} pushed ${push.commits.length} new ${
                 (push.commits.length > 1 ? "commits" : "commit")} ` +
             `to ${bold(url(branchUrl(repo, push.branch), `${repoSlug(repo)}/${push.branch}`))}`,
         };
