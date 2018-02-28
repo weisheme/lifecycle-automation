@@ -395,6 +395,93 @@ export namespace BranchWithPullRequest {
     url?: string | null; 
   } 
 }
+export namespace CardEvents {
+  export type Variables = {
+    id: string;
+  }
+
+  export type Query = {
+    Card?: Card[] | null; 
+  } 
+
+  export type Card = {
+    events?: Events[] | null; 
+  } 
+
+  export type Events = {
+    icon?: string | null; 
+    text?: string | null; 
+    ts?: number | null; 
+    actions?: Actions[] | null; 
+    actionGroups?: ActionGroups[] | null; 
+  } 
+
+  export type Actions = {
+    text?: string | null; 
+    type?: string | null; 
+    registration?: string | null; 
+    command?: string | null; 
+    parameters?: Parameters[] | null; 
+    parameterName?: string | null; 
+    parameterOptions?: ParameterOptions[] | null; 
+    parameterOptionGroups?: ParameterOptionGroups[] | null; 
+  } 
+
+  export type Parameters = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type ParameterOptions = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type ParameterOptionGroups = {
+    name?: string | null; 
+    options?: Options[] | null; 
+  } 
+
+  export type Options = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type ActionGroups = {
+    actions?: _Actions[] | null; 
+  } 
+
+  export type _Actions = {
+    text?: string | null; 
+    type?: string | null; 
+    registration?: string | null; 
+    command?: string | null; 
+    parameters?: _Parameters[] | null; 
+    parameterName?: string | null; 
+    parameterOptions?: _ParameterOptions[] | null; 
+    parameterOptionGroups?: _ParameterOptionGroups[] | null; 
+  } 
+
+  export type _Parameters = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type _ParameterOptions = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type _ParameterOptionGroups = {
+    name?: string | null; 
+    options?: _Options[] | null; 
+  } 
+
+  export type _Options = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+}
 export namespace Channels {
   export type Variables = {
     teamId: string;
@@ -2216,6 +2303,11 @@ export namespace BuildToPushLifecycle {
 
   export type Build = {
     _id?: Long | null; 
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
     push?: Push | null; 
     timestamp?: string | null; 
   } 
@@ -6488,11 +6580,13 @@ export namespace ReleaseToPushLifecycle {
 
   export type Release = {
     _id?: Long | null; 
+    name?: string | null; 
     tag?: Tag | null; 
     timestamp?: string | null; 
   } 
 
   export type Tag = {
+    name?: string | null; 
     commit?: Commit | null; 
   } 
 
@@ -7445,6 +7539,10 @@ export namespace StatusToPushLifecycle {
 
   export type Status = {
     _id?: Long | null; 
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
     commit?: Commit | null; 
   } 
 
@@ -7718,6 +7816,7 @@ export namespace TagToPushLifecycle {
 
   export type Tag = {
     _id?: Long | null; 
+    name?: string | null; 
     commit?: Commit | null; 
     timestamp?: string | null; 
   } 

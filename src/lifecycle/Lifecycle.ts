@@ -105,10 +105,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                     });
                 });
 
-                // Prepare message and instructions
-                const message = this.prepareMessage(lifecycle);
-
-                return renderers.reduce((p, f) => p.then(f), Promise.resolve(message))
+                return renderers.reduce((p, f) => p.then(f), this.prepareMessage(lifecycle, ctx))
                     .then(msg => {
                         return this.createAndSendMessage(msg, lifecycle, channels, ctx);
                     });
@@ -141,7 +138,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
      * Extension point to create an empty starting point for the lifecycle message.
      * @returns {any}
      */
-    protected abstract prepareMessage(lifecycle: Lifecycle): any;
+    protected abstract prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<any>;
 
     private prepareConfiguration(name: string,
                                  channels: { teamId: string, channels: string[] },

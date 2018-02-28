@@ -9,6 +9,7 @@ import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
+import { Event } from "../../../lifecycle/card";
 
 /**
  * Send a lifecycle message on ParentImpact events.
@@ -42,8 +43,8 @@ export class ParentImpactToPushCardLifecycle
     extends PushCardLifecycleHandler<graphql.ParentImpactToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ParentImpactToPushLifecycle.Subscription>):
-        graphql.PushToPushLifecycle.Push[] {
-        return event.data.ParentImpact[0].commit.pushes;
+        [graphql.PushToPushLifecycle.Push[], {type: string, node: any}] {
+        return [event.data.ParentImpact[0].commit.pushes, null];
     }
 
     protected extractPreferences(

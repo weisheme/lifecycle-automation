@@ -1,6 +1,11 @@
 subscription BuildToPushLifecycle {
   Build {
     _id
+    buildId
+    buildUrl
+    name
+    provider
+    status
     push {
       builds {
         buildId

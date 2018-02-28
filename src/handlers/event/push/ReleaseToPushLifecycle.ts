@@ -40,8 +40,8 @@ export class ReleaseToPushLifecycle extends PushLifecycleHandler<graphql.Release
 export class ReleaseToPushCardLifecycle extends PushCardLifecycleHandler<graphql.ReleaseToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ReleaseToPushLifecycle.Subscription>):
-    graphql.PushToPushLifecycle.Push[] {
-        return event.data.Release[0].tag.commit.pushes;
+        [graphql.PushToPushLifecycle.Push[], { type: string, node: any }] {
+        return [event.data.Release[0].tag.commit.pushes, { type: "release", node: event.data.Release[0]}];
     }
 
     protected extractPreferences(

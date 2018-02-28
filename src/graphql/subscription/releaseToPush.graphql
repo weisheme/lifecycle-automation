@@ -1,7 +1,9 @@
 subscription ReleaseToPushLifecycle {
   Release {
     _id
+    name
     tag {
+      name
       commit {
         pushes {
           builds {

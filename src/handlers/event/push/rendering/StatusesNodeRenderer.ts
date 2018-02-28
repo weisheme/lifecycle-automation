@@ -144,11 +144,11 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
                 text = `${s.description} | ${s.context}`;
             }
 
-            msg.events.push({
+            /*msg.events.push({
                icon,
                text,
                ts: Date.parse(s.timestamp),
-            });
+            });*/
 
             return {
                 icon,
@@ -297,12 +297,6 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
             } else {
                 text = `${s.description}`;
             }
-
-            msg.events.push({
-                icon,
-                text,
-                ts: Date.parse(s.timestamp),
-            });
 
             return {
                 icon,

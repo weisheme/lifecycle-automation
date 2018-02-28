@@ -15,11 +15,11 @@ import {
 
 export abstract class ReviewLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): SlackMessage {
-        return {
+    protected prepareMessage(): Promise<SlackMessage> {
+        return Promise.resolve({
             text: null,
             attachments: [],
-        };
+        });
     }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {

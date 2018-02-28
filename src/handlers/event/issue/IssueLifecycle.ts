@@ -14,7 +14,6 @@ import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/Colla
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
-import { CommentCardLifecycleHandler } from "../comment/CommentLifecycle";
 import { LifecyclePreferences } from "../preferences";
 import {
     AssignActionContributor,
@@ -38,7 +37,7 @@ import {
 
 export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(lifecycle: Lifecycle): CardMessage {
+    protected prepareMessage(lifecycle: Lifecycle): Promise<CardMessage> {
         const msg = newCardMessage("issue");
         const repo = lifecycle.extract("repo");
         msg.repository = {
@@ -46,7 +45,7 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
             name: repo.name,
         };
         msg.ts = +lifecycle.timestamp;
-        return msg;
+        return Promise.resolve(msg);
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
@@ -119,11 +118,11 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
 export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): SlackMessage {
-        return {
+    protected prepareMessage(): Promise<SlackMessage> {
+        return Promise.resolve({
             text: null,
             attachments: [],
-        };
+        });
     }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {

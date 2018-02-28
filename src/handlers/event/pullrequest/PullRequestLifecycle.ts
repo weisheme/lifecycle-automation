@@ -35,7 +35,7 @@ import {
 
 export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(lifecycle: Lifecycle): CardMessage {
+    protected prepareMessage(lifecycle: Lifecycle): Promise<CardMessage> {
         const msg = newCardMessage("pullrequest");
         const repo = lifecycle.extract("repo");
         msg.repository = {
@@ -43,7 +43,7 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
             name: repo.name,
         };
         msg.ts = +lifecycle.timestamp;
-        return msg;
+        return Promise.resolve(msg);
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
@@ -116,11 +116,11 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
 
 export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): SlackMessage {
-        return {
+    protected prepareMessage(): Promise<SlackMessage> {
+        return Promise.resolve({
             text: null,
             attachments: [],
-        };
+        });
     }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {

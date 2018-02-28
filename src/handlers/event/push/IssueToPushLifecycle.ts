@@ -9,6 +9,7 @@ import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
+import { Event } from "../../../lifecycle/card";
 
 /**
  * Send a lifecycle message on Issue events.
@@ -43,11 +44,11 @@ export class IssueToPushLifecycle extends PushLifecycleHandler<graphql.IssueToPu
 export class IssueToPushCardLifecycle extends PushCardLifecycleHandler<graphql.IssueToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.IssueToPushLifecycle.Subscription>):
-        graphql.PushToPushLifecycle.Push[] {
+        [graphql.PushToPushLifecycle.Push[], {type: string, node: any}] {
 
         const pushes = [];
         event.data.Issue[0].resolvingCommits.forEach(c => pushes.push(...c.pushes));
-        return pushes;
+        return [pushes, null];
     }
 
     protected extractPreferences(

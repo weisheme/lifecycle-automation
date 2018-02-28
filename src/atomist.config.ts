@@ -53,23 +53,12 @@ import { PullRequestToBranchLifecycle } from "./handlers/event/branch/PullReques
 import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild";
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
-import {
-    CommentToIssueCommentCardLifecycle,
-    CommentToIssueCommentLifecycle,
-} from "./handlers/event/comment/CommentToIssueCommentLifecycle";
-import {
-    CommentToPullRequestCommentCardLifecycle,
-    CommentToPullRequestCommentLifecycle,
-} from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
-import {
-    IssueToIssueCommentCardLifecycle,
-    IssueToIssueCommentLifecycle,
-} from "./handlers/event/comment/IssueToIssueCommentLifecycle";
+import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
+import { CommentToPullRequestCommentLifecycle}  from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
+import { IssueToIssueCommentLifecycle } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
 import { NotifyMentionedOnIssueComment } from "./handlers/event/comment/NotifyMentionedOnIssueComment";
 import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/NotifyMentionedOnPullRequestComment";
-import {
-    PullRequestToPullRequestCommentLifecycle,
-} from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
+import { PullRequestToPullRequestCommentLifecycle } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
@@ -177,35 +166,6 @@ if (notLocal) {
 }
 
 const AdminTeam = "atomist-automation";
-
-const cardHandlers = [];
-
-if (process.env.NODE_ENV !== "production") {
-    cardHandlers.push(
-        // push
-        () => new ApplicationToPushCardLifecycle(),
-        () => new BuildToPushCardLifecycle(),
-        () => new IssueToPushCardLifecycle(),
-        () => new K8PodToPushCardLifecycle(),
-        () => new ParentImpactToPushCardLifecycle(),
-        () => new PushToPushCardLifecycle(),
-        () => new ReleaseToPushCardLifecycle(),
-        () => new StatusToPushCardLifecycle(),
-        () => new TagToPushCardLifecycle(),
-
-        // pullRequest
-        () => new PullRequestToPullRequestCardLifecycle(),
-
-        // issue
-        () => new IssueToIssueCardLifecycle(),
-        () => new CommentToIssueCardLifecycle(),
-
-        // comment
-        // () => new CommentToIssueCommentCardLifecycle(),
-        () => new CommentToPullRequestCommentCardLifecycle(),
-        // () => new IssueToIssueCommentCardLifecycle(),
-    );
-}
 
 export const configuration: any = {
     name: pj.name,
@@ -330,7 +290,24 @@ export const configuration: any = {
         () => new GitHubWebhookCreated(),
 
         // add card handlers
-        ...cardHandlers,
+
+        // push
+        () => new ApplicationToPushCardLifecycle(),
+        () => new BuildToPushCardLifecycle(),
+        () => new IssueToPushCardLifecycle(),
+        () => new K8PodToPushCardLifecycle(),
+        () => new ParentImpactToPushCardLifecycle(),
+        () => new PushToPushCardLifecycle(),
+        () => new ReleaseToPushCardLifecycle(),
+        () => new StatusToPushCardLifecycle(),
+        () => new TagToPushCardLifecycle(),
+
+        // pullRequest
+        () => new PullRequestToPullRequestCardLifecycle(),
+
+        // issue
+        () => new IssueToIssueCardLifecycle(),
+        () => new CommentToIssueCardLifecycle(),
     ],
     listeners,
     token,

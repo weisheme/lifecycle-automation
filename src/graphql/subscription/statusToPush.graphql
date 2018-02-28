@@ -1,6 +1,10 @@
 subscription StatusToPushLifecycle {
   Status {
     _id
+    context
+    description
+    targetUrl
+    state
     commit {
       pushes {
         builds {

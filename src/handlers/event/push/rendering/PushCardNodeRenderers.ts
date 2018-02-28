@@ -3,6 +3,7 @@ import {
     bold,
     url,
 } from "@atomist/slack-messages/SlackMessages";
+import { all } from "async";
 import * as _ from "lodash";
 import {
     Action,
@@ -108,7 +109,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
             })),
         });
 
-        msg.events.push(...commits.map(c => {
+        /*msg.events.push(...commits.map(c => {
             const e: Event = {
                 icon: avatarUrl(repo, c.author.login),
                 text: renderCommitMessage(c, repo),
@@ -118,59 +119,77 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
                 e.actions = actions;
             }
             return e;
-        }));
+        }));*/
 
         return Promise.resolve(msg);
     }
 }
 
 export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
-    implements CardNodeRenderer<graphql.PushToPushLifecycle.Builds> {
+    implements CardNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
         super("build");
     }
 
     public supports(node: any): boolean {
-        return node.status;
+        return node.after && node.builds && node.builds.length > 0;
     }
 
-    public render(build: graphql.PushToPushLifecycle.Builds,
+    public render(push: graphql.PushToPushLifecycle.Push,
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        let icon;
-        if (build.status === "passed") {
-            icon = "css://icon-circle-check";
-        } else if (build.status === "started") {
-            icon = "css://icon-oval-icon alert";
-        } else {
-            icon = "css://icon-circle-x fail";
-        }
 
-        let title;
-        // build.name might be a number in which case we should render "Build #<number>".
-        // It it isn't a number just render the build.name
-        if (isNaN(+build.name)) {
-            title = build.name;
+        const allBuilds = push.builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
+        const success = allBuilds.filter(b => b.status === "passed");
+        const pending = allBuilds.filter(b => b.status === "started");
+        const error = allBuilds.filter(b => b.status !== "passed" && b.status !== "started");
+
+        let icon;
+        if (pending.length > 0) {
+            icon = "css://icon-oval-icon alert";
+        } else if (error.length > 0) {
+            icon = "css://icon-circle-x fail";
         } else {
-            title = `Build #${build.name}`;
+            icon = "css://icon-circle-check";
         }
 
         msg.correlations.push({
             type: "build",
-            title,
-            shortTitle: title,
-            link: build.buildUrl,
+            title: `${allBuilds.length} Build`,
+            shortTitle: `${success.length}/${allBuilds.length}`,
+            link: allBuilds[0].buildUrl,
             icon,
+            body: allBuilds.map(b => {
+                let title;
+                // build.name might be a number in which case we should render "Build #<number>".
+                // It it isn't a number just render the build.name
+                if (isNaN(+b.name)) {
+                    title = b.name;
+                } else {
+                    title = `Build #${b.name}`;
+                }
+                let i;
+                if (b.status === "passed") {
+                    i = "css://icon-circle-check";
+                } else if (b.status === "started") {
+                    i = "css://icon-oval-icon alert";
+                } else {
+                    i = "css://icon-circle-x fail";
+                }
+                return {
+                    icon: i,
+                    text: b.buildUrl ? url(b.buildUrl, title) : title,
+                }}),
         });
 
-        msg.events.push({
+        /*msg.events.push({
            icon,
            text: `${build.buildUrl ? url(build.buildUrl, title) : title}`,
            ts: Date.parse(build.timestamp),
            actions,
-        });
+        });*/
 
         return Promise.resolve(msg);
     }
@@ -203,7 +222,7 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
             })),
         });
 
-        msg.events.push(...push.after.tags.map(t => ({
+        /*msg.events.push(...push.after.tags.map(t => ({
             icon: "css://icon-tag",
             text: url(tagUrl(repo, t), `Tag ${t.name}`),
             ts: Date.parse(t.timestamp),
@@ -213,7 +232,7 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
             icon: "css://icon-database",
             text: url(tagUrl(repo, t), `Release ${t.release.name}`),
             ts: Date.parse(t.release.timestamp),
-        })));
+        })));*/
 
         return Promise.resolve(msg);
     }

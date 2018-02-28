@@ -17,10 +17,12 @@ import {
     Preferences,
 } from "../../../lifecycle/Lifecycle";
 import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/CollaboratorCardNodeRenderer";
+import { EventsCardNodeRenderer } from "../../../lifecycle/rendering/EventsCardNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import { PushToPushLifecycle } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
+import { encode } from "../../../util/base64";
 import { LifecyclePreferences } from "../preferences";
 import {
     ApplicationActionContributor,
@@ -53,26 +55,36 @@ import {
     TagNodeRenderer,
 } from "./rendering/PushNodeRenderers";
 import {
-    PhaseCardNodeRenderer, PhaseNodeRenderer, StatusesCardNodeRenderer,
+    PhaseCardNodeRenderer,
+    PhaseNodeRenderer,
+    StatusesCardNodeRenderer,
     StatusesNodeRenderer,
 } from "./rendering/StatusesNodeRenderer";
 import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
 
 export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(lifecycle: Lifecycle): CardMessage {
-        const msg = newCardMessage("push");
-        const repo = lifecycle.extract("repo");
-        msg.repository = {
-            owner: repo.owner,
-            name: repo.name,
-        };
-        msg.ts = +lifecycle.timestamp;
-        return msg;
+    protected prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<CardMessage> {
+        return ctx.graphClient.executeQueryFromFile<graphql.CardEvents.Query, graphql.CardEvents.Variables>(
+            "../../../graphql/query/cardEvents",
+            { id: encode(lifecycle.id) },
+            { fetchPolicy: "network-only" },
+            __dirname)
+            .then(result => {
+                const msg = newCardMessage("push");
+                const repo = lifecycle.extract("repo");
+                msg.repository = {
+                    owner: repo.owner,
+                    name: repo.name,
+                };
+                msg.ts = +lifecycle.timestamp;
+                msg.events = _.cloneDeep(_.get(result, "Card[0].events") || []);
+                return Promise.resolve(msg);
+            });
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
-        const pushes = this.extractNodes(event);
+        const [pushes, events] = this.extractNodes(event);
 
         return pushes.filter(p => p).map(push => {
             const nodes: any[] = orderNodes(push);
@@ -87,6 +99,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                 name: LifecyclePreferences.push.id,
                 nodes,
                 renderers: [
+                    new EventsCardNodeRenderer(node => node.after),
                     new PushCardNodeRenderer(),
                     new CommitCardNodeRenderer(),
                     new BuildCardNodeRenderer(),
@@ -120,6 +133,8 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                         return push;
                     } else if (type === "domains") {
                         return extractDomains(push).sort((d1, d2) => d1.name.localeCompare(d2.name));
+                    } else if (type === "events") {
+                        return events;
                     }
                     return null;
                 },
@@ -128,16 +143,16 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
         });
     }
 
-    protected abstract extractNodes(event: EventFired<R>): PushToPushLifecycle.Push[];
+    protected abstract extractNodes(event: EventFired<R>): [PushToPushLifecycle.Push[], {type: string, node: any}];
 }
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): SlackMessage {
-        return {
+    protected prepareMessage(): Promise<SlackMessage> {
+        return Promise.resolve({
             text: null,
             attachments: [],
-        };
+        });
     }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {

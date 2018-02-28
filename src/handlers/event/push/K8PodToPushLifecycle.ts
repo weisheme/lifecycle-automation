@@ -9,6 +9,7 @@ import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
+import { Event } from "../../../lifecycle/card";
 
 /**
  * Send a lifecycle message on K8Pod events.
@@ -43,11 +44,11 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
 export class K8PodToPushCardLifecycle extends PushCardLifecycleHandler<graphql.K8PodToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.K8PodToPushLifecycle.Subscription>):
-        graphql.K8PodToPushLifecycle.Pushes[] {
+        [graphql.K8PodToPushLifecycle.Pushes[], {type: string, node: any}] {
 
         const pushes = [];
         event.data.K8Pod[0].images.forEach(i => pushes.push(...i.commits[0].pushes));
-        return pushes;
+        return [pushes, null];
     }
 
     protected extractPreferences(

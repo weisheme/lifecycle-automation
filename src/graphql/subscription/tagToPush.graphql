@@ -1,6 +1,7 @@
 subscription TagToPushLifecycle {
   Tag {
     _id
+    name
     commit {
       pushes {
         builds {

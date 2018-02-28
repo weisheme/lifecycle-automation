@@ -4,7 +4,8 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import {
-    Action, addCollaborator,
+    Action,
+    addCollaborator,
     CardMessage,
 } from "../../../../lifecycle/card";
 import {
@@ -14,10 +15,13 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import {
-    avatarUrl, extractLinkedIssues,
+    avatarUrl,
+    extractLinkedIssues,
     issueUrl,
     linkGitHubUsers,
-    linkIssues, repoUrl, truncateCommitMessage,
+    linkIssues,
+    repoUrl,
+    truncateCommitMessage,
     userUrl,
 } from "../../../../util/helpers";
 import * as github from "../../../command/github/gitHubApi";
@@ -346,6 +350,22 @@ export class CorrelationsCardNodeRenderer extends AbstractIdentifiableContributi
                         msg.events.push({
                             icon: e.actor.avatar_url,
                             text: `@${e.actor.login} change title`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    }
+                    case "closed": {
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: `@${e.actor.login} closed issue`,
+                            ts: Date.parse(e.created_at),
+                        });
+                        break;
+                    }
+                    case "reopened": {
+                        msg.events.push({
+                            icon: e.actor.avatar_url,
+                            text: `@${e.actor.login} reopened issue`,
                             ts: Date.parse(e.created_at),
                         });
                         break;

@@ -9,6 +9,7 @@ import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
+import { Event } from "../../../lifecycle/card";
 
 /**
  * Send a lifecycle message on Application events.
@@ -44,11 +45,11 @@ export class ApplicationToPushCardLifecycle
     extends PushCardLifecycleHandler<graphql.ApplicationToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ApplicationToPushLifecycle.Subscription>):
-        graphql.PushToPushLifecycle.Push[] {
+        [graphql.PushToPushLifecycle.Push[], {type: string, node: any}] {
 
         const pushes = [];
         event.data.Application[0].commits.forEach(c => pushes.push(...c.pushes));
-        return pushes;
+        return [pushes, null];
     }
 
     protected extractPreferences(

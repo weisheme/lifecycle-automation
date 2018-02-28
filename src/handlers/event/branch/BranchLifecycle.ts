@@ -12,11 +12,11 @@ import { BranchNodeRenderer } from "./rendering/BranchNodeRenderers";
 
 export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): SlackMessage {
-        return {
+    protected prepareMessage(): Promise<SlackMessage> {
+        return Promise.resolve({
             text: null,
             attachments: [],
-        };
+        });
     }
 
     protected prepareLifecycle(event: EventFired<R>): Lifecycle[] {

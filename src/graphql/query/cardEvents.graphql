@@ -1,0 +1,57 @@
+query CardEvents($id: ID!) {
+  Card(id: $id) {
+    events {
+      icon
+      text
+      ts
+      actions {
+        text
+        type
+        registration
+        command
+        parameters {
+          name
+          value
+        }
+        parameterName
+        parameterOptions {
+          name
+          value
+        }
+        parameterOptionGroups {
+          name
+          options {
+            name
+            value
+          }
+        }
+        role
+      }
+      actionGroups {
+        actions {
+          text
+          type
+          registration
+          command
+          parameters {
+            name
+            value
+          }
+          parameterName
+          parameterOptions {
+            name
+            value
+          }
+          parameterOptionGroups {
+            name
+            options {
+              name
+              value
+            }
+          }
+          role
+        }
+      }
+    }
+  }
+}
