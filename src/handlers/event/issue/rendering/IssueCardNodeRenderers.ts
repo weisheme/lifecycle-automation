@@ -168,7 +168,7 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const issue = node.issue;
 
-        let title = `${bold(url(issueUrl(repo, node), `#${issue.number.toString()}: ${issue.title}`))}`;
+        let title = `${bold(url(issueUrl(repo, issue, node), `#${issue.number.toString()}: ${issue.title}`))}`;
         title = `${url(avatarUrl(repo, node.by.login), `@${node.by.login}`)} commented on ${title}`;
 
         let icon;
