@@ -10,7 +10,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { codeLine, SlackMessage, url } from "@atomist/slack-messages";
+import { bold, codeLine, SlackMessage, url } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { success, supportLink } from "../../../util/messages";
@@ -49,12 +49,12 @@ export class ToggleCustomEmojiEnablement implements HandleCommand {
                 /* tslint:disable */
                 const instructions = `Please download the ${url("https://images.atomist.com/atomist-emojis-1.0.0.zip", 
                     "emoji archive")}, open the ${codeLine("README.md")} and follow the instructions to install the custom emojis into this Slack team.`;
-                const text = `Successfully ${enabled ? "enabled" : "disabled"} custom lifecycle emojis`;
+                const text = `${bold(`'Custom Lifecycle Emojis' ${enabled ? "enabled" : "disabled"}`)}`;
 
                 const msg: SlackMessage = {
                     attachments: [{
                         author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
-                        author_name: "Custom Lifecycle Emojis",
+                        author_name: "Successfully updated your preferences",
                         text,
                         fallback: text,
                         color: "#45B254",
