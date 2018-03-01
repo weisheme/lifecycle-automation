@@ -7,7 +7,7 @@ import {
     HandlerResult,
     Secret,
     Secrets,
-    Success,
+    Success, success,
     Tags,
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
@@ -29,6 +29,7 @@ import { warning } from "../../../util/messages";
 import * as github from "../../command/github/gitHubApi";
 import { InstallGitHubOrgWebhook, InstallGitHubRepoWebhook } from "../../command/github/InstallGitHubWebhook";
 import { ListRepoLinks } from "../../command/slack/ListRepoLinks";
+import { PushToPushLifecycle } from "../push/PushToPushLifecycle";
 
 @EventHandler("Display an unlink message when a channel is linked",
     GraqhQL.subscriptionFromFile("../../../graphql/subscription/channelLinkCreated", __dirname))
@@ -116,7 +117,8 @@ Please use one of the buttons below to install a Webhook in your repository or o
                     { id: msgId });
             }
         })
-        .then(() => Success, failure);
+        .then(() => showLastPush(repo, this.orgToken, ctx))
+        .then(success, failure);
     }
 }
 
@@ -150,4 +152,49 @@ function createListRepoLinksAction(msgId: string): Action {
     const repoList = new ListRepoLinks();
     repoList.msgId = msgId;
     return buttonForCommand({ text: "List Repository Links" }, repoList);
+}
+
+function showLastPush(repo: graphql.ChannelLinkCreated.Repo, token: string, ctx: HandlerContext): Promise<any> {
+    return ctx.graphClient.executeQueryFromFile<graphql.LastPushOnBranch.Query, graphql.LastPushOnBranch.Variables>(
+        "../../../graphql/query/lastPushOnBranch",
+        {
+            owner: repo.owner,
+            name: repo.name,
+            branch: repo.defaultBranch,
+        },
+        {},
+        __dirname)
+        .then(result => {
+            if (result) {
+                return _.get(result, "Repo[0].branches[0].commit.pushes[0].id");
+            }
+            return null;
+        })
+        .then(id => {
+            if (id) {
+                return ctx.graphClient.executeQueryFromFile<graphql.PushById.Query, graphql.PushById.Variables>(
+                    "../../../graphql/query/pushById",
+                    {
+                        id
+                    },
+                    {},
+                    __dirname);
+            }
+            return null;
+        })
+        .then(push => {
+            if (push) {
+                const handler = new PushToPushLifecycle();
+                handler.orgToken = token;
+                return handler.handle({
+                    data: {
+                        Push: _.cloneDeep(push.Push),
+                    },
+                    extensions: {
+                        operationName: "PushToPushLifecycle",
+                    }
+                }, ctx);
+            }
+            return null;
+        });
 }

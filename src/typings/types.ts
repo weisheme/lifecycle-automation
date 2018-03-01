@@ -915,6 +915,33 @@ export namespace IssueOrPr {
     login?: string | null; 
   } 
 }
+export namespace LastPushOnBranch {
+  export type Variables = {
+    name: string;
+    owner: string;
+    branch: string;
+  }
+
+  export type Query = {
+    Repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    branches?: Branches[] | null; 
+  } 
+
+  export type Branches = {
+    commit?: Commit | null; 
+  } 
+
+  export type Commit = {
+    pushes?: Pushes[] | null; 
+  } 
+
+  export type Pushes = {
+    id?: string | null; 
+  } 
+}
 export namespace MappedChannels {
   export type Variables = {
     teamId: string;
@@ -1276,6 +1303,271 @@ export namespace PullRequest {
   export type Preferences = {
     name?: string | null; 
     value?: string | null; 
+  } 
+}
+export namespace PushById {
+  export type Variables = {
+    id: string;
+  }
+
+  export type Query = {
+    Push?: Push[] | null; 
+  } 
+
+  export type Push = {
+    _id?: Long | null; 
+    builds?: Builds[] | null; 
+    before?: Before | null; 
+    after?: After | null; 
+    repo?: Repo | null; 
+    commits?: Commits[] | null; 
+    timestamp?: string | null; 
+    branch?: string | null; 
+  } 
+
+  export type Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    commit?: Commit | null; 
+    timestamp?: string | null; 
+    workflow?: Workflow | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+  } 
+
+  export type Workflow = {
+    id?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    config?: string | null; 
+    builds?: _Builds[] | null; 
+  } 
+
+  export type _Builds = {
+    jobId?: string | null; 
+    jobName?: string | null; 
+    finishedAt?: string | null; 
+    startedAt?: string | null; 
+    status?: BuildStatus | null; 
+    id?: string | null; 
+    buildUrl?: string | null; 
+  } 
+
+  export type Before = {
+    sha?: string | null; 
+  } 
+
+  export type After = {
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
+    images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
+  } 
+
+  export type Statuses = {
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Tags = {
+    name?: string | null; 
+    release?: Release | null; 
+    builds?: __Builds[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Release = {
+    name?: string | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type __Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
+  } 
+
+  export type Repo = {
+    owner?: string | null; 
+    name?: string | null; 
+    channels?: Channels[] | null; 
+    labels?: Labels[] | null; 
+    org?: Org | null; 
+    defaultBranch?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+    team?: _Team | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type Commits = {
+    sha?: string | null; 
+    message?: string | null; 
+    resolves?: Resolves[] | null; 
+    impact?: Impact | null; 
+    apps?: Apps[] | null; 
+    tags?: _Tags[] | null; 
+    author?: _Author | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Resolves = {
+    number?: number | null; 
+    name?: string | null; 
+    title?: string | null; 
+    state?: IssueState | null; 
+    openedBy?: OpenedBy | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
+  } 
+
+  export type Impact = {
+    data?: string | null; 
+    url?: string | null; 
+  } 
+
+  export type Apps = {
+    state?: string | null; 
+    host?: string | null; 
+    domain?: string | null; 
+    data?: string | null; 
+  } 
+
+  export type _Tags = {
+    name?: string | null; 
+    release?: _Release | null; 
+    containers?: _Containers[] | null; 
+  } 
+
+  export type _Release = {
+    name?: string | null; 
+  } 
+
+  export type _Containers = {
+    pods?: _Pods[] | null; 
+    image?: string | null; 
+  } 
+
+  export type _Pods = {
+    host?: string | null; 
+    state?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type _Author = {
+    login?: string | null; 
+    person?: _Person | null; 
+  } 
+
+  export type _Person = {
+    chatId?: _ChatId | null; 
+  } 
+
+  export type _ChatId = {
+    screenName?: string | null; 
   } 
 }
 export namespace Webhook {
@@ -2589,6 +2881,7 @@ export namespace ChannelLinkCreated {
   export type Repo = {
     name?: string | null; 
     owner?: string | null; 
+    defaultBranch?: string | null; 
     org?: Org | null; 
   } 
 
