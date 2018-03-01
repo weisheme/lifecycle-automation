@@ -50,7 +50,7 @@ export function error(title: string, text: string, ctx: HandlerContext, actions?
     return msg;
 }
 
-function supportLink(ctx: HandlerContext): string {
+export function supportLink(ctx: HandlerContext): string {
     const supportUrl =
         `https://atomist.typeform.com/to/yvnyOj?message_id=${base64.encode(ctx.invocationId)}`;
     return `${url(supportUrl, "Support")}`;

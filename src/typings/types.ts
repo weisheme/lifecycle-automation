@@ -644,6 +644,7 @@ export namespace ChatTeamPreferences {
   } 
 
   export type ChatTeam = {
+    domain?: string | null; 
     preferences?: Preferences[] | null; 
   } 
 
