@@ -202,11 +202,7 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
     public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
         const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
-        const buttons = [];
-
-        this.createTagButton(tag, push, repo, buttons);
-
-        return Promise.resolve(buttons);
+        return this.createTagButton(tag, push, repo, context);
     }
 
     public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
@@ -216,32 +212,42 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
     private createTagButton(tag: graphql.PushToPushLifecycle.Tags,
                             push: graphql.PushToPushLifecycle.Push,
                             repo: graphql.PushToPushLifecycle.Repo,
-                            buttons: any[]) {
+                            ctx: RendererContext): Promise<Action[]> {
         if (push.branch !== repo.defaultBranch) {
-            return;
+            return Promise.resolve([]);
         }
         // If the tag is like 0.5.32-stuff, offer to create a tag like 0.5.32
         const version = this.versionPrefix(tag.name);
         if (version) {
-            // if that tag does not exist already, and only for the last tag of that same version prefix.
-            if (!push.after.tags.some(t => t.name === version) && this.isLastTagOfVersion(push, tag, version)) {
+            return ctx.context.graphClient.executeQueryFromFile<graphql.TagByName.Query, graphql.TagByName.Variables>(
+                    "../../../../graphql/query/tagByName",
+                    { repo: repo.name, owner: repo.owner, name: version },
+                    { fetchPolicy: "network-only" },
+                    __dirname)
+                .then(result => {
+                    const et = _.get(result, "Tag[0].name");
+                    if (!et) {
+                        if (this.isLastTagOfVersion(push, tag, version)) {
 
-                const tagHandler = new CreateGitHubTag();
-                tagHandler.tag = version;
-                tagHandler.message = push.after.message || "Tag created by Atomist Lifecycle Automation";
-                tagHandler.sha = push.after.sha;
-                tagHandler.repo = repo.name;
-                tagHandler.owner = repo.owner;
+                            const tagHandler = new CreateGitHubTag();
+                            tagHandler.tag = version;
+                            tagHandler.message = push.after.message || "Tag created by Atomist Lifecycle Automation";
+                            tagHandler.sha = push.after.sha;
+                            tagHandler.repo = repo.name;
+                            tagHandler.owner = repo.owner;
 
-                buttons.push(buttonForCommand(
-                    {
-                        text: `Tag ${version}`,
-                        role: "global",
-                    },
-                    tagHandler));
-
-            }
+                            return [buttonForCommand(
+                                {
+                                    text: `Tag ${version}`,
+                                    role: "global",
+                                },
+                                tagHandler)];
+                        }
+                    }
+                    return [];
+                });
         }
+        return Promise.resolve([]);
     }
 
     private versionPrefix(tagName: string): string | undefined {

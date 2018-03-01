@@ -1570,6 +1570,31 @@ export namespace PushById {
     screenName?: string | null; 
   } 
 }
+export namespace TagByName {
+  export type Variables = {
+    owner: string;
+    repo: string;
+    name: string;
+  }
+
+  export type Query = {
+    Tag?: Tag[] | null; 
+  } 
+
+  export type Tag = {
+    name?: string | null; 
+    commit?: Commit | null; 
+  } 
+
+  export type Commit = {
+    repo?: Repo | null; 
+  } 
+
+  export type Repo = {
+    owner?: string | null; 
+    name?: string | null; 
+  } 
+}
 export namespace Webhook {
   export type Variables = {
     owner: string;
