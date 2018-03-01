@@ -13,7 +13,7 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message with buttons if there are matching channels", done => {
         const event = {
             data: {
-                WebhookCreated: [{
+                Webhook: [{
                     org: {
                         owner: "test-org",
                         team: {
@@ -78,7 +78,7 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message if there are no channels", done => {
         const event = {
             data: {
-                WebhookCreated: [{
+                Webhook: [{
                     name: "test-owner",
                     org: {
                         team: {
@@ -137,7 +137,7 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message if there are null channels", done => {
         const event = {
             data: {
-                WebhookCreated: [{
+                Webhook: [{
                     org: {
                         team: {
                             chatTeams: [{
@@ -182,7 +182,7 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message if channels is undefined", done => {
         const event = {
             data: {
-                WebhookCreated: [{
+                Webhook: [{
                     org: {
                         team: {
                             chatTeams: [{

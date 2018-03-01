@@ -38,8 +38,8 @@ export class GitHubWebhookCreated implements HandleEvent<graphql.WebhookCreated.
         ctx: HandlerContext,
     ): Promise<HandlerResult> {
 
-        const orgOwner = _.get(event, "data.WebhookCreated[0].org.owner");
-        const chatTeams = _.get(event, "data.WebhookCreated[0].org.team.chatTeams") as
+        const orgOwner = _.get(event, "data.Webhook[0].org.owner");
+        const chatTeams = _.get(event, "data.Webhook[0].org.team.chatTeams") as
             graphql.WebhookCreated.ChatTeams[];
 
         return Promise.all(chatTeams.map(chatTeam => {
