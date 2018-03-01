@@ -1,8 +1,5 @@
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import {
-    bold,
-    url,
-} from "@atomist/slack-messages/SlackMessages";
+import { url } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import {
     Action,
@@ -52,7 +49,7 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
             text: `${url(userUrl(repo, author),
                 `@${author}`)} pushed ${push.commits.length} new ${
                 (push.commits.length > 1 ? "commits" : "commit")} ` +
-            `to ${bold(url(branchUrl(repo, push.branch), `${repoSlug(repo)}/${push.branch}`))}`,
+            `to ${url(branchUrl(repo, push.branch), `${repoSlug(repo)}/${push.branch}`)}`,
         };
 
         msg.shortTitle = `Push of ${push.commits.length} ${push.commits.length > 1 ?

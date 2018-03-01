@@ -1,8 +1,5 @@
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
-import {
-    bold,
-    url,
-} from "@atomist/slack-messages/SlackMessages";
+import { url } from "@atomist/slack-messages/SlackMessages";
 import {
     Action,
     addCollaborator,
@@ -50,7 +47,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
             return Promise.resolve(msg);
         }
 
-        let title = `${bold(url(issueUrl(repo, node), `#${node.number.toString()}: ${node.title}`))}`;
+        let title = `${url(issueUrl(repo, node), `#${node.number.toString()}: ${node.title}`)}`;
         let icon;
         if (node.state === "open") {
             icon = "css://icon-issue-opened";
@@ -168,7 +165,7 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const issue = node.issue;
 
-        let title = `${bold(url(issueUrl(repo, issue, node), `#${issue.number.toString()}: ${issue.title}`))}`;
+        let title = `${url(issueUrl(repo, issue, node), `#${issue.number.toString()}: ${issue.title}`)}`;
         title = `${url(avatarUrl(repo, node.by.login), `@${node.by.login}`)} commented on ${title}`;
 
         let icon;
