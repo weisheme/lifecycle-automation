@@ -13,8 +13,9 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message with buttons if there are matching channels", done => {
         const event = {
             data: {
-                GitHubOrgWebhook: [{
+                WebhookCreated: [{
                     org: {
+                        owner: "test-org",
                         team: {
                             chatTeams: [{
                                 members: [
@@ -59,6 +60,7 @@ describe("GitHubWebhookCreated", () => {
 
                     assert(sm.attachments[0].actions[1].text === "#engineering");
                     assert((sm.attachments[0].actions[1] as any).command.parameters.channelId === "D18G4L88J");
+                    assert.equal(options.id, `webhook/create/test-org`);
                     messageSend = true;
                     return Promise.resolve();
                 },
@@ -76,7 +78,8 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message if there are no channels", done => {
         const event = {
             data: {
-                GitHubOrgWebhook: [{
+                WebhookCreated: [{
+                    name: "test-owner",
                     org: {
                         team: {
                             chatTeams: [{
@@ -134,7 +137,7 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message if there are null channels", done => {
         const event = {
             data: {
-                GitHubOrgWebhook: [{
+                WebhookCreated: [{
                     org: {
                         team: {
                             chatTeams: [{
@@ -179,7 +182,7 @@ describe("GitHubWebhookCreated", () => {
     it("should generate a message if channels is undefined", done => {
         const event = {
             data: {
-                GitHubOrgWebhook: [{
+                WebhookCreated: [{
                     org: {
                         team: {
                             chatTeams: [{

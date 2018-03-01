@@ -4205,43 +4205,6 @@ export namespace DeletedBranchToPullRequestLifecycle {
     value?: string | null; 
   } 
 }
-export namespace GitHubWebhookCreated {
-  export type Variables = {
-  }
-
-  export type Subscription = {
-    GitHubOrgWebhook?: GitHubOrgWebhook[] | null; 
-  } 
-
-  export type GitHubOrgWebhook = {
-    org?: Org | null; 
-  } 
-
-  export type Org = {
-    team?: Team | null; 
-  } 
-
-  export type Team = {
-    chatTeams?: ChatTeams[] | null; 
-  } 
-
-  export type ChatTeams = {
-    id?: string | null; 
-    members?: Members[] | null; 
-    channels?: Channels[] | null; 
-  } 
-
-  export type Members = {
-    isAtomistBot?: string | null; 
-    isOwner?: string | null; 
-    screenName?: string | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    channelId?: string | null; 
-  } 
-}
 export namespace IssueToIssueLifecycle {
   export type Variables = {
   }
@@ -5753,6 +5716,44 @@ export namespace NotifyReviewerOnPush {
 
   export type ChatTeam = {
     id?: string | null; 
+  } 
+}
+export namespace WebhookCreated {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Webhook?: Webhook[] | null; 
+  } 
+
+  export type Webhook = {
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    owner?: string | null; 
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    members?: Members[] | null; 
+    channels?: Channels[] | null; 
+  } 
+
+  export type Members = {
+    isAtomistBot?: string | null; 
+    isOwner?: string | null; 
+    screenName?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    channelId?: string | null; 
   } 
 }
 export namespace ParentImpactToPushLifecycle {

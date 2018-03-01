@@ -29,17 +29,18 @@ import { DefaultBotName } from "../../command/slack/LinkRepo";
 const Channels = ["dev", "engineering", "development", "devops"];
 
 @EventHandler("Displays a welcome message when a new org webhook is installed",
-    GraqhQL.subscriptionFromFile("../../../graphql/subscription/githubOrgWebhook", __dirname))
+    GraqhQL.subscriptionFromFile("../../../graphql/subscription/orgWebhook", __dirname))
 @Tags("enrollment")
-export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCreated.Subscription> {
+export class GitHubWebhookCreated implements HandleEvent<graphql.WebhookCreated.Subscription> {
 
     public handle(
-        event: EventFired<graphql.GitHubWebhookCreated.Subscription>,
+        event: EventFired<graphql.WebhookCreated.Subscription>,
         ctx: HandlerContext,
     ): Promise<HandlerResult> {
 
-        const chatTeams = _.get(event, "data.GitHubOrgWebhook[0].org.team.chatTeams") as
-            graphql.GitHubWebhookCreated.ChatTeams[];
+        const orgOwner = _.get(event, "data.WebhookCreated[0].org.owner");
+        const chatTeams = _.get(event, "data.WebhookCreated[0].org.team.chatTeams") as
+            graphql.WebhookCreated.ChatTeams[];
 
         return Promise.all(chatTeams.map(chatTeam => {
             if (!chatTeam) {
@@ -77,7 +78,10 @@ export class GitHubWebhookCreated implements HandleEvent<graphql.GitHubWebhookCr
                 codeLine(`/invite @${botName}`) + suffix;
 
             const welcomeMsg: SlackMessage = { attachments: [welcomeAttachment] };
-            return ctx.messageClient.send(welcomeMsg, addressSlackUsers(teamId, ownerName))
+            return ctx.messageClient.send(
+                welcomeMsg,
+                addressSlackUsers(teamId, ownerName),
+                {id: `webhook/create/${orgOwner}`})
                 .then(() => Success, failure);
         }))
         .then(() => Success, failure);

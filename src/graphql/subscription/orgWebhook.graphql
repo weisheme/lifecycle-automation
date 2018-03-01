@@ -1,6 +1,7 @@
-subscription GitHubWebhookCreated {
-  GitHubOrgWebhook {
+subscription WebhookCreated {
+  Webhook(webhookType: organization) {
     org {
+      owner
       team {
         chatTeams {
           id
