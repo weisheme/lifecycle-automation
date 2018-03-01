@@ -1,5 +1,6 @@
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { url } from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import {
     Action,
     addCollaborator,
@@ -39,7 +40,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        const repo = context.lifecycle.extract("repo");
+        const repo = context.lifecycle.extract("repo") as graphql.IssueToIssueLifecycle.Repo;
 
         const comment = context.lifecycle.extract("comment");
         if (comment) {
@@ -94,7 +95,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                 return msg;
             })
             .then(card => {
-                const api = github.api(context.orgToken);
+                const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
                 return api.reactions.getForIssue({
                     owner: repo.owner,
                     repo: repo.name,
@@ -120,7 +121,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                 .catch(err => msg);
             })
             .then(card => {
-                const api = github.api(context.orgToken);
+                const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
                 return api.issues.getComments({
                     owner: repo.owner,
                     repo: repo.name,
@@ -162,7 +163,7 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        const repo = context.lifecycle.extract("repo");
+        const repo = context.lifecycle.extract("repo") as graphql.CommentToIssueLifecycle.Repo;
         const issue = node.issue;
 
         let title = `${url(issueUrl(repo, issue, node), `#${issue.number.toString()}: ${issue.title}`)}`;
@@ -197,7 +198,7 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
                 return msg;
             })
             .then(card => {
-                const api = github.api(context.orgToken);
+                const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
                 return api.reactions.getForIssue({
                     owner: repo.owner,
                     repo: repo.name,
@@ -223,7 +224,7 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
                 .catch(err => msg);
             })
             .then(card => {
-                const api = github.api(context.orgToken);
+                const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
                 return api.issues.getComments({
                     owner: repo.owner,
                     repo: repo.name,
