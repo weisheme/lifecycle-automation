@@ -1,5 +1,5 @@
-query CardEvents($id: ID!) {
-  Card(id: $id) {
+query CardEvents(key: String!) {
+  Card(key: $key) {
     events {
       icon
       text
