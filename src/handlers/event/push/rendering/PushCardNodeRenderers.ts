@@ -3,13 +3,11 @@ import {
     bold,
     url,
 } from "@atomist/slack-messages/SlackMessages";
-import { all } from "async";
 import * as _ from "lodash";
 import {
     Action,
     addCollaborator,
     CardMessage,
-    Event,
 } from "../../../../lifecycle/card";
 import {
     AbstractIdentifiableContribution,
@@ -22,6 +20,7 @@ import {
     branchUrl,
     commitUrl,
     extractLinkedIssues,
+    issueUrl,
     prUrl,
     repoSlug,
     tagUrl,
@@ -105,7 +104,7 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "commit",
             shortTitle: commits.length.toString(),
-            title: `${commits.length.toString()} Commit`,
+            title: `${commits.length.toString()} ${commits.length === 1 ? "Commit" : "Commits"}`,
             icon: "css://icon-git-commit",
             body: commits.map(c => ({
                 icon: avatarUrl(repo, c.author ? c.author.login : "(unknown)"),
@@ -163,7 +162,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 
         msg.correlations.push({
             type: "build",
-            title: `${allBuilds.length} Build`,
+            title: `${allBuilds.length} ${allBuilds.length === 1 ? "Build" : "Builds"}`,
             shortTitle: `${success.length}/${allBuilds.length}`,
             link: allBuilds[0].buildUrl,
             icon,
@@ -225,9 +224,11 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
             type: "tag",
             icon: "css://icon-tag",
             shortTitle: push.after.tags ? push.after.tags.length.toString() : "0",
-            title: `${push.after.tags ? push.after.tags.length.toString() : "0"} Tag`,
+            title: `${push.after.tags ? push.after.tags.length.toString() : "0"} ${
+                push.after.tags.length === 1 ? "Tag" : "Tags"}`,
             body: push.after.tags.map(t => ({
-                text: `${url(tagUrl(repo, t))}`,
+                icon: "css://icon-tag",
+                text: `${url(tagUrl(repo, t), t.name)}`,
             })),
         });
 
@@ -323,7 +324,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                 ri.issues.forEach(i => {
                     if (issues.indexOf(i.number) < 0) {
                         body.push({
-                            text: `#${i.number}: ${truncateCommitMessage(i.title, repo)}`,
+                            text: `${url(issueUrl(repo, i), `#${i.number}`)}: ${truncateCommitMessage(i.title, repo)}`,
                             icon: `css://icon-issue-opened`,
                         });
                         totalCount++;
@@ -344,7 +345,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                     if (issues.indexOf(pr.number) < 0) {
                         const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
                         body.push({
-                            text: `#${pr.number}: ${truncateCommitMessage(pr.title, repo)}`,
+                            text: `${url(prUrl(repo, pr), `#${pr.number}`)}: ${truncateCommitMessage(pr.title, repo)}`,
                             icon: `css://icon-merge`,
                         });
                         totalCount++;
@@ -367,7 +368,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                         type: "issue",
                         icon: "css://icon-issue-opened",
                         shortTitle: `${closedCount}/${totalCount}`,
-                        title: `${totalCount} Issue`,
+                        title: `${totalCount} ${totalCount === 1 ? "Issue" : "Issues"}`,
                         body,
                     });
                 }
