@@ -77,7 +77,7 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
                 new BuildCardNodeRenderer(),
                 new StatusCardNodeRenderer(),
                 new ReviewCardNodeRenderer(),
-                new CollaboratorCardNodeRenderer(node => node.baseBranchName),
+                new CollaboratorCardNodeRenderer(node => node.baseBranchName != null),
             ],
             contributors: [
                 new CardActionContributorWrapper(new MergeActionContributor()),

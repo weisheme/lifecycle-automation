@@ -109,7 +109,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                     new IssueCardNodeRenderer(),
                     new PullRequestCardNodeRenderer(),
                     new ApplicationCardNodeRenderer(),
-                    new CollaboratorCardNodeRenderer(node => node.after),
+                    new CollaboratorCardNodeRenderer(node => node.after != null),
                 ],
                 contributors: [
                     new CardActionContributorWrapper(new TagPushActionContributor()),

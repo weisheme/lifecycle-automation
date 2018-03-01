@@ -74,7 +74,7 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
                 new CommentCardNodeRenderer(),
                 new CorrelationsCardNodeRenderer(),
                 new ReferencedIssueCardNodeRenderer(),
-                new CollaboratorCardNodeRenderer(node => node.body),
+                new CollaboratorCardNodeRenderer(node => node.body != null),
             ],
             contributors: [
                 new CardActionContributorWrapper(new CommentActionContributor()),
