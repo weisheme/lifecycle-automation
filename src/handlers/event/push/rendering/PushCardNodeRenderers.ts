@@ -67,6 +67,8 @@ export class PushCardNodeRenderer extends AbstractIdentifiableContribution
             link: branchUrl(repo, push.branch),
         });
 
+        msg.actions.push(...actions);
+
         return Promise.resolve(msg);
     }
 }
@@ -122,6 +124,8 @@ export class CommitCardNodeRenderer extends AbstractIdentifiableContribution
             }
             return e;
         }));*/
+
+        msg.actions.push(...actions);
 
         return Promise.resolve(msg);
     }
@@ -194,6 +198,8 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
            actions,
         });*/
 
+        msg.actions.push(...actions);
+
         return Promise.resolve(msg);
     }
 }
@@ -224,6 +230,8 @@ export class TagCardNodeRenderer extends AbstractIdentifiableContribution
                 text: `${url(tagUrl(repo, t))}`,
             })),
         });
+
+        msg.actions.push(...actions);
 
         /*msg.events.push(...push.after.tags.map(t => ({
             icon: "css://icon-tag",
@@ -280,6 +288,8 @@ export class ApplicationCardNodeRenderer extends AbstractIdentifiableContributio
                 text: d,
             })),
         });
+
+        msg.actions.push(...actions);
 
         return Promise.resolve(msg);
     }
@@ -361,6 +371,9 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                         body,
                     });
                 }
+
+                msg.actions.push(...actions);
+
                 return Promise.resolve(msg);
             });
     }
@@ -409,6 +422,9 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                     // store on the context
                     context.set("open_pr", `${repo.owner}/${repo.name}#${pr.number}`);
                 }
+
+                msg.actions.push(...actions);
+
                 return msg;
             })
             .catch(err => {
