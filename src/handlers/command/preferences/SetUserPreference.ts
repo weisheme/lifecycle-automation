@@ -82,12 +82,12 @@ export class SetUserPreference implements HandleCommand {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
             graphql.ChatId.Variables>(
                 "../../../graphql/query/chatId",
-                { teamId: ctx.teamId, chatId: this.requester },
+                { teamId: this.teamId, chatId: this.requester },
                 { fetchPolicy: "network-only" },
                 __dirname)
             .then(result => {
                 const preferences =
-                    _.get(result, "ChatTeam[0].members[0].person.chatId.preferences") as graphql.ChatId.Preferences[];
+                    _.get(result, "ChatTeam[0].members[0].preferences") as graphql.ChatId.Preferences[];
                 if (preferences) {
                     const keyPreferences = preferences.find(p => p.name === this.key);
                     if (keyPreferences) {

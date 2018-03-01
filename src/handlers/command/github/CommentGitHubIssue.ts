@@ -33,12 +33,15 @@ export class CommentGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
-        return replaceChatIdWithGitHubId(this.comment, ctx)
+        return replaceChatIdWithGitHubId(this.comment, this.teamId, ctx)
             .then(body => {
                 return github.api(this.githubToken, this.apiUrl).issues.createComment({
                     owner: this.owner,

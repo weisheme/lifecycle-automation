@@ -144,7 +144,7 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
                             orgHookUrl(this.webUrl, this.owner, this.repo),
                             codeLine(`${this.owner}/${this.repo}`))}`))
                     .then(() => Promise.all([
-                        loadChatIdByChatId(ctx, this.requester),
+                        loadChatIdByChatId(this.requester, this.teamId, ctx),
                         loadChatTeam(this.teamId, ctx),
                     ]))
                     .then(results => {

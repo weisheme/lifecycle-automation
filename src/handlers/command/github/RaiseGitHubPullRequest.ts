@@ -47,6 +47,9 @@ export class RaiseGitHubPullRequest implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
@@ -54,7 +57,7 @@ export class RaiseGitHubPullRequest implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return replaceChatIdWithGitHubId(this.body, ctx)
+        return replaceChatIdWithGitHubId(this.body, this.teamId, ctx)
             .then(body => {
                 return github.api(this.githubToken, this.apiUrl).pullRequests.create({
                     owner: this.owner,

@@ -241,7 +241,7 @@ export const configuration: any = {
         () => new ChannelLinkCreated(),
 
         // parentimpact
-        () => new StatusOnParentImpact(),
+        // () => new StatusOnParentImpact(),
 
         // push
         () => new ApplicationToPushLifecycle(),

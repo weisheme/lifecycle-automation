@@ -32,6 +32,9 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/,
         required: false, displayable: false })
     public msgId: string;
@@ -62,12 +65,12 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
         } else {
             return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
                 graphql.ChatId.Variables>("../../../graphql/query/chatId",
-                { teamId: ctx.teamId, chatId: this.requester },
+                { teamId: this.teamId, chatId: this.requester },
                 { fetchPolicy: "network-only" },
                 __dirname)
                 .then(result => {
                     const preferences =
-                        _.get(result, "ChatTeam[0].members[0].person.chatId.preferences");
+                        _.get(result, "ChatTeam[0].members[0].preferences");
                     if (preferences) {
                         const dmPreferences = preferences.find(p => p.name === DirectMessagePreferences.key);
                         if (dmPreferences) {

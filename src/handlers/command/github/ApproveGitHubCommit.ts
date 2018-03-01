@@ -39,6 +39,9 @@ export class ApproveGitHubCommit implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
@@ -47,7 +50,7 @@ export class ApproveGitHubCommit implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
-        return loadGitHubIdByChatId(ctx, this.requester)
+        return loadGitHubIdByChatId(this.requester, this.teamId, ctx)
             .then(chatId => {
                 const api = github.api(this.githubToken, this.apiUrl);
                 return Promise.all(this.shas.split(",").map(sha => {

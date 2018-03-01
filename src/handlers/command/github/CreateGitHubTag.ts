@@ -60,8 +60,11 @@ export class CreateGitHubTag implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
-    @MappedParameter(MappedParameters.SlackUser)
+    @MappedParameter(MappedParameters.SlackUser, false)
     public requester: string;
+
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
@@ -70,7 +73,7 @@ export class CreateGitHubTag implements HandleCommand {
 
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
             "../../../graphql/query/chatId",
-            { teamId: ctx.teamId, chatId: this.requester },
+            { teamId: this.teamId, chatId: this.requester },
             {},
             __dirname)
             .then(result => {

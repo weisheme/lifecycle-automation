@@ -972,11 +972,9 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
                         return Promise.resolve({
                             ChatTeam: [{
                                 members: [{
+                                    screenName,
+                                    preferences: [],
                                     person: {
-                                        chatId: {
-                                            screenName,
-                                            preferences: {},
-                                        },
                                         gitHubId: {
                                             login: gitHubLogin,
                                         },
@@ -988,12 +986,8 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
                         return Promise.resolve({
                             ChatTeam: [{
                                 members: [{
-                                    person: {
-                                        chatId: {
-                                            screenName,
-                                            preferences: {},
-                                        },
-                                    },
+                                    screenName,
+                                    preferences: [],
                                 }],
                             }],
                         });
@@ -1006,7 +1000,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
         it("should replace known user with github login", done => {
             const body = `<@${slackId}>`;
             const expected = `@${gitHubLogin}`;
-            replaceChatIdWithGitHubId(body, ctx)
+            replaceChatIdWithGitHubId(body, ctx.teamId, ctx)
                 .then(r => {
                     assert(r === expected);
                 })
@@ -1016,7 +1010,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
         it("should replace known user with slack screeName", done => {
             const body = `<@${slackIdUnknownGitHub}>`;
             const expected = screenName;
-            replaceChatIdWithGitHubId(body, ctx)
+            replaceChatIdWithGitHubId(body, ctx.teamId, ctx)
                 .then(r => {
                     assert(r === expected);
                 })
@@ -1025,7 +1019,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
 
         it("should not replace unknown user", done => {
             const body = `<@U123456>`;
-            replaceChatIdWithGitHubId(body, ctx)
+            replaceChatIdWithGitHubId(body, ctx.teamId, ctx)
                 .then(r => {
                     assert(r === body);
                 })

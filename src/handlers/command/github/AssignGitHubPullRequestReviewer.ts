@@ -35,6 +35,9 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @Parameter({
         displayName: "Pull Request Number",
         description: "the number of the pull request number to merge, with no leading `#`",
@@ -75,7 +78,7 @@ export class AssignGitHubPullRequestReviewer implements HandleCommand {
         });
 
         return Promise.all(reviewers.map(r => {
-                return loadGitHubIdByChatId(ctx, r)
+                return loadGitHubIdByChatId(r, this.teamId, ctx)
                     .then(chatId => {
                         if (chatId) {
                             return chatId;

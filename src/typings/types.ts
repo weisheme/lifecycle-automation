@@ -567,7 +567,7 @@ export namespace ChatChannelByChannelId {
 }
 export namespace ChatId {
   export type Variables = {
-    teamId: string;
+    teamId?: string | null;
     chatId: string;
   }
 
@@ -580,19 +580,10 @@ export namespace ChatId {
   } 
 
   export type Members = {
-    person?: Person | null; 
-  } 
-
-  export type Person = {
-    chatId?: ChatId | null; 
-    gitHubId?: GitHubId | null; 
-    emails?: Emails[] | null; 
-  } 
-
-  export type ChatId = {
     screenName?: string | null; 
     preferences?: Preferences[] | null; 
     chatTeam?: _ChatTeam | null; 
+    person?: Person | null; 
   } 
 
   export type Preferences = {
@@ -603,6 +594,11 @@ export namespace ChatId {
   export type _ChatTeam = {
     id?: string | null; 
     name?: string | null; 
+  } 
+
+  export type Person = {
+    gitHubId?: GitHubId | null; 
+    emails?: Emails[] | null; 
   } 
 
   export type GitHubId = {

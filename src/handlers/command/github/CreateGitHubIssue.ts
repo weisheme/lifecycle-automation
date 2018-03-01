@@ -64,7 +64,7 @@ export class CreateGitHubIssue implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
 
-        return replaceChatIdWithGitHubId(this.body, ctx)
+        return replaceChatIdWithGitHubId(this.body, this.teamId, ctx)
             .then(body => {
                 return trimQuotes(body);
             })

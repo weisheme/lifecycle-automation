@@ -45,6 +45,9 @@ export class ApproveGitHubPhaseStatus implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
@@ -60,7 +63,7 @@ export class ApproveGitHubPhaseStatus implements HandleCommand {
             this.targetUrl = url.toString();
         }
 
-        return loadGitHubIdByChatId(ctx, this.requester)
+        return loadGitHubIdByChatId(this.requester, this.teamId, ctx)
             .then(chatId => {
                 const api = github.api(this.githubToken, this.apiUrl);
                 return api.repos.createStatus({

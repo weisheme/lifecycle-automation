@@ -405,22 +405,15 @@ export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): 
     }
 }
 
-export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promise<string> {
+export function loadGitHubIdByChatId(chatId: string, teamId: string, ctx: HandlerContext): Promise<string> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
         "../graphql/query/chatId",
-        { teamId: ctx.teamId, chatId },
+        { teamId, chatId },
         {},
         __dirname)
         .then(result => {
             if (result) {
-                if (result.ChatTeam && result.ChatTeam.length > 0) {
-                    if (result.ChatTeam[0].members && result.ChatTeam[0].members
-                        && result.ChatTeam[0].members.length > 0
-                        && result.ChatTeam[0].members[0].person
-                        && result.ChatTeam[0].members[0].person.gitHubId) {
-                        return result.ChatTeam[0].members[0].person.gitHubId.login;
-                    }
-                }
+                return _.get(result, "ChatTeam[0].members[0].person.gitHubId.login");
             }
             return null;
         })
@@ -430,22 +423,16 @@ export function loadGitHubIdByChatId(ctx: HandlerContext, chatId: string): Promi
         });
 }
 
-export function loadChatIdByChatId(ctx: HandlerContext, chatId: string): Promise<graphql.ChatId.ChatId> {
+export function loadChatIdByChatId(chatId: string, teamId: string, ctx: HandlerContext)
+    : Promise<graphql.ChatId.Members> {
     return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
         "../graphql/query/chatId",
-        { teamId: ctx.teamId, chatId },
+        { teamId, chatId },
         {},
         __dirname)
         .then(result => {
             if (result) {
-                if (result.ChatTeam && result.ChatTeam.length > 0) {
-                    if (result.ChatTeam[0].members && result.ChatTeam[0].members
-                        && result.ChatTeam[0].members.length > 0
-                        && result.ChatTeam[0].members[0].person
-                        && result.ChatTeam[0].members[0].person.chatId) {
-                        return result.ChatTeam[0].members[0].person.chatId;
-                    }
-                }
+                return _.get(result, "ChatTeam[0].members[0]");
             }
             return null;
         })
@@ -564,7 +551,7 @@ const PATTERNS = [
     /<@(U[0-9A-Z]*)>/g,
 ];
 
-export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext): Promise<string> {
+export function replaceChatIdWithGitHubId(body: string = "", teamId: string, ctx: HandlerContext): Promise<string> {
     if (!body || body.length === 0) {
         return Promise.resolve(body);
     }
@@ -573,24 +560,17 @@ export function replaceChatIdWithGitHubId(body: string = "", ctx: HandlerContext
         return Promise.all(matches.map(m => {
             return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
                 "../graphql/query/chatId",
-                { teamId: ctx.teamId, chatId: m },
+                { teamId, chatId: m },
                 {},
                 __dirname)
                 .then(result => {
                     if (result) {
-                        if (result.ChatTeam && result.ChatTeam.length > 0) {
-                            if (result.ChatTeam[0].members && result.ChatTeam[0].members.length > 0
-                                && result.ChatTeam[0].members[0].person) {
-                                if (result.ChatTeam[0].members[0].person.gitHubId
-                                    && result.ChatTeam[0].members[0].person.gitHubId.login) {
-                                    const login = result.ChatTeam[0].members[0].person.gitHubId.login;
-                                    body = body.split(`<@${m}>`).join(`@${login}`);
-                                } else if (result.ChatTeam[0].members[0].person.chatId
-                                    && result.ChatTeam[0].members[0].person.chatId.screenName) {
-                                    const screenName = result.ChatTeam[0].members[0].person.chatId.screenName;
-                                    body = body.split(`<@${m}>`).join(screenName);
-                                }
-                            }
+                        const login = _.get(result, "ChatTeam[0].members[0].person.gitHubId.login");
+                        const screenName = _.get(result, "ChatTeam[0].members[0].screenName");
+                        if (login) {
+                            body = body.split(`<@${m}>`).join(`@${login}`);
+                        } else if (screenName) {
+                            body = body.split(`<@${m}>`).join(screenName);
                         }
                     }
                 })

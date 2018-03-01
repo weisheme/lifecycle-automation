@@ -36,6 +36,9 @@ export class AssignToMeGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.SlackUser, false)
     public requester: string;
 
+    @MappedParameter(MappedParameters.SlackTeam, false)
+    public teamId: string;
+
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
@@ -57,25 +60,27 @@ export class AssignToMeGitHubIssue implements HandleCommand {
             })
             .then(issue => {
                 if (this.assignee === AssignToMe) {
-                    return loadGitHubIdByChatId(ctx, this.requester)
+                    return loadGitHubIdByChatId(this.requester, this.teamId, ctx)
                         .then(gitHubId => {
-                            if (gitHubId) {
-                                let assignees: string[] =
-                                    issue.data.assignees ? issue.data.assignees.map(a => a.login) : [];
-
-                                if (assignees.some(a => a === gitHubId)) {
-                                    assignees = assignees.filter(a => a !== gitHubId);
-                                } else {
-                                    assignees.push(gitHubId);
-                                }
-
-                                return api.issues.edit({
-                                    owner: this.owner,
-                                    repo: this.repo,
-                                    number: this.issue,
-                                    assignees,
-                                });
+                            if (!gitHubId) {
+                                gitHubId = this.requester;
                             }
+
+                            let assignees: string[] =
+                                issue.data.assignees ? issue.data.assignees.map(a => a.login) : [];
+
+                            if (assignees.some(a => a === gitHubId)) {
+                                assignees = assignees.filter(a => a !== gitHubId);
+                            } else {
+                                assignees.push(gitHubId);
+                            }
+
+                            return api.issues.edit({
+                                owner: this.owner,
+                                repo: this.repo,
+                                number: this.issue,
+                                assignees,
+                            });
                         });
                 } else {
                     let assignees: string[] =

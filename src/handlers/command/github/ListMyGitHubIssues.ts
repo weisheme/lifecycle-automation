@@ -49,7 +49,7 @@ export class ListMyGitHubIssues implements HandleCommand {
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
             "../../../graphql/query/chatId",
-            { teamId: ctx.teamId, chatId: this.requester },
+            { teamId: this.teamId, chatId: this.requester },
             {},
             __dirname)
             .then(result => {
