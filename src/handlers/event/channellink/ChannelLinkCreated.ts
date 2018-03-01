@@ -175,7 +175,7 @@ function showLastPush(repo: graphql.ChannelLinkCreated.Repo, token: string, ctx:
                 return ctx.graphClient.executeQueryFromFile<graphql.PushById.Query, graphql.PushById.Variables>(
                     "../../../graphql/query/pushById",
                     {
-                        id
+                        id,
                     },
                     {},
                     __dirname);
@@ -192,7 +192,7 @@ function showLastPush(repo: graphql.ChannelLinkCreated.Repo, token: string, ctx:
                     },
                     extensions: {
                         operationName: "PushToPushLifecycle",
-                    }
+                    },
                 }, ctx);
             }
             return null;
