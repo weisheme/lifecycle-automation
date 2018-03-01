@@ -397,7 +397,7 @@ export namespace BranchWithPullRequest {
 }
 export namespace CardEvents {
   export type Variables = {
-    id: string;
+    key: string;
   }
 
   export type Query = {
