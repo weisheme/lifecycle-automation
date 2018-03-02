@@ -119,6 +119,12 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.SlackTeam)
     public teamId: string;
 
+    @MappedParameter(MappedParameters.GitHubUserLogin)
+    public login: string;
+
+    @MappedParameter(MappedParameters.GitHubRepositoryProvider)
+    public provider: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -137,6 +143,7 @@ export class InstallGitHubRepoWebhook implements HandleCommand {
         };
 
         return (github.api(this.githubToken, this.apiUrl).repos as any).createHook(payload)
+            .then(() => setRepoLogin(this.owner, this.repo, this.login, this.provider, ctx))
             .then(() => {
                 return ctx.messageClient.respond(
                     success("Repository Webhook",
@@ -204,6 +211,12 @@ export class InstallGitHubReposWebhook implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
+    @MappedParameter(MappedParameters.GitHubUserLogin)
+    public login: string;
+
+    @MappedParameter(MappedParameters.GitHubRepositoryProvider)
+    public provider: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
@@ -221,7 +234,8 @@ export class InstallGitHubReposWebhook implements HandleCommand {
                     content_type: "json",
                 },
             };
-            return (github.api(this.githubToken, this.apiUrl).repos as any).createHook(payload);
+            return (github.api(this.githubToken, this.apiUrl).repos as any).createHook(payload)
+                .then(() => setRepoLogin(this.owner, r, this.login, this.provider, ctx));
         });
         return promises.reduce((p, f) => p.then(f), Promise.resolve())
             .then(() => Success, failure);
@@ -260,4 +274,23 @@ function orgHookUrl(webUrl: string, owner: string, repo?: string): string {
     } else {
         return `${webUrl}/organizations/${owner}/settings/hooks`;
     }
+}
+
+function setRepoLogin(owner: string,
+                      repo: string,
+                      login: string,
+                      providerId: string,
+                      ctx: HandlerContext): Promise<any> {
+    return ctx.graphClient.executeMutationFromFile<graphql.SetRepoLogin.Mutation,
+        graphql.SetRepoLogin.Variables>(
+        "../../../graphql/mutation/setRepoLogin",
+        {
+            login,
+            owner,
+            repo: repo.trim(),
+            providerId,
+        },
+        {},
+        __dirname)
+        .catch(failure);
 }

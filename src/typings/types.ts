@@ -152,6 +152,9 @@ export type _PullRequestImpactOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 /* Ordering Enum for UserJoinedChannel */
 export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc";
 
+/* asc or desc ordering. Must be used with orderBy */
+export type _Ordering = "desc" | "asc";
+
 export namespace AddBotToSlackChannel {
   export type Variables = {
     teamId: string;
@@ -258,6 +261,25 @@ export namespace SetOwnerLogin {
 
   export type SetOwnerLogin = {
     owner?: string | null; 
+    providerId?: string | null; 
+    login?: string | null; 
+  } 
+}
+export namespace SetRepoLogin {
+  export type Variables = {
+    owner: string;
+    repo: string;
+    login: string;
+    providerId: string;
+  }
+
+  export type Mutation = {
+    setRepoLogin?: SetRepoLogin | null; 
+  } 
+
+  export type SetRepoLogin = {
+    owner?: string | null; 
+    repo?: string | null; 
     providerId?: string | null; 
     login?: string | null; 
   } 
@@ -425,6 +447,7 @@ export namespace CardEvents {
     parameterName?: string | null; 
     parameterOptions?: ParameterOptions[] | null; 
     parameterOptionGroups?: ParameterOptionGroups[] | null; 
+    role?: string | null; 
   } 
 
   export type Parameters = {
@@ -460,6 +483,7 @@ export namespace CardEvents {
     parameterName?: string | null; 
     parameterOptions?: _ParameterOptions[] | null; 
     parameterOptionGroups?: _ParameterOptionGroups[] | null; 
+    role?: string | null; 
   } 
 
   export type _Parameters = {
