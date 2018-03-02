@@ -1,19 +1,23 @@
 import {
     CommandHandler,
-    failure, HandleCommand,
+    failure,
+    HandleCommand,
     HandlerContext,
     HandlerResult,
     MappedParameter,
     MappedParameters,
     Parameter,
-    Success,
+    Secret,
+    success,
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import { url } from "@atomist/slack-messages";
 import {
     Action,
-    Attachment, bold,
+    Attachment,
+    bold,
     channel,
     SlackMessage,
 } from "@atomist/slack-messages/SlackMessages";
@@ -24,6 +28,7 @@ import {
     LifecyclePreferences,
     LifecycleRendererPreferences,
 } from "../../event/preferences";
+import { isCustomEmojisEnabled, ToggleCustomEmojiEnablement } from "../slack/ToggleCustomEmojiEnablement";
 
 /**
  * Configure DM preferences for the invoking user.
@@ -70,13 +75,19 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 }],
             };
             return ctx.messageClient.respond(msg, { id: this.msgId })
-                .then(() => Success, failure);
+                .then(success, failure);
         } else if (!this.lifecycle) {
             return this.loadPreferences(ctx, LifecyclePreferences.key)
                 .then(preferences => {
-                    return ctx.messageClient.respond(this.createMessage(preferences), { id: this.msgId });
+                    return isCustomEmojisEnabled(this.teamId, ctx)
+                        .then(emojisEnabled => [preferences, emojisEnabled.enabled])
+                        .catch(err => null);
                 })
-                .then(() => Success, failure);
+                .then(([preferences, emojisEnabled]) => {
+                    return ctx.messageClient.respond(
+                        this.createMessage(preferences, emojisEnabled), { id: this.msgId });
+                })
+                .then(success, failure);
         } else {
             return Promise.all([this.loadPreferences(ctx, LifecycleActionPreferences.key),
                 this.loadPreferences(ctx, LifecycleRendererPreferences.key)])
@@ -84,11 +95,11 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                     return ctx.messageClient.respond(
                         this.createConfigureMessage(preferences[0], preferences[1]), { id: this.msgId });
                 })
-                .then(() => Success, failure);
+                .then(success, failure);
         }
     }
 
-    private createMessage(preferences: any): SlackMessage {
+    private createMessage(preferences: any, emojisEnabled: boolean): SlackMessage {
         const msg: SlackMessage = {
             text: `Configure Lifecycle for ${channel(this.channelId)}:`,
             attachments: [],
@@ -130,17 +141,35 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
             }
         }
 
+        // Add the emoji attachment
+        const emojiHandler = new ToggleCustomEmojiEnablement();
+        emojiHandler.msgId = this.msgId;
+        msg.attachments.push({
+            title: "Lifecycle Emojis",
+            fallback: "Configure Lifecycle Emojis",
+            // tslint:disable-next-line:max-line-length
+            text: `Lifecycle can be used with custom emojis. Examples can be seen ${url("https://the-composition.com/automation-story-graphql-schema-deployment-7893eb55ed18", "here")}.`,
+            actions: [
+                buttonForCommand(
+                    {
+                        text: `${emojisEnabled ? "Disable" : "Enable"}`,
+                        style: emojisEnabled ? "danger" : "primary",
+                    },
+                    emojiHandler),
+            ],
+            mrkdwn_in: ["text"],
+        });
+
         // Add the cancel option
         const handler = new ConfigureLifecyclePreferences();
         handler.msgId = this.msgId;
         handler.cancel = "true";
-        const attachment: Attachment = {
+        msg.attachments.push({
             fallback: "Collapse",
             actions: [
                 buttonForCommand({ text: "Collapse" }, handler),
             ],
-        };
-        msg.attachments.push(attachment);
+        });
 
         return msg;
     }

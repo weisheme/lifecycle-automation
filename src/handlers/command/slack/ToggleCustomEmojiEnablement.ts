@@ -5,15 +5,15 @@ import {
     HandlerContext,
     HandlerResult,
     MappedParameter,
-    MappedParameters,
-    Success,
+    MappedParameters, Parameter,
+    success,
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import { bold, codeLine, SlackMessage, url } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
-import { success, supportLink } from "../../../util/messages";
+import { supportLink } from "../../../util/messages";
 
 export const LifecyclePreferencesName = "lifecycle_preferences";
 
@@ -21,10 +21,18 @@ export const LifecyclePreferencesName = "lifecycle_preferences";
 @Tags("slack", "emoji")
 export class ToggleCustomEmojiEnablement implements HandleCommand {
 
+    @Parameter({ description: "id of the message to use for confirmation", pattern: /^.*$/,
+        required: false, displayable: false })
+    public msgId: string;
+
     @MappedParameter(MappedParameters.SlackTeam, false)
     public teamId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        if (!this.msgId) {
+            this.msgId = guid();
+        }
+
         return isCustomEmojisEnabled(this.teamId, ctx)
             .then(preferencesState => {
                 const preferences =
@@ -73,9 +81,9 @@ export class ToggleCustomEmojiEnablement implements HandleCommand {
                     });
                 }
                 /* tslint:enable */
-                return ctx.messageClient.respond(msg);
+                return ctx.messageClient.respond(msg, { id: this.msgId });
             })
-            .then(() => Success, failure);
+            .then(success, failure);
     }
 }
 
