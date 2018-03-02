@@ -310,7 +310,7 @@ describe("BotJoinedChannel", () => {
                         options?: MessageOptions,
                     ): Promise<any> {
                         const m = msg as string;
-                        assert(m.includes("Hello! Now I can respond to messages beginning with @atomist_bot."));
+                        assert(m.includes("Hello! Now I can respond to messages beginning with <@atomist_bot>."));
                         assert(m.includes("I will post GitHub notifications about <https://ghe.chp.gov/n/n|n/n>"));
                         sent = true;
                         return Promise.resolve(true);
@@ -362,7 +362,7 @@ describe("BotJoinedChannel", () => {
                         options?: MessageOptions,
                     ): Promise<any> {
                         const m = msg as string;
-                        assert(m.includes("Hello! Now I can respond to messages beginning with @atomist_bot."));
+                        assert(m.includes("Hello! Now I can respond to messages beginning with <@atomist_bot>."));
                         assert(m.includes("I won't be able to do much without GitHub integration, though."));
                         assert(m.includes("Run `@atomist_bot enroll org` to set that up."));
                         sent = true;

@@ -1,6 +1,6 @@
 subscription BotJoinedChannel {
   UserJoinedChannel {
-    user {
+    user(isAtomistBot: "true") @required {
       isAtomistBot
       screenName
       userId

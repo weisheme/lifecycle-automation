@@ -34,6 +34,7 @@ import {
     LinkRepo,
 } from "../../command/slack/LinkRepo";
 import { NoLinkRepo } from "../../command/slack/NoLinkRepo";
+import { user } from "@atomist/slack-messages";
 
 export interface RepoApi {
     name: string;
@@ -75,7 +76,7 @@ export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Su
             }
             const botName = (j.user.screenName) ? j.user.screenName : DefaultBotName;
 
-            const helloText = `Hello! Now I can respond to messages beginning with @${botName}. ` +
+            const helloText = `Hello! Now I can respond to messages beginning with ${user(botName)}. ` +
                 `To see some options, try \`@${botName} help\``;
 
             if (j.channel.repos && j.channel.repos.length > 0) {
@@ -141,7 +142,8 @@ I don't see any repositories in GitHub${ownerText}.`;
                     const msgId = `channel_link/bot_joined_channel/${channelName}`;
                     const actions: slack.Action[] = [];
 
-                    const matchyRepos = fuzzyChannelRepoMatch(channelName, repos);
+                    const matchyRepos =
+                        _.uniqBy(fuzzyChannelRepoMatch(channelName, repos), r => `${r.owner}/${r.name}`);
                     matchyRepos.forEach(r => {
                         const linkRepo = new LinkRepo();
                         const org = orgs.find(o => o.owner === r.owner);
