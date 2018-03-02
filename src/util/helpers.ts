@@ -130,6 +130,13 @@ export function avatarUrl(repo: any, login: string): string {
     }
 }
 
+export function isGitHubCom(repo: any): boolean {
+    return repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.url != null &&
+        repo.org.provider.url === DefaultGitHubUrl;
+}
+
 export function commitUrl(repo: any, commit: any): string {
     return `${htmlUrl(repo)}/${repoSlug(repo)}/commit/${commit.sha}`;
 }
