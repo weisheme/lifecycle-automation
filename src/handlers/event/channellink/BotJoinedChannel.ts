@@ -21,6 +21,7 @@ import {
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 
+import { user } from "@atomist/slack-messages";
 import * as graphql from "../../../typings/types";
 import {
     repoChannelName,
@@ -34,7 +35,6 @@ import {
     LinkRepo,
 } from "../../command/slack/LinkRepo";
 import { NoLinkRepo } from "../../command/slack/NoLinkRepo";
-import { user } from "@atomist/slack-messages";
 
 export interface RepoApi {
     name: string;
