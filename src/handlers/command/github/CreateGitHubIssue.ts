@@ -132,6 +132,7 @@ export class CreateGitHubIssue implements HandleCommand {
                     };
 
                     const handler = new IssueToIssueLifecycle();
+                    handler.orgToken = this.githubToken;
                     return handler.handle(
                         { data: { Issue: [issue] as any }, extensions: { operationName: "CreateGitHubIssue" } }, ctx);
                 } else {
