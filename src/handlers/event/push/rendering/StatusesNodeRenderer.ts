@@ -214,6 +214,7 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
         });
 
         let counter = 0;
+        const attachments: Attachment[] = []
         for (const key in grouped) {
             if (grouped.hasOwnProperty(key)) {
                 const statuses = grouped[key];
@@ -243,13 +244,18 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
                     author_icon: counter === 0 ? "https://images.atomist.com/rug/phases.png" : undefined,
                     color,
                     fallback: summary,
-                    actions,
                     text: lines.join("\n"),
                 };
+                attachments.push(attachment);
                 counter++;
-                msg.attachments.push(attachment);
             }
         }
+
+        if (attachments.length > 0) {
+            attachments.slice(-1)[0].actions = actions;
+        }
+
+        msg.attachments.push(...attachments);
 
         return Promise.resolve(msg);
     }

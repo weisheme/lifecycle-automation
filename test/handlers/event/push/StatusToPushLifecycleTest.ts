@@ -794,8 +794,8 @@ describe("StatusToPushLifecycle", () => {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 8);
                 assert(sm.attachments[2].author_name === "Phases");
-                assert(sm.attachments[2].actions.length === 1);
-                assert(sm.attachments[2].actions[0].text === "Approve 'Failed to  verify endpoint in Test'");
+                assert(sm.attachments[4].actions.length === 1);
+                assert(sm.attachments[4].actions[0].text === "Approve 'Failed to  verify endpoint in Test'");
                 messageSent = true;
                 return Promise.resolve();
             }
