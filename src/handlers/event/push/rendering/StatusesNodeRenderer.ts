@@ -214,7 +214,7 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
         });
 
         let counter = 0;
-        const attachments: Attachment[] = []
+        const attachments: Attachment[] = [];
         for (const key in grouped) {
             if (grouped.hasOwnProperty(key)) {
                 const statuses = grouped[key];
