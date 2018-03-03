@@ -279,11 +279,13 @@ export class CorrelationsCardNodeRenderer extends AbstractIdentifiableContributi
             link: repoUrl(repo),
         });
 
+        const len = issue.resolvingCommits ? issue.resolvingCommits.length : 0;
+
         msg.correlations.push({
             type: "commit",
             icon: "css://icon-git-commit",
             shortTitle: issue.resolvingCommits ? issue.resolvingCommits.length.toString() : "0",
-            title: `${issue.resolvingCommits ? issue.resolvingCommits.length.toString() : "0"} Commit`,
+            title: `${len} ${len === 1 ? "Commit" : "Commits"}`,
             body: issue.resolvingCommits ? issue.resolvingCommits.map(c => ({
                 icon: avatarUrl(repo, c.author.login),
                 text: renderCommitMessage(c, repo),
@@ -293,7 +295,7 @@ export class CorrelationsCardNodeRenderer extends AbstractIdentifiableContributi
         msg.correlations.push({
             type: "label",
             icon: "css://icon-tag",
-            title: `${issue.labels.length} Label`,
+            title: `${issue.labels.length} ${issue.labels.length === 1 ? "Label" : "Labels"}`,
             shortTitle: issue.labels.length === 0 ? "0" :
                 (issue.labels.length <= 2 ? issue.labels.map(l => l.name).join(", ") : issue.labels.length.toString()),
             body: issue.labels.map(l => ({
