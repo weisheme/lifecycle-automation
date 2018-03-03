@@ -4,6 +4,7 @@ import {
     SlackMessage,
     url,
 } from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import { Action as CardAction, CardMessage } from "../../../../lifecycle/card";
 import {
     AbstractIdentifiableContribution, CardNodeRenderer,
@@ -199,40 +200,56 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
         // List all the statuses on the after commit
         const commit = push.after;
         // exclude build statuses already displayed
-        const statuses = commit.statuses.filter(status => status.context.includes("sdm/"));
-        if (statuses.length === 0) {
+        const phases = commit.statuses.filter(status => status.context.includes("sdm/"))
+            .sort((s1, s2) => s1.context.localeCompare(s2.context)) as graphql.PushToPushLifecycle.Statuses[];
+        if (phases.length === 0) {
             return Promise.resolve(msg);
         }
 
-        const pending = statuses.filter(s => s.state === "pending").length;
-        const success = statuses.filter(s => s.state === "success").length;
-        const error = statuses.length - pending - success;
-
-        // Now each one
-        const lines = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
-            if (s.targetUrl != null && s.targetUrl.length > 0) {
-                return `${this.emoji(s.state)} ${url(s.targetUrl, s.description)}`;
-            } else {
-                return `${this.emoji(s.state)} ${s.description}`;
-            }
+        // sdm/atomist/#-env/#-name
+        const EnvRegexp = /sdm\/atomist\/([0-9]*-[a-zA-Z]*)\/.*/i;
+        const grouped = _.groupBy(phases, s => {
+            const result = EnvRegexp.exec(s.context);
+            return result[1];
         });
 
-        const color =
-            pending > 0 ? "#cccc00" :
-                error > 0 ? "#D94649" :
-                    "#45B254";
+        let counter = 0;
+        for (const key in grouped) {
+            if (grouped.hasOwnProperty(key)) {
+                const statuses = grouped[key];
 
-        const summary = summarizeStatusCounts(pending, success, error);
+                const pending = statuses.filter(s => s.state === "pending").length;
+                const success = statuses.filter(s => s.state === "success").length;
+                const error = statuses.length - pending - success;
 
-        const attachment: Attachment = {
-            author_name: lines.length > 1 ? "Phases" : "Phase",
-            author_icon: "https://images.atomist.com/rug/phases.png",
-            color,
-            fallback: summary,
-            actions,
-            text: lines.join("\n"),
-        };
-        msg.attachments.push(attachment);
+                // Now each one
+                const lines = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+                    if (s.targetUrl != null && s.targetUrl.length > 0) {
+                        return `${this.emoji(s.state)} ${url(s.targetUrl, s.description)}`;
+                    } else {
+                        return `${this.emoji(s.state)} ${s.description}`;
+                    }
+                });
+
+                const color =
+                    pending > 0 ? "#cccc00" :
+                        error > 0 ? "#D94649" :
+                            "#45B254";
+
+                const summary = summarizeStatusCounts(pending, success, error, "phase", "phases");
+
+                const attachment: Attachment = {
+                    author_name: counter === 0 ? (lines.length > 1 ? "Phases" : "Phase") : undefined,
+                    author_icon: counter === 0 ? "https://images.atomist.com/rug/phases.png" : undefined,
+                    color,
+                    fallback: summary,
+                    actions,
+                    text: lines.join("\n"),
+                };
+                counter++;
+                msg.attachments.push(attachment);
+            }
+        }
 
         return Promise.resolve(msg);
     }
@@ -337,30 +354,34 @@ function notAlreadyDisplayed(push: any, status: any): boolean {
     return true;
 }
 
-export function summarizeStatusCounts(pending: number, success: number, error: number): string {
+export function summarizeStatusCounts(pending: number,
+                                      success: number,
+                                      error: number,
+                                      labelSingular: string = "check",
+                                      labelPlural: string = "checks"): string {
 
     const parts = [];
     let check = "check";
     if (pending > 0) {
         parts.push(`${pending} pending`);
         if (pending > 1) {
-            check = "checks";
+            check = labelPlural;
         }
     }
     if (error > 0) {
         parts.push(`${error} failing`);
         if (error > 1) {
-            check = "checks";
+            check = labelPlural;
         } else {
-            check = "check";
+            check = labelSingular;
         }
     }
     if (success > 0) {
         parts.push(`${success} successful`);
         if (success > 1) {
-            check = "checks";
+            check = labelPlural;
         } else {
-            check = "check";
+            check = labelSingular;
         }
     }
 
