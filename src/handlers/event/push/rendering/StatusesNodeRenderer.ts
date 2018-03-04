@@ -210,7 +210,11 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
         const EnvRegexp = /sdm\/atomist\/([0-9]*-[a-zA-Z]*)\/.*/i;
         const grouped = _.groupBy(phases, s => {
             const result = EnvRegexp.exec(s.context);
-            return result[1];
+            if (result) {
+                return result[1];
+            }  else {
+                return null;
+            }
         });
 
         let counter = 0;

@@ -843,4 +843,209 @@ describe("StatusToPushLifecycle", () => {
 
     });
 
+    /* tslint:disable */
+    const payloadFailure = `{
+  "data": {
+    "Status": [{
+      "_id": 1746986,
+      "commit": {
+        "pushes": [{
+          "after": {
+            "author": {
+              "login": "jessitron",
+              "person": {
+                "chatId": {
+                  "screenName": "jessitron"
+                }
+              }
+            },
+            "fingerprints": [{
+              "data": null,
+              "name": "dependencies",
+              "sha": "e3a95168a2163577f707dd61d7172911034ddc9781698bd593e2365b546877dc048677a6845d7b8d6319cfdf53f39d21b4e2760c8a4c6501dae3050362b3f39b"
+            }],
+            "images": [],
+            "message": "touch",
+            "sha": "2509b1edc1cd533287bbda4471179c6ef69e3154",
+            "statuses": [{
+              "context": "sdm/atomist/0-code2-endpoint",
+              "description": "Skipping endpoint because deploy locally failed",
+              "state": "failure",
+              "targetUrl": "",
+              "timestamp": "2018-03-04T11:17:21.311Z"
+            }, {
+              "context": "sdm/atomist/0-code/1-deploy locally",
+              "description": "Working: deploy locally",
+              "state": "failure",
+              "targetUrl": "",
+              "timestamp": "2018-03-04T11:17:18.956Z"
+            }, {
+              "context": "sdm/atomist/0-code/2-endpoint",
+              "description": "Planning to locate local service endpoint",
+              "state": "pending",
+              "targetUrl": "https://github.com/satellite-of-love/horseguards/commit/2509b1edc1cd533287bbda4471179c6ef69e3154",
+              "timestamp": "2018-03-04T11:17:06.623Z"
+            }],
+            "tags": []
+          },
+          "before": {
+            "sha": "374264fb9541552be0a46e1539754bae75b97c2e"
+          },
+          "branch": "nortissej/kitties",
+          "builds": [],
+          "commits": [{
+            "apps": [{
+              "data": "{}",
+              "domain": "development",
+              "host": "jessicas-macbook-pro.local",
+              "state": "stopping"
+            }],
+            "author": {
+              "login": "jessitron",
+              "person": {
+                "chatId": {
+                  "screenName": "jessitron"
+                }
+              }
+            },
+            "impact": {
+              "data": "[[[\\"deps\\",0]]]",
+              "url": ""
+            },
+            "message": "touch",
+            "resolves": [],
+            "sha": "2509b1edc1cd533287bbda4471179c6ef69e3154",
+            "tags": [],
+            "timestamp": "2018-03-04T11:16:58Z"
+          }],
+          "repo": {
+            "channels": [{
+              "name": "horseguards",
+              "team": {
+                "id": "T1JVCMVH7"
+              }
+            }],
+            "defaultBranch": "master",
+            "labels": [{
+              "name": "bug"
+            }, {
+              "name": "help wanted"
+            }, {
+              "name": "good first issue"
+            }, {
+              "name": "enhancement"
+            }, {
+              "name": "duplicate"
+            }, {
+              "name": "wontfix"
+            }, {
+              "name": "question"
+            }, {
+              "name": "invalid"
+            }],
+            "name": "horseguards",
+            "org": {
+              "provider": {
+                "apiUrl": "https://api.github.com/",
+                "gitUrl": "git@github.com:",
+                "url": "https://github.com/"
+              },
+              "team": {
+                "chatTeams": [{
+                  "id": "T1JVCMVH7",
+                  "preferences": [{
+                    "name": "lifecycle_preferences",
+                    "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\"}},\\"pull_request\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\"}}}"
+                  }, {
+                    "name": "lifecycles",
+                    "value": "{\\"rexacorigal\\":{\\"branch\\":false},\\"horseguards\\":{\\"branch\\":true}}"
+                  }, {
+                    "name": "disable_bot_owner_on_github_activity_notification",
+                    "value": "true"
+                  }]
+                }],
+                "id": "T1JVCMVH7"
+              }
+            },
+            "owner": "satellite-of-love"
+          },
+          "timestamp": "2018-03-04T11:17:02.948Z"
+        }],
+        "timestamp": "2018-03-04T11:16:58Z"
+      },
+      "context": "sdm/atomist/0-code2-endpoint",
+      "description": "Skipping endpoint because deploy locally failed",
+      "state": "failure",
+      "targetUrl": ""
+    }]
+  },
+  "extensions": {
+    "operationName": "StatusToPushLifecycle",
+    "team_id": "T1JVCMVH7",
+    "team_name": "satellite-of-love",
+    "correlation_id": "3e85fbb9-c505-4915-98de-c963c09a8ee3"
+  },
+  "api_version": "1",
+  "secrets": [{
+    "uri": "github://org_token",
+    "value": "7**************************************3"
+  }]
+}`;
+    /* tslint:enable */
+
+    it("render phase attachements correctly if context format is wonrg1", done => {
+        let messageSent = false;
+        class MockMessageClient {
+
+            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
+                const sm = msg as SlackMessage;
+                assert(sm.attachments.length === 4);
+                assert(sm.attachments[1].author_name === "Phases");
+                messageSent = true;
+                return Promise.resolve();
+            }
+
+        }
+
+        class MockGraphClient implements GraphClient {
+
+            public endpoint = "";
+
+            public executeQueryFromFile(queryFile: string, variables?: any): Promise<any> {
+                return Promise.resolve({});
+            }
+
+            public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeMutation<T, Q>(mutation: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+        }
+
+        const ctx = {
+            teamId: "T095SFFBK",
+            correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
+            invocationId: guid(),
+            graphClient: new MockGraphClient(),
+            messageClient: new MockMessageClient(),
+        };
+        const handler = new StatusToPushLifecycle();
+        handler.handle(JSON.parse(payloadFailure) as EventFired<any>, ctx as HandlerContext)
+            .then(result => {
+                assert(messageSent);
+                assert(result.code === 0);
+            })
+            .then(done, done);
+
+    });
+
 });
