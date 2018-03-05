@@ -113,7 +113,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     public eventSuccessful(payload: EventFired<any>, ctx: HandlerContext, result: HandlerResult[]): Promise<any> {
         const tags = [
-            `atomist_operation:${payload.extensions.operationName}`,
+            `atomist_operation:${trimShortId(payload.extensions.operationName)}`,
             `atomist_operation_type:event`,
             ...this.teamDetail(ctx),
         ];
@@ -124,7 +124,7 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
 
     public eventFailed(payload: EventFired<any>, ctx: HandlerContext, err: any): Promise<any> {
         const tags = [
-            `atomist_operation:${payload.extensions.operationName}`,
+            `atomist_operation:${trimShortId(payload.extensions.operationName)}`,
             `atomist_operation_type:event`,
             ...this.teamDetail(ctx),
         ];
@@ -229,6 +229,14 @@ export class DatadogAutomationEventListener extends AutomationEventListenerSuppo
         this.statsd.gauge("heap.rss", heap.rss, 1, [], callback);
         this.statsd.gauge("heap.total", heap.heapTotal, 1, [], callback);
         this.statsd.gauge("heap.used", heap.heapUsed, 1, [], callback);
+    }
+}
+
+export function trimShortId(name: string): string {
+    if (name) {
+        return name.slice(0, name.lastIndexOf("_"));
+    } else {
+        return name;
     }
 }
 

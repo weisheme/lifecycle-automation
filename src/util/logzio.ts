@@ -21,6 +21,7 @@ import * as appRoot from "app-root-path";
 import * as cluster from "cluster";
 import { createLogger } from "logzio-nodejs";
 import * as serializeError from "serialize-error";
+import { trimShortId } from "./datadog";
 
 /* tslint:disable */
 const logzioWinstonTransport = require("winston-logzio");
@@ -110,7 +111,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
         const data: any = {
             "operation-type": type,
-            "operation-name": name,
+            "operation-name": trimShortId(name),
             "artifact": session.name,
             "version": session.version,
             "team-id": session.teamId,
@@ -143,7 +144,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
         const session = getContext(ctx);
 
         const data = {
-            "operation-name": session.operation,
+            "operation-name": trimShortId(session.operation),
             "artifact": session.name,
             "version": session.version,
             "team-id": session.teamId,
@@ -197,7 +198,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                 _assign(msg, {
                     level,
                     "meta": meta,
-                    "operation-name": nsp.get().operation,
+                    "operation-name": trimShortId(nsp.get().operation),
                     "artifact": nsp.get().name,
                     "version": nsp.get().version,
                     "team-id": nsp.get().teamId,
