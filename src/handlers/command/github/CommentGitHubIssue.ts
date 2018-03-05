@@ -21,7 +21,7 @@ export class CommentGitHubIssue implements HandleCommand {
     @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
-    @Parameter({ description: "comment", pattern: /[\s\S]*/ })
+    @Parameter({ description: "Issue comment", pattern: /[\s\S]*/, control: "textarea", type: "string" })
     public comment: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
