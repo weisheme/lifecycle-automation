@@ -169,14 +169,14 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-export class PhaseNodeRenderer extends AbstractIdentifiableContribution
+export class GoalNodeRenderer extends AbstractIdentifiableContribution
     implements SlackNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";
 
     constructor() {
-        super("phases");
+        super("goals");
     }
 
     public configure(configuration: LifecycleConfiguration) {
@@ -276,11 +276,11 @@ export class PhaseNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
+export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
     implements CardNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
-        super("phases");
+        super("goals");
     }
 
     public supports(node: any): boolean {
@@ -299,15 +299,15 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
         // List all the statuses on the after commit
         const commit = push.after;
         // exclude build statuses already displayed
-        const statuses = commit.statuses.filter(status => status.context.includes("sdm/"));
-        if (statuses.length === 0) {
+        const goals = commit.statuses.filter(status => status.context.includes("sdm/"));
+        if (goals.length === 0) {
             return Promise.resolve(msg);
         }
 
-        const success = statuses.filter(s => s.state === "success").length;
+        const success = goals.filter(s => s.state === "success").length;
 
         // Now each one
-        const body = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+        const body = goals.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
 
             let icon;
             if (s.state === "success") {
@@ -334,8 +334,8 @@ export class PhaseCardNodeRenderer extends AbstractIdentifiableContribution
         msg.correlations.push({
             type: "status",
             icon: "css://icon-panels",
-            shortTitle: `${success}/${statuses.length}`,
-            title: `${statuses.length} Phase`,
+            shortTitle: `${success}/${goals.length}`,
+            title: `${goals.length} ${goals.length === 1 ? "Goal" : "Goals"}`,
             body,
         });
 

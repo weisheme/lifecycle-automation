@@ -14,8 +14,8 @@ import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import {
     ApprovalGateParam,
-    ApproveGitHubPhaseStatus,
-} from "../../../command/github/ApproveGitHubPhaseStatus";
+    ApproveGitHubGoalStatus,
+} from "../../../command/github/ApproveGitHubGoalStatus";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { LifecycleActionPreferences } from "../../preferences";
@@ -416,11 +416,11 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
     }
 }
 
-export class ApprovePhaseActionContributor extends AbstractIdentifiableContribution
+export class ApproveGoalActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
-        super(LifecycleActionPreferences.push.approve_phase.id);
+        super(LifecycleActionPreferences.push.approve_goal.id);
     }
 
     public supports(node: any): boolean {
@@ -436,7 +436,7 @@ export class ApprovePhaseActionContributor extends AbstractIdentifiableContribut
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
         const buttons = [];
 
-        if (context.rendererId === "phases") {
+        if (context.rendererId === "goals") {
             push.after.statuses.filter(s => {
                 const url = urijs(s.targetUrl);
                 return url.hasQuery(ApprovalGateParam);
@@ -456,7 +456,7 @@ export class ApprovePhaseActionContributor extends AbstractIdentifiableContribut
                                buttons: any[]) {
 
         // Add the approve button
-        const approveHandler = new ApproveGitHubPhaseStatus();
+        const approveHandler = new ApproveGitHubGoalStatus();
         approveHandler.sha = push.after.sha;
         approveHandler.repo = repo.name;
         approveHandler.owner = repo.owner;
