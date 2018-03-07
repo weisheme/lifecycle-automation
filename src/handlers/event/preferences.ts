@@ -82,10 +82,10 @@ export const LifecycleActionPreferences = {
             description: "Start, Stop, Scale and retrieve application information for Cloud Foundry applications",
             enabled: true,
         },
-        approve_phase: {
-            id: "approve_phase",
-            name: "Approve SDM Phase",
-            description: "Approves or continues a Atomist SDM phase",
+        approve_goal: {
+            id: "approve_goal",
+            name: "Approve SDM Goal",
+            description: "Approves or continues a Atomist SDM goal",
             enabled: true,
         },
     },
