@@ -531,7 +531,7 @@ describe("StatusToPushLifecycle", () => {
     });
 
     /* tslint:disable */
-    const payloadWithPhases = `{
+    const payloadWithGoals = `{
   "data": {
     "Status": [{
       "_id": 1740274,
@@ -619,7 +619,7 @@ describe("StatusToPushLifecycle", () => {
               "timestamp": "2018-03-03T00:02:08.691Z"
             }, {
               "context": "sdm/atomist/1-staging/5-verifyEndpoint",
-              "description": "Failed to  verify endpoint in Test",
+              "description": "Failed to verify endpoint in Test",
               "state": "failure",
               "targetUrl": "https://sdm.atomist.io/T5964N9B7/testing/spring-team/prendergast/?atomist:approve=true",
               "timestamp": "2018-03-03T01:20:47.981Z"
@@ -767,7 +767,7 @@ describe("StatusToPushLifecycle", () => {
         "timestamp": "2018-03-02T18:00:20-06:00"
       },
       "context": "sdm/atomist/1-staging/5-verifyEndpoint",
-      "description": "Failed to  verify endpoint in Test",
+      "description": "Failed to verify endpoint in Test",
       "state": "failure",
       "targetUrl": "https://sdm.atomist.io/T5964N9B7/testing/spring-team/prendergast/?atomist:approve=true"
     }]
@@ -786,16 +786,16 @@ describe("StatusToPushLifecycle", () => {
 }`;
     /* tslint:enable */
 
-    it("render phase attachements separately per env", done => {
+    it("render goal attachments separately per env", done => {
         let messageSent = false;
         class MockMessageClient {
 
             public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 8);
-                assert(sm.attachments[2].author_name === "Phases");
+                assert(sm.attachments[2].author_name === "Goals");
                 assert(sm.attachments[4].actions.length === 1);
-                assert(sm.attachments[4].actions[0].text === "Approve 'Failed to  verify endpoint in Test'");
+                assert(sm.attachments[4].actions[0].text === "Approve 'Failed to verify endpoint in Test'");
                 messageSent = true;
                 return Promise.resolve();
             }
@@ -834,7 +834,7 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadWithPhases) as EventFired<any>, ctx as HandlerContext)
+        handler.handle(JSON.parse(payloadWithGoals) as EventFired<any>, ctx as HandlerContext)
             .then(result => {
                 assert(messageSent);
                 assert(result.code === 0);
@@ -993,14 +993,14 @@ describe("StatusToPushLifecycle", () => {
 }`;
     /* tslint:enable */
 
-    it("render phase attachements correctly if context format is wonrg1", done => {
+    it("render goal attachments correctly if context format is wrong1", done => {
         let messageSent = false;
         class MockMessageClient {
 
             public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 4);
-                assert(sm.attachments[1].author_name === "Phases");
+                assert(sm.attachments[1].author_name === "Goals");
                 messageSent = true;
                 return Promise.resolve();
             }

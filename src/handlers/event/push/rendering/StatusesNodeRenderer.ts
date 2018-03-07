@@ -200,15 +200,15 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         // List all the statuses on the after commit
         const commit = push.after;
         // exclude build statuses already displayed
-        const phases = commit.statuses.filter(status => status.context.includes("sdm/"))
+        const goals = commit.statuses.filter(status => status.context.includes("sdm/"))
             .sort((s1, s2) => s1.context.localeCompare(s2.context)) as graphql.PushToPushLifecycle.Statuses[];
-        if (phases.length === 0) {
+        if (goals.length === 0) {
             return Promise.resolve(msg);
         }
 
         // sdm/atomist/#-env/#-name
         const EnvRegexp = /sdm\/atomist\/([0-9]*-[a-zA-Z]*)\/.*/i;
-        const grouped = _.groupBy(phases, s => {
+        const grouped = _.groupBy(goals, s => {
             const result = EnvRegexp.exec(s.context);
             if (result) {
                 return result[1];
@@ -241,11 +241,11 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                         error > 0 ? "#D94649" :
                             "#45B254";
 
-                const summary = summarizeStatusCounts(pending, success, error, "phase", "phases");
+                const summary = summarizeStatusCounts(pending, success, error, "goal", "goals");
 
                 const attachment: Attachment = {
-                    author_name: counter === 0 ? (lines.length > 1 ? "Phases" : "Phase") : undefined,
-                    author_icon: counter === 0 ? "https://images.atomist.com/rug/phases.png" : undefined,
+                    author_name: counter === 0 ? (lines.length > 1 ? "Goals" : "Goal") : undefined,
+                    author_icon: counter === 0 ? "https://images.atomist.com/rug/goals.png" : undefined,
                     color,
                     fallback: summary,
                     text: lines.join("\n"),
