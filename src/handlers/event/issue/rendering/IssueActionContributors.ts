@@ -1,3 +1,4 @@
+import { logger } from "@atomist/automation-client";
 import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
 import {
     buttonForCommand,
@@ -193,6 +194,10 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
                     return [
                         menuForCommand(menu, handler, "assignee"),
                     ];
+                })
+                .catch(err => {
+                    logger.warn(err);
+                    return [];
                 });
         }
         return Promise.resolve([]);
@@ -295,7 +300,7 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
                            repo: graphql.IssueToIssueLifecycle.Repo,
                            context: RendererContext): Promise<Action[]> {
 
-        const api = github.api(context.orgToken);
+        const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
         return api.reactions.getForIssue({
             owner: repo.owner,
             repo: repo.name,
