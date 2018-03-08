@@ -43,6 +43,7 @@ export interface CardMessage {
     repository?: {
         owner: string;
         name: string;
+        slug: string;
     };
 
     shortTitle?: string;
@@ -104,7 +105,7 @@ export interface Event {
 }
 
 export interface ActionGroup {
-
+    text: string;
     actions: Action[];
 }
 

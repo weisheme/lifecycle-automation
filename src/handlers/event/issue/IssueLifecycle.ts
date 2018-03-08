@@ -43,6 +43,7 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
         msg.repository = {
             owner: repo.owner,
             name: repo.name,
+            slug: `${repo.owner}/${repo.name}`,
         };
         msg.ts = +lifecycle.timestamp;
         return Promise.resolve(msg);

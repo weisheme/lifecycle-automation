@@ -76,6 +76,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                 msg.repository = {
                     owner: repo.owner,
                     name: repo.name,
+                    slug: `${repo.owner}/${repo.name}`,
                 };
                 msg.ts = +lifecycle.timestamp;
                 msg.events = _.cloneDeep(_.get(result, "Card[0].events") || []);

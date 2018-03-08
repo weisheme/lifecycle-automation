@@ -41,6 +41,7 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
         msg.repository = {
             owner: repo.owner,
             name: repo.name,
+            slug: `${repo.owner}/${repo.name}`,
         };
         msg.ts = +lifecycle.timestamp;
         return Promise.resolve(msg);
