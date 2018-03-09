@@ -1,3 +1,4 @@
+import { logger } from "@atomist/automation-client";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { url } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
@@ -221,7 +222,10 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
 
                     return card;
                 })
-                .catch(err => msg);
+                .catch(err => {
+                    logger.warn(err);
+                    return msg;
+                });
             })
             .then(card => {
                 const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
@@ -246,7 +250,10 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
 
                     return card;
                 })
-                .catch(err => msg);
+                .catch(err => {
+                    logger.warn(err);
+                    return msg;
+                });
             });
     }
 }
@@ -372,7 +379,11 @@ export class CorrelationsCardNodeRenderer extends AbstractIdentifiableContributi
                     }
                 }
             });
-            return Promise.resolve(msg);
+            return msg;
+        })
+        .catch(err => {
+            logger.warn(err);
+            return msg;
         });
     }
 }
