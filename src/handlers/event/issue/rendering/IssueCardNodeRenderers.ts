@@ -294,7 +294,7 @@ export class CorrelationsCardNodeRenderer extends AbstractIdentifiableContributi
             shortTitle: issue.resolvingCommits ? issue.resolvingCommits.length.toString() : "0",
             title: `${len} ${len === 1 ? "Commit" : "Commits"}`,
             body: issue.resolvingCommits ? issue.resolvingCommits.map(c => ({
-                icon: avatarUrl(repo, c.author.login),
+                icon: c.author ? avatarUrl(repo, c.author.login) : undefined,
                 text: renderCommitMessage(c, repo),
             })) : undefined,
         });
