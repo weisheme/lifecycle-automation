@@ -26,6 +26,7 @@ import {
 } from "./handlers/command/github/InstallGitHubWebhook";
 import { ListMyGitHubIssues } from "./handlers/command/github/ListMyGitHubIssues";
 import { MergeGitHubPullRequest } from "./handlers/command/github/MergeGitHubPullRequest";
+import { MoveGitHubIssue } from "./handlers/command/github/MoveGitHubIssue";
 import { RaiseGitHubPullRequest } from "./handlers/command/github/RaiseGitHubPullRequest";
 import { ReactGitHubIssue } from "./handlers/command/github/ReactGitHubIssue";
 import { ReactGitHubIssueComment } from "./handlers/command/github/ReactGitHubIssueComment";
@@ -202,6 +203,7 @@ export const configuration: any = {
         () => new InstallGitHubReposWebhook(),
         () => new ListMyGitHubIssues(),
         () => new MergeGitHubPullRequest(),
+        () => new MoveGitHubIssue(),
         () => new RaiseGitHubPullRequest(),
         () => new ReactGitHubIssue(),
         () => new ReactGitHubIssueComment(),
