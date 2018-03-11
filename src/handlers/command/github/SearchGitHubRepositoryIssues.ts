@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     MappedParameter,
@@ -21,7 +21,10 @@ import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 import { ListMyGitHubIssues } from "./ListMyGitHubIssues";
 
-@CommandHandler("Search issues and pull requests in GitHub repositories", "search issues", "search github issues")
+@ConfigurableCommandHandler("Search issues and pull requests in GitHub repositories", {
+    intent: [ "search issues", "search github issues" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class SearchGitHubRepositoryIssues extends ListMyGitHubIssues implements HandleCommand {
 

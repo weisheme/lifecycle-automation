@@ -1,5 +1,6 @@
 import {
-    CommandHandler, failure,
+    ConfigurableCommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -15,8 +16,11 @@ import { PullRequestsCreateParams } from "@octokit/rest";
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Raise a GitHub pull request", "raise pr", "raise pullrequest",
-    "raise github pr", "raise github pullrequest")
+@ConfigurableCommandHandler("Raise a GitHub pull request", {
+    intent: [ "raise pr", "raise pullrequest",
+        "raise github pr", "raise github pullrequest" ],
+    autoSubmit: true,
+})
 @Tags("github", "pr")
 export class RaiseGitHubPullRequest implements HandleCommand {
 

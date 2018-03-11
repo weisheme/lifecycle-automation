@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -14,7 +14,10 @@ import {
 import { replaceChatIdWithGitHubId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Comment on a GitHub issue", "comment issue", "comment github issue")
+@ConfigurableCommandHandler("Comment on a GitHub issue", {
+    intent: ["comment issue", "comment github issue"],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class CommentGitHubIssue implements HandleCommand {
 

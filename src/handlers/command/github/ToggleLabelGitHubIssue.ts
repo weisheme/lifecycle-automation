@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -13,7 +13,10 @@ import {
 } from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Add label to or remove a label from a GitHub issue", "toggle issue label", "toggle github issue label")
+@ConfigurableCommandHandler("Add label to or remove a label from a GitHub issue", {
+    intent: [ "toggle issue label", "toggle github issue label" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class ToggleLabelGitHubIssue implements HandleCommand {
 

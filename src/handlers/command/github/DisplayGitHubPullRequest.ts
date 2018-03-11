@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -17,8 +17,10 @@ import * as graphql from "../../../typings/types";
 import { PullRequestToPullRequestLifecycle } from "../../event/pullrequest/PullRequestToPullRequestLifecycle";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Display a pull request on GitHub", "show pull request", "show pr", "show github pr",
-    "show github pull request")
+@ConfigurableCommandHandler("Display a pull request on GitHub", {
+    intent: [ "show pull request", "show pr", "show github pr", "show github pull request" ],
+    autoSubmit: true,
+})
 @Tags("github", "pr")
 export class DisplayGitHubPullRequest implements HandleCommand {
 

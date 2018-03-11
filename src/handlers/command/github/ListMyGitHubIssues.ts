@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -24,7 +24,10 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 
-@CommandHandler("List user's GitHub issues from mapped repositories", "my issues", "my github issues")
+@ConfigurableCommandHandler("List user's GitHub issues from mapped repositories", {
+    intent: [ "my issues", "my github issues" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class ListMyGitHubIssues implements HandleCommand {
 

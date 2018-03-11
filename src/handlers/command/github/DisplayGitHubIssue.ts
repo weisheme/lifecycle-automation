@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -17,7 +17,10 @@ import * as graphql from "../../../typings/types";
 import { IssueToIssueLifecycle } from "../../event/issue/IssueToIssueLifecycle";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Display an issue on GitHub", "show issue", "show github issue")
+@ConfigurableCommandHandler("Display an issue on GitHub", {
+    intent: [ "show issue", "show github issue" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class DisplayGitHubIssue implements HandleCommand {
 

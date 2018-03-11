@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -15,7 +15,10 @@ import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Create a tag on GitHub", "create tag", "create github tag")
+@ConfigurableCommandHandler("Create a tag on GitHub", {
+    intent: [ "create tag", "create github tag" ],
+    autoSubmit: true,
+})
 @Tags("github", "tag")
 export class CreateGitHubTag implements HandleCommand {
 

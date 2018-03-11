@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -18,7 +18,10 @@ import {
 import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Create a release of a repo on GitHub", "create release", "create github release")
+@ConfigurableCommandHandler("Create a release of a repo on GitHub", {
+    intent: [ "create release", "create github release" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class CreateGitHubRelease implements HandleCommand {
 

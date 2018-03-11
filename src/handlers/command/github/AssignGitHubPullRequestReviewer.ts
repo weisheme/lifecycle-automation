@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -25,7 +25,10 @@ import * as github from "./gitHubApi";
 /**
  * Approve GitHub status on commit.
  */
-@CommandHandler("Assign GitHub pull request reviewer", "assign reviewer", "assign github reviewer")
+@ConfigurableCommandHandler("Assign GitHub pull request reviewer", {
+    intent: ["assign reviewer", "assign github reviewer"],
+    autoSubmit: true,
+})
 @Tags("github", "review")
 export class AssignGitHubPullRequestReviewer implements HandleCommand {
 

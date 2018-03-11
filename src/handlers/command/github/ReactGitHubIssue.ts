@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -13,7 +13,10 @@ import {
 } from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
-@CommandHandler("React to a GitHub issue", "react issue", "react github issue")
+@ConfigurableCommandHandler("React to a GitHub issue", {
+    intent: [ "react issue", "react github issue" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue", "reaction")
 export class ReactGitHubIssue implements HandleCommand {
 

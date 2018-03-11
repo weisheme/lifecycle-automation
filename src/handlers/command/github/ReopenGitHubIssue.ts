@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -13,7 +13,10 @@ import {
 } from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Reopen a GitHub issue", "reopen issue", "reopen github issue")
+@ConfigurableCommandHandler("Reopen a GitHub issue", {
+    intent: [ "reopen issue", "reopen github issue" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class ReopenGitHubIssue implements HandleCommand {
 

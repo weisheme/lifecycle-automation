@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -13,7 +13,10 @@ import {
 } from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Deletes a GitHub branch", "delete branch", "delete github branch")
+@ConfigurableCommandHandler("Deletes a GitHub branch", {
+    intent: [ "delete branch", "delete github branch" ],
+    autoSubmit: true,
+})
 @Tags("github", "branch")
 export class DeleteGitHubBranch implements HandleCommand {
 

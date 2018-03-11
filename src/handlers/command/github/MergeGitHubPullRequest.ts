@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -22,8 +22,11 @@ import * as github from "./gitHubApi";
 /**
  * Merge a GitHub Pull Request.
  */
-@CommandHandler("Merge a GitHub Pull Request", "merge pr", "merge pullrequest",
-    "merge github pr", "merge gihub pullrequest")
+@ConfigurableCommandHandler("Merge a GitHub Pull Request", {
+    intent: [ "merge pr", "merge pullrequest",
+        "merge github pr", "merge gihub pullrequest" ],
+    autoSubmit: true,
+})
 @Tags("github", "pr")
 export class MergeGitHubPullRequest implements HandleCommand {
 

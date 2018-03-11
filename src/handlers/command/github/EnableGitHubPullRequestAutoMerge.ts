@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -18,7 +18,10 @@ import * as github from "./gitHubApi";
 /**
  * Approve GitHub status on commit.
  */
-@CommandHandler("Approve GitHub status on commit", "auto merge pr", "auto merge github pr")
+@ConfigurableCommandHandler("Approve GitHub status on commit", {
+    intent: [ "auto merge pr", "auto merge github pr" ],
+    autoSubmit: true,
+})
 @Tags("github", "pr", "auto-merge")
 export class EnableGitHubPullRequestAutoMerge implements HandleCommand {
 

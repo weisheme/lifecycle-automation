@@ -1,5 +1,6 @@
 import {
     CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -31,7 +32,10 @@ import { sendUnMappedRepoMessage } from "../../event/push/PushToUnmappedRepo";
 import { DefaultBotName } from "../slack/LinkRepo";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Install webhook for a whole organization", "install org-webhook", "install github org-webhook")
+@ConfigurableCommandHandler("Install webhook for a whole organization", {
+    intent: [ "install org-webhook", "install github org-webhook" ],
+    autoSubmit: true,
+})
 @Tags("github", "webhook")
 export class InstallGitHubOrgWebhook implements HandleCommand {
 
@@ -94,7 +98,10 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
     }
 }
 
-@CommandHandler("Install webhook for a repository", "install webhook", "install github webhook")
+@ConfigurableCommandHandler("Install webhook for a repository", {
+    intent: [ "install webhook", "install github webhook" ],
+    autoSubmit: true,
+})
 @Tags("github", "webhook")
 export class InstallGitHubRepoWebhook implements HandleCommand {
 

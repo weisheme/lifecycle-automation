@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -13,7 +13,10 @@ import {
 } from "@atomist/automation-client";
 import * as github from "./gitHubApi";
 
-@CommandHandler("Close a GitHub issue", "close issue", "close github issue")
+@ConfigurableCommandHandler("Close a GitHub issue", {
+    intent: [ "close issue", "close github issue" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class CloseGitHubIssue implements HandleCommand {
 

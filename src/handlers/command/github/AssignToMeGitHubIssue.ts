@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -16,8 +16,10 @@ import * as github from "./gitHubApi";
 
 export const AssignToMe = "$assign_to_me";
 
-@CommandHandler("Assign a GitHub issue to the invoking user or provided assingee",
-    "assign issue to me", "assign github issue to me")
+@ConfigurableCommandHandler("Assign a GitHub issue to the invoking user or provided assingee", {
+    intent: [ "assign issue to me", "assign github issue to me" ],
+    autoSubmit: true,
+})
 @Tags("github", "issue")
 export class AssignToMeGitHubIssue implements HandleCommand {
 

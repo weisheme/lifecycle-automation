@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    CommandHandler, ConfigurableCommandHandler,
     Failure,
     HandleCommand,
     HandlerContext,
@@ -27,7 +27,10 @@ const buildIdParameter = {
     pattern: /^\d+$/,
 };
 
-@CommandHandler("Restart a Travis CI build", "restart build", "restart travis build")
+@ConfigurableCommandHandler("Restart a Travis CI build", {
+    intent: [ "restart build", "restart travis build" ],
+    autoSubmit: true,
+})
 @Tags("travis", "ci", "restart")
 export class RestartTravisBuild implements HandleCommand {
 
