@@ -29,11 +29,38 @@ export function api(token: string, apiUrl: string = DefaultGitHubApiUrl): GitHub
 }
 
 export function handleError(title: string, err: any, ctx: HandlerContext): Promise<HandlerResult> | HandlerError {
-    if (err.message) {
-        const body = JSON.parse(err.message);
-        const message = body.message ? `${body.message}.` : "Error occurred. Please contact support.";
-        return ctx.messageClient.respond(error(title, message, ctx))
-            .then(() => Success, failure);
+    switch (err.code) {
+        case 400:
+        case 422:
+            return ctx.messageClient.respond(
+                error(
+                    title,
+                    "The request contained errors.",
+                    ctx,
+                ))
+                .then(() => Success, failure);
+        case 403:
+        case 404:
+            return ctx.messageClient.respond(
+                error(
+                    title,
+                    "You are not authorized to access the requested resource.",
+                    ctx,
+                ))
+                .then(() => Success, failure);
+        default:
+            if (err.message) {
+                const body = JSON.parse(err.message);
+                const message = body.message ? body.message : "Error occurred. Please contact support.";
+                return ctx.messageClient.respond(
+                    error(
+                        title,
+                        message.endsWith(".") ? message : `${message}.`,
+                        ctx,
+                    ))
+                    .then(() => Success, failure);
+            }
+            return failure(err);
+
     }
-    return failure(err);
 }
