@@ -1,5 +1,5 @@
 import {
-    CommandHandler,
+    ConfigurableCommandHandler,
     failure,
     HandleCommand,
     HandlerContext,
@@ -42,7 +42,10 @@ export function linkSlackChannelToRepo(
     );
 }
 
-@CommandHandler("Link a repository and channel", "repo", "link repo", "link repository")
+@ConfigurableCommandHandler("Link a repository and channel", {
+    intent: ["repo", "link repo", "link repository"],
+    autoSubmit: true,
+})
 @Tags("slack", "repo")
 export class LinkRepo implements HandleCommand {
 
@@ -70,18 +73,11 @@ export class LinkRepo implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
+    @MappedParameter(MappedParameters.GitHubAllRepositories)
+    public name: string;
+
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
-
-    @Parameter({
-        displayName: "Repository Name",
-        description: "name of the repository to link",
-        pattern: /^[-.\w]+$/,
-        minLength: 1,
-        maxLength: 100,
-        required: true,
-    })
-    public name: string;
 
     @Parameter({ pattern: /^\S*$/, displayable: false, required: false })
     public msgId: string;
