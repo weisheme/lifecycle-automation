@@ -1,0 +1,12 @@
+subscription RepoOnboarded {
+  RepoOnboarded {
+    repo {
+      name
+      owner
+      org {
+        owner
+        ownerType
+      }
+    }
+  }
+}

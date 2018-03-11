@@ -7190,6 +7190,29 @@ export namespace ReleaseToPushLifecycle {
     screenName?: string | null; 
   } 
 }
+export namespace RepoOnboarded {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    RepoOnboarded?: RepoOnboarded[] | null; 
+  } 
+
+  export type RepoOnboarded = {
+    repo: Repo; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    owner?: string | null; 
+    ownerType?: OwnerType | null; 
+  } 
+}
 export namespace ReviewToPullRequestLifecycle {
   export type Variables = {
   }
