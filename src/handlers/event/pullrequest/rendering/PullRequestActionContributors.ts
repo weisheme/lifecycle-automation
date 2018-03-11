@@ -69,21 +69,37 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
             squash: undefined,
             rebase: undefined,
         };
-        const commitMessage = `Merge pull request #${pr.number}`;
+        const title = `Merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`;
+        const message = pr.title;
         if (repo.allowMergeCommit === true) {
-            mergeMethods.merge = { method: "Merge", commitMessage };
+            mergeMethods.merge = {
+                method: "Merge",
+                title,
+                message,
+            };
         }
         if (repo.allowSquashMerge === true && !isGenerated(pr)) {
-            mergeMethods.squash = { method: "Squash and Merge",
-                commitMessage: pr.commits.map(c => `* ${c.message}`).join("\n")};
+            mergeMethods.squash = {
+                method: "Squash and Merge",
+                title: `${pr.commits.find(c => c.sha === pr.head.sha).message} (#${pr.number})`,
+                message: `${pr.title}\n\n${pr.commits.map(c => `* ${c.message}`).join("\n")}`,
+            };
         }
         if (repo.allowRebaseMerge === true && !isGenerated(pr)) {
-            mergeMethods.rebase = { method: "Rebase and Merge", commitMessage };
+            mergeMethods.rebase = {
+                method: "Rebase and Merge",
+                title,
+                message,
+            };
         }
         if (repo.allowMergeCommit === undefined
             && repo.allowSquashMerge === undefined
             && repo.allowRebaseMerge === undefined) {
-            mergeMethods.merge = { method: "Merge", commitMessage };
+            mergeMethods.merge = {
+                method: "Merge",
+                title,
+                message,
+            };
         }
 
         _.forIn(mergeMethods, (v, k) => {
@@ -95,8 +111,8 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
                         issue: pr.number,
                         repo: repo.name,
                         owner: repo.owner,
-                        title: pr.title,
-                        message: v.commitMessage,
+                        title: v.title,
+                        message: v.message,
                         mergeMethod: k,
                         sha: pr.head.sha,
                     }));
