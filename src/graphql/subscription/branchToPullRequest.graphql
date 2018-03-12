@@ -15,6 +15,7 @@ subscription BranchToPullRequestLifecycle {
       mergedAt
       head {
         sha
+        message
       }
       lastAssignedBy {
         login

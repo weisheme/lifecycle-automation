@@ -2396,6 +2396,7 @@ export namespace BranchToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {
@@ -3248,6 +3249,7 @@ export namespace CommentToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {
@@ -3649,6 +3651,7 @@ export namespace CommitToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {
@@ -3995,6 +3998,7 @@ export namespace DeletedBranchToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {
@@ -6109,6 +6113,7 @@ export namespace PullRequestToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {
@@ -7233,6 +7238,7 @@ export namespace ReviewToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {
@@ -7634,6 +7640,7 @@ export namespace StatusToPullRequestLifecycle {
 
   export type Head = {
     sha?: string | null; 
+    message?: string | null; 
   } 
 
   export type LastAssignedBy = {

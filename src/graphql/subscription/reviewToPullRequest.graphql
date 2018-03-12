@@ -15,6 +15,7 @@ subscription ReviewToPullRequestLifecycle {
       branchName
       head {
         sha
+        message
       }
       lastAssignedBy {
         login

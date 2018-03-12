@@ -15,6 +15,7 @@ subscription CommitToPullRequestLifecycle {
       branchName
       head {
         sha
+        message
       }
       lastAssignedBy {
         login

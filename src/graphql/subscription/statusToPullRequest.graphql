@@ -16,6 +16,7 @@ subscription StatusToPullRequestLifecycle {
         branchName
         head {
           sha
+          message
         }
         lastAssignedBy {
           login

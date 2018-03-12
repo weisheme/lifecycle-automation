@@ -15,6 +15,7 @@ subscription DeletedBranchToPullRequestLifecycle {
       branchName
       head {
         sha
+        message
       }
       lastAssignedBy {
         login

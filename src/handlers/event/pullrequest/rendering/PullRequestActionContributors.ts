@@ -81,7 +81,7 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
         if (repo.allowSquashMerge === true && !isGenerated(pr)) {
             mergeMethods.squash = {
                 method: "Squash and Merge",
-                title: `${pr.commits.find(c => c.sha === pr.head.sha).message} (#${pr.number})`,
+                title: `${pr.head.message} (#${pr.number})`,
                 message: `${pr.title}\n\n${pr.commits.map(c => `* ${c.message}`).join("\n")}`,
             };
         }
