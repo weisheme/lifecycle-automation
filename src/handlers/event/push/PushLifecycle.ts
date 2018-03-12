@@ -26,7 +26,7 @@ import { encode } from "../../../util/base64";
 import { LifecyclePreferences } from "../preferences";
 import {
     ApplicationActionContributor,
-    ApprovePhaseActionContributor,
+    ApproveGoalActionContributor,
     BuildActionContributor,
     PullRequestActionContributor,
     ReleaseActionContributor,
@@ -55,8 +55,8 @@ import {
     TagNodeRenderer,
 } from "./rendering/PushNodeRenderers";
 import {
-    PhaseCardNodeRenderer,
-    PhaseNodeRenderer,
+    GoalCardNodeRenderer,
+    GoalNodeRenderer,
     StatusesCardNodeRenderer,
     StatusesNodeRenderer,
 } from "./rendering/StatusesNodeRenderer";
@@ -105,7 +105,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                     new CommitCardNodeRenderer(),
                     new BuildCardNodeRenderer(),
                     new StatusesCardNodeRenderer(),
-                    new PhaseCardNodeRenderer(),
+                    new GoalCardNodeRenderer(),
                     new TagCardNodeRenderer(),
                     new IssueCardNodeRenderer(),
                     new PullRequestCardNodeRenderer(),
@@ -118,7 +118,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                     new CardActionContributorWrapper(new ReleaseActionContributor()),
                     new CardActionContributorWrapper(new BuildActionContributor()),
                     new CardActionContributorWrapper(new PullRequestActionContributor()),
-                    // new CardActionContributorWrapper(new ApprovePhaseActionContributor()),
+                    // new CardActionContributorWrapper(new ApproveGoalActionContributor()),
                     // new CardActionContributorWrapper(new ApplicationActionContributor()),
                 ],
                 id: `push_lifecycle/${push.repo.owner}/${push.repo.name}/${push.branch}/${push.after.sha}`,
@@ -177,7 +177,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new PushNodeRenderer(),
                     new CommitNodeRenderer(),
                     new StatusesNodeRenderer(),
-                    new PhaseNodeRenderer(),
+                    new GoalNodeRenderer(),
                     new WorkflowNodeRenderer(),
                     new IssueNodeRenderer(),
                     new PullRequestNodeRenderer(),
@@ -194,7 +194,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new ReleaseActionContributor(),
                     new BuildActionContributor(),
                     new PullRequestActionContributor(),
-                    new ApprovePhaseActionContributor(),
+                    new ApproveGoalActionContributor(),
                     new ApplicationActionContributor(),
                 ],
                 id: `push_lifecycle/${push.repo.owner}/${push.repo.name}/${push.branch}/${push.after.sha}`,

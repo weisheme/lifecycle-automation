@@ -7,7 +7,7 @@ import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/Sc
 import { StartCloudFoundryApplication } from "./handlers/command/cloudfoundry/StartCloudFoundryApplication";
 import { StopCloudFoundryApplication } from "./handlers/command/cloudfoundry/StopCloudFoundryApplication";
 import { ApproveGitHubCommit } from "./handlers/command/github/ApproveGitHubCommit";
-import { ApproveGitHubPhaseStatus } from "./handlers/command/github/ApproveGitHubPhaseStatus";
+import { ApproveGitHubGoalStatus } from "./handlers/command/github/ApproveGitHubGoalStatus";
 import { AssignGitHubPullRequestReviewer } from "./handlers/command/github/AssignGitHubPullRequestReviewer";
 import { AssignToMeGitHubIssue } from "./handlers/command/github/AssignToMeGitHubIssue";
 import { CloseGitHubIssue } from "./handlers/command/github/CloseGitHubIssue";
@@ -186,7 +186,7 @@ export const configuration: any = {
 
         // github
         () => new ApproveGitHubCommit(),
-        () => new ApproveGitHubPhaseStatus(),
+        () => new ApproveGitHubGoalStatus(),
         () => new AssignGitHubPullRequestReviewer(),
         () => new AssignToMeGitHubIssue(),
         () => new CloseGitHubIssue(),

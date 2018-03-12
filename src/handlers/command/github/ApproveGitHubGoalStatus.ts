@@ -20,9 +20,9 @@ export const ApprovalGateParam = "atomist:approve";
 /**
  * Approve GitHub status on commit.
  */
-@CommandHandler("Approve GitHub phase status on commit")
+@CommandHandler("Approve GitHub goal status on commit")
 @Tags("fingerprint", "approve")
-export class ApproveGitHubPhaseStatus implements HandleCommand {
+export class ApproveGitHubGoalStatus implements HandleCommand {
 
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
@@ -78,7 +78,7 @@ export class ApproveGitHubPhaseStatus implements HandleCommand {
             })
             .then(() => Success)
             .catch(err => {
-                return github.handleError("Approve Phase", err, ctx);
+                return github.handleError("Approve Goal", err, ctx);
             });
     }
 }
