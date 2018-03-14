@@ -1,4 +1,4 @@
-query CardEvents($key: String!) {
+query CardEvents($key: [String]!) {
   Card(key: $key) {
     events {
       icon

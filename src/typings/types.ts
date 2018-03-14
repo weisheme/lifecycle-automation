@@ -419,7 +419,7 @@ export namespace BranchWithPullRequest {
 }
 export namespace CardEvents {
   export type Variables = {
-    key: string;
+    key: string[];
   }
 
   export type Query = {
@@ -938,6 +938,117 @@ export namespace IssueOrPr {
 
   export type OpenedBy = {
     login?: string | null; 
+  } 
+}
+export namespace LastCommitOnBranch {
+  export type Variables = {
+    name: string;
+    owner: string;
+    branch: string;
+  }
+
+  export type Query = {
+    Repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    branches?: Branches[] | null; 
+  } 
+
+  export type Branches = {
+    commit?: Commit | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
+    statuses?: Statuses[] | null; 
+    tags?: Tags[] | null; 
+    images?: Images[] | null; 
+    fingerprints?: Fingerprints[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
+  } 
+
+  export type Statuses = {
+    context?: string | null; 
+    description?: string | null; 
+    targetUrl?: string | null; 
+    state?: StatusState | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Tags = {
+    name?: string | null; 
+    release?: Release | null; 
+    builds?: Builds[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Release = {
+    name?: string | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Builds = {
+    buildId?: string | null; 
+    buildUrl?: string | null; 
+    name?: string | null; 
+    provider?: string | null; 
+    status?: BuildStatus | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Images = {
+    _id?: Long | null; 
+    image?: string | null; 
+    imageName?: string | null; 
+    pods?: Pods[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Pods = {
+    _id?: Long | null; 
+    name?: string | null; 
+    phase?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    baseName?: string | null; 
+    namespace?: string | null; 
+    resourceVersion?: Long | null; 
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
+    _id?: Long | null; 
+    name?: string | null; 
+    imageName?: string | null; 
+    timestamp?: string | null; 
+    environment?: string | null; 
+    state?: string | null; 
+    ready?: boolean | null; 
+    restartCount?: Long | null; 
+    statusJSON?: string | null; 
+    resourceVersion?: Long | null; 
+  } 
+
+  export type Fingerprints = {
+    name?: string | null; 
+    sha?: string | null; 
+    data?: string | null; 
   } 
 }
 export namespace LastPushOnBranch {
@@ -7203,14 +7314,25 @@ export namespace RepoOnboarded {
   } 
 
   export type Repo = {
-    name?: string | null; 
     owner?: string | null; 
+    name?: string | null; 
     org?: Org | null; 
+    defaultBranch?: string | null; 
   } 
 
   export type Org = {
-    owner?: string | null; 
-    ownerType?: OwnerType | null; 
+    provider?: Provider | null; 
+    team?: Team | null; 
+  } 
+
+  export type Provider = {
+    url?: string | null; 
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
   } 
 }
 export namespace ReviewToPullRequestLifecycle {
