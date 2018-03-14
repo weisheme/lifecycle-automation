@@ -66,6 +66,7 @@ import {
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
+import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
 import { StatusOnParentImpact } from "./handlers/event/parentimpact/StatusOnParentImpact";
 import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild";
 import { AutoMergeOnPullRequest } from "./handlers/event/pullrequest/AutoMergeOnPullRequest";
@@ -264,6 +265,9 @@ export const configuration: any = {
         // issue
         () => new IssueToIssueLifecycle(),
         () => new NotifyMentionedOnIssue(),
+
+        // onboarded
+        () => new RepositoryOnboarded(),
 
         // pullRequest
         () => new AutoMergeOnBuild(),

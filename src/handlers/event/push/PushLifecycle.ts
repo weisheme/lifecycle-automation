@@ -67,7 +67,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
     protected prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<CardMessage> {
         return ctx.graphClient.executeQueryFromFile<graphql.CardEvents.Query, graphql.CardEvents.Variables>(
             "../../../graphql/query/cardEvents",
-            { key: lifecycle.id },
+            { key: [ lifecycle.id ]},
             { fetchPolicy: "network-only" },
             __dirname)
             .then(result => {

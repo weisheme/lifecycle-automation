@@ -1,0 +1,19 @@
+subscription RepoOnboarded {
+  RepoOnboarded {
+    repo {
+      owner
+      name
+      org {
+        provider {
+          url
+          apiUrl
+          gitUrl
+        }
+        team {
+          id
+        }
+      }
+      defaultBranch
+    }
+  }
+}
