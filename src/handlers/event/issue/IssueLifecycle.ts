@@ -20,9 +20,9 @@ import {
     AssignToMeActionContributor,
     CloseActionContributor,
     CommentActionContributor,
-    DisplayAssignActionContributor,
-    LabelActionContributor,
-    ReactionActionContributor,
+    DisplayMoreActionContributor,
+    LabelActionContributor, MoveActionContributor,
+    ReactionActionContributor, RelatedActionContributor,
     ReopenActionContributor,
 } from "./rendering/IssueActionContributors";
 import {
@@ -106,7 +106,7 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
     }
 
     protected processLifecycle(lifecycle: Lifecycle, store: Map<string, any>): Lifecycle {
-        store.set("show_assign", true);
+        store.set("show_more", true);
         return lifecycle;
     }
 
@@ -150,14 +150,16 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
                 new AttachImagesNodeRenderer(node => node.state === "open"),
                 new FooterNodeRenderer(node => node.title || node.body)],
             contributors: [
-                new DisplayAssignActionContributor(),
                 new CommentActionContributor(),
                 new LabelActionContributor(),
                 new ReactionActionContributor(),
                 new AssignToMeActionContributor(),
                 new AssignActionContributor(),
+                new MoveActionContributor(),
+                new RelatedActionContributor(),
                 new ReopenActionContributor(),
                 new CloseActionContributor(),
+                new DisplayMoreActionContributor(),
             ],
             id: `issue_lifecycle/${repo.owner}/${repo.name}/${issue.number}`,
             timestamp,

@@ -15,6 +15,7 @@ import { CommentGitHubIssue } from "./handlers/command/github/CommentGitHubIssue
 import { CreateGitHubIssue } from "./handlers/command/github/CreateGitHubIssue";
 import { CreateGitHubRelease } from "./handlers/command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "./handlers/command/github/CreateGitHubTag";
+import { CreateRelatedGitHubIssue } from "./handlers/command/github/CreateRelatedGitHubIssue";
 import { DeleteGitHubBranch } from "./handlers/command/github/DeleteGitHubBranch";
 import { DisplayGitHubIssue } from "./handlers/command/github/DisplayGitHubIssue";
 import { DisplayGitHubPullRequest } from "./handlers/command/github/DisplayGitHubPullRequest";
@@ -63,6 +64,7 @@ import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/No
 import {
     PullRequestToPullRequestCommentLifecycle,
 } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
+import { CommentOnRelatedIssueClosed } from "./handlers/event/issue/CommentOnRelatedIssueClosed";
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
@@ -124,6 +126,7 @@ import {
 } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
+import { issueRelationshipIngester } from "./ingesters/issueRelationship";
 import {
     DatadogAutomationEventListener,
     DatadogOptions,
@@ -195,6 +198,7 @@ export const configuration: any = {
         () => new CreateGitHubIssue(),
         () => new CreateGitHubRelease(),
         () => new CreateGitHubTag(),
+        () => new CreateRelatedGitHubIssue(),
         () => new DeleteGitHubBranch(),
         () => new DisplayGitHubIssue(),
         () => new DisplayGitHubPullRequest(),
@@ -263,6 +267,7 @@ export const configuration: any = {
         () => new TagToPushLifecycle(),
 
         // issue
+        () => new CommentOnRelatedIssueClosed(),
         () => new IssueToIssueLifecycle(),
         () => new NotifyMentionedOnIssue(),
 
@@ -318,6 +323,9 @@ export const configuration: any = {
         // issue
         () => new IssueToIssueCardLifecycle(),
         () => new CommentToIssueCardLifecycle(),
+    ],
+    ingesters: [
+        issueRelationshipIngester,
     ],
     listeners,
     token,

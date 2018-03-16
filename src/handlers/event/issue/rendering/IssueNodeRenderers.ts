@@ -103,7 +103,7 @@ export class MoreNodeRenderer extends AbstractIdentifiableContribution
     implements SlackNodeRenderer<any> {
 
     constructor() {
-        super("assign");
+        super("more");
     }
 
     public supports(node: any): boolean {
@@ -111,10 +111,9 @@ export class MoreNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public render(node: any, actions: Action[], msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
-        if (context.has("show_assign") && actions.length > 0) {
+        if (context.has("show_more") && actions.length > 0) {
             msg.attachments.push({
-                text: `:busts_in_silhouette: Assignees`,
-                fallback: "Issue Assignment",
+                fallback: "More Actions",
                 actions,
             });
         }

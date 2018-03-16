@@ -11,15 +11,17 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { loadGitHubIdByChatId } from "../../../util/helpers";
+import { guid } from "@atomist/automation-client/internal/util/string";
+import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
+import { IssueRelationship } from "../../../ingesters/issueRelationship";
 import * as github from "./gitHubApi";
 
-@ConfigurableCommandHandler("Moves a GitHub issue to a different org and/or repo", {
-    intent: [ "move issue", "move github issue" ],
+@ConfigurableCommandHandler("Create a related GitHub issue in a different org and/or repo", {
+    intent: [ "related issue", "related github issue" ],
     autoSubmit: true,
 })
 @Tags("github", "issue")
-export class MoveGitHubIssue implements HandleCommand {
+export class CreateRelatedGitHubIssue implements HandleCommand {
 
     @Parameter({ description: "target repository name", pattern: /^.*$/ })
     public targetRepo: string;
@@ -49,58 +51,51 @@ export class MoveGitHubIssue implements HandleCommand {
             repo: this.repo,
             number: this.issue,
         })
-        .then(issue => {
-            return api.issues.getComments({
-                owner: this.owner,
-                repo: this.repo,
-                number: this.issue,
-            })
-            .then(result => {
-                return [issue.data, result.data];
-            });
-        })
-        .then(([issue, comment]) => {
-            const comments = comment.map(c => `
----
-Comment by @${c.user.login} at ${c.created_at}:
-
-${c.body}`).join("\n");
-
-            const body = `Issue moved from ${this.owner}/${this.repo}#${this.issue}
+        .then(result => {
+            const issue = result.data;
+            const body = `Issue originated from ${this.owner}/${this.repo}#${this.issue}
 
 Created by @${issue.user.login} at ${issue.created_at}:
 
-${issue.body}
-${comments}`;
-
+${issue.body}`;
             return api.issues.create({
                 owner: this.targetOwner,
                 repo: this.targetRepo,
                 title: issue.title,
                 body,
                 labels: issue.labels.map(l => l.name),
-                assignees: issue.assignees.map(a => a.login),
             });
+        })
+        .then(newIssue => {
+            const issueRel: IssueRelationship = {
+                relationshipId: guid(),
+                type: "related",
+                state: "open",
+                source: {
+                    owner: this.owner,
+                    repo: this.repo,
+                    issue: this.issue.toString(),
+                },
+                target: {
+                    owner: this.targetOwner,
+                    repo: this.targetRepo,
+                    issue: newIssue.data.number.toString(),
+                },
+            };
+            return ctx.messageClient.send(issueRel, addressEvent("IssueRelationship"))
+                .then(() => newIssue);
         })
         .then(newIssue => {
             return api.issues.createComment({
                 owner: this.owner,
                 repo: this.repo,
                 number: this.issue,
-                body: `Issue moved to ${this.targetOwner}/${this.targetRepo}#${newIssue.data.number}`,
-            })
-            .then(() => {
-                return api.issues.edit({
-                    owner: this.owner,
-                    repo: this.repo,
-                    number: this.issue,
-                    state: "closed",
-                });
+                body: `Related issue ${this.targetOwner}/${this.targetRepo}#${newIssue.data.number} created`,
             });
         })
         .then(() => Success)
         .catch(err => {
-            return github.handleError("Move Issue", err, ctx);
+            return github.handleError("New Related Issue", err, ctx);
         });
     }
 }

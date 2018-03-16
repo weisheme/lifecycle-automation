@@ -15,7 +15,9 @@ import {
 import * as graphql from "../../../../typings/types";
 import { isGitHubCom } from "../../../../util/helpers";
 import { AssignToMe, AssignToMeGitHubIssue } from "../../../command/github/AssignToMeGitHubIssue";
+import { CreateRelatedGitHubIssue } from "../../../command/github/CreateRelatedGitHubIssue";
 import * as github from "../../../command/github/gitHubApi";
+import { MoveGitHubIssue } from "../../../command/github/MoveGitHubIssue";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractIssueActionContributor extends AbstractIdentifiableContribution
@@ -62,11 +64,11 @@ export abstract class AbstractIssueActionContributor extends AbstractIdentifiabl
     }
 }
 
-export class DisplayAssignActionContributor extends AbstractIdentifiableContribution
+export class DisplayMoreActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
     constructor() {
-        super(LifecycleActionPreferences.issue.assign.id);
+        super(LifecycleActionPreferences.issue.more.id);
     }
 
     public supports(node: any): boolean {
@@ -76,26 +78,26 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
         if (context.rendererId === "issue") {
-            if (!context.has("show_assign")) {
+            if (!context.has("show_more")) {
                 return Promise.resolve([
-                    buttonForCommand({ text: "Assign \u02C5" },
+                    buttonForCommand({ text: "More \u02C5" },
                         "DisplayGitHubIssue",
                         {
                             repo: repo.name,
                             owner: repo.owner,
                             issue: issue.number,
-                            showMore: "assign_+",
+                            showMore: "more_+",
                         }),
                 ]);
             } else {
                 return Promise.resolve([
-                    buttonForCommand({ text: "Assign \u02C4" },
+                    buttonForCommand({ text: "More \u02C4" },
                         "DisplayGitHubIssue",
                         {
                             repo: repo.name,
                             owner: repo.owner,
                             issue: issue.number,
-                            showMore: "assign_-",
+                            showMore: "more_-",
                         }),
                 ]);
             }
@@ -111,8 +113,8 @@ export class DisplayAssignActionContributor extends AbstractIdentifiableContribu
 export class AssignToMeActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
-    constructor(private rendererId = "assign") {
-        super(LifecycleActionPreferences.issue.assign.id);
+    constructor(private rendererId = "more") {
+        super(LifecycleActionPreferences.issue.assigntome.id);
     }
 
     public supports(node: any): boolean {
@@ -126,7 +128,7 @@ export class AssignToMeActionContributor extends AbstractIdentifiableContributio
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
 
-        if (context.rendererId === this.rendererId && context.has("show_assign")) {
+        if (context.rendererId === this.rendererId && context.has("show_more")) {
             const handler = new AssignToMeGitHubIssue();
             handler.repo = repo.name;
             handler.owner = repo.owner;
@@ -140,10 +142,72 @@ export class AssignToMeActionContributor extends AbstractIdentifiableContributio
     }
 }
 
+export class MoveActionContributor extends AbstractIdentifiableContribution
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+
+    constructor(private rendererId = "more") {
+        super(LifecycleActionPreferences.issue.move.id);
+    }
+
+    public supports(node: any): boolean {
+        return node.title && node.state === "open";
+    }
+
+    public menusFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
+        return Promise.resolve([]);
+    }
+
+    public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo");
+
+        if (context.rendererId === this.rendererId && context.has("show_more")) {
+            const handler = new MoveGitHubIssue();
+            handler.repo = repo.name;
+            handler.owner = repo.owner;
+            handler.issue = issue.number;
+            return Promise.resolve([
+                buttonForCommand({ text: "Move" }, handler),
+            ]);
+        }
+        return Promise.resolve([]);
+    }
+}
+
+export class RelatedActionContributor extends AbstractIdentifiableContribution
+    implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
+
+    constructor(private rendererId = "more") {
+        super(LifecycleActionPreferences.issue.related.id);
+    }
+
+    public supports(node: any): boolean {
+        return node.title && node.state === "open";
+    }
+
+    public menusFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
+        return Promise.resolve([]);
+    }
+
+    public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo");
+
+        if (context.rendererId === this.rendererId && context.has("show_more")) {
+            const handler = new CreateRelatedGitHubIssue();
+            handler.repo = repo.name;
+            handler.owner = repo.owner;
+            handler.issue = issue.number;
+            return Promise.resolve([
+                buttonForCommand({ text: "Create Related" }, handler),
+            ]);
+        }
+        return Promise.resolve([]);
+    }
+}
+
 export class AssignActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.IssueToIssueLifecycle.Issue> {
 
-    constructor(private rendererId = "assign") {
+    constructor(private rendererId = "more") {
         super(LifecycleActionPreferences.issue.assign.id);
     }
 
@@ -158,7 +222,7 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
     public menusFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
 
-        if (context.rendererId === this.rendererId && context.has("show_assign") && isGitHubCom(repo)) {
+        if (context.rendererId === this.rendererId && context.has("show_more") && isGitHubCom(repo)) {
             const client = new ApolloGraphClient("https://api.github.com/graphql",
                 { Authorization: `bearer ${context.orgToken}` });
 

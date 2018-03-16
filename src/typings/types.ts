@@ -3058,6 +3058,29 @@ export namespace ChannelLinkCreated {
     providerId?: string | null; 
   } 
 }
+export namespace CommentOnRelatedIssueClosed {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Issue?: Issue[] | null; 
+  } 
+
+  export type Issue = {
+    number?: number | null; 
+    repo: Repo; 
+    closedBy?: ClosedBy | null; 
+  } 
+
+  export type Repo = {
+    owner?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type ClosedBy = {
+    login?: string | null; 
+  } 
+}
 export namespace CommentToIssueLifecycle {
   export type Variables = {
   }

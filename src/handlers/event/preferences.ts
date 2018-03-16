@@ -142,6 +142,18 @@ export const LifecycleActionPreferences = {
             description: "Assign GitHub issues",
             enabled: true,
         },
+        move: {
+            id: "move",
+            name: "Move",
+            description: "Move GitHub issues",
+            enabled: true,
+        },
+        related: {
+            id: "related",
+            name: "Create Related",
+            description: "Create related GitHub issues",
+            enabled: true,
+        },
         label: {
             id: "label",
             name: "Toggle Labels",
@@ -172,6 +184,13 @@ export const LifecycleActionPreferences = {
             description: "Reopen GitHub issue",
             enabled: true,
         },
+        more: {
+            id: "more",
+            name: "More",
+            description: "More actions",
+            enabled: true,
+        },
+
     },
 
     branch: {

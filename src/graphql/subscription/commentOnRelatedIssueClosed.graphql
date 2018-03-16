@@ -1,0 +1,12 @@
+subscription CommentOnRelatedIssueClosed {
+  Issue(state: closed) {
+    number
+    repo {
+      owner
+      name
+    }
+    closedBy {
+      login
+    }
+  }
+}

@@ -122,9 +122,9 @@ class ResponseIssueToIssueLifecycle extends IssueToIssueLifecycle {
     }
 
     protected processLifecycle(lifecycle: Lifecycle, store: Map<string, any>): Lifecycle {
-        if (this.showMore === "assign_+") {
-            store.set("show_assign", true);
-        } else if (this.showMore === "assign_-") {
+        if (this.showMore === "more_+" || this.showMore === "assign_+") {
+            store.set("show_more", true);
+        } else if (this.showMore === "more_-" || this.showMore === "assign_-") {
             // don't do anything
         } else {
             lifecycle.post = "always";
