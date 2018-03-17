@@ -100,7 +100,7 @@ ${issue.body}`;
                 `${this.targetOwner}/${this.targetRepo}#${newIssue.data.number}`);
             return ctx.messageClient.respond(success(
                 "Related Issue",
-                `Successfully create tower related issue
+                `Successfully create related issue
 ${issueLink}: ${newIssue.data.title}`));
         })
         .then(() => Success)
