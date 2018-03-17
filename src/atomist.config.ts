@@ -57,7 +57,7 @@ import { NotifyPusherOnBuild } from "./handlers/event/build/NotifyPusherOnBuild"
 import { BotJoinedChannel } from "./handlers/event/channellink/BotJoinedChannel";
 import { ChannelLinkCreated } from "./handlers/event/channellink/ChannelLinkCreated";
 import { CommentToIssueCommentLifecycle } from "./handlers/event/comment/CommentToIssueCommentLifecycle";
-import { CommentToPullRequestCommentLifecycle} from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
+import { CommentToPullRequestCommentLifecycle } from "./handlers/event/comment/CommentToPullRequestCommentLifecycle";
 import { IssueToIssueCommentLifecycle } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
 import { NotifyMentionedOnIssueComment } from "./handlers/event/comment/NotifyMentionedOnIssueComment";
 import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/NotifyMentionedOnPullRequestComment";
@@ -324,9 +324,9 @@ export const configuration: any = {
         () => new IssueToIssueCardLifecycle(),
         () => new CommentToIssueCardLifecycle(),
     ],
-    ingesters: [
+    ingesters: notLocal ? [
         issueRelationshipIngester,
-    ],
+    ] : [],
     listeners,
     token,
     http: {
