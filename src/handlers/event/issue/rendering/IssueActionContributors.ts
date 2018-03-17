@@ -204,8 +204,8 @@ export class RelatedActionContributor extends AbstractIdentifiableContribution
             linkHandler.issue = issue.number;
 
             return Promise.resolve([
-                buttonForCommand({ text: "Link Related" }, linkHandler),
-                buttonForCommand({ text: "Create Related" }, createHandler),
+                buttonForCommand({ text: "Link" }, linkHandler),
+                buttonForCommand({ text: "Create" }, createHandler),
             ]);
         }
         return Promise.resolve([]);
