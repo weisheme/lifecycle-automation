@@ -25,6 +25,7 @@ import {
     InstallGitHubReposWebhook,
     InstallGitHubRepoWebhook,
 } from "./handlers/command/github/InstallGitHubWebhook";
+import { LinkRelatedGitHubIssue } from "./handlers/command/github/LinkRelatedGitHubIssue";
 import { ListMyGitHubIssues } from "./handlers/command/github/ListMyGitHubIssues";
 import { MergeGitHubPullRequest } from "./handlers/command/github/MergeGitHubPullRequest";
 import { MoveGitHubIssue } from "./handlers/command/github/MoveGitHubIssue";
@@ -206,6 +207,7 @@ export const configuration: any = {
         () => new InstallGitHubOrgWebhook(),
         () => new InstallGitHubRepoWebhook(),
         () => new InstallGitHubReposWebhook(),
+        () => new LinkRelatedGitHubIssue(),
         () => new ListMyGitHubIssues(),
         () => new MergeGitHubPullRequest(),
         () => new MoveGitHubIssue(),

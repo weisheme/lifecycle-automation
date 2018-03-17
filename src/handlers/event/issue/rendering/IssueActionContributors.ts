@@ -17,6 +17,7 @@ import { isGitHubCom } from "../../../../util/helpers";
 import { AssignToMe, AssignToMeGitHubIssue } from "../../../command/github/AssignToMeGitHubIssue";
 import { CreateRelatedGitHubIssue } from "../../../command/github/CreateRelatedGitHubIssue";
 import * as github from "../../../command/github/gitHubApi";
+import { LinkRelatedGitHubIssue } from "../../../command/github/LinkRelatedGitHubIssue";
 import { MoveGitHubIssue } from "../../../command/github/MoveGitHubIssue";
 import { LifecycleActionPreferences } from "../../preferences";
 
@@ -192,12 +193,19 @@ export class RelatedActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
 
         if (context.rendererId === this.rendererId && context.has("show_more")) {
-            const handler = new CreateRelatedGitHubIssue();
-            handler.repo = repo.name;
-            handler.owner = repo.owner;
-            handler.issue = issue.number;
+            const createHandler = new CreateRelatedGitHubIssue();
+            createHandler.repo = repo.name;
+            createHandler.owner = repo.owner;
+            createHandler.issue = issue.number;
+
+            const linkHandler = new LinkRelatedGitHubIssue();
+            linkHandler.repo = repo.name;
+            linkHandler.owner = repo.owner;
+            linkHandler.issue = issue.number;
+
             return Promise.resolve([
-                buttonForCommand({ text: "Create Related" }, handler),
+                buttonForCommand({ text: "Link Related" }, linkHandler),
+                buttonForCommand({ text: "Create Related" }, createHandler),
             ]);
         }
         return Promise.resolve([]);

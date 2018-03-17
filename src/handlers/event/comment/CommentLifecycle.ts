@@ -85,12 +85,12 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
                         }),
                         new FooterNodeRenderer(node => node.body && (node.issue || node.pullRequest))],
                     contributors: [
-                        new DetailsActionContributor(),
                         new AssignActionContributor(),
                         new CommentActionContributor(),
                         new LabelActionContributor(),
                         new ReactionActionContributor(),
                         new CloseActionContributor(),
+                        new DetailsActionContributor(),
                     ],
                     id: `comment_lifecycle/${repo.owner}/${repo.name}/${id}/${comment.gitHubId}`,
                     timestamp: Date.now().toString(),

@@ -40,6 +40,7 @@ export class CreateRelatedGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
+    @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
     @Secret(Secrets.userToken("repo"))
@@ -100,7 +101,7 @@ ${issue.body}`;
                 `${this.targetOwner}/${this.targetRepo}#${newIssue.data.number}`);
             return ctx.messageClient.respond(success(
                 "Related Issue",
-                `Successfully create related issue
+                `Successfully created related issue
 ${issueLink}: ${newIssue.data.title}`));
         })
         .then(() => Success)
