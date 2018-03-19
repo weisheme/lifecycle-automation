@@ -11,7 +11,6 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { loadGitHubIdByChatId } from "../../../util/helpers";
 import * as github from "./gitHubApi";
 
 @ConfigurableCommandHandler("Moves a GitHub issue to a different org and/or repo", {
@@ -21,11 +20,11 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue")
 export class MoveGitHubIssue implements HandleCommand {
 
-    @Parameter({ description: "target repository name", pattern: /^.*$/ })
-    public targetRepo: string;
-
     @Parameter({ description: "target owner name", pattern: /^.*$/ })
     public targetOwner: string;
+
+    @Parameter({ description: "target repository name", pattern: /^.*$/ })
+    public targetRepo: string;
 
     @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
