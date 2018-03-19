@@ -73,7 +73,7 @@ export class CreateGitHubIssue implements HandleCommand {
                     owner: this.owner,
                     repo: this.repo,
                     title: this.title,
-                    body: body,
+                    body,
                 });
             })
             .then(result => {

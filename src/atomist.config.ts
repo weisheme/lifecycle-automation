@@ -363,7 +363,7 @@ export const configuration: any = {
     },
     logging: {
         level: "debug",
-    }
+    },
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
