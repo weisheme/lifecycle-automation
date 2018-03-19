@@ -26,11 +26,11 @@ import * as github from "./gitHubApi";
 @Tags("github", "issue")
 export class LinkRelatedGitHubIssue implements HandleCommand {
 
-    @Parameter({ description: "target repository name", pattern: /^.*$/ })
-    public targetRepo: string;
-
     @Parameter({ description: "target owner name", pattern: /^.*$/ })
     public targetOwner: string;
+
+    @Parameter({ description: "target repository name", pattern: /^.*$/ })
+    public targetRepo: string;
 
     @Parameter({ description: "target issue number", pattern: /^.*$/ })
     public targetIssue: number;

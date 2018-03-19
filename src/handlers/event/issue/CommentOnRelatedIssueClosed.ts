@@ -8,6 +8,7 @@ import {
     Secret,
     Secrets,
     success,
+    Success,
     SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
@@ -80,8 +81,10 @@ export class CommentOnRelatedIssueClosed
                         issueRel.state = "closed";
                         return ctx.messageClient.send(issueRel, addressEvent("IssueRelationship"));
                     });
-                }));
+                }))
+                .then(success);
             }
+            return Success;
         })
         .then(success, failure);
     }
