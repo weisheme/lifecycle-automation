@@ -1,5 +1,8 @@
 import { automationClient } from "@atomist/automation-client/automationClient";
-import { findConfiguration } from "@atomist/automation-client/configuration";
+import {
+    findConfiguration,
+    loadConfiguration
+} from "@atomist/automation-client/configuration";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { enableDefaultScanning } from "@atomist/automation-client/scan";
 import {
@@ -9,9 +12,10 @@ import {
 
 loadSecretsFromConfigServer()
     .then(() => loadSecretsFromCloudFoundryEnvironment())
-    .then(() => {
-        const configuration = enableDefaultScanning(findConfiguration());
+    .then(() => loadConfiguration())
+    .then(configuration => {
         const node = automationClient(configuration);
-        node.run()
+        return node.run()
             .then(() => logger.info("Successfully completed startup of process '%s'", process.pid));
     });
+

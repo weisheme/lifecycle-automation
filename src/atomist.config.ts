@@ -70,7 +70,6 @@ import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIss
 import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
 import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
-import { StatusOnParentImpact } from "./handlers/event/parentimpact/StatusOnParentImpact";
 import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild";
 import { AutoMergeOnPullRequest } from "./handlers/event/pullrequest/AutoMergeOnPullRequest";
 import { AutoMergeOnReview } from "./handlers/event/pullrequest/AutoMergeOnReview";
@@ -177,8 +176,6 @@ if (notLocal) {
 const AdminTeam = "atomist-automation";
 
 export const configuration: any = {
-    name: pj.name,
-    version: pj.version,
     policy: config.get("policy"),
     teamIds: config.get("teamIds"),
     groups: config.get("groups"),
@@ -364,6 +361,9 @@ export const configuration: any = {
         },
         compress: false,
     },
+    logging: {
+        level: "debug",
+    }
 };
 
 // For now, we enable a couple of interesting memory and heap commands on this automation-client
