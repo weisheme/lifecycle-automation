@@ -16,6 +16,7 @@ import * as GraphQL from "@atomist/automation-client/graph/graphQL";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
+import { AtomistGeneratedLabel } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
 const RelatedIssueQuery = `query RelatedIssue($owner: [String]!, $repo: [String]!, $issue: [String]!) {
@@ -74,7 +75,9 @@ export class CommentOnRelatedIssueClosed
                         repo: ir.source.repo,
                         number: ir.source.issue,
                         body: `Related issue ${ir.target.owner}/${ir.target.repo}#${
-                            ir.target.issue} closed by @${issue.closedBy.login}`,
+                            ir.target.issue} closed by @${issue.closedBy.login}
+
+[${AtomistGeneratedLabel}] [atomist:related-issue]`,
                     })
                     .then(() => {
                         const issueRel = _.cloneDeep(ir);

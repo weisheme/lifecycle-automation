@@ -5,7 +5,10 @@ import {
     Success,
 } from "@atomist/automation-client";
 import * as graphql from "../../../typings/types";
-import { apiUrl } from "../../../util/helpers";
+import {
+    apiUrl,
+    AtomistGeneratedLabel,
+} from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
 export const AutoMergeLabel = "atomist:auto-merge";
@@ -53,7 +56,9 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
 
 * ${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews.map(
                             r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}
-* ${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}`;
+* ${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}
+
+[${AtomistGeneratedLabel}] [${AutoMergeLabel}]`;
 
                         return api.issues.createComment({
                             owner: pr.repo.owner,
