@@ -58,6 +58,7 @@ export class ListRepoLinks implements HandleCommand {
                         const handler = new UnlinkRepo();
                         handler.msgId = this.msgId;
                         handler.name = r.name;
+                        handler.owner = r.owner;
 
                         const slug = `${r.owner}/${r.name}`;
                         const attachment: Attachment = {
