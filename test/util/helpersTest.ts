@@ -1043,7 +1043,7 @@ in line with some other text`);
 
         it("should remove two markers", () => {
             const body = `This is some test text
-[atomist:generated] [atomist:add-pcf-manifest]
+[atomist:generated][atomist:add-pcf-manifest]
 in line with some other text`;
             assert.equal(removeAtomistMarkers(body), `This is some test text
 
