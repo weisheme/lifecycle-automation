@@ -1,0 +1,187 @@
+
+import {
+    HandlerContext,
+    HandlerResult,
+    MappedParameter,
+    MappedParameters,
+    Parameter,
+    Parameters,
+    Success,
+} from "@atomist/automation-client";
+import { guid } from "@atomist/automation-client/internal/util/string";
+import {
+    buttonForCommand,
+    menuForCommand,
+} from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    bold,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages";
+import * as _ from "lodash";
+import * as types from "../../../typings/types";
+import {
+    avatarUrl,
+    issueUrl,
+} from "../../../util/helpers";
+
+@Parameters()
+export class OwnerParameters {
+
+    @Parameter({ description: "message id", required: false, displayable: false })
+    public msgId: string;
+
+    @Parameter({ description: "issue number", pattern: /^.*$/ })
+    public issue: number;
+
+    @MappedParameter(MappedParameters.GitHubRepository)
+    public repo: string;
+
+    @MappedParameter(MappedParameters.GitHubOwner)
+    public owner: string;
+
+}
+
+@Parameters()
+export class RepoParameters extends OwnerParameters {
+
+    @Parameter({ description: "owner to target organization" })
+    public targetOwner: string;
+
+}
+
+export function ownerSelection(prefix: string, text: string, repoHandler: string) {
+    return async (ctx: HandlerContext, params: OwnerParameters) => {
+        if (!params.msgId) {
+            params.msgId = guid();
+        }
+
+        const orgResult = await ctx.graphClient.executeQueryFromFile<types.Orgs.Query, types.Orgs.Variables>(
+            "../../../graphql/query/orgs",
+            {},
+            {},
+            __dirname);
+
+        const { title, author, authorIcon } = await retrieveIssue(ctx, params);
+
+        if (orgResult && orgResult.Org && orgResult.Org.length > 0) {
+            const msg: SlackMessage = {
+                text: `${prefix} ${title}`,
+                attachments: [{
+                    author_name: author,
+                    author_icon: authorIcon,
+                    text,
+                    fallback: text,
+                    mrkdwn_in: ["text", "title"],
+                    actions: [
+                        menuForCommand(
+                            {
+                                text: "Organization",
+                                options: orgResult.Org.map(org => ({ text: org.owner, value: JSON.stringify(org) })),
+                            },
+                            repoHandler,
+                            "targetOwner",
+                            { ...params }),
+                    ],
+                }],
+            };
+            await ctx.messageClient.respond(msg, { id: params.msgId });
+        }
+        return Success;
+    };
+}
+
+export function repoSelection(prefix: string, text: string, previousHandler: string, nextHandler: string) {
+    return async (ctx: HandlerContext, params: RepoParameters) => {
+        const targetOwner = JSON.parse(params.targetOwner) as types.Orgs.Org;
+
+        const repoResult = await ctx.graphClient.executeQueryFromFile<types.OrgRepos.Query, types.OrgRepos.Variables>(
+            "../../../graphql/query/orgRepos",
+            {
+                owner: targetOwner.owner,
+                providerId: targetOwner.provider.providerId,
+            },
+            {},
+            __dirname);
+
+        const orgResult = await ctx.graphClient.executeQueryFromFile<types.Orgs.Query, types.Orgs.Variables>(
+            "../../../graphql/query/orgs",
+            {},
+            {},
+            __dirname);
+
+        const { title, author, authorIcon } = await retrieveIssue(ctx, params);
+        text = text.replace("%ORG%", bold(targetOwner.owner));
+
+        if (repoResult && repoResult.Repo && repoResult.Repo.length > 0) {
+            const repoChunks = _.chunk(_.cloneDeep(repoResult.Repo).sort(
+                (r1, r2) => r1.name.toLowerCase().localeCompare(r2.name.toLowerCase())), 100);
+
+            const actions = repoChunks.map(chunk => {
+                return menuForCommand(
+                    {
+                        text: `Repository (${chunk[0].name.charAt(0).toLowerCase()}-${
+                            chunk[chunk.length - 1].name.charAt(0).toLowerCase()})`,
+                        options: chunk.map(repo => ({ text: repo.name, value: repo.name })),
+                    },
+                    nextHandler,
+                    "targetRepo",
+                    { ...params });
+            });
+
+            const msg: SlackMessage = {
+                text: `${prefix} ${title}`,
+                attachments: [{
+                    author_name: author,
+                    author_icon: authorIcon,
+                    text,
+                    fallback: text,
+                    mrkdwn_in: ["text", "title"],
+                    actions,
+                }],
+            };
+
+            if (orgResult && orgResult.Org && orgResult.Org.length > 1) {
+                msg.attachments.push({
+                    fallback: "Actions",
+                    actions: [
+                        buttonForCommand({ text: "Change Organization" }, previousHandler, {
+                            msgId: params.msgId,
+                            issue: params.issue,
+                            owner: params.owner,
+                            repo: params.repo,
+                        }),
+                    ],
+                });
+            }
+
+            await ctx.messageClient.respond(msg, { id: params.msgId });
+        }
+        return Success;
+    };
+}
+
+export const retrieveIssue = async (ctx: HandlerContext, params: OwnerParameters) => {
+    const issueResult = await ctx.graphClient.executeQueryFromFile<types.IssueOrPr.Query, types.IssueOrPr.Variables>(
+        "../../../graphql/query/issueOrPr",
+        {
+            owner: params.owner,
+            repo: params.repo,
+            names: [params.issue.toString()],
+        },
+        {},
+        __dirname,
+    );
+
+    let title;
+    let author;
+    let authorIcon;
+    const issue = _.get(issueResult, "Org[0].repo[0].issue[0]") as types.IssueOrPr.Issue;
+    const repo = _.get(issueResult, "Org[0].repo[0]") as types.IssueOrPr.Repo;
+    if (issue) {
+        title = `${bold(url(issueUrl(repo, issue), `#${issue.number.toString()}: ${issue.title}`))}`;
+        author = issue.openedBy.login;
+        authorIcon = avatarUrl(repo, issue.openedBy.login);
+    }
+    return { title, author, authorIcon };
+};

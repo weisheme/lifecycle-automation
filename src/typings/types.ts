@@ -852,6 +852,7 @@ export namespace Issue {
     apiUrl?: string | null; 
     gitUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
   } 
 
   export type _Labels = {
@@ -1128,6 +1129,47 @@ export namespace OpenPr {
     merged?: boolean | null; 
     number?: number | null; 
     title?: string | null; 
+  } 
+}
+export namespace OrgRepos {
+  export type Variables = {
+    owner: string;
+    providerId: string;
+  }
+
+  export type Query = {
+    Repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    org?: Org | null; 
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    owner?: string | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    providerId?: string | null; 
+  } 
+}
+export namespace Orgs {
+  export type Variables = {
+  }
+
+  export type Query = {
+    Org?: Org[] | null; 
+  } 
+
+  export type Org = {
+    owner?: string | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    providerId?: string | null; 
   } 
 }
 export namespace ProviderIdFromOrg {
@@ -1704,6 +1746,25 @@ export namespace PushById {
 
   export type _ChatId = {
     screenName?: string | null; 
+  } 
+}
+export namespace RepoIssues {
+  export type Variables = {
+    name: string;
+    owner: string;
+  }
+
+  export type Query = {
+    Repo?: Repo[] | null; 
+  } 
+
+  export type Repo = {
+    issue?: Issue[] | null; 
+  } 
+
+  export type Issue = {
+    number?: number | null; 
+    title?: string | null; 
   } 
 }
 export namespace TagByName {
@@ -3191,6 +3252,7 @@ export namespace CommentToIssueLifecycle {
     apiUrl?: string | null; 
     gitUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
   } 
 
   export type _Team = {
@@ -4466,6 +4528,7 @@ export namespace IssueToIssueLifecycle {
     apiUrl?: string | null; 
     gitUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
   } 
 
   export type _Team = {

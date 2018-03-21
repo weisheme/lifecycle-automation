@@ -11,10 +11,18 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
+import { commandHandlerFrom } from "@atomist/automation-client/onCommand";
+import * as slack from "@atomist/slack-messages/SlackMessages";
+import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
+import {
+    OwnerParameters,
+    ownerSelection,
+    RepoParameters,
+    repoSelection,
+} from "./targetOrgAndRepo";
 
 @ConfigurableCommandHandler("Moves a GitHub issue to a different org and/or repo", {
-    intent: [ "move issue", "move github issue" ],
     autoSubmit: true,
 })
 @Tags("github", "issue")
@@ -29,18 +37,28 @@ export class MoveGitHubIssue implements HandleCommand {
     @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
+    @Parameter({ description: "message id", required: false, displayable: false })
+    public msgId: string;
+
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
 
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
+    @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
     @Secret(Secrets.userToken("repo"))
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        try {
+            this.targetOwner = JSON.parse(this.targetOwner).owner;
+        } catch (err) {
+            // Safe to ignore
+        }
+
         const api = github.api(this.githubToken, this.apiUrl);
 
         return api.issues.get({
@@ -95,11 +113,48 @@ ${comments}`;
                     number: this.issue,
                     state: "closed",
                 });
+            })
+            .then(() => {
+                const issueLink = slack.url(newIssue.data.html_url,
+                    `${this.targetOwner}/${this.targetRepo}#${newIssue.data.number}`);
+                return ctx.messageClient.respond(success(
+                    "Move Issue",
+                    `Successfully moved issue ${issueLink}`),
+                    { id: this.msgId});
             });
         })
         .then(() => Success)
         .catch(err => {
-            return github.handleError("Move Issue", err, ctx);
+            return github.handleError("Move Issue", err, ctx, { id: this.msgId });
         });
     }
+}
+
+export function moveGitHubIssueTargetOwnerSelection(): HandleCommand<OwnerParameters> {
+    return commandHandlerFrom(
+        ownerSelection(
+            "Move issue",
+            "Select organization to move issue to:",
+            "moveGitHubIssueTargetRepoSelection",
+        ),
+        OwnerParameters,
+        "moveGitHubIssueTargetOwnerSelection",
+        "Move a GitHub issue to a different org and/or repo",
+        ["move issue", "move github issue"],
+    );
+}
+
+export function moveGitHubIssueTargetRepoSelection(): HandleCommand<RepoParameters> {
+    return commandHandlerFrom(
+        repoSelection(
+            "Move issue",
+            "Select repository within %ORG% to move issue to:",
+            "moveGitHubIssueTargetOwnerSelection",
+            "MoveGitHubIssue",
+        ),
+        RepoParameters,
+        "moveGitHubIssueTargetRepoSelection",
+        "Move a GitHub issue to a different org and/or repo",
+        [],
+    );
 }

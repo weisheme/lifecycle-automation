@@ -1,5 +1,6 @@
 import { logger } from "@atomist/automation-client";
 import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
+import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     buttonForCommand,
     menuForCommand,
@@ -19,6 +20,7 @@ import { CreateRelatedGitHubIssue } from "../../../command/github/CreateRelatedG
 import * as github from "../../../command/github/gitHubApi";
 import { LinkRelatedGitHubIssue } from "../../../command/github/LinkRelatedGitHubIssue";
 import { MoveGitHubIssue } from "../../../command/github/MoveGitHubIssue";
+import { OwnerParameters } from "../../../command/github/targetOrgAndRepo";
 import { LifecycleActionPreferences } from "../../preferences";
 
 export abstract class AbstractIssueActionContributor extends AbstractIdentifiableContribution
@@ -159,15 +161,22 @@ export class MoveActionContributor extends AbstractIdentifiableContribution
     }
 
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo");
+        const repo = context.lifecycle.extract("repo") as graphql.IssueToIssueLifecycle.Repo;
 
         if (context.rendererId === this.rendererId && context.has("show_more")) {
-            const handler = new MoveGitHubIssue();
-            handler.repo = repo.name;
-            handler.owner = repo.owner;
-            handler.issue = issue.number;
+            const handler = new OwnerParameters();
             return Promise.resolve([
-                buttonForCommand({ text: "Move" }, handler),
+                buttonForCommand(
+                    { text: "Move" },
+                    "moveGitHubIssueTargetRepoSelection",
+                    {
+                        repo: repo.name,
+                        owner: repo.owner,
+                        targetOwner: JSON.stringify({ owner: repo.owner, ...repo.org }),
+                        issue: issue.number,
+                        title: issue.timestamp,
+                        msgId: context.lifecycle.id,
+                    }),
             ]);
         }
         return Promise.resolve([]);
@@ -193,19 +202,29 @@ export class RelatedActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
 
         if (context.rendererId === this.rendererId && context.has("show_more")) {
-            const createHandler = new CreateRelatedGitHubIssue();
-            createHandler.repo = repo.name;
-            createHandler.owner = repo.owner;
-            createHandler.issue = issue.number;
-
-            const linkHandler = new LinkRelatedGitHubIssue();
-            linkHandler.repo = repo.name;
-            linkHandler.owner = repo.owner;
-            linkHandler.issue = issue.number;
-
             return Promise.resolve([
-                buttonForCommand({ text: "Link" }, linkHandler),
-                buttonForCommand({ text: "Create" }, createHandler),
+                buttonForCommand(
+                    { text: "Link" },
+                    "linkRelatedGitHubIssueTargetRepoSelection",
+                    {
+                        repo: repo.name,
+                        owner: repo.owner,
+                        targetOwner: JSON.stringify({ owner: repo.owner, ...repo.org }),
+                        issue: issue.number,
+                        title: issue.timestamp,
+                        msgId: guid(),
+                    }),
+                buttonForCommand(
+                    { text: "Create" },
+                    "createRelatedGitHubIssueTargetRepoSelection",
+                    {
+                        repo: repo.name,
+                        owner: repo.owner,
+                        targetOwner: JSON.stringify({ owner: repo.owner, ...repo.org }),
+                        issue: issue.number,
+                        title: issue.timestamp,
+                        msgId: guid(),
+                    }),
             ]);
         }
         return Promise.resolve([]);

@@ -1,0 +1,8 @@
+query Orgs {
+  Org(orderBy: [owner_asc]) {
+    owner
+    provider {
+      providerId
+    }
+  }
+}

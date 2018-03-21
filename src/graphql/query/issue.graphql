@@ -55,6 +55,7 @@ query Issue(
                   apiUrl
                   gitUrl
                   url
+                  providerId
                 }
               }
             }

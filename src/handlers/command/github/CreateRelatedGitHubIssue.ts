@@ -12,14 +12,20 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { commandHandlerFrom } from "@atomist/automation-client/onCommand";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import { IssueRelationship } from "../../../ingesters/issueRelationship";
 import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
+import {
+    OwnerParameters,
+    ownerSelection,
+    RepoParameters,
+    repoSelection,
+} from "./targetOrgAndRepo";
 
 @ConfigurableCommandHandler("Create a related GitHub issue in a different org and/or repo", {
-    intent: [ "related issue", "related github issue" ],
     autoSubmit: true,
 })
 @Tags("github", "issue")
@@ -34,6 +40,9 @@ export class CreateRelatedGitHubIssue implements HandleCommand {
     @Parameter({ description: "issue number", pattern: /^.*$/ })
     public issue: number;
 
+    @Parameter({ description: "message id", required: false, displayable: false })
+    public msgId: string;
+
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
 
@@ -47,6 +56,12 @@ export class CreateRelatedGitHubIssue implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
+        try {
+            this.targetOwner = JSON.parse(this.targetOwner).owner;
+        } catch (err) {
+            // Safe to ignore
+        }
+
         const api = github.api(this.githubToken, this.apiUrl);
 
         return api.issues.get({
@@ -101,13 +116,42 @@ ${issue.body}`;
                 `${this.targetOwner}/${this.targetRepo}#${newIssue.data.number}`);
             return ctx.messageClient.respond(success(
                 "Related Issue",
-                `Successfully created related issue
-${issueLink}: ${newIssue.data.title}`));
+                `Successfully created related issue ${issueLink}`),
+                { id: this.msgId });
         })
         .then(() => Success)
         .catch(err => {
-            return github.handleError("New Related Issue", err, ctx);
+            return github.handleError("Create Related Issue", err, ctx);
         });
     }
 
+}
+
+export function createRelatedGitHubIssueTargetOwnerSelection(): HandleCommand<OwnerParameters> {
+    return commandHandlerFrom(
+        ownerSelection(
+            "Create related issue",
+            "Select organization to create related issue in:",
+            "createRelatedGitHubIssueTargetRepoSelection",
+        ),
+        OwnerParameters,
+        "createRelatedGitHubIssueTargetOwnerSelection",
+        "Create a related GitHub issue in a different org and/or repo",
+        ["related issue", "related github issue"],
+    );
+}
+
+export function createRelatedGitHubIssueTargetRepoSelection(): HandleCommand<RepoParameters> {
+    return commandHandlerFrom(
+        repoSelection(
+            "Create related issue",
+            "Select repository within %ORG% to create related issue in:",
+            "createRelatedGitHubIssueTargetOwnerSelection",
+            "CreateRelatedGitHubIssue",
+        ),
+        RepoParameters,
+        "createRelatedGitHubIssueTargetRepoSelection",
+        "Create a related GitHub issue in a different org and/or repo",
+        [],
+    );
 }

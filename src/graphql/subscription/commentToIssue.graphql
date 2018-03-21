@@ -59,6 +59,7 @@ subscription CommentToIssueLifecycle {
             apiUrl
             gitUrl
             url
+            providerId
           }
           team {
             id

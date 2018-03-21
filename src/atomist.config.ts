@@ -15,7 +15,11 @@ import { CommentGitHubIssue } from "./handlers/command/github/CommentGitHubIssue
 import { CreateGitHubIssue } from "./handlers/command/github/CreateGitHubIssue";
 import { CreateGitHubRelease } from "./handlers/command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "./handlers/command/github/CreateGitHubTag";
-import { CreateRelatedGitHubIssue } from "./handlers/command/github/CreateRelatedGitHubIssue";
+import {
+    CreateRelatedGitHubIssue,
+    createRelatedGitHubIssueTargetOwnerSelection,
+    createRelatedGitHubIssueTargetRepoSelection,
+} from "./handlers/command/github/CreateRelatedGitHubIssue";
 import { DeleteGitHubBranch } from "./handlers/command/github/DeleteGitHubBranch";
 import { DisplayGitHubIssue } from "./handlers/command/github/DisplayGitHubIssue";
 import { DisplayGitHubPullRequest } from "./handlers/command/github/DisplayGitHubPullRequest";
@@ -25,10 +29,19 @@ import {
     InstallGitHubReposWebhook,
     InstallGitHubRepoWebhook,
 } from "./handlers/command/github/InstallGitHubWebhook";
-import { LinkRelatedGitHubIssue } from "./handlers/command/github/LinkRelatedGitHubIssue";
+import {
+    LinkRelatedGitHubIssue,
+    linkRelatedGitHubIssueTargetIssueSelection,
+    linkRelatedGitHubIssueTargetOwnerSelection,
+    linkRelatedGitHubIssueTargetRepoSelection,
+} from "./handlers/command/github/LinkRelatedGitHubIssue";
 import { ListMyGitHubIssues } from "./handlers/command/github/ListMyGitHubIssues";
 import { MergeGitHubPullRequest } from "./handlers/command/github/MergeGitHubPullRequest";
-import { MoveGitHubIssue } from "./handlers/command/github/MoveGitHubIssue";
+import {
+    MoveGitHubIssue,
+    moveGitHubIssueTargetOwnerSelection,
+    moveGitHubIssueTargetRepoSelection,
+} from "./handlers/command/github/MoveGitHubIssue";
 import { RaiseGitHubPullRequest } from "./handlers/command/github/RaiseGitHubPullRequest";
 import { ReactGitHubIssue } from "./handlers/command/github/ReactGitHubIssue";
 import { ReactGitHubIssueComment } from "./handlers/command/github/ReactGitHubIssueComment";
@@ -197,6 +210,8 @@ export const configuration: any = {
         () => new CreateGitHubRelease(),
         () => new CreateGitHubTag(),
         () => new CreateRelatedGitHubIssue(),
+        () => createRelatedGitHubIssueTargetOwnerSelection(),
+        () => createRelatedGitHubIssueTargetRepoSelection(),
         () => new DeleteGitHubBranch(),
         () => new DisplayGitHubIssue(),
         () => new DisplayGitHubPullRequest(),
@@ -205,9 +220,14 @@ export const configuration: any = {
         () => new InstallGitHubRepoWebhook(),
         () => new InstallGitHubReposWebhook(),
         () => new LinkRelatedGitHubIssue(),
+        () => linkRelatedGitHubIssueTargetOwnerSelection(),
+        () => linkRelatedGitHubIssueTargetRepoSelection(),
+        () => linkRelatedGitHubIssueTargetIssueSelection(),
         () => new ListMyGitHubIssues(),
         () => new MergeGitHubPullRequest(),
         () => new MoveGitHubIssue(),
+        () => moveGitHubIssueTargetOwnerSelection(),
+        () => moveGitHubIssueTargetRepoSelection(),
         () => new RaiseGitHubPullRequest(),
         () => new ReactGitHubIssue(),
         () => new ReactGitHubIssueComment(),

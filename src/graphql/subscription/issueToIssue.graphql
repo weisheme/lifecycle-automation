@@ -53,6 +53,7 @@ subscription IssueToIssueLifecycle {
           apiUrl
           gitUrl
           url
+          providerId
         }
         team {
           id

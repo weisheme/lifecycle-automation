@@ -5,6 +5,7 @@ import {
     Success,
 } from "@atomist/automation-client";
 import { HandlerError } from "@atomist/automation-client/HandlerResult";
+import { MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import * as GitHubApi from "@octokit/rest";
 import * as URL from "url";
 import { error } from "../../../util/messages";
@@ -28,7 +29,10 @@ export function api(token: string, apiUrl: string = DefaultGitHubApiUrl): GitHub
     return gitHubApi;
 }
 
-export function handleError(title: string, err: any, ctx: HandlerContext): Promise<HandlerResult> | HandlerError {
+export function handleError(title: string,
+                            err: any,
+                            ctx: HandlerContext,
+                            options?: MessageOptions): Promise<HandlerResult> | HandlerError {
     switch (err.code) {
         case 400:
         case 422:
@@ -37,7 +41,8 @@ export function handleError(title: string, err: any, ctx: HandlerContext): Promi
                     title,
                     "The request contained errors.",
                     ctx,
-                ))
+                ),
+                options)
                 .then(() => Success, failure);
         case 403:
         case 404:
@@ -46,7 +51,8 @@ export function handleError(title: string, err: any, ctx: HandlerContext): Promi
                     title,
                     "You are not authorized to access the requested resource.",
                     ctx,
-                ))
+                ),
+                options)
                 .then(() => Success, failure);
         default:
             if (err.message) {
@@ -57,7 +63,8 @@ export function handleError(title: string, err: any, ctx: HandlerContext): Promi
                         title,
                         message.endsWith(".") ? message : `${message}.`,
                         ctx,
-                    ))
+                    ),
+                    options)
                     .then(() => Success, failure);
             }
             return failure(err);
