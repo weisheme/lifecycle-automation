@@ -233,7 +233,7 @@ function issueSelection(prefix: string, text: string, previousHandler: string, n
                             issue: params.issue,
                             owner: params.owner,
                             repo: params.repo,
-                            targetOwner: JSON.stringify(params.targetOwner),
+                            targetOwner: params.targetOwner,
                         }),
                     ],
                 }],
