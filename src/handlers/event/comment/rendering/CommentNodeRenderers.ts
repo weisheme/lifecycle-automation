@@ -17,6 +17,7 @@ import {
     issueUrl,
     linkGitHubUsers,
     linkIssues,
+    removeAtomistMarkers,
     repoAndlabelsAndAssigneesFooter,
     userUrl,
 } from "../../../../util/helpers";
@@ -50,7 +51,7 @@ export class IssueCommentNodeRenderer extends AbstractIdentifiableContribution
                 const attachment: Attachment = {
                     pretext: `New comment on ${issue.state} issue ${bold(url(issueUrl(repo, issue, node),
                         `#${issue.number}: ${issue.title}`))}`,
-                    text: linkIssues(body, repo),
+                    text: removeAtomistMarkers(linkIssues(body, repo)),
                     author_name: `@${node.by.login}`,
                     author_icon: avatarUrl(repo, node.by.login),
                     author_link: userUrl(repo, node.by.login),
@@ -89,7 +90,7 @@ export class PullRequestCommentNodeRenderer extends AbstractIdentifiableContribu
                 const attachment: Attachment = {
                     pretext: `New comment on ${state} pull request ${bold(url(issueUrl(repo, pr, node),
                         `#${pr.number}: ${pr.title}`))}`,
-                    text: linkIssues(body, repo),
+                    text: removeAtomistMarkers(linkIssues(body, repo)),
                     author_name: `@${node.by.login}`,
                     author_icon: avatarUrl(repo, node.by.login),
                     author_link: userUrl(repo, node.by.login),

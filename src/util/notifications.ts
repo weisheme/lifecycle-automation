@@ -12,7 +12,9 @@ import { RestartTravisBuild } from "../handlers/command/travis/RestartTravisBuil
 import { DirectMessagePreferences } from "../handlers/event/preferences";
 import * as graphql from "../typings/types";
 import {
-    avatarUrl, commitIcon,
+    AtomistGeneratedLabel,
+    avatarUrl,
+    commitIcon,
     commitUrl,
     getGitHubUsers,
     isAssigner,
@@ -22,6 +24,7 @@ import {
     linkIssues,
     loadChatIdByGitHubId,
     prUrl,
+    removeAtomistMarkers,
     repoAndChannelFooter,
     repoSlug,
     repoUrl,
@@ -38,6 +41,11 @@ export function issueNotification(id: string,
                                   repo: graphql.NotifyMentionedOnIssue.Repo,
                                   ctx: HandlerContext,
                                   actions?: Action[]): Promise<any[]> {
+
+    // Don't send any DMs for generated comments/issues/bodies
+    if (body.includes(AtomistGeneratedLabel)) {
+        return Promise.resolve(null);
+    }
 
     const matches = getGitHubUsers(body);
     return linkGitHubUsers(githubToSlack(body), ctx)
@@ -59,7 +67,7 @@ export function issueNotification(id: string,
                                             author_name: `@${login}`,
                                             author_link: userUrl(repo, login),
                                             author_icon: avatarUrl(repo, login),
-                                            text: linkIssues(b, repo),
+                                            text: removeAtomistMarkers(linkIssues(b, repo)),
                                             mrkdwn_in: ["text"],
                                             fallback: `${prefix} #${issue.number}: ${issue.title}`,
                                             footer: repoAndChannelFooter(repo),
@@ -91,6 +99,12 @@ export function prNotification(id: string,
                                pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
                                repo: graphql.NotifyMentionedOnPullRequest.Repo,
                                ctx: HandlerContext): Promise<any[]> {
+
+    // Don't send any DMs for generated comments/issues/bodies
+    if (body.includes(AtomistGeneratedLabel)) {
+        return Promise.resolve(null);
+    }
+
     const state = (pr.state === "closed" ? (pr.merged ? "merged" : "closed") : "open");
 
     const matches = getGitHubUsers(body);
@@ -114,7 +128,7 @@ export function prNotification(id: string,
                                             author_name: `@${pr.author.login}`,
                                             author_link: userUrl(repo, author.login),
                                             author_icon: avatarUrl(repo, author.login),
-                                            text: linkIssues(b, repo),
+                                            text: removeAtomistMarkers(linkIssues(b, repo)),
                                             mrkdwn_in: ["text"],
                                             fallback: `${prefix} #${pr.number}: ${pr.title}`,
                                             footer: repoAndChannelFooter(repo),
@@ -164,7 +178,7 @@ export function issueAssigneeNotification(id: string,
                             author_name: `@${issue.openedBy.login}`,
                             author_link: userUrl(repo, issue.openedBy.login),
                             author_icon: avatarUrl(repo, issue.openedBy.login),
-                            text: linkIssues(b, repo),
+                            text: removeAtomistMarkers(linkIssues(b, repo)),
                             mrkdwn_in: ["text"],
                             fallback: `${prefix} #${issue.number}: ${issue.title}`,
                             footer: repoAndChannelFooter(repo),
@@ -213,7 +227,7 @@ export function prAssigneeNotification(id: string,
                             author_name: `@${pr.author.login}`,
                             author_link: userUrl(repo, pr.author.login),
                             author_icon: avatarUrl(repo, pr.author.login),
-                            text: linkIssues(b, repo),
+                            text: removeAtomistMarkers(linkIssues(b, repo)),
                             mrkdwn_in: ["text"],
                             fallback: `${prefix} #${pr.number}: ${pr.title}`,
                             footer: repoAndChannelFooter(repo),
@@ -261,7 +275,7 @@ export function prRevieweeNotification(id: string,
                             author_name: `@${pr.author.login}`,
                             author_link: userUrl(repo, pr.author.login),
                             author_icon: avatarUrl(repo, pr.author.login),
-                            text: linkIssues(b, repo),
+                            text: removeAtomistMarkers(linkIssues(b, repo)),
                             mrkdwn_in: ["text"],
                             fallback: `${prefix} #${pr.number}: ${pr.title}`,
                             footer: repoAndChannelFooter(repo),
@@ -308,7 +322,7 @@ export function prAuthorMergeNotification(id: string,
                             author_name: `@${pr.author.login}`,
                             author_link: userUrl(repo, pr.author.login),
                             author_icon: avatarUrl(repo, pr.author.login),
-                            text: linkIssues(b, repo),
+                            text: removeAtomistMarkers(linkIssues(b, repo)),
                             mrkdwn_in: ["text"],
                             fallback: `Pull Request #${pr.number}: ${pr.title} ${state}`,
                             footer: repoAndChannelFooter(repo),
@@ -367,7 +381,7 @@ export function prAuthorReviewNotification(id: string,
                             color,
                             title,
                             title_link: reviewUrl(repo, pr, review),
-                            text: linkIssues(b, repo),
+                            text: removeAtomistMarkers(linkIssues(b, repo)),
                             author_name: `@${review.by[0].login}`,
                             author_icon: avatarUrl(repo, review.by[0].login),
                             author_link: userUrl(repo, review.by[0].login),
@@ -470,7 +484,7 @@ export function reviewerNotification(push: graphql.NotifyReviewerOnPush.Push,
                         author_name: `@${pr.author.login}`,
                         author_link: userUrl(repo, pr.author.login),
                         author_icon: avatarUrl(repo, pr.author.login),
-                        text: linkIssues(b, repo),
+                        text: removeAtomistMarkers(linkIssues(b, repo)),
                         mrkdwn_in: ["text"],
                         fallback: `New commits to #${pr.number}: ${pr.title}`,
                         footer: repoAndChannelFooter(repo),

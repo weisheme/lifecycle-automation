@@ -7,7 +7,7 @@ import {
     HandlerResult,
     Secret,
     Secrets,
-    Success, success,
+    success,
     Tags,
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";

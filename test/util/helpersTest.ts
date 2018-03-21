@@ -9,7 +9,9 @@ import {
     getIssueMentions,
     isDmDisabled,
     linkGitHubUsers,
-    linkIssues, replaceChatIdWithGitHubId,
+    linkIssues,
+    removeAtomistMarkers,
+    replaceChatIdWithGitHubId,
     repoSlackLink,
     truncateCommitMessage,
 } from "../../src/util/helpers";
@@ -1024,6 +1026,39 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
                     assert(r === body);
                 })
                 .then(done, done);
+        });
+
+    });
+
+    describe("removeAtomistMarkers", () => {
+
+        it("should remove one marker", () => {
+            const body = `This is some test text
+[atomist:generated]
+in line with some other text`;
+            assert.equal(removeAtomistMarkers(body), `This is some test text
+
+in line with some other text`);
+        });
+
+        it("should remove two markers", () => {
+            const body = `This is some test text
+[atomist:generated] [atomist:add-pcf-manifest]
+in line with some other text`;
+            assert.equal(removeAtomistMarkers(body), `This is some test text
+
+in line with some other text`);
+        });
+
+        it("should remove two markers in different rows", () => {
+            const body = `This is some test text
+[atomist:generated]
+in line with some other text
+[atomist:generated]`;
+            assert.equal(removeAtomistMarkers(body), `This is some test text
+
+in line with some other text
+`);
         });
 
     });

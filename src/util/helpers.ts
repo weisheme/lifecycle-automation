@@ -536,6 +536,16 @@ export function getGitHubUsers(msg: string = ""): string[] {
     return _.uniq(allMentions);
 }
 
+const AtomistMarkerExp = /(\[atomist:[a-zA-Z_\-:#()\/]*\])/gi;
+
+export function removeAtomistMarkers(body: string): string {
+    if (body) {
+        return body.replace(AtomistMarkerExp, "");
+    } else {
+        return null;
+    }
+}
+
 export function linkGitHubUsers(body: string = "", context: HandlerContext): Promise<string> {
     if (!body || body.length === 0) {
         return Promise.resolve(body);
