@@ -6,9 +6,11 @@ import {
     HandlerResult,
     Secret,
     Secrets,
+    SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
 import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
+import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { PushToPushCardLifecycle } from "../push/PushToPushLifecycle";
 
@@ -34,32 +36,35 @@ export class RepositoryOnboarded implements HandleEvent<graphql.RepoOnboarded.Su
             {},
             __dirname);
 
-        const commit = result.Repo[0].branches[0].commit;
-        const push: graphql.PushToPushLifecycle.Push = {
-            after: commit,
-            commits: [commit],
-            builds: [],
-            branch: repo.defaultBranch,
-            repo,
-            timestamp: commit.timestamp,
-        };
+        const commit = _.get(result, "Repo[0].branches[0].commit");
+        if (commit) {
+            const push: graphql.PushToPushLifecycle.Push = {
+                after: commit,
+                commits: [commit],
+                builds: [],
+                branch: repo.defaultBranch,
+                repo,
+                timestamp: commit.timestamp,
+            };
 
-        const handler = new PushToPushCardLifecycle();
-        handler.orgToken = this.orgToken;
+            const handler = new PushToPushCardLifecycle();
+            handler.orgToken = this.orgToken;
 
-        return handler.handle(
-            {
-                data: {
-                    Push: [push],
-                },
-                extensions: {
-                    ...event.extensions,
-                    operationName: "PushToPushCardLifecycle",
-                },
-                secrets: {
-                    ...event.secrets,
-                },
-            } ,
-            ctx);
+            return handler.handle(
+                {
+                    data: {
+                        Push: [push],
+                    },
+                    extensions: {
+                        ...event.extensions,
+                        operationName: "PushToPushCardLifecycle",
+                    },
+                    secrets: {
+                        ...event.secrets,
+                    },
+                } ,
+                ctx);
+        }
+        return SuccessPromise;
     }
 }
