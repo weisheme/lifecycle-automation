@@ -341,7 +341,7 @@ export const configuration: any = {
 
         // issue
         () => new IssueToIssueCardLifecycle(),
-        () => new CommentToIssueCardLifecycle()
+        () => new CommentToIssueCardLifecycle(),
     ],
     ingesters: notLocal ? [
         issueRelationshipIngester,
@@ -364,7 +364,7 @@ export const configuration: any = {
     },
     endpoints: {
         graphql: config.get("endpoints.graphql"),
-        api: config.get("endpoints.api")
+        api: config.get("endpoints.api"),
     },
     applicationEvents: {
         enabled: true,
