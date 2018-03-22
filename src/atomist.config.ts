@@ -341,10 +341,10 @@ export const configuration: any = {
 
         // issue
         () => new IssueToIssueCardLifecycle(),
-        () => new CommentToIssueCardLifecycle()
+        () => new CommentToIssueCardLifecycle(),
     ],
     ingesters: notLocal ? [
-        issueRelationshipIngester
+        issueRelationshipIngester,
     ] : [],
     listeners,
     token,
@@ -354,7 +354,7 @@ export const configuration: any = {
             basic: {
                 enabled: config.get("http.auth.basic.enabled"),
                 username: secret("dashboard.user"),
-                password: secret("dashboard.password")
+                password: secret("dashboard.password"),
             },
             bearer: {
                 enabled: config.get("http.auth.bearer.enabled"),
