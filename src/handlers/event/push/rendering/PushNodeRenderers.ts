@@ -22,7 +22,8 @@ import {
     avatarUrl,
     branchUrl,
     commitIcon,
-    commitUrl, issueUrl,
+    commitUrl,
+    issueUrl,
     prUrl,
     repoSlug,
     repoUrl,
@@ -358,7 +359,8 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-export function renderDecorator(build: graphql.PushToPushLifecycle.Builds, builds: graphql.PushToPushLifecycle.Builds[],
+export function renderDecorator(build: graphql.PushToPushLifecycle.Builds,
+                                builds: graphql.PushToPushLifecycle.Builds[],
                                 message: string, emojiStyle: string): [string, string] {
     // For now we only render the last build as decorator
     builds = builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));

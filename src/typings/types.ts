@@ -5831,6 +5831,12 @@ export namespace NotifyPusherOnBuild {
 
   export type ChatTeam = {
     id?: string | null; 
+    preferences?: _Preferences[] | null; 
+  } 
+
+  export type _Preferences = {
+    name?: string | null; 
+    value?: string | null; 
   } 
 
   export type Repo = {

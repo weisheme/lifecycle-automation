@@ -8,8 +8,10 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
+import { LifecyclePreferencesName } from "../handlers/command/slack/ToggleCustomEmojiEnablement";
 import { RestartTravisBuild } from "../handlers/command/travis/RestartTravisBuild";
 import { DirectMessagePreferences } from "../handlers/event/preferences";
+import { renderDecorator } from "../handlers/event/push/rendering/PushNodeRenderers";
 import * as graphql from "../typings/types";
 import {
     AtomistGeneratedLabel,
@@ -413,6 +415,17 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
         return Promise.resolve(null);
     }
 
+    let emojiStyle = "default";
+    const teamPreferences = _.get(build, "commit.author.person.chatId.chatTeam.preferences") as
+        graphql.NotifyPusherOnBuild.Preferences[];
+    if (teamPreferences) {
+        const lifecyclePreferences = teamPreferences.find(p => p.name === LifecyclePreferencesName);
+        if (lifecyclePreferences) {
+            const preferences = JSON.parse(lifecyclePreferences.value);
+            emojiStyle = _.get(preferences, "push.configuration['emoji-style']", "default");
+        }
+    }
+
     const commit = build.commit;
 
     // Add restart action
@@ -426,6 +439,10 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
         actions.push(buttonForCommand({ text: "Restart" }, handler));
     }
 
+    const text = "`" + url(commitUrl(repo, commit), commit.sha.substring(0, 7))
+        + "` " + truncateCommitMessage(commit.message, repo);
+    const [message, color] = renderDecorator(build, [build], text, emojiStyle);
+
     const slackMessage: SlackMessage = {
         // tslint:disable-next-line:max-line-length
         text: `${url(build.buildUrl, `Build #${build.name}`)} of your push to ${url(repoUrl(repo), repoSlug(repo))} failed`,
@@ -434,12 +451,10 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
                 author_name: `@${commit.author.login}`,
                 author_link: userUrl(repo, commit.author.login),
                 author_icon: avatarUrl(repo, commit.author.login),
-                // tslint:disable-next-line:max-line-length
-                text: "`" + url(commitUrl(repo, commit), commit.sha.substring(0, 7))
-                    + "` " + truncateCommitMessage(commit.message, repo),
+                text: message,
                 mrkdwn_in: ["text"],
                 fallback: `Build #${build.name} of your push failed`,
-                color: "#D94649",
+                color,
                 footer: repoAndChannelFooter(repo),
                 footer_icon: commitIcon(repo),
                 ts: Math.floor(Date.now() / 1000),

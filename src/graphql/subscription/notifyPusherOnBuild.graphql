@@ -20,6 +20,10 @@ subscription NotifyPusherOnBuild {
             }
             chatTeam {
               id
+              preferences {
+                name
+                value
+              }
             }
           }
         }
