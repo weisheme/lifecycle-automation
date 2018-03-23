@@ -205,7 +205,6 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
                                 {
                                     ...tagHandler,
                                     lastTag,
-                                    msgId: guid(),
                                 }),
                         ]);
                     } else {
