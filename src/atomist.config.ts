@@ -259,7 +259,7 @@ export const configuration: any = {
         () => new UnlinkRepo(),
 
         // travis
-        () => new RestartTravisBuild(),
+        () => new RestartTravisBuild()
     ],
     events: [
         // branch
