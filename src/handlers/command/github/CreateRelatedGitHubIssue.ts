@@ -19,7 +19,7 @@ import { IssueRelationship } from "../../../ingesters/issueRelationship";
 import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
 import {
-    OwnerParameters,
+    IssueOwnerParameters,
     ownerSelection,
     RepoParameters,
     repoSelection,
@@ -127,14 +127,14 @@ ${issue.body}`;
 
 }
 
-export function createRelatedGitHubIssueTargetOwnerSelection(): HandleCommand<OwnerParameters> {
+export function createRelatedGitHubIssueTargetOwnerSelection(): HandleCommand<IssueOwnerParameters> {
     return commandHandlerFrom(
         ownerSelection(
             "Create related issue",
             "Select organization to create related issue in:",
             "createRelatedGitHubIssueTargetRepoSelection",
         ),
-        OwnerParameters,
+        IssueOwnerParameters,
         "createRelatedGitHubIssueTargetOwnerSelection",
         "Create a related GitHub issue in a different org and/or repo",
         ["related issue", "related github issue"],

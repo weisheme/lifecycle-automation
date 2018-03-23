@@ -14,7 +14,10 @@ import { CloseGitHubIssue } from "./handlers/command/github/CloseGitHubIssue";
 import { CommentGitHubIssue } from "./handlers/command/github/CommentGitHubIssue";
 import { CreateGitHubIssue } from "./handlers/command/github/CreateGitHubIssue";
 import { CreateGitHubRelease } from "./handlers/command/github/CreateGitHubRelease";
-import { CreateGitHubTag } from "./handlers/command/github/CreateGitHubTag";
+import {
+    CreateGitHubTag,
+    createGitHubTagSelection,
+} from "./handlers/command/github/CreateGitHubTag";
 import {
     CreateRelatedGitHubIssue,
     createRelatedGitHubIssueTargetOwnerSelection,
@@ -56,6 +59,7 @@ import { SetTeamPreference } from "./handlers/command/preferences/SetTeamPrefere
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
 import { AddBotToChannel } from "./handlers/command/slack/AddBotToChannel";
 import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
+import { cancelConversation } from "./handlers/command/slack/cancel";
 import { CreateChannel } from "./handlers/command/slack/CreateChannel";
 import { LinkOwnerRepo } from "./handlers/command/slack/LinkOwnerRepo";
 import { LinkRepo } from "./handlers/command/slack/LinkRepo";
@@ -209,6 +213,7 @@ export const configuration: any = {
         () => new CreateGitHubIssue(),
         () => new CreateGitHubRelease(),
         () => new CreateGitHubTag(),
+        () => createGitHubTagSelection(),
         () => new CreateRelatedGitHubIssue(),
         () => createRelatedGitHubIssueTargetOwnerSelection(),
         () => createRelatedGitHubIssueTargetRepoSelection(),
@@ -244,6 +249,7 @@ export const configuration: any = {
         // slack
         () => new AddBotToChannel(),
         () => new AssociateRepo(),
+        () => cancelConversation(),
         () => new CreateChannel(),
         () => new LinkOwnerRepo(),
         () => new LinkRepo(),

@@ -31,9 +31,6 @@ export class OwnerParameters {
     @Parameter({ description: "message id", required: false, displayable: false })
     public msgId: string;
 
-    @Parameter({ description: "issue number", pattern: /^.*$/ })
-    public issue: number;
-
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
 
@@ -43,7 +40,15 @@ export class OwnerParameters {
 }
 
 @Parameters()
-export class RepoParameters extends OwnerParameters {
+export class IssueOwnerParameters extends OwnerParameters {
+
+    @Parameter({ description: "issue number", pattern: /^.*$/ })
+    public issue: number;
+
+}
+
+@Parameters()
+export class RepoParameters extends IssueOwnerParameters {
 
     @Parameter({ description: "owner to target organization" })
     public targetOwner: string;
@@ -51,7 +56,7 @@ export class RepoParameters extends OwnerParameters {
 }
 
 export function ownerSelection(prefix: string, text: string, repoHandler: string) {
-    return async (ctx: HandlerContext, params: OwnerParameters) => {
+    return async (ctx: HandlerContext, params: IssueOwnerParameters) => {
         if (!params.msgId) {
             params.msgId = guid();
         }
@@ -161,7 +166,7 @@ export function repoSelection(prefix: string, text: string, previousHandler: str
     };
 }
 
-export const retrieveIssue = async (ctx: HandlerContext, params: OwnerParameters) => {
+export const retrieveIssue = async (ctx: HandlerContext, params: IssueOwnerParameters) => {
     const issueResult = await ctx.graphClient.executeQueryFromFile<types.IssueOrPr.Query, types.IssueOrPr.Variables>(
         "../../../graphql/query/issueOrPr",
         {

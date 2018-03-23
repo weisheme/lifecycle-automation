@@ -16,7 +16,7 @@ import * as slack from "@atomist/slack-messages/SlackMessages";
 import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
 import {
-    OwnerParameters,
+    IssueOwnerParameters,
     ownerSelection,
     RepoParameters,
     repoSelection,
@@ -130,14 +130,14 @@ ${comments}`;
     }
 }
 
-export function moveGitHubIssueTargetOwnerSelection(): HandleCommand<OwnerParameters> {
+export function moveGitHubIssueTargetOwnerSelection(): HandleCommand<IssueOwnerParameters> {
     return commandHandlerFrom(
         ownerSelection(
             "Move issue",
             "Select organization to move issue to:",
             "moveGitHubIssueTargetRepoSelection",
         ),
-        OwnerParameters,
+        IssueOwnerParameters,
         "moveGitHubIssueTargetOwnerSelection",
         "Move a GitHub issue to a different org and/or repo",
         ["move issue", "move github issue"],

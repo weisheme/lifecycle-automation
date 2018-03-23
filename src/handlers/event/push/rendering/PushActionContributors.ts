@@ -1,4 +1,6 @@
+import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
 import { logger } from "@atomist/automation-client/internal/util/logger";
+import { guid } from "@atomist/automation-client/internal/util/string";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
@@ -18,6 +20,7 @@ import {
 } from "../../../command/github/ApproveGitHubGoalStatus";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
+import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
@@ -149,14 +152,13 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
 
     public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
-        const buttons = [];
 
         const branch = repo.defaultBranch || "master";
         if (context.rendererId === "commit" && push.branch === branch) {
-            this.createTagButton(push, repo, buttons);
+            return this.createTagButton(push, repo, context);
         }
 
-        return Promise.resolve(buttons);
+        return Promise.resolve([]);
     }
 
     public menusFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
@@ -165,7 +167,8 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
 
     private createTagButton(push: graphql.PushToPushLifecycle.Push,
                             repo: graphql.PushToPushLifecycle.Repo,
-                            buttons: any[]) {
+                            context: RendererContext): Promise<Action[]> {
+
         // Add the create tag button
         const tagHandler = new CreateGitHubTag();
         tagHandler.message = push.after.message || "Tag created by Atomist Lifecycle Automation";
@@ -173,12 +176,45 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
         tagHandler.repo = repo.name;
         tagHandler.owner = repo.owner;
 
-        buttons.push(buttonForCommand(
+        const defaultTagAction = [buttonForCommand(
             {
                 text: "Tag",
                 role: "global",
             },
-            tagHandler));
+            tagHandler)];
+
+        if (repo.org &&
+            repo.org.provider &&
+            repo.org.provider.apiUrl === DefaultGitHubApiUrl &&
+            context.orgToken) {
+
+            const client = new ApolloGraphClient("https://api.github.com/graphql",
+                { Authorization: `bearer ${context.orgToken}` });
+
+            return client.executeQueryFromFile("repositoryTags",
+                { owner: repo.owner, name: repo.name },
+                {},
+                __dirname)
+                .then(result => {
+                    const lastTag = _.get(result, "repository.refs.nodes[0].name");
+                    if (lastTag && semver.valid(lastTag)) {
+                        return Promise.resolve([
+                            buttonForCommand(
+                                { text: "Tag" },
+                                "createGitHubTagSelection",
+                                {
+                                    ...tagHandler,
+                                    lastTag,
+                                    msgId: guid(),
+                                }),
+                        ]);
+                    } else {
+                        return Promise.resolve(defaultTagAction);
+                    }
+                });
+        } else {
+            return Promise.resolve(defaultTagAction);
+        }
     }
 }
 
@@ -364,7 +400,7 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
         const actions = [];
 
         if (context.rendererId === "application") {
-            let guid = null;
+            let appId = null;
             let started = false;
             let stopped = true;
 
@@ -374,7 +410,7 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
                 if (data.cloudfoundry) {
                     const vcapApplication = JSON.parse(data.cloudfoundry);
                     if (vcapApplication.application_name && !vcapApplication.application_name.endsWith("-old")) {
-                        guid = vcapApplication.application_id;
+                        appId = vcapApplication.application_id;
                     }
                 }
                 if (a.state === "started" || a.state === "starting" || a.state === "healthy" ||
@@ -386,13 +422,13 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
 
             });
 
-            if (guid) {
+            if (appId) {
                 actions.push(buttonForCommand({ text: "Info" }, "CloudFoundryApplicationDetail",
-                    { guid }));
+                    { guid: appId }));
 
                 if (stopped && !started) {
                     actions.push(buttonForCommand({ text: "Start" }, "StartCloudFoundryApplication",
-                        { guid }));
+                        { guid: appId }));
                 }
                 if (started) {
                     actions.push(buttonForCommand({
@@ -402,10 +438,10 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
                             ok_text: "Proceed",
                             text: `Do you really want to stop application?`,
                         },
-                    }, "StopCloudFoundryApplication", { guid }));
+                    }, "StopCloudFoundryApplication", { guid: appId }));
                 }
                 actions.push(buttonForCommand({ text: "Scale" }, "ScaleCloudFoundryApplication",
-                    { guid }));
+                    { guid: appId }));
             }
         }
         return Promise.resolve(actions);

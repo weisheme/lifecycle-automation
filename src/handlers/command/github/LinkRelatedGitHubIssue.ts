@@ -31,7 +31,7 @@ import * as types from "../../../typings/types";
 import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
 import {
-    OwnerParameters,
+    IssueOwnerParameters,
     ownerSelection,
     RepoParameters,
     repoSelection,
@@ -126,14 +126,14 @@ export class LinkRelatedGitHubIssue implements HandleCommand {
     }
 }
 
-export function linkRelatedGitHubIssueTargetOwnerSelection(): HandleCommand<OwnerParameters> {
+export function linkRelatedGitHubIssueTargetOwnerSelection(): HandleCommand<IssueOwnerParameters> {
     return commandHandlerFrom(
         ownerSelection(
             "Link related issue",
             "Select organization to link issue to:",
             "linkRelatedGitHubIssueTargetRepoSelection",
         ),
-        OwnerParameters,
+        IssueOwnerParameters,
         "linkRelatedGitHubIssueTargetOwnerSelection",
         "Link a related GitHub issue in a different org and/or repo",
         ["link issue", "link github issue"],

@@ -1,19 +1,32 @@
 import {
     ConfigurableCommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
     MappedParameter,
     MappedParameters,
     Parameter,
+    Parameters,
     Secret,
     Secrets,
     Success,
     Tags,
 } from "@atomist/automation-client";
+import { guid } from "@atomist/automation-client/internal/util/string";
+import { commandHandlerFrom } from "@atomist/automation-client/onCommand";
+import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    bold,
+    codeLine,
+    SlackMessage,
+} from "@atomist/slack-messages";
 import * as _ from "lodash";
+import * as semver from "semver";
 import * as graphql from "../../../typings/types";
+import { success } from "../../../util/messages";
 import * as github from "./gitHubApi";
+import { OwnerParameters } from "./targetOrgAndRepo";
 
 @ConfigurableCommandHandler("Create a tag on GitHub", {
     intent: [ "create tag", "create github tag" ],
@@ -53,6 +66,9 @@ export class CreateGitHubTag implements HandleCommand {
         required: false,
     })
     public message: string = "";
+
+    @Parameter({ description: "message id", required: false, displayable: false })
+    public msgId: string;
 
     @MappedParameter(MappedParameters.GitHubRepository)
     public repo: string;
@@ -111,9 +127,131 @@ export class CreateGitHubTag implements HandleCommand {
                     sha: this.sha,
                 });
             })
+            .then(() => {
+                if (this.msgId) {
+                    return ctx.messageClient.respond(success(
+                        "Create Tag",
+                        `Successfully created new tag ${codeLine(this.tag)} on commit ${
+                            codeLine(this.sha.slice(0, 6))}`),
+                        { id: this.msgId });
+                }
+            })
             .then(() => Success)
             .catch(err => {
                 return github.handleError("Create Tag", err, ctx);
             });
     }
+}
+
+@Parameters()
+export class TagParameters extends OwnerParameters {
+
+    @Parameter({
+        displayName: "SHA",
+        description: "commit SHA to create tag on",
+        pattern: /^[a-f0-9]+$/,
+        validInput: "",
+        minLength: 7,
+        maxLength: 40,
+    })
+    public sha: string;
+
+    @Parameter({
+        displayName: "Message",
+        description: "message for the annotated tag",
+        pattern: /^.*$/,
+        validInput: "arbitrary string",
+        minLength: 0,
+        maxLength: 200,
+        required: false,
+    })
+    public message: string = "";
+
+    @Parameter({
+        displayName: "Tag",
+        description: "tag to create",
+        pattern: /^\w(?:[-.\w/]*\w)*$/,
+        validInput: "valid git tag, starting and ending with a alphanumeric character and containing alphanumeric,"
+        + "_, -, ., and / characters",
+        minLength: 1,
+        maxLength: 100,
+    })
+    public lastTag: string;
+
+}
+
+export function tagSelection() {
+    return async (ctx: HandlerContext, params: TagParameters): Promise<HandlerResult> => {
+        if (!params.msgId) {
+            params.msgId = guid();
+        }
+
+        if (semver.valid(params.lastTag)) {
+            const majorTag = semver.coerce(params.lastTag).inc("major");
+            const minorTag = semver.coerce(params.lastTag).inc("minor");
+            const patchTag = semver.coerce(params.lastTag).inc("patch");
+
+            const msg: SlackMessage = {
+                text: `Create new tag on commit ${codeLine(params.sha.slice(0, 6))}`,
+                attachments: [{
+                    fallback: "Tag actions",
+                    text: `Last tag on ${bold(`${params.owner}/${params.repo}`)} is ${codeLine(params.lastTag)}`,
+                    mrkdwn_in: ["text"],
+                    actions: [
+                        buttonForCommand(
+                           { text: `Tag ${majorTag.format()}` },
+                           "CreateGitHubTag",
+                           {
+                               ...params,
+                               tag: majorTag.format(),
+                           }),
+                        buttonForCommand(
+                           { text: `Tag ${minorTag.format()}` },
+                           "CreateGitHubTag",
+                           {
+                               ...params,
+                               tag: minorTag.format(),
+                           }),
+                        buttonForCommand(
+                           { text: `Tag ${patchTag.format()}` },
+                           "CreateGitHubTag",
+                           {
+                               ...params,
+                               tag: patchTag.format(),
+                           }),
+                        buttonForCommand(
+                            { text: `New Tag` },
+                            "CreateGitHubTag",
+                            {
+                                ...params,
+                            }),
+                    ],
+                }, {
+                    fallback: "Cancel",
+                    actions: [
+                        buttonForCommand(
+                        { text: `Cancel` },
+                        "cancelConversation",
+                        {
+                            msgId: params.msgId,
+                            title: "Create Tag",
+                            text: "Canceled tag creation",
+                        }),
+                    ],
+                }],
+            };
+            return ctx.messageClient.respond(msg, { id: params.msgId })
+                .then(() => Success, failure);
+        }
+    };
+}
+
+export function createGitHubTagSelection(): HandleCommand<TagParameters> {
+    return commandHandlerFrom(
+        tagSelection(),
+        TagParameters,
+        "createGitHubTagSelection",
+        "Create a tag on GitHub",
+        [],
+    );
 }
