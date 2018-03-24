@@ -16,7 +16,7 @@ client that connects to the [Atomist][atomist] API.
 [slack]: https://slack.com (Slack)
 [client]: https://github.com/atomist/automation-client-ts (@atomist/automation-client Node Module)
 
-This Atomist API client can provide your team with better Slack messages about what is
+This Atomist API client provides your team with better Slack messages about what is
 happening in your development and delivery lifecycle by
 simply adding the Atomist Bot to your Slack team:
 
