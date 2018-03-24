@@ -24,7 +24,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as graphql from "../../../typings/types";
 import { reviewerNotification } from "../../../util/notifications";
 
@@ -37,8 +37,7 @@ import { reviewerNotification } from "../../../util/notifications";
  *
  * This DM can be disabled via the `@atomist configured dm` command.
  */
-@EventHandler("Notify pull request reviewer about new commits",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyReviewerOnPush", __dirname))
+@EventHandler("Notify pull request reviewer about new commits", subscription("notifyReviewerOnPush"))
 @Tags("lifecycle", "pr", "notification")
 export class NotifyReviewerOnPush implements HandleEvent<graphql.NotifyReviewerOnPush.Subscription> {
 

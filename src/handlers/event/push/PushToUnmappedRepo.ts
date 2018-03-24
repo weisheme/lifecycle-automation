@@ -24,7 +24,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import {
     addressSlackUsers,
     buttonForCommand,
@@ -40,7 +40,6 @@ import {
     repoSlackLink,
 } from "../../../util/helpers";
 import { SetUserPreference } from "../../command/preferences/SetUserPreference";
-import { AssociateRepo } from "../../command/slack/AssociateRepo";
 import { CreateChannel } from "../../command/slack/CreateChannel";
 import {
     DefaultBotName,
@@ -51,8 +50,7 @@ import { DirectMessagePreferences } from "../preferences";
 /**
  * Suggest mapping a repo to committer on unmapped repo.
  */
-@EventHandler("Suggest mapping a repo to committer on unmapped repo",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/pushToUnmappedRepo", __dirname))
+@EventHandler("Suggest mapping a repo to committer on unmapped repo", subscription("pushToUnmappedRepo"))
 @Tags("lifecycle", "push")
 export class PushToUnmappedRepo implements HandleEvent<graphql.PushToUnmappedRepo.Subscription> {
 

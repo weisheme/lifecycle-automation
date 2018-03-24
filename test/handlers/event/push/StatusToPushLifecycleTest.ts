@@ -17,7 +17,11 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { GraphClient } from "@atomist/automation-client/spi/graph/GraphClient";
+import {
+    GraphClient,
+    MutationOptions,
+    QueryOptions
+} from "@atomist/automation-client/spi/graph/GraphClient";
 import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
@@ -152,6 +156,16 @@ describe("StatusToPushLifecycle", () => {
         class MockGraphClient implements GraphClient {
 
             public endpoint = "";
+
+            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
 
             public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
 
@@ -296,6 +310,16 @@ describe("StatusToPushLifecycle", () => {
         class MockGraphClient implements GraphClient {
 
             public endpoint = "";
+
+            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
 
             public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
 
@@ -484,6 +508,16 @@ describe("StatusToPushLifecycle", () => {
         class MockGraphClient implements GraphClient {
 
             public endpoint = "";
+
+            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
 
             public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
 
@@ -822,6 +856,16 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
+            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
             public executeQueryFromFile(queryFile: string, variables?: any): Promise<any> {
                 return Promise.resolve({});
             }
@@ -1026,6 +1070,16 @@ describe("StatusToPushLifecycle", () => {
         class MockGraphClient implements GraphClient {
 
             public endpoint = "";
+
+            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
 
             public executeQueryFromFile(queryFile: string, variables?: any): Promise<any> {
                 return Promise.resolve({});

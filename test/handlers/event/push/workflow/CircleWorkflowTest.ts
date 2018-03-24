@@ -169,7 +169,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 14",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -281,7 +281,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 4",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -345,7 +345,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 1",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -398,7 +398,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 2",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -454,7 +454,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 1",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -525,7 +525,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 3",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -597,7 +597,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 1",
                 },
             ],
-        } as graphql.PushToPushLifecycle.Workflow;
+        } as graphql.PushFields.Workflow;
         const stages = circleWorkflowtoStages(workflow);
         const expectedStages: WorkflowStage[] = [
             {
@@ -646,7 +646,7 @@ describe("CircleWorkflow", () => {
       - test_init:
 `,
         builds: [],
-    } as graphql.PushToPushLifecycle.Workflow;
+    } as graphql.PushFields.Workflow;
 
     it("should run branch filter jobs where no branch matches", () => {
         const stages = circleWorkflowtoStages(branchFilterWorkflow);
@@ -694,7 +694,7 @@ describe("CircleWorkflow", () => {
               ignore: /^testing-.*/
 `,
         builds: [],
-    } as graphql.PushToPushLifecycle.Workflow;
+    } as graphql.PushFields.Workflow;
 
     it("should run tag filter jobs", () => {
         const stages = circleWorkflowtoStages(tagIgnoreWorkflow);
@@ -740,7 +740,7 @@ describe("CircleWorkflow", () => {
               ignore: /.*/
 `,
         builds: [],
-    } as graphql.PushToPushLifecycle.Workflow;
+    } as graphql.PushFields.Workflow;
 
     it("should run tag only jobs for branch push", () => {
         const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow);
@@ -796,7 +796,7 @@ describe("CircleWorkflow", () => {
               ignore: /.*/
 `,
         builds: [],
-    } as graphql.PushToPushLifecycle.Workflow;
+    } as graphql.PushFields.Workflow;
 
     it("should not run branch ignore all job for branch push", () => {
         const stages = circleWorkflowtoStages(branchAndTagFiltersWorkflow2);

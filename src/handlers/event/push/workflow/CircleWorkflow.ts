@@ -30,7 +30,7 @@ function findMatchingRegex(text: string, regexes: string[]): string {
     return regexes.find(r => new RegExp(r.replace(new RegExp("^/(.*?)/"), "$1")).test(text));
 }
 
-export function circleWorkflowtoStages(workflow: graphql.PushToPushLifecycle.Workflow,
+export function circleWorkflowtoStages(workflow: graphql.PushFields.Workflow,
                                        workflowPush: PushTrigger = {name: "master", type: "branch"}): WorkflowStage[] {
 
     const doc = yaml.load(workflow.config);

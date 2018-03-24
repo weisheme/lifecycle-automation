@@ -19,18 +19,20 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
+import {
+    PushCardLifecycleHandler,
+    PushLifecycleHandler,
+} from "./PushLifecycle";
 
 /**
  * Send a lifecycle message on K8Pod events.
  */
-@EventHandler("Send a lifecycle message on K8Pod events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/k8podToPush", __dirname))
+@EventHandler("Send a lifecycle message on K8Pod events", subscription("k8podToPush"))
 @Tags("lifecycle", "push", "k8pod")
 export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPushLifecycle.Subscription> {
 
@@ -53,8 +55,7 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
 /**
  * Send a lifecycle card on K8Pod events.
  */
-@EventHandler("Send a lifecycle card on K8Pod events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/k8podToPush", __dirname))
+@EventHandler("Send a lifecycle card on K8Pod events", subscription("k8podToPush"))
 @Tags("lifecycle", "push", "k8pod")
 export class K8PodToPushCardLifecycle extends PushCardLifecycleHandler<graphql.K8PodToPushLifecycle.Subscription> {
 

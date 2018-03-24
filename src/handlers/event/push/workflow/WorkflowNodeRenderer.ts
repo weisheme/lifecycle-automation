@@ -28,7 +28,7 @@ import { chartUrlFromWorkflow } from "./ChartUrl";
 import {circleWorkflowtoStages, PushTrigger} from "./CircleWorkflow";
 
 export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
-    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Builds> {
+    implements SlackNodeRenderer<graphql.PushFields.Builds> {
 
     constructor() {
         super("workflow");
@@ -38,7 +38,7 @@ export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
         return node.config && node.provider === "circle";
     }
 
-    public render(workflow: graphql.PushToPushLifecycle.Workflow, actions: Action[], msg: SlackMessage,
+    public render(workflow: graphql.PushFields.Workflow, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
         const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const pushTrigger: PushTrigger = {

@@ -41,7 +41,7 @@ import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
-    implements SlackActionContributor<graphql.PushToPushLifecycle.Builds> {
+    implements SlackActionContributor<graphql.PushFields.Builds> {
 
     constructor() {
         super(LifecycleActionPreferences.push.restart_build.id);
@@ -51,7 +51,7 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
         return node.buildUrl;
     }
 
-    public buttonsFor(build: graphql.PushToPushLifecycle.Builds, context: RendererContext): Promise<Action[]> {
+    public buttonsFor(build: graphql.PushFields.Builds, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
         if (build.status === "failed" || build.status === "broken") {
@@ -68,7 +68,7 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
         return Promise.resolve([]);
     }
 
-    private travisRestartAction(build: graphql.PushToPushLifecycle.Builds, repo: any): Action {
+    private travisRestartAction(build: graphql.PushFields.Builds, repo: any): Action {
         return buttonForCommand(
             {
                 text: "Restart",
@@ -84,7 +84,7 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
 }
 
 export class ReleaseActionContributor extends AbstractIdentifiableContribution
-    implements SlackActionContributor<graphql.PushToPushLifecycle.Tags> {
+    implements SlackActionContributor<graphql.PushFields.Tags> {
 
     constructor() {
         super(LifecycleActionPreferences.push.release.id);
@@ -94,8 +94,8 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         return node.release === null;
     }
 
-    public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+    public buttonsFor(tag: graphql.PushFields.Tags, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
         const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         const buttons = [];
 
@@ -111,13 +111,13 @@ export class ReleaseActionContributor extends AbstractIdentifiableContribution
         return Promise.resolve(buttons);
     }
 
-    public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
+    public menusFor(tag: graphql.PushFields.Tags, context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 
     private createReleaseButton(push: graphql.PushToPushLifecycle.Push,
-                                tag: graphql.PushToPushLifecycle.Tags,
-                                repo: graphql.PushToPushLifecycle.Repo): Action {
+                                tag: graphql.PushFields.Tags,
+                                repo: graphql.PushFields.Repo): Action {
         let commitMessage = "Release created by Atomist Lifecycle Automation";
 
         // We do not have a tag message in our model so let's fallback onto
@@ -167,7 +167,7 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
     }
 
     public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
 
         const branch = repo.defaultBranch || "master";
         if (context.rendererId === "commit" && push.branch === branch) {
@@ -182,7 +182,7 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
     }
 
     private createTagButton(push: graphql.PushToPushLifecycle.Push,
-                            repo: graphql.PushToPushLifecycle.Repo,
+                            repo: graphql.PushFields.Repo,
                             context: RendererContext): Promise<Action[]> {
 
         // Add the create tag button
@@ -233,14 +233,14 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
     }
 }
 
-export function sortTagsByName(tags: graphql.PushToPushLifecycle.Tags[]) {
+export function sortTagsByName(tags: graphql.PushFields.Tags[]) {
     return tags
         .filter(t => t.name)
         .sort((t1, t2) => t1.name.localeCompare(t2.name));
 }
 
 export class TagTagActionContributor extends AbstractIdentifiableContribution
-    implements SlackActionContributor<graphql.PushToPushLifecycle.Tags> {
+    implements SlackActionContributor<graphql.PushFields.Tags> {
 
     constructor() {
         super(LifecycleActionPreferences.push.tag.id);
@@ -250,19 +250,19 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
         return node.release === null;
     }
 
-    public buttonsFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+    public buttonsFor(tag: graphql.PushFields.Tags, context: RendererContext): Promise<Action[]> {
+        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
         const push = context.lifecycle.extract("push") as graphql.PushToPushLifecycle.Push;
         return this.createTagButton(tag, push, repo, context);
     }
 
-    public menusFor(tag: graphql.PushToPushLifecycle.Tags, context: RendererContext): Promise<Action[]> {
+    public menusFor(tag: graphql.PushFields.Tags, context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 
-    private createTagButton(tag: graphql.PushToPushLifecycle.Tags,
+    private createTagButton(tag: graphql.PushFields.Tags,
                             push: graphql.PushToPushLifecycle.Push,
-                            repo: graphql.PushToPushLifecycle.Repo,
+                            repo: graphql.PushFields.Repo,
                             ctx: RendererContext): Promise<Action[]> {
         if (push.branch !== repo.defaultBranch) {
             return Promise.resolve([]);
@@ -308,7 +308,7 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
     }
 
     private isLastTagOfVersion(push: graphql.PushToPushLifecycle.Push,
-                               tag: graphql.PushToPushLifecycle.Tags,
+                               tag: graphql.PushFields.Tags,
                                version: string): boolean {
         const sortedTagNamesWithThisVersion = sortTagsByName(push.after.tags)
             .filter(t => this.versionPrefix(t.name) === version)
@@ -484,7 +484,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
     }
 
     public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
         const buttons = [];
 
         if (context.rendererId === "goals") {
@@ -501,9 +501,9 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
         return Promise.resolve([]);
     }
 
-    private createStatusButton(status: graphql.PushToPushLifecycle.Statuses,
+    private createStatusButton(status: graphql.PushFields.Statuses,
                                push: graphql.PushToPushLifecycle.Push,
-                               repo: graphql.PushToPushLifecycle.Repo,
+                               repo: graphql.PushFields.Repo,
                                buttons: any[]) {
 
         // Add the approve button

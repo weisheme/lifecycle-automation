@@ -217,7 +217,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         const commit = push.after;
         // exclude build statuses already displayed
         const goals = commit.statuses.filter(status => status.context.includes("sdm/"))
-            .sort((s1, s2) => s1.context.localeCompare(s2.context)) as graphql.PushToPushLifecycle.Statuses[];
+            .sort((s1, s2) => s1.context.localeCompare(s2.context)) as graphql.PushFields.Statuses[];
         if (goals.length === 0) {
             return Promise.resolve(msg);
         }

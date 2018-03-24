@@ -361,5 +361,5 @@ function matches(pattern: string, target: string): boolean {
 
 export interface Domain {
     name: string;
-    apps: graphql.PushToPushLifecycle.Apps[];
+    apps: graphql.PushFields.Apps[];
 }

@@ -228,7 +228,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         return Promise.resolve(msg);
     }
 
-    private renderCommitMessage(commitNode: graphql.PushToPushLifecycle.Commits, push: any,
+    private renderCommitMessage(commitNode: graphql.PushFields.Commits, push: any,
                                 repo: any): [string, boolean] {
         // Cut commit to 50 chars of first line
         let m = truncateCommitMessage(commitNode.message, repo);
@@ -299,7 +299,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         return ["`" + url(commitUrl(repo, commitNode), commitNode.sha.substring(0, 7)) + "` " + m, foundFingerprints];
     }
 
-    private renderFingerprintMessageMultiLine(fingerprint: string, impact: graphql.PushToPushLifecycle.Impact): string {
+    private renderFingerprintMessageMultiLine(fingerprint: string, impact: graphql.PushFields.Impact): string {
         return `\n┗ ${EMOJI_SCHEME[this.emojiStyle].impact[this.getFingerprintLevel(fingerprint)]}`
             + ` ${this.getFingerprintDescription(fingerprint)} ${url(impact.url, "more...")}`;
     }
@@ -343,7 +343,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class BuildNodeRenderer extends AbstractIdentifiableContribution
-    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Builds> {
+    implements SlackNodeRenderer<graphql.PushFields.Builds> {
 
     public emojiStyle: "default" | "atomist";
 
@@ -359,7 +359,7 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
         return node.status;
     }
 
-    public render(build: graphql.PushToPushLifecycle.Builds, actions: Action[], msg: SlackMessage,
+    public render(build: graphql.PushFields.Builds, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
         const push = context.lifecycle.extract("push");
         const attachment = msg.attachments[0];
@@ -375,8 +375,8 @@ export class BuildNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-export function renderDecorator(build: graphql.PushToPushLifecycle.Builds,
-                                builds: graphql.PushToPushLifecycle.Builds[],
+export function renderDecorator(build: graphql.PushFields.Builds,
+                                builds: graphql.PushFields.Builds[],
                                 message: string, emojiStyle: string): [string, string] {
     // For now we only render the last build as decorator
     builds = builds.sort((b1, b2) => b2.timestamp.localeCompare(b1.timestamp));
@@ -427,7 +427,7 @@ export function renderDecorator(build: graphql.PushToPushLifecycle.Builds,
 }
 
 export class TagNodeRenderer extends AbstractIdentifiableContribution
-    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Tags> {
+    implements SlackNodeRenderer<graphql.PushFields.Tags> {
 
     public emojiStyle: "default" | "atomist";
 
@@ -443,7 +443,7 @@ export class TagNodeRenderer extends AbstractIdentifiableContribution
         return "release" in node;
     }
 
-    public render(tag: graphql.PushToPushLifecycle.Tags, actions: Action[], msg: SlackMessage,
+    public render(tag: graphql.PushFields.Tags, actions: Action[], msg: SlackMessage,
                   context: RendererContext): Promise<SlackMessage> {
         const repo = context.lifecycle.extract("repo");
         const push = context.lifecycle.extract("push");
@@ -649,7 +649,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
 
     public render(node: graphql.PushToPushLifecycle.Push, actions: Action[],
                   msg: SlackMessage, context: RendererContext): Promise<SlackMessage> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
 
         // Make sure we only attempt to render PR for non-default branch pushes
         if (node.branch === (repo.defaultBranch || "master")) {
