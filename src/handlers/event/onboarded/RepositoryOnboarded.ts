@@ -132,7 +132,6 @@ function processIssue(issue: graphql.LastIssueOnRepo.Issue,
                       ctx: HandlerContext,
                       orgToken: string): Promise<HandlerResult> {
 
-
     const handler = new IssueToIssueCardLifecycle();
     handler.orgToken = orgToken;
 
