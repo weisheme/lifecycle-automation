@@ -68,7 +68,9 @@ import { ReactGitHubIssueComment } from "./handlers/command/github/ReactGitHubIs
 import { ReopenGitHubIssue } from "./handlers/command/github/ReopenGitHubIssue";
 import { SearchGitHubRepositoryIssues } from "./handlers/command/github/SearchGitHubRepositoryIssues";
 import { ToggleLabelGitHubIssue } from "./handlers/command/github/ToggleLabelGitHubIssue";
-import { ConfigureDirectMessageUserPreferences, } from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
+import {
+    ConfigureDirectMessageUserPreferences,
+} from "./handlers/command/preferences/ConfigureDirectMessageUserPreferences";
 import { ConfigureLifecyclePreferences } from "./handlers/command/preferences/ConfigureLifecyclePreferences";
 import { SetTeamPreference } from "./handlers/command/preferences/SetTeamPreference";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
@@ -94,7 +96,9 @@ import { CommentToPullRequestCommentLifecycle } from "./handlers/event/comment/C
 import { IssueToIssueCommentLifecycle } from "./handlers/event/comment/IssueToIssueCommentLifecycle";
 import { NotifyMentionedOnIssueComment } from "./handlers/event/comment/NotifyMentionedOnIssueComment";
 import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/NotifyMentionedOnPullRequestComment";
-import { PullRequestToPullRequestCommentLifecycle, } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
+import {
+    PullRequestToPullRequestCommentLifecycle,
+} from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
 import { CommentOnRelatedIssueClosed } from "./handlers/event/issue/CommentOnRelatedIssueClosed";
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import {
