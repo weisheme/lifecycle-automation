@@ -20,9 +20,12 @@ import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     GraphClient,
     MutationOptions,
-    QueryOptions,
+    QueryOptions
 } from "@atomist/automation-client/spi/graph/GraphClient";
-import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    Destination,
+    MessageOptions
+} from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
 import * as assert from "power-assert";
