@@ -103,7 +103,7 @@ import { CommentOnRelatedIssueClosed } from "./handlers/event/issue/CommentOnRel
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import {
     IssueToIssueCardLifecycle,
-    IssueToIssueLifecycle
+    IssueToIssueLifecycle,
 } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
 import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
