@@ -40,6 +40,7 @@ import {
 
 @ConfigurableCommandHandler("Moves a GitHub issue to a different org and/or repo", {
     autoSubmit: true,
+    intent: ["move issue", "move github issue"],
 })
 @Tags("github", "issue")
 export class MoveGitHubIssue implements HandleCommand {
@@ -156,7 +157,7 @@ export function moveGitHubIssueTargetOwnerSelection(): HandleCommand<IssueOwnerP
         IssueOwnerParameters,
         "moveGitHubIssueTargetOwnerSelection",
         "Move a GitHub issue to a different org and/or repo",
-        ["move issue", "move github issue"],
+        [],
     );
 }
 
