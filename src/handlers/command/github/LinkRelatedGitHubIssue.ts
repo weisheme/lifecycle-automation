@@ -56,6 +56,7 @@ import {
 
 @ConfigurableCommandHandler("Link a related GitHub issue in a different org and/or repo", {
     autoSubmit: true,
+    intent: ["link issue", "link github issue"],
 })
 @Tags("github", "issue")
 export class LinkRelatedGitHubIssue implements HandleCommand {
@@ -152,7 +153,7 @@ export function linkRelatedGitHubIssueTargetOwnerSelection(): HandleCommand<Issu
         IssueOwnerParameters,
         "linkRelatedGitHubIssueTargetOwnerSelection",
         "Link a related GitHub issue in a different org and/or repo",
-        ["link issue", "link github issue"],
+        [],
     );
 }
 
