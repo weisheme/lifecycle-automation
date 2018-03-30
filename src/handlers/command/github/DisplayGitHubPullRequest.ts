@@ -68,6 +68,7 @@ export class DisplayGitHubPullRequest implements HandleCommand {
                 const prs: graphql.PullRequest.PullRequest[] =
                     _.get(result, "ChatTeam[0].team.orgs[0].repo[0].pullRequest");
                 const handler = new ResponsePullRequestToPullRequestLifecycle();
+                handler.orgToken = this.githubToken;
 
                 // Hopefully we can find the pull request in Neo
                 if (prs && prs.length > 0) {
