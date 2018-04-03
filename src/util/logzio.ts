@@ -160,12 +160,9 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                       payload: any,
                       ctx?: HandlerContext) {
 
-        const compressedPayload =
-            zlib.deflateSync(JSON.stringify(payload, null, 2)).toString("base64");
-
         const session = getContext(ctx);
 
-        const data = {
+        const data: any = {
             "operation-name": session.operation,
             "artifact": session.name,
             "version": session.version,
@@ -176,11 +173,16 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             "correlation-id": session.correlationId,
             "invocation-id": session.invocationId,
             "message": `${identifier} of ${session.operation} for ${session.teamName} '${session.teamId}'`,
-            "payload": compressedPayload,
         };
-        if (this.logzio) {
-            this.logzio.log(data);
-        }
+
+        zlib.deflate(
+            JSON.stringify(payload, null, 2),
+            (err, result) => {
+                data.payload = result.toString("base64");
+                if (this.logzio) {
+                    this.logzio.log(data);
+                }
+            });
     }
 
     private initLogzioLogging(options: LogzioOptions) {
