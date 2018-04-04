@@ -92,7 +92,7 @@ export class UnlinkRepo implements HandleCommand {
                             channelId: this.channelId,
                             repo: this.name,
                             owner: this.owner,
-                            providerId: this.provider
+                            providerId: this.provider,
                         },
                         {},
                         __dirname)
