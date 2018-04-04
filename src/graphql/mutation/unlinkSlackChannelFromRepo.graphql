@@ -3,12 +3,14 @@ mutation UnlinkSlackChannelFromRepo(
   $channelId: String!
   $repo: String!
   $owner: String!
+  $providerId: String!
 ) {
   unlinkSlackChannelFromRepo(
     chatTeamId: $teamId
     channelId: $channelId
     repo: $repo
     owner: $owner
+    providerId: $providerId
   ) {
     id
   }

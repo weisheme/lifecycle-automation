@@ -63,7 +63,8 @@ export class ListRepoLinks implements HandleCommand {
                 { fetchPolicy: "network-only" },
                 __dirname)
             .then(result => {
-                const repos = _.get(result, "ChatTeam[0].channels[0].repos");
+                const repos = _.get(result, "ChatTeam[0].channels[0].repos") as
+                    graphql.ChatChannelByChannelId.Repos[];
                 if (repos && repos.length > 0) {
 
                     const msg: SlackMessage = {
@@ -75,6 +76,7 @@ export class ListRepoLinks implements HandleCommand {
                         handler.msgId = this.msgId;
                         handler.name = r.name;
                         handler.owner = r.owner;
+                        handler.provider = r.org.provider.providerId;
 
                         const slug = `${r.owner}/${r.name}`;
                         const attachment: Attachment = {
