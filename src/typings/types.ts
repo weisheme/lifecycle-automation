@@ -290,6 +290,7 @@ export namespace UnlinkSlackChannelFromRepo {
     channelId: string;
     repo: string;
     owner: string;
+    providerId: string;
   }
 
   export type Mutation = {
@@ -587,6 +588,7 @@ export namespace ChatChannelByChannelId {
 
   export type Provider = {
     url?: string | null; 
+    providerId?: string | null; 
   } 
 }
 export namespace ChatId {

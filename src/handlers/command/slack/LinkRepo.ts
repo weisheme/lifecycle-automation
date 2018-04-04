@@ -89,6 +89,9 @@ export class LinkRepo implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
+    @MappedParameter(MappedParameters.GitHubRepositoryProvider)
+    public provider: string;
+
     @MappedParameter(MappedParameters.GitHubAllRepositories)
     public name: string;
 
@@ -108,7 +111,7 @@ export class LinkRepo implements HandleCommand {
             return ctx.messageClient.addressChannels(err, this.channelName)
                 .then(() => Success, failure);
         }
-        return checkRepo(this.githubToken, this.apiUrl, this.name, this.owner)
+        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.name, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));

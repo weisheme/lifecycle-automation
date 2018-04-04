@@ -41,9 +41,13 @@ import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
 import { linkSlackChannelToRepo } from "./LinkRepo";
 
-export function checkRepo(token: string, url: string, repo: string, owner: string): Promise<boolean> {
-    return github.api(token, url).repos.get({ owner, repo })
-        .then(() => true, () => false);
+export function checkRepo(token: string, url: string, provider: string, repo: string, owner: string): Promise<boolean> {
+    if (provider === "bitbucketcloud" || provider === "bitbucket") {
+        return Promise.resolve(true);
+    } else {
+        return github.api(token, url).repos.get({ owner, repo })
+            .then(() => true, () => false);
+    }
 }
 
 export function noRepoMessage(repo: string, owner: string, ctx: HandlerContext): slack.SlackMessage {
@@ -85,6 +89,9 @@ export class AssociateRepo implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
+    @MappedParameter(MappedParameters.GitHubRepositoryProvider)
+    public provider: string;
+
     @MappedParameter(MappedParameters.SlackUser)
     public userId: string;
 
@@ -111,7 +118,7 @@ export class AssociateRepo implements HandleCommand {
             return ctx.messageClient.respond(err)
                 .then(() => Success, failure);
         }
-        return checkRepo(this.githubToken, this.apiUrl, this.repo, this.owner)
+        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.repo, this.owner)
             .then(repoExists => {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx));
