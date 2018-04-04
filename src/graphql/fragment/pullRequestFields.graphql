@@ -1,4 +1,5 @@
 fragment PullRequestFields on PullRequest {
+    _id
     number
     name
     body

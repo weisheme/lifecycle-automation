@@ -2769,117 +2769,7 @@ export namespace CommentToIssueLifecycle {
     login?: string | null; 
   } 
 
-  export type Issue = {
-    _id?: Long | null; 
-    name?: string | null; 
-    title?: string | null; 
-    body?: string | null; 
-    state?: IssueState | null; 
-    number?: number | null; 
-    createdAt?: string | null; 
-    updatedAt?: string | null; 
-    closedAt?: string | null; 
-    comments?: Comments[] | null; 
-    resolvingCommits?: ResolvingCommits[] | null; 
-    openedBy?: OpenedBy | null; 
-    closedBy?: ClosedBy | null; 
-    assignees?: Assignees[] | null; 
-    repo: Repo; 
-    labels?: _Labels[] | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type Comments = {
-    by?: _By | null; 
-    body?: string | null; 
-  } 
-
-  export type _By = {
-    login?: string | null; 
-  } 
-
-  export type ResolvingCommits = {
-    sha?: string | null; 
-    message?: string | null; 
-    author?: Author | null; 
-  } 
-
-  export type Author = {
-    login?: string | null; 
-    person?: Person | null; 
-  } 
-
-  export type Person = {
-    chatId?: ChatId | null; 
-  } 
-
-  export type ChatId = {
-    screenName?: string | null; 
-  } 
-
-  export type OpenedBy = {
-    login?: string | null; 
-  } 
-
-  export type ClosedBy = {
-    login?: string | null; 
-  } 
-
-  export type Assignees = {
-    login?: string | null; 
-  } 
-
-  export type Repo = {
-    name?: string | null; 
-    owner?: string | null; 
-    labels?: Labels[] | null; 
-    channels?: Channels[] | null; 
-    org?: Org | null; 
-  } 
-
-  export type Labels = {
-    name?: string | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    team?: Team | null; 
-  } 
-
-  export type Team = {
-    id?: string | null; 
-  } 
-
-  export type Org = {
-    provider?: Provider | null; 
-    team?: _Team | null; 
-  } 
-
-  export type Provider = {
-    apiUrl?: string | null; 
-    gitUrl?: string | null; 
-    url?: string | null; 
-    providerId?: string | null; 
-  } 
-
-  export type _Team = {
-    id?: string | null; 
-    chatTeams?: ChatTeams[] | null; 
-  } 
-
-  export type ChatTeams = {
-    id?: string | null; 
-    preferences?: Preferences[] | null; 
-  } 
-
-  export type Preferences = {
-    name?: string | null; 
-    value?: string | null; 
-  } 
-
-  export type _Labels = {
-    name?: string | null; 
-  } 
+  export type Issue = IssueFields.Fragment
 }
 export namespace CommentToIssueCommentLifecycle {
   export type Variables = {
@@ -3255,117 +3145,7 @@ export namespace IssueToIssueLifecycle {
     Issue?: Issue[] | null; 
   } 
 
-  export type Issue = {
-    _id?: Long | null; 
-    name?: string | null; 
-    title?: string | null; 
-    body?: string | null; 
-    state?: IssueState | null; 
-    number?: number | null; 
-    createdAt?: string | null; 
-    updatedAt?: string | null; 
-    closedAt?: string | null; 
-    comments?: Comments[] | null; 
-    resolvingCommits?: ResolvingCommits[] | null; 
-    openedBy?: OpenedBy | null; 
-    closedBy?: ClosedBy | null; 
-    assignees?: Assignees[] | null; 
-    repo: Repo; 
-    labels?: _Labels[] | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type Comments = {
-    by?: By | null; 
-    body?: string | null; 
-  } 
-
-  export type By = {
-    login?: string | null; 
-  } 
-
-  export type ResolvingCommits = {
-    sha?: string | null; 
-    message?: string | null; 
-    author?: Author | null; 
-  } 
-
-  export type Author = {
-    login?: string | null; 
-    person?: Person | null; 
-  } 
-
-  export type Person = {
-    chatId?: ChatId | null; 
-  } 
-
-  export type ChatId = {
-    screenName?: string | null; 
-  } 
-
-  export type OpenedBy = {
-    login?: string | null; 
-  } 
-
-  export type ClosedBy = {
-    login?: string | null; 
-  } 
-
-  export type Assignees = {
-    login?: string | null; 
-  } 
-
-  export type Repo = {
-    name?: string | null; 
-    owner?: string | null; 
-    labels?: Labels[] | null; 
-    channels?: Channels[] | null; 
-    org?: Org | null; 
-  } 
-
-  export type Labels = {
-    name?: string | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    team?: Team | null; 
-  } 
-
-  export type Team = {
-    id?: string | null; 
-  } 
-
-  export type Org = {
-    provider?: Provider | null; 
-    team?: _Team | null; 
-  } 
-
-  export type Provider = {
-    apiUrl?: string | null; 
-    gitUrl?: string | null; 
-    url?: string | null; 
-    providerId?: string | null; 
-  } 
-
-  export type _Team = {
-    id?: string | null; 
-    chatTeams?: ChatTeams[] | null; 
-  } 
-
-  export type ChatTeams = {
-    id?: string | null; 
-    preferences?: Preferences[] | null; 
-  } 
-
-  export type Preferences = {
-    name?: string | null; 
-    value?: string | null; 
-  } 
-
-  export type _Labels = {
-    name?: string | null; 
-  } 
+  export type Issue = IssueFields.Fragment
 }
 export namespace IssueToIssueCommentLifecycle {
   export type Variables = {
@@ -4918,8 +4698,123 @@ export namespace TagToPushLifecycle {
   export type Pushes = PushFields.Fragment
 }
 
+export namespace IssueFields {
+  export type Fragment = {
+    _id?: Long | null; 
+    name?: string | null; 
+    title?: string | null; 
+    body?: string | null; 
+    state?: IssueState | null; 
+    number?: number | null; 
+    createdAt?: string | null; 
+    updatedAt?: string | null; 
+    closedAt?: string | null; 
+    comments?: Comments[] | null; 
+    resolvingCommits?: ResolvingCommits[] | null; 
+    openedBy?: OpenedBy | null; 
+    closedBy?: ClosedBy | null; 
+    assignees?: Assignees[] | null; 
+    repo: Repo; 
+    labels?: _Labels[] | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type Comments = {
+    by?: By | null; 
+    body?: string | null; 
+  } 
+
+  export type By = {
+    login?: string | null; 
+  } 
+
+  export type ResolvingCommits = {
+    sha?: string | null; 
+    message?: string | null; 
+    author?: Author | null; 
+  } 
+
+  export type Author = {
+    login?: string | null; 
+    person?: Person | null; 
+  } 
+
+  export type Person = {
+    chatId?: ChatId | null; 
+  } 
+
+  export type ChatId = {
+    screenName?: string | null; 
+  } 
+
+  export type OpenedBy = {
+    login?: string | null; 
+  } 
+
+  export type ClosedBy = {
+    login?: string | null; 
+  } 
+
+  export type Assignees = {
+    login?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    labels?: Labels[] | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Labels = {
+    name?: string | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+    team?: _Team | null; 
+  } 
+
+  export type Provider = {
+    apiUrl?: string | null; 
+    gitUrl?: string | null; 
+    url?: string | null; 
+    providerId?: string | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type _Labels = {
+    name?: string | null; 
+  } 
+}
+
 export namespace PullRequestFields {
   export type Fragment = {
+    _id?: Long | null; 
     number?: number | null; 
     name?: string | null; 
     body?: string | null; 
@@ -5188,6 +5083,7 @@ export namespace PullRequestFields {
 
 export namespace PushFields {
   export type Fragment = {
+    _id?: Long | null; 
     builds?: Builds[] | null; 
     before?: Before | null; 
     after?: After | null; 
