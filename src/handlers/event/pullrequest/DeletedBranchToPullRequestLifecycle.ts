@@ -19,7 +19,7 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
@@ -29,14 +29,13 @@ import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 /**
  * Send a lifecycle message on DeletedBranch events.
  */
-@EventHandler("Send a lifecycle message on DeletedBranch events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/deletedBranchToPullRequest", __dirname))
+@EventHandler("Send a lifecycle message on DeletedBranch events", subscription("deletedBranchToPullRequest"))
 @Tags("lifecycle", "pr", "status")
 export class DeletedBranchToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.DeletedBranchToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.DeletedBranchToPullRequestLifecycle.Subscription>):
-        [graphql.StatusToPullRequestLifecycle.PullRequests, graphql.StatusToPullRequestLifecycle.Repo,
+        [graphql.StatusToPullRequestLifecycle.PullRequests, graphql.PullRequestFields.Repo,
             string, boolean] {
 
         const pr = _.get(event, "data.DeletedBranch[0].pullRequests[0]");

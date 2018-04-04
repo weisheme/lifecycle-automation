@@ -36,12 +36,13 @@ import { AssociateRepo } from "./AssociateRepo";
 export function createChannel(ctx: HandlerContext,
                               teamId: string,
                               channelName: string): Promise<CreateSlackChannel.Mutation> {
-    return ctx.graphClient.executeMutationFromFile<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>(
-        "../../../graphql/mutation/createSlackChannel",
-        { teamId, name: channelName },
-        {},
-        __dirname,
-    );
+    return ctx.graphClient.mutate<CreateSlackChannel.Mutation, CreateSlackChannel.Variables>({
+            name: "createSlackChannel",
+            variables: {
+                teamId,
+                name: channelName,
+            },
+        });
 }
 
 /**

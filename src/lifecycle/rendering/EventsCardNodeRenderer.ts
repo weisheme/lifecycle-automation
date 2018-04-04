@@ -87,7 +87,7 @@ export class EventsCardNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderCommits(events, msg: CardMessage, repo) {
-        const commits = events.node as graphql.PushToPushLifecycle.Commits[];
+        const commits = events.node as graphql.PushFields.Commits[];
         msg.events.push(...commits.map(c => ({
             icon: avatarUrl(repo, c.author.login),
             text: renderCommitMessage(c, repo),

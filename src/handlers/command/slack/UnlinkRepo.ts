@@ -84,18 +84,17 @@ export class UnlinkRepo implements HandleCommand {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));
                 } else {
-                    return ctx.graphClient.executeMutationFromFile<graphql.UnlinkSlackChannelFromRepo.Mutation,
-                        graphql.UnlinkSlackChannelFromRepo.Variables>(
-                        "../../../graphql/mutation/unlinkSlackChannelFromRepo",
-                        {
-                            teamId: this.teamId,
-                            channelId: this.channelId,
-                            repo: this.name,
-                            owner: this.owner,
-                            providerId: this.provider,
-                        },
-                        {},
-                        __dirname)
+                    return ctx.graphClient.mutate<graphql.UnlinkSlackChannelFromRepo.Mutation,
+                            graphql.UnlinkSlackChannelFromRepo.Variables>({
+                            name: "unlinkSlackChannelFromRepo",
+                            variables: {
+                                teamId: this.teamId,
+                                channelId: this.channelId,
+                                repo: this.name,
+                                owner: this.owner,
+                                providerId: this.provider,
+                            },
+                        })
                         .then(() => {
                             const text = `Successfully unlinked repository ${
                                 codeLine(`${this.owner}/${this.name}`)} from this channel`;

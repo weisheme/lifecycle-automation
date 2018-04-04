@@ -24,12 +24,12 @@ import {
     Secrets,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as graphql from "../../../typings/types";
 import { autoMerge } from "./autoMerge";
 
 @EventHandler("Auto merge reviewed and approved pull requests on PullRequest events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/autoMergeOnPullRequest", __dirname))
+    subscription("autoMergeOnPullRequest"))
 @Tags("lifecycle", "pr", "automerge")
 export class AutoMergeOnPullRequest implements HandleEvent<graphql.AutoMergeOnPullRequest.Subscription> {
 

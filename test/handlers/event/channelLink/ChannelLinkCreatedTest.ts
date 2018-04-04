@@ -67,7 +67,7 @@ describe("ChannelLinkCreated", () => {
                 },
             },
             graphClient: {
-                executeQueryFromFile() {
+                query() {
                     return Promise.resolve({
                        GitHubOrgWebhook: [
                            {

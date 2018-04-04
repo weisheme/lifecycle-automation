@@ -26,6 +26,7 @@ import {
     Success, Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import {
     Attachment,
@@ -56,12 +57,15 @@ export class ListRepoLinks implements HandleCommand {
             this.msgId = guid();
         }
 
-        return ctx.graphClient.executeQueryFromFile<graphql.ChatChannelByChannelId.Query,
-            graphql.ChatChannelByChannelId.Variables>(
-                "../../../graphql/query/chatChannelByChannelId",
-                { teamId: this.teamId, channelName: this.channelName },
-                { fetchPolicy: "network-only" },
-                __dirname)
+        return ctx.graphClient.query<graphql.ChatChannelByChannelId.Query,
+            graphql.ChatChannelByChannelId.Variables>({
+                name: "chatChannelByChannelId",
+                variables: {
+                    teamId: this.teamId,
+                    channelName: this.channelName,
+                },
+                options: NoCacheOptions,
+            })
             .then(result => {
                 const repos = _.get(result, "ChatTeam[0].channels[0].repos") as
                     graphql.ChatChannelByChannelId.Repos[];

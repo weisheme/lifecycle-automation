@@ -26,15 +26,14 @@ import {
     success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { IssueToIssueCardLifecycle } from "../issue/IssueToIssueLifecycle";
 import { PullRequestToPullRequestCardLifecycle } from "../pullrequest/PullRequestToPullRequestLifecycle";
 import { PushToPushCardLifecycle } from "../push/PushToPushLifecycle";
 
-@EventHandler("Send a Push lifecycle card when a new repo has finished onboarding",
-    GraqhQL.subscriptionFromFile("../../../graphql/subscription/repoOnboarded", __dirname))
+@EventHandler("Send a Push lifecycle card when a new repo has finished onboarding", subscription("repoOnboarded"))
 @Tags("enrollment")
 export class RepositoryOnboarded implements HandleEvent<graphql.RepoOnboarded.Subscription> {
 
@@ -46,44 +45,41 @@ export class RepositoryOnboarded implements HandleEvent<graphql.RepoOnboarded.Su
         const repo = event.data.RepoOnboarded[0].repo;
         const promises: Array<Promise<HandlerResult>> = [];
 
-        const commitResult = await ctx.graphClient.executeQueryFromFile<graphql.LastCommitOnBranch.Query,
-            graphql.LastCommitOnBranch.Variables>(
-            "../../../graphql/query/lastCommitOnBranch",
-            {
-                name: repo.name,
-                owner: repo.owner,
-                branch: repo.defaultBranch,
-            },
-            {},
-            __dirname);
+        const commitResult = await ctx.graphClient.query<graphql.LastCommitOnBranch.Query,
+            graphql.LastCommitOnBranch.Variables>({
+                name: "lastCommitOnBranch",
+                variables: {
+                    name: repo.name,
+                    owner: repo.owner,
+                    branch: repo.defaultBranch,
+                },
+            });
         const commit = _.get(commitResult, "Repo[0].branches[0].commit") as graphql.LastCommitOnBranch.Commit;
         if (commit) {
             promises.push(processCommit(commit, repo, event, ctx, this.orgToken));
         }
 
-        const issueResult = await ctx.graphClient.executeQueryFromFile<graphql.LastIssueOnRepo.Query,
-            graphql.LastIssueOnRepo.Variables>(
-            "../../../graphql/query/lastIssueOnRepo",
-            {
-                name: repo.name,
-                owner: repo.owner,
-            },
-            {},
-            __dirname);
+        const issueResult = await ctx.graphClient.query<graphql.LastIssueOnRepo.Query,
+            graphql.LastIssueOnRepo.Variables>({
+                name: "lastIssueOnRepo",
+                variables: {
+                    name: repo.name,
+                    owner: repo.owner,
+                },
+            });
         const issues = _.get(issueResult, "Repo[0].issue");
         if (issues) {
             promises.push(...issues.map(i => processIssue(i, event, ctx, this.orgToken)));
         }
 
-        const prResult = await ctx.graphClient.executeQueryFromFile<graphql.LastPullRequestOnRepo.Query,
-            graphql.LastPullRequestOnRepo.Variables>(
-            "../../../graphql/query/lastPullRequestOnRepo",
-            {
-                name: repo.name,
-                owner: repo.owner,
-            },
-            {},
-            __dirname);
+        const prResult = await ctx.graphClient.query<graphql.LastPullRequestOnRepo.Query,
+            graphql.LastPullRequestOnRepo.Variables>({
+                name: "lastPullRequestOnRepo",
+                variables: {
+                    name: repo.name,
+                    owner: repo.owner,
+                },
+            });
         const prs = _.get(prResult, "Repo[0].pullRequest");
         if (prs) {
             promises.push(...prs.map(pr => processPullRequest(pr, event, ctx, this.orgToken)));

@@ -19,23 +19,26 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { IssueCardLifecycleHandler, IssueLifecycleHandler } from "./IssueLifecycle";
+import {
+    IssueCardLifecycleHandler,
+    IssueLifecycleHandler,
+} from "./IssueLifecycle";
 
 /**
  * Send a lifecycle message on Issue events.
  */
-@EventHandler("Send a lifecycle message on Issue events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/issueToIssue", __dirname))
+@EventHandler("Send a lifecycle message on Issue events", subscription("issueToIssue"))
 @Tags("lifecycle", "issue")
 export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueToIssueLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>):
-        [graphql.IssueToIssueLifecycle.Issue, graphql.IssueToIssueLifecycle.Repo, string] {
+        [graphql.IssueToIssueLifecycle.Issue,
+            graphql.IssueFields.Repo, string] {
 
         const issue = event.data.Issue[0];
         const repo = event.data.Issue[0].repo;
@@ -51,14 +54,13 @@ export class IssueToIssueLifecycle extends IssueLifecycleHandler<graphql.IssueTo
 /**
  * Send a lifecycle card on Issue events.
  */
-@EventHandler("Send a lifecycle message on Issue events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/issueToIssue", __dirname))
+@EventHandler("Send a lifecycle message on Issue events", subscription("issueToIssue"))
 @Tags("lifecycle", "issue")
 export class IssueToIssueCardLifecycle extends IssueCardLifecycleHandler<graphql.IssueToIssueLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.IssueToIssueLifecycle.Subscription>):
         [graphql.IssueToIssueLifecycle.Issue,
-            graphql.IssueToIssueLifecycle.Repo,
+            graphql.IssueFields.Repo,
             graphql.CommentToIssueLifecycle.Comment,
             string] {
         const issue = event.data.Issue[0];

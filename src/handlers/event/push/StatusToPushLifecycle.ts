@@ -19,18 +19,20 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PushCardLifecycleHandler, PushLifecycleHandler } from "./PushLifecycle";
+import {
+    PushCardLifecycleHandler,
+    PushLifecycleHandler,
+} from "./PushLifecycle";
 
 /**
  * Send a Push lifecycle message on Status events.
  */
-@EventHandler("Send a lifecycle message on Status events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/statusToPush", __dirname))
+@EventHandler("Send a lifecycle message on Status events", subscription("statusToPush"))
 @Tags("lifecycle", "push", "status")
 export class StatusToPushLifecycle extends PushLifecycleHandler<graphql.StatusToPushLifecycle.Subscription> {
 
@@ -49,8 +51,7 @@ export class StatusToPushLifecycle extends PushLifecycleHandler<graphql.StatusTo
 /**
  * Send a Push lifecycle card on Status events.
  */
-@EventHandler("Send a lifecycle card on Status events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/statusToPush", __dirname))
+@EventHandler("Send a lifecycle card on Status events", subscription("statusToPush"))
 @Tags("lifecycle", "push", "status")
 export class StatusToPushCardLifecycle extends PushCardLifecycleHandler<graphql.StatusToPushLifecycle.Subscription> {
 

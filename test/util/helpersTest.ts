@@ -19,6 +19,7 @@ import * as assert from "power-assert";
 
 import { LoggingConfig } from "@atomist/automation-client/internal/util/logger";
 
+import { QueryOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import {
     extractImageUrls,
     getGitHubUsers,
@@ -913,8 +914,8 @@ does it like something that looks like an @email.domain or a partial@email
         const ctx: any = {
             teamId: "T3434343",
             graphClient: {
-                executeQueryFromFile(path: string, params: any): Promise<any> {
-                    const ghid = (params.gitHubIds[0] === gitHubLogin) ? {
+                query(options: QueryOptions<any>): Promise<any> {
+                    const ghid = (options.variables.gitHubIds[0] === gitHubLogin) ? {
                         GitHubId: [{
                             login: gitHubLogin,
                             person: {
@@ -985,8 +986,8 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
         const ctx: any = {
             teamId: "T3434343",
             graphClient: {
-                executeQueryFromFile(path: string, params: any): Promise<any> {
-                    if (params.chatId === slackId) {
+                query(options: QueryOptions<any>): Promise<any> {
+                    if (options.variables.chatId === slackId) {
                         return Promise.resolve({
                             ChatTeam: [{
                                 members: [{
@@ -1000,7 +1001,7 @@ He, <@${screenName}> that is, is not a bad slide guitarist.
                                 }],
                             }],
                         });
-                    } else if (params.chatId === slackIdUnknownGitHub) {
+                    } else if (options.variables.chatId === slackIdUnknownGitHub) {
                         return Promise.resolve({
                             ChatTeam: [{
                                 members: [{

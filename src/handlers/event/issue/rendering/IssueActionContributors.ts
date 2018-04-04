@@ -71,13 +71,13 @@ export abstract class AbstractIssueActionContributor extends AbstractIdentifiabl
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo,
+                           repo: graphql.IssueFields.Repo,
                            context: RendererContext): Promise<Action[]> {
         return null;
     }
 
     protected createMenu(issue: graphql.IssueToIssueLifecycle.Issue,
-                         repo: graphql.IssueToIssueLifecycle.Repo,
+                         repo: graphql.IssueFields.Repo,
                          context: RendererContext): Promise<Action[]> {
         return null;
     }
@@ -177,7 +177,7 @@ export class MoveActionContributor extends AbstractIdentifiableContribution
     }
 
     public buttonsFor(issue: graphql.IssueToIssueLifecycle.Issue, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.IssueToIssueLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.IssueFields.Repo;
 
         if (context.rendererId === this.rendererId && context.has("show_more")) {
             const handler = new OwnerParameters();
@@ -269,10 +269,10 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
             const client = new ApolloGraphClient("https://api.github.com/graphql",
                 { Authorization: `bearer ${context.orgToken}` });
 
-            return client.executeQueryFromFile("suggestedAssignees",
-                { owner: repo.owner, name: repo.name },
-                {},
-                __dirname)
+            return client.query<any, any>({
+                    path: "./suggestedAssignees",
+                    variables: { owner: repo.owner, name: repo.name },
+                })
                 .then(result => {
                     const assignees = issue.assignees.map(a => a.login);
                     const suggestedAssignees = (_.get(result, "repository.assignableUsers.nodes") || [])
@@ -376,7 +376,7 @@ export class CloseActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Promise<Action[]> {
+                           repo: graphql.IssueFields.Repo): Promise<Action[]> {
         return Promise.resolve([buttonForCommand({ text: "Close" },
             "CloseGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner })]);
     }
@@ -390,7 +390,7 @@ export class CommentActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Promise<Action[]> {
+                           repo: graphql.IssueFields.Repo): Promise<Action[]> {
         return Promise.resolve([buttonForCommand({ text: "Comment", role: "comment" },
             "CommentGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner })]);
     }
@@ -404,7 +404,7 @@ export class ReactionActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo,
+                           repo: graphql.IssueFields.Repo,
                            context: RendererContext): Promise<Action[]> {
 
         const api = github.api(context.orgToken, _.get(repo, "org.provider.apiUrl"));
@@ -440,7 +440,7 @@ export class ReopenActionContributor extends AbstractIssueActionContributor
     }
 
     protected createButton(issue: graphql.IssueToIssueLifecycle.Issue,
-                           repo: graphql.IssueToIssueLifecycle.Repo): Promise<Action[]> {
+                           repo: graphql.IssueFields.Repo): Promise<Action[]> {
         return Promise.resolve([buttonForCommand({ text: "Reopen" },
             "ReopenGitHubIssue", { issue: issue.number, repo: repo.name, owner: repo.owner })]);
     }

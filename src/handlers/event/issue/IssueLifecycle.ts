@@ -128,7 +128,7 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
     protected abstract extractNodes(event: EventFired<R>):
         [graphql.IssueToIssueLifecycle.Issue,
-            graphql.IssueToIssueLifecycle.Repo,
+            graphql.IssueFields.Repo,
             graphql.CommentToIssueLifecycle.Comment,
             string];
 }
@@ -192,5 +192,5 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
     }
 
     protected abstract extractNodes(event: EventFired<R>):
-        [graphql.IssueToIssueLifecycle.Issue, graphql.IssueToIssueLifecycle.Repo, string];
+        [graphql.IssueToIssueLifecycle.Issue, graphql.IssueFields.Repo, string];
 }

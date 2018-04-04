@@ -19,7 +19,7 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
@@ -29,14 +29,13 @@ import { BranchLifecycle } from "./BranchLifecycle";
 /**
  * Send a lifecycle message on Branch events.
  */
-@EventHandler("Send a lifecycle message on Branch events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/branchToBranch", __dirname))
+@EventHandler("Send a lifecycle message on Branch events", subscription("branchToBranch"))
 @Tags("lifecycle", "branch")
 export class BranchToBranchLifecycle
     extends BranchLifecycle<graphql.BranchToBranchLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.BranchToBranchLifecycle.Subscription>)
-        : [graphql.BranchToBranchLifecycle.Branch[], graphql.BranchToBranchLifecycle.Repo, boolean] {
+        : [graphql.BranchToBranchLifecycle.Branch[], graphql.BranchFields.Repo, boolean] {
 
         const branch = _.get(event, "data.Branch[0]");
         return [[branch], branch.repo, false];

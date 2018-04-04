@@ -19,25 +19,27 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PullRequestCardLifecycleHandler, PullRequestLifecycleHandler } from "./PullRequestLifecycle";
+import {
+    PullRequestCardLifecycleHandler,
+    PullRequestLifecycleHandler,
+} from "./PullRequestLifecycle";
 
 /**
  * Send a lifecycle message on PullRequest events.
  */
-@EventHandler("Send a lifecycle message on PullRequest events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/pullRequestToPullRequest", __dirname))
+@EventHandler("Send a lifecycle message on PullRequest events", subscription("pullRequestToPullRequest"))
 @Tags("lifecycle", "pr")
 export class PullRequestToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.PullRequestToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.PullRequestToPullRequestLifecycle.Subscription>):
         [graphql.PullRequestToPullRequestLifecycle.PullRequest,
-            graphql.PullRequestToPullRequestLifecycle.Repo,
+            graphql.PullRequestFields.Repo,
             string, boolean] {
 
         return [event.data.PullRequest[0], event.data.PullRequest[0].repo, Date.now().toString(), false];
@@ -53,15 +55,14 @@ export class PullRequestToPullRequestLifecycle
 /**
  * Send a lifecycle card on PullRequest events.
  */
-@EventHandler("Send a lifecycle card on PullRequest events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/pullRequestToPullRequest", __dirname))
+@EventHandler("Send a lifecycle card on PullRequest events", subscription("pullRequestToPullRequest"))
 @Tags("lifecycle", "pr")
 export class PullRequestToPullRequestCardLifecycle
     extends PullRequestCardLifecycleHandler<graphql.PullRequestToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.PullRequestToPullRequestLifecycle.Subscription>):
         [graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        graphql.PullRequestToPullRequestLifecycle.Repo,
+        graphql.PullRequestFields.Repo,
         string, boolean] {
 
         return [event.data.PullRequest[0], event.data.PullRequest[0].repo, Date.now().toString(), false];

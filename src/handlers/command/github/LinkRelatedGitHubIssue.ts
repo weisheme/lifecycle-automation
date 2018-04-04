@@ -199,15 +199,13 @@ function issueSelection(prefix: string, text: string, previousHandler: string, n
     return async (ctx: HandlerContext, params: IssueParameters) => {
         const targetOwner = JSON.parse(params.targetOwner) as types.Orgs.Org;
 
-        const issueResult = await ctx.graphClient
-            .executeQueryFromFile<types.RepoIssues.Query, types.RepoIssues.Variables>(
-            "../../../graphql/query/repoIssues",
-            {
-                owner: targetOwner.owner,
-                name: params.targetRepo,
-            },
-            {},
-            __dirname);
+        const issueResult = await ctx.graphClient.query<types.RepoIssues.Query, types.RepoIssues.Variables>({
+                name: "repoIssues",
+                variables: {
+                    owner: targetOwner.owner,
+                    name: params.targetRepo,
+                },
+            });
 
         const { title, author, authorIcon } = await retrieveIssue(ctx, params);
         text = text.replace("%SLUG%", bold(`${targetOwner.owner}/${params.targetRepo}`));

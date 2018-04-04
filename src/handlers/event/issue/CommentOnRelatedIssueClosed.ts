@@ -25,10 +25,10 @@ import {
     Secrets,
     success,
     Success,
-    SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -57,8 +57,7 @@ const RelatedIssueQuery = `query RelatedIssue($owner: [String]!, $repo: [String]
 /**
  * Create a comment if a related issue is closed.
  */
-@EventHandler("Create a comment if a related issue is closed",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/commentOnRelatedIssueClosed", __dirname))
+@EventHandler("Create a comment if a related issue is closed", subscription("commentOnRelatedIssueClosed"))
 @Tags("lifecycle", "issue")
 export class CommentOnRelatedIssueClosed
     implements HandleEvent<graphql.CommentOnRelatedIssueClosed.Subscription> {
@@ -70,14 +69,15 @@ export class CommentOnRelatedIssueClosed
                   ctx: HandlerContext): Promise<HandlerResult> {
         const issue = event.data.Issue[0];
 
-        return ctx.graphClient.executeQuery<any, any>(
-            RelatedIssueQuery,
-            {
-                owner: [issue.repo.owner],
-                repo: [issue.repo.name],
-                issue: [issue.number.toString()],
-            },
-            { fetchPolicy: "network-only" })
+        return ctx.graphClient.query<any, any>({
+                query: RelatedIssueQuery,
+                variables: {
+                    owner: [issue.repo.owner],
+                    repo: [issue.repo.name],
+                    issue: [issue.number.toString()],
+                },
+                options: NoCacheOptions,
+        })
         .then(result => {
             if (result
                 && result.IssueRelationship

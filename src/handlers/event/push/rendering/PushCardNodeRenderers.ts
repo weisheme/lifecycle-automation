@@ -217,7 +217,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class TagCardNodeRenderer extends AbstractIdentifiableContribution
-    implements CardNodeRenderer<graphql.PushToPushLifecycle.Tags> {
+    implements CardNodeRenderer<graphql.PushFields.Tags> {
 
     constructor() {
         super("tag");
@@ -408,18 +408,21 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushToPushLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
 
         // Make sure we only attempt to render PR for non-default branch pushes
         if (node.branch === (repo.defaultBranch || "master")) {
             return Promise.resolve(msg);
         }
 
-        return context.context.graphClient.executeQueryFromFile<graphql.OpenPr.Query, graphql.OpenPr.Variables>(
-            "../../../../graphql/query/openPr",
-            { repo: repo.name, owner: repo.owner, branch: node.branch },
-            {},
-            __dirname)
+        return context.context.graphClient.query<graphql.OpenPr.Query, graphql.OpenPr.Variables>({
+                name: "openPr",
+                variables: {
+                    repo: repo.name,
+                    owner: repo.owner,
+                    branch: node.branch,
+                },
+            })
             .then(result => {
                 const pr = _.get(result, "Repo[0].branches[0].pullRequests[0]") as graphql.OpenPr.PullRequests;
                 if (pr) {
@@ -448,8 +451,8 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
     }
 }
 
-export function renderCommitMessage(commitNode: graphql.PushToPushLifecycle.Commits,
-                                    repo: graphql.PushToPushLifecycle.Repo): string {
+export function renderCommitMessage(commitNode: graphql.PushFields.Commits,
+                                    repo: graphql.PushFields.Repo): string {
     // Cut commit to 50 chars of first line
     const m = truncateCommitMessage(commitNode.message, repo);
     return "`" + url(commitUrl(repo, commitNode), commitNode.sha.substring(0, 7)) + "` " + m;

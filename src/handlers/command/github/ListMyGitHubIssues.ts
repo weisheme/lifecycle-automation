@@ -66,11 +66,13 @@ export class ListMyGitHubIssues implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-            "../../../graphql/query/chatId",
-            { teamId: this.teamId, chatId: this.requester },
-            {},
-            __dirname)
+        return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
+                name: "chatId",
+                variables: {
+                    teamId: this.teamId,
+                    chatId: this.requester,
+                },
+            })
             .then(result => {
                 const person = _.get(result, "ChatTeam[0].members[0].person") as graphql.ChatId.Person;
                 if (person) {
@@ -104,14 +106,13 @@ export class ListMyGitHubIssues implements HandleCommand {
 
     protected searchReposFromChannel(ctx: HandlerContext): Promise<string> {
         if (this.channel) {
-            return ctx.graphClient.executeQueryFromFile<graphql.MappedChannels.Query, graphql.MappedChannels.Variables>(
-                "../../../graphql/query/mappedChannels",
-                {
-                    teamId: this.teamId,
-                    name: this.channel,
-                },
-                {},
-                __dirname)
+            return ctx.graphClient.query<graphql.MappedChannels.Query, graphql.MappedChannels.Variables>({
+                    name: "mappedChannels",
+                    variables: {
+                        teamId: this.teamId,
+                        name: this.channel,
+                    },
+                })
                 .then(result => {
                     const repos = _.get(result, "ChatChannel[0].repos") as graphql.MappedChannels.Repos[] || [];
                     return repos.map(r => `repo:${r.owner}/${r.name}`).join(" ");

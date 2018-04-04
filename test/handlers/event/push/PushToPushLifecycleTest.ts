@@ -17,6 +17,7 @@
 import { EventFired } from "@atomist/automation-client/HandleEvent";
 import { HandlerContext } from "@atomist/automation-client/HandlerContext";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { QueryOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { Destination, MessageOptions, SlackDestination } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import "mocha";
@@ -114,7 +115,7 @@ describe("PushToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-                executeQueryFromFile(name: string, variables?: any): Promise<any> {
+                query(): Promise<any> {
                     return Promise.resolve();
                 },
             },
@@ -148,7 +149,7 @@ describe("PushToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-                executeQueryFromFile(name: string, variables?: any): Promise<any> {
+                query(): Promise<any> {
                     return Promise.resolve();
                 },
             },
@@ -180,7 +181,7 @@ describe("PushToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-                executeQueryFromFile(name: string, variables?: any): Promise<any> {
+                query(): Promise<any> {
                     return Promise.resolve();
                 },
             },
@@ -320,8 +321,8 @@ describe("PushToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-                executeQueryFromFile(name: string, variables?: any): Promise<any> {
-                    assert(variables.branch === "cdupuis-patch-37");
+                query(options: QueryOptions<any>): Promise<any> {
+                    assert(options.variables.branch === "cdupuis-patch-37");
                     return Promise.resolve({
                         Repo: [
                             {
@@ -460,8 +461,8 @@ describe("PushToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-                executeQueryFromFile(name: string, variables?: any): Promise<any> {
-                    assert(variables.branchName === "cdupuis-patch-37");
+                query(options: QueryOptions<any>): Promise<any> {
+                    assert(options.variables.branchName === "cdupuis-patch-37");
                     return Promise.resolve({
                         Repo: [
                             {

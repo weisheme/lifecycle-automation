@@ -126,7 +126,7 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
 
     protected abstract extractNodes(event: EventFired<R>):
     [graphql.PullRequestToPullRequestLifecycle.PullRequest,
-        graphql.PullRequestToPullRequestLifecycle.Repo,
+        graphql.PullRequestFields.Repo,
         string,
         boolean];
 }
@@ -201,7 +201,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
 
     protected abstract extractNodes(event: EventFired<R>):
         [graphql.PullRequestToPullRequestLifecycle.PullRequest,
-            graphql.PullRequestToPullRequestLifecycle.Repo,
+            graphql.PullRequestFields.Repo,
             string,
             boolean];
 }

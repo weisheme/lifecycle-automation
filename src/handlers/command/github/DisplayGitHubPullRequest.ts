@@ -59,11 +59,15 @@ export class DisplayGitHubPullRequest implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeQueryFromFile<graphql.PullRequest.Query, graphql.PullRequest.Variables>(
-            "../../../graphql/query/pullRequest",
-            { teamId: ctx.teamId, repoName: this.repo, prName: this.issue, orgOwner: this.owner },
-            {},
-            __dirname)
+        return ctx.graphClient.query<graphql.PullRequest.Query, graphql.PullRequest.Variables>({
+                name: "pullRequest",
+                variables: {
+                    teamId: ctx.teamId,
+                    repoName: this.repo,
+                    prName: this.issue,
+                    orgOwner: this.owner,
+                },
+            })
             .then(result => {
                 const prs: graphql.PullRequest.PullRequest[] =
                     _.get(result, "ChatTeam[0].team.orgs[0].repo[0].pullRequest");

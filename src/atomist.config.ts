@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Configuration } from "@atomist/automation-client";
 import { initMemoryMonitoring } from "@atomist/automation-client/internal/util/memory";
 import * as secured from "@atomist/automation-client/secured";
 import * as appRoot from "app-root-path";
@@ -100,7 +101,10 @@ import {
 } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
 import { CommentOnRelatedIssueClosed } from "./handlers/event/issue/CommentOnRelatedIssueClosed";
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
-import { IssueToIssueCardLifecycle, IssueToIssueLifecycle } from "./handlers/event/issue/IssueToIssueLifecycle";
+import {
+    IssueToIssueCardLifecycle,
+    IssueToIssueLifecycle,
+} from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
 import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
 import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild";
@@ -161,10 +165,6 @@ import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnRevi
 import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
 import { issueRelationshipIngester } from "./ingesters/issueRelationship";
 import {
-    DatadogAutomationEventListener,
-    DatadogOptions,
-} from "./util/datadog";
-import {
     LogzioAutomationEventListener,
     LogzioOptions,
 } from "./util/logzio";
@@ -184,13 +184,6 @@ const logzioOptions: LogzioOptions = {
     token: secret("logzio.token", process.env.LOGZIO_TOKEN),
 };
 
-const datadogOptions: DatadogOptions = {
-    applicationId: secret("applicationId"),
-    environmentId: secret("environmentId"),
-    host: "dd-agent",
-    port: 8125,
-};
-
 // Set uo automation event listeners
 const listeners = [
     new ShortenUrlAutomationEventListener(),
@@ -201,17 +194,14 @@ if (logzioOptions.token) {
     listeners.push(new LogzioAutomationEventListener(logzioOptions));
 }
 
-// StatsD/Datadog servers aren't available locally either
-if (notLocal) {
-    listeners.push(new DatadogAutomationEventListener(datadogOptions));
-}
-
 const AdminTeam = "atomist-automation";
 
-export const configuration: any = {
+export const configuration: Configuration = {
     policy: config.get("policy"),
     teamIds: config.get("teamIds"),
     groups: config.get("groups"),
+    application: secret("applicationId"),
+    environment: secret("environmentId"),
     commands: [
         // cloudfoundry
         secured.githubTeam(() => new CloudFoundryApplicationDetail(), AdminTeam),
@@ -395,6 +385,9 @@ export const configuration: any = {
     cluster: {
         enabled: notLocal,
         // worker: 2,
+    },
+    statsd: {
+        enabled: notLocal,
     },
     ws: {
         enabled: true,

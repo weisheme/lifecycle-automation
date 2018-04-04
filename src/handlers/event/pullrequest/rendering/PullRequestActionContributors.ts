@@ -78,7 +78,7 @@ export class MergeActionContributor extends AbstractIdentifiableContribution
     }
 
     private mergePRActions(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-                           repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
+                           repo: graphql.PullRequestFields.Repo): Action[] {
         const buttons: Action[] = [];
         const mergeMethods = {
             merge: undefined,
@@ -379,7 +379,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
 
     public buttonsFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):
         Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.PullRequestToPullRequestLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.PullRequestFields.Repo;
 
         if (context.rendererId === "pull_request") {
             if (repo.org &&
@@ -400,16 +400,20 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
     }
 
     private assignReviewMenu(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-                             repo: graphql.PullRequestToPullRequestLifecycle.Repo,
+                             repo: graphql.PullRequestFields.Repo,
                              orgToken: string): Promise<Action[]> {
 
         const client = new ApolloGraphClient("https://api.github.com/graphql",
             { Authorization: `bearer ${orgToken}` });
 
-        return client.executeQueryFromFile("suggestedReviewers",
-            { owner: repo.owner, name: repo.name, number: pr.number },
-            {},
-            __dirname)
+        return client.query<any, any>({
+                path: "./suggestedReviewers",
+                variables: {
+                    owner: repo.owner,
+                    name: repo.name,
+                    number: pr.number,
+                },
+            })
             .then(result => {
                 const reviewers = _.get(result, "repository.pullRequest.suggestedReviewers");
 
@@ -442,7 +446,7 @@ export class AssignReviewerActionContributor extends AbstractIdentifiableContrib
     }
 
     private assignReviewButton(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-                               repo: graphql.PullRequestToPullRequestLifecycle.Repo): Action[] {
+                               repo: graphql.PullRequestFields.Repo): Action[] {
         return [ buttonForCommand({ text: "Request Review" }, "AssignGitHubPullRequestReviewer",
             { issue: pr.number, repo: repo.name, owner: repo.owner }) ];
     }

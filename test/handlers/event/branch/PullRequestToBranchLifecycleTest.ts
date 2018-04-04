@@ -158,7 +158,7 @@ describe("PullRequestToBranchLifecycle", () => {
         const ctx: any = {
             messageClient: new MockMessageClient(),
             graphClient: {
-                executeQueryFromFile() {
+                query() {
                     /* tslint:disable */
                     return Promise.resolve(JSON.parse(queryResponse));
                     /* tslint:enable */

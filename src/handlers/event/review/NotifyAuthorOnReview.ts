@@ -24,12 +24,11 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as graphql from "../../../typings/types";
 import { prAuthorReviewNotification } from "../../../util/notifications";
 
-@EventHandler("Notify pull request authors in slack",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyAuthorOnReview", __dirname))
+@EventHandler("Notify pull request authors in slack", subscription("notifyAuthorOnReview"))
 @Tags("lifecycle", "review", "notification")
 export class NotifyAuthorOnReview implements HandleEvent<graphql.NotifyAuthorOnReview.Subscription> {
 

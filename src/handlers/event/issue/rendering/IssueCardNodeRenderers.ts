@@ -57,7 +57,7 @@ export class IssueCardNodeRenderer extends AbstractIdentifiableContribution
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        const repo = context.lifecycle.extract("repo") as graphql.IssueToIssueLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.IssueFields.Repo;
 
         const comment = context.lifecycle.extract("comment");
         if (comment) {
@@ -180,7 +180,7 @@ export class CommentCardNodeRenderer extends AbstractIdentifiableContribution
                   actions: Action[],
                   msg: CardMessage,
                   context: RendererContext): Promise<CardMessage> {
-        const repo = context.lifecycle.extract("repo") as graphql.CommentToIssueLifecycle.Repo;
+        const repo = context.lifecycle.extract("repo") as graphql.IssueFields.Repo;
         const issue = node.issue;
 
         let title = `${url(issueUrl(repo, issue, node), `#${issue.number.toString()}: ${issue.title}`)}`;

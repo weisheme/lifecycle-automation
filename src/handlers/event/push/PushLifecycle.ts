@@ -19,6 +19,7 @@ import {
     HandlerContext,
 } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import {
@@ -81,11 +82,13 @@ import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
 export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
     protected prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<CardMessage> {
-        return ctx.graphClient.executeQueryFromFile<graphql.CardEvents.Query, graphql.CardEvents.Variables>(
-            "../../../graphql/query/cardEvents",
-            { key: [ lifecycle.id ]},
-            { fetchPolicy: "network-only" },
-            __dirname)
+        return ctx.graphClient.query<graphql.CardEvents.Query, graphql.CardEvents.Variables>({
+                name: "cardEvents",
+                variables: {
+                    key: [lifecycle.id],
+                },
+                options: NoCacheOptions,
+            })
             .then(result => {
                 const msg = newCardMessage("push");
                 const repo = lifecycle.extract("repo");
@@ -361,5 +364,5 @@ function matches(pattern: string, target: string): boolean {
 
 export interface Domain {
     name: string;
-    apps: graphql.PushToPushLifecycle.Apps[];
+    apps: graphql.PushFields.Apps[];
 }

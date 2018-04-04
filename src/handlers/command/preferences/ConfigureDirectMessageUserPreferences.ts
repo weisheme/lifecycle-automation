@@ -26,6 +26,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import {
     Action,
@@ -79,11 +80,14 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                 .then(() => Success, failure);
 
         } else {
-            return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
-                graphql.ChatId.Variables>("../../../graphql/query/chatId",
-                { teamId: this.teamId, chatId: this.requester },
-                { fetchPolicy: "network-only" },
-                __dirname)
+            return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
+                    name: "chatId",
+                    variables: {
+                        teamId: this.teamId,
+                        chatId: this.requester,
+                    },
+                    options: NoCacheOptions,
+                })
                 .then(result => {
                     const preferences =
                         _.get(result, "ChatTeam[0].members[0].preferences");

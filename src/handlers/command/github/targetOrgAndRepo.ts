@@ -76,11 +76,7 @@ export function ownerSelection(prefix: string, text: string, repoHandler: string
             params.msgId = guid();
         }
 
-        const orgResult = await ctx.graphClient.executeQueryFromFile<types.Orgs.Query, types.Orgs.Variables>(
-            "../../../graphql/query/orgs",
-            {},
-            {},
-            __dirname);
+        const orgResult = await ctx.graphClient.query<types.Orgs.Query, types.Orgs.Variables>("orgs");
 
         const { title, author, authorIcon } = await retrieveIssue(ctx, params);
 
@@ -115,20 +111,15 @@ export function repoSelection(prefix: string, text: string, previousHandler: str
     return async (ctx: HandlerContext, params: RepoParameters) => {
         const targetOwner = JSON.parse(params.targetOwner) as types.Orgs.Org;
 
-        const repoResult = await ctx.graphClient.executeQueryFromFile<types.OrgRepos.Query, types.OrgRepos.Variables>(
-            "../../../graphql/query/orgRepos",
-            {
+        const repoResult = await ctx.graphClient.query<types.OrgRepos.Query, types.OrgRepos.Variables>({
+            name: "orgRepos",
+            variables: {
                 owner: targetOwner.owner,
                 providerId: targetOwner.provider.providerId,
             },
-            {},
-            __dirname);
+        });
 
-        const orgResult = await ctx.graphClient.executeQueryFromFile<types.Orgs.Query, types.Orgs.Variables>(
-            "../../../graphql/query/orgs",
-            {},
-            {},
-            __dirname);
+        const orgResult = await ctx.graphClient.query<types.Orgs.Query, types.Orgs.Variables>("orgs");
 
         const { title, author, authorIcon } = await retrieveIssue(ctx, params);
         text = text.replace("%ORG%", bold(targetOwner.owner));
@@ -182,16 +173,14 @@ export function repoSelection(prefix: string, text: string, previousHandler: str
 }
 
 export const retrieveIssue = async (ctx: HandlerContext, params: IssueOwnerParameters) => {
-    const issueResult = await ctx.graphClient.executeQueryFromFile<types.IssueOrPr.Query, types.IssueOrPr.Variables>(
-        "../../../graphql/query/issueOrPr",
-        {
+    const issueResult = await ctx.graphClient.query<types.IssueOrPr.Query, types.IssueOrPr.Variables>({
+        name: "../../../graphql/query/issueOrPr",
+        variables: {
             owner: params.owner,
             repo: params.repo,
             names: [params.issue.toString()],
         },
-        {},
-        __dirname,
-    );
+    });
 
     let title;
     let author;
