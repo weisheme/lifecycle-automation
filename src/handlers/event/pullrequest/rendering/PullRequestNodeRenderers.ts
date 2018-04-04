@@ -192,8 +192,8 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
     }
 
     private renderCommitMessage(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest,
-                                c: graphql.PullRequestToPullRequestLifecycle.Commits,
-                                repo: graphql.PullRequestToPullRequestLifecycle.Repo): [string, string] {
+                                c: graphql.PullRequestFields.Commits,
+                                repo: graphql.PullRequestFields.Repo): [string, string] {
 
         // Cut commit to 50 chars of first line
         const cm = truncateCommitMessage(c.message, repo);

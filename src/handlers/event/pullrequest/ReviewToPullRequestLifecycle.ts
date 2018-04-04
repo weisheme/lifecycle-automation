@@ -19,7 +19,7 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
@@ -29,14 +29,13 @@ import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 /**
  * Send a lifecycle message on Review events.
  */
-@EventHandler("Send a lifecycle message on Review events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/reviewToPullRequest", __dirname))
+@EventHandler("Send a lifecycle message on Review events", subscription("reviewToPullRequest"))
 @Tags("lifecycle", "pr", "review")
 export class ReviewToPullRequestLifecycle
     extends PullRequestLifecycleHandler<graphql.ReviewToPullRequestLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ReviewToPullRequestLifecycle.Subscription>):
-        [graphql.ReviewToPullRequestLifecycle.PullRequest, graphql.ReviewToPullRequestLifecycle.Repo,
+        [graphql.ReviewToPullRequestLifecycle.PullRequest, graphql.PullRequestFields.Repo,
             string, boolean] {
 
         const pr = _.get(event, "data.Review[0].pullRequest");
