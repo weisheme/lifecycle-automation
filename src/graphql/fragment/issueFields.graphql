@@ -1,73 +1,73 @@
 fragment IssueFields on Issue {
-    _id
-    name
-    title
+  _id
+  name
+  title
+  body
+  state
+  number
+  createdAt
+  updatedAt
+  closedAt
+  comments {
+    by {
+      login
+    }
     body
-    state
-    number
-    createdAt
-    updatedAt
-    closedAt
-    comments {
-        by {
-            login
+  }
+  resolvingCommits {
+    sha
+    message
+    author {
+      login
+      person {
+        chatId {
+          screenName
         }
-        body
+      }
     }
-    resolvingCommits {
-        sha
-        message
-        author {
-            login
-            person {
-                chatId {
-                    screenName
-                }
-            }
-        }
-    }
-    openedBy {
-        login
-    }
-    closedBy {
-        login
-    }
-    assignees {
-        login
-    }
-    repo {
-        name
-        owner
-        labels {
-            name
-        }
-        channels {
-            name
-            team {
-                id
-            }
-        }
-        org {
-            provider {
-                apiUrl
-                gitUrl
-                url
-                providerId
-            }
-            team {
-                id
-                chatTeams {
-                    id
-                    preferences {
-                        name
-                        value
-                    }
-                }
-            }
-        }
-    }
+  }
+  openedBy {
+    login
+  }
+  closedBy {
+    login
+  }
+  assignees {
+    login
+  }
+  repo {
+    name
+    owner
     labels {
-        name
+      name
     }
-    timestamp
+    channels {
+      name
+      team {
+        id
+      }
+    }
+    org {
+      provider {
+        apiUrl
+        gitUrl
+        url
+        providerId
+      }
+      team {
+        id
+        chatTeams {
+          id
+          preferences {
+            name
+            value
+          }
+        }
+      }
+    }
+  }
+  labels {
+    name
+  }
+  timestamp
 }

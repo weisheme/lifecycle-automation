@@ -26,7 +26,7 @@ import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import {
     IssueCardLifecycleHandler,
-    IssueLifecycleHandler
+    IssueLifecycleHandler,
 } from "./IssueLifecycle";
 
 /**

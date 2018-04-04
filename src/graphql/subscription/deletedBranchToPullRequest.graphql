@@ -2,7 +2,7 @@ subscription DeletedBranchToPullRequestLifecycle {
   DeletedBranch {
     id
     pullRequests(first: 1) {
-      ... PullRequestFields
+      ...PullRequestFields
     }
   }
 }

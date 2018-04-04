@@ -1,5 +1,5 @@
 subscription PullRequestToPullRequestLifecycle {
   PullRequest {
-    ... PullRequestFields
+    ...PullRequestFields
   }
 }

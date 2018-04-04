@@ -78,6 +78,6 @@ export abstract class BranchLifecycle<R> extends LifecycleHandler<R> {
 
     protected abstract extractNodes(event: EventFired<R>):
         [graphql.BranchToBranchLifecycle.Branch[],
-            graphql.BranchToBranchLifecycle.Repo,
+            graphql.BranchFields.Repo,
             boolean];
 }

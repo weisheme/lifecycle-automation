@@ -26,15 +26,14 @@ import {
     SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as graphql from "../../../typings/types";
 import { BranchToBranchLifecycle } from "./BranchToBranchLifecycle";
 
 /**
  * Send a lifecycle message on PullRequest events.
  */
-@EventHandler("Send a lifecycle message on Branch events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/pullRequestToBranch", __dirname))
+@EventHandler("Send a lifecycle message on Branch events", subscription("pullRequestToBranch"))
 @Tags("lifecycle", "branch", "pr")
 export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullRequestToBranchLifecycle.Subscription> {
 

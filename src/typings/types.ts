@@ -2587,67 +2587,7 @@ export namespace BranchToBranchLifecycle {
     Branch?: Branch[] | null; 
   } 
 
-  export type Branch = {
-    id?: string | null; 
-    pullRequests?: PullRequests[] | null; 
-    commit?: Commit | null; 
-    name?: string | null; 
-    repo?: Repo | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type PullRequests = {
-    merged?: boolean | null; 
-  } 
-
-  export type Commit = {
-    sha?: string | null; 
-    message?: string | null; 
-  } 
-
-  export type Repo = {
-    name?: string | null; 
-    owner?: string | null; 
-    defaultBranch?: string | null; 
-    channels?: Channels[] | null; 
-    org?: Org | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    team?: Team | null; 
-  } 
-
-  export type Team = {
-    id?: string | null; 
-    name?: string | null; 
-  } 
-
-  export type Org = {
-    team?: _Team | null; 
-    provider?: Provider | null; 
-  } 
-
-  export type _Team = {
-    id?: string | null; 
-    chatTeams?: ChatTeams[] | null; 
-  } 
-
-  export type ChatTeams = {
-    id?: string | null; 
-    preferences?: Preferences[] | null; 
-  } 
-
-  export type Preferences = {
-    name?: string | null; 
-    value?: string | null; 
-  } 
-
-  export type Provider = {
-    id?: string | null; 
-    apiUrl?: string | null; 
-    url?: string | null; 
-  } 
+  export type Branch = BranchFields.Fragment
 }
 export namespace BranchToPullRequestLifecycle {
   export type Variables = {
@@ -3060,67 +3000,7 @@ export namespace DeletedBranchToBranchLifecycle {
     DeletedBranch?: DeletedBranch[] | null; 
   } 
 
-  export type DeletedBranch = {
-    id?: string | null; 
-    pullRequests?: PullRequests[] | null; 
-    commit?: Commit | null; 
-    name?: string | null; 
-    repo?: Repo | null; 
-    timestamp?: string | null; 
-  } 
-
-  export type PullRequests = {
-    merged?: boolean | null; 
-  } 
-
-  export type Commit = {
-    sha?: string | null; 
-    message?: string | null; 
-  } 
-
-  export type Repo = {
-    name?: string | null; 
-    owner?: string | null; 
-    defaultBranch?: string | null; 
-    channels?: Channels[] | null; 
-    org?: Org | null; 
-  } 
-
-  export type Channels = {
-    name?: string | null; 
-    team?: Team | null; 
-  } 
-
-  export type Team = {
-    id?: string | null; 
-    name?: string | null; 
-  } 
-
-  export type Org = {
-    team?: _Team | null; 
-    provider?: Provider | null; 
-  } 
-
-  export type _Team = {
-    id?: string | null; 
-    chatTeams?: ChatTeams[] | null; 
-  } 
-
-  export type ChatTeams = {
-    id?: string | null; 
-    preferences?: Preferences[] | null; 
-  } 
-
-  export type Preferences = {
-    name?: string | null; 
-    value?: string | null; 
-  } 
-
-  export type Provider = {
-    id?: string | null; 
-    apiUrl?: string | null; 
-    url?: string | null; 
-  } 
+  export type DeletedBranch = DeletedBranchFields.Fragment
 }
 export namespace DeletedBranchToPullRequestLifecycle {
   export type Variables = {
@@ -4696,6 +4576,134 @@ export namespace TagToPushLifecycle {
   } 
 
   export type Pushes = PushFields.Fragment
+}
+
+export namespace BranchFields {
+  export type Fragment = {
+    _id?: Long | null; 
+    pullRequests?: PullRequests[] | null; 
+    commit?: Commit | null; 
+    name?: string | null; 
+    repo?: Repo | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type PullRequests = {
+    merged?: boolean | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+    message?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    defaultBranch?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    team?: _Team | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type Provider = {
+    id?: string | null; 
+    apiUrl?: string | null; 
+    url?: string | null; 
+  } 
+}
+
+export namespace DeletedBranchFields {
+  export type Fragment = {
+    _id?: Long | null; 
+    pullRequests?: PullRequests[] | null; 
+    commit?: Commit | null; 
+    name?: string | null; 
+    repo?: Repo | null; 
+    timestamp?: string | null; 
+  } 
+
+  export type PullRequests = {
+    merged?: boolean | null; 
+  } 
+
+  export type Commit = {
+    sha?: string | null; 
+    message?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    defaultBranch?: string | null; 
+    channels?: Channels[] | null; 
+    org?: Org | null; 
+  } 
+
+  export type Channels = {
+    name?: string | null; 
+    team?: Team | null; 
+  } 
+
+  export type Team = {
+    id?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Org = {
+    team?: _Team | null; 
+    provider?: Provider | null; 
+  } 
+
+  export type _Team = {
+    id?: string | null; 
+    chatTeams?: ChatTeams[] | null; 
+  } 
+
+  export type ChatTeams = {
+    id?: string | null; 
+    preferences?: Preferences[] | null; 
+  } 
+
+  export type Preferences = {
+    name?: string | null; 
+    value?: string | null; 
+  } 
+
+  export type Provider = {
+    id?: string | null; 
+    apiUrl?: string | null; 
+    url?: string | null; 
+  } 
 }
 
 export namespace IssueFields {
