@@ -160,17 +160,12 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
-            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
             public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
             }
 
-            public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
+            public query<T, Q>(): Promise<T> {
 
                 return Promise.resolve({
                     ChatTeam: [
@@ -203,6 +198,11 @@ describe("StatusToPushLifecycle", () => {
                 return Promise.reject("Shouldn't call this");
             }
 
+            public executeQueryFromFile<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
             public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
@@ -222,7 +222,7 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadRaisePr) as EventFired<any>, ctx as HandlerContext)
+        handler.handle(JSON.parse(payloadRaisePr) as EventFired<any>, ctx as any as HandlerContext)
             .then(result => {
                 assert(messageSent);
                 assert(result.code === 0);
@@ -314,17 +314,12 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
-            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
             public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
             }
 
-            public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
+            public query<T, Q>(): Promise<T> {
 
                 return Promise.resolve({
                     ChatTeam: [
@@ -357,6 +352,11 @@ describe("StatusToPushLifecycle", () => {
                 return Promise.reject("Shouldn't call this");
             }
 
+            public executeQueryFromFile<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
             public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
@@ -376,7 +376,7 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadNoChannel) as EventFired<any>, ctx as HandlerContext)
+        handler.handle(JSON.parse(payloadNoChannel) as EventFired<any>, ctx as any as HandlerContext)
             .then(result => {
                 assert(!messageSent);
                 assert(result.code === 0);
@@ -512,17 +512,12 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
-            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
             public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
             }
 
-            public executeQueryFromFile<T, Q>(queryFile: string, variables?: Q): Promise<T> {
+            public query<T, Q>(): Promise<T> {
 
                 return Promise.resolve({
                     ChatTeam: [
@@ -555,6 +550,11 @@ describe("StatusToPushLifecycle", () => {
                 return Promise.reject("Shouldn't call this");
             }
 
+            public executeQueryFromFile<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
             public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
@@ -574,7 +574,7 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadNoRaisePr) as EventFired<any>, ctx as HandlerContext)
+        handler.handle(JSON.parse(payloadNoRaisePr) as EventFired<any>, ctx as any as HandlerContext)
             .then(result => {
                 assert(messageSent);
                 assert(result.code === 0);
@@ -859,21 +859,21 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
-            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
             public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
             }
 
-            public executeQueryFromFile(queryFile: string, variables?: any): Promise<any> {
+            public query(): Promise<any> {
                 return Promise.resolve({});
             }
 
             public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
+                fail();
+                return Promise.reject("Shouldn't call this");
+            }
+
+            public executeQueryFromFile<T, Q>(query: string, variables?: Q): Promise<T> {
                 fail();
                 return Promise.reject("Shouldn't call this");
             }
@@ -897,7 +897,7 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadWithGoals) as EventFired<any>, ctx as HandlerContext)
+        handler.handle(JSON.parse(payloadWithGoals) as EventFired<any>, ctx as any as HandlerContext)
             .then(result => {
                 assert(messageSent);
                 assert(result.code === 0);
@@ -1074,9 +1074,8 @@ describe("StatusToPushLifecycle", () => {
 
             public endpoint = "";
 
-            public query<T, Q>(optionsOrName: QueryOptions<Q> | string): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
+            public query(): Promise<any> {
+                return Promise.resolve({});
             }
 
             public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
@@ -1112,7 +1111,7 @@ describe("StatusToPushLifecycle", () => {
             messageClient: new MockMessageClient(),
         };
         const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadFailure) as EventFired<any>, ctx as HandlerContext)
+        handler.handle(JSON.parse(payloadFailure) as EventFired<any>, ctx as any as HandlerContext)
             .then(result => {
                 assert(messageSent);
                 assert(result.code === 0);

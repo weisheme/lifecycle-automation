@@ -64,13 +64,15 @@ export function inviteUserToSlackChannel(
     userId: string,
 ): Promise<InviteUserToSlackChannel.Mutation> {
 
-    return ctx.graphClient.executeMutationFromFile<InviteUserToSlackChannel.Mutation,
-        InviteUserToSlackChannel.Variables>(
-        "../../../graphql/mutation/inviteUserToSlackChannel",
-        { teamId, channelId, userId },
-        {},
-        __dirname,
-    );
+    return ctx.graphClient.mutate<InviteUserToSlackChannel.Mutation,
+        InviteUserToSlackChannel.Variables>({
+            name: "inviteUserToSlackChannel",
+            variables: {
+                teamId,
+                channelId,
+                userId,
+            },
+        });
 }
 
 @CommandHandler("Invite bot, link a repository, and invite user to channel")
@@ -125,12 +127,13 @@ export class AssociateRepo implements HandleCommand {
                 }
                 return addBotToSlackChannel(ctx, this.teamId, this.channelId)
                     .then(() => {
-                        return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
-                            graphql.ProviderIdFromOrg.Variables>(
-                            "../../../graphql/query/providerIdFromOrg",
-                            { owner: this.owner },
-                            {},
-                            __dirname)
+                        return ctx.graphClient.query<graphql.ProviderIdFromOrg.Query,
+                            graphql.ProviderIdFromOrg.Variables>({
+                                name: "providerIdFromOrg",
+                                variables: {
+                                    owner: this.owner,
+                                },
+                            })
                             .then(result => {
                                 const providerId = _.get(result, "Org[0].provider.providerId");
                                 return linkSlackChannelToRepo(

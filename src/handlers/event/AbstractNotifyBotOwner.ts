@@ -40,11 +40,14 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
             .filter(ct => ct.preferences.some(p => p.name === PreferenceKey));
 
         return Promise.all(chatTeams.map(ct => {
-            return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
-                "../../graphql/query/channels",
-                { teamId: ct.id, first: PageSize, offset: 0 },
-                {},
-                __dirname)
+            return ctx.graphClient.query<graphql.Channels.Query, graphql.Channels.Variables>({
+                    name: "channels",
+                    variables: {
+                        teamId: ct.id,
+                        first: PageSize,
+                        offset: 0,
+                    },
+                })
                 .then(function page(result, offset = 0) {
                     const channels = _.get(result, "ChatTeam[0].channels") as graphql.Channels.Channels[];
                     if (!channels || channels.length === 0) {
@@ -54,11 +57,14 @@ export abstract class AbstractNotifyBotOwner<R> implements HandleEvent<R> {
                     }
 
                     offset = offset + PageSize;
-                    return ctx.graphClient.executeQueryFromFile<graphql.Channels.Query, graphql.Channels.Variables>(
-                        "../../graphql/query/channels",
-                        {teamId: ct.id, first: PageSize, offset},
-                        {},
-                        __dirname)
+                    return ctx.graphClient.query<graphql.Channels.Query, graphql.Channels.Variables>({
+                            name: "channels",
+                            variables: {
+                                teamId: ct.id,
+                                first: PageSize,
+                                offset,
+                            },
+                        })
                         .then(innerResult => page(innerResult, offset));
                 })
                 .then(() => Success, failure);
@@ -73,11 +79,12 @@ function handleResult(team: ChatTeam,
                       mappedRepo: boolean,
                       ctx: HandlerContext): Promise<HandlerResult> {
     if (!mappedRepo) {
-        return ctx.graphClient.executeQueryFromFile<graphql.BotOwner.Query, graphql.BotOwner.Variables>(
-            "../../graphql/query/botOwner",
-            { teamId: team.id},
-            {},
-            __dirname)
+        return ctx.graphClient.query<graphql.BotOwner.Query, graphql.BotOwner.Variables>({
+                name: "botOwner",
+                variables: {
+                    teamId: team.id,
+                },
+            })
             .then(r => {
                 const members = (_.get(r, "ChatTeam[0].members") || []) as graphql.BotOwner.Members[];
                 return members.map(c => c.screenName);
@@ -93,11 +100,15 @@ function handleResult(team: ChatTeam,
             .then(() => Success, failure);
     } else {
         console.log(`Setting team preferences '${PreferenceKey}' to 'true'`);
-        return ctx.graphClient.executeMutationFromFile<graphql.SetChatTeamPreference.Mutation,
-                graphql.SetChatTeamPreference.Variables>("../../graphql/mutation/setChatTeamPreference",
-                { teamId: team.id, name: PreferenceKey, value: "true" },
-                {},
-                __dirname)
+        return ctx.graphClient.mutate<graphql.SetChatTeamPreference.Mutation,
+                graphql.SetChatTeamPreference.Variables>({
+                name: "setChatTeamPreference",
+                variables: {
+                    teamId: team.id,
+                    name: PreferenceKey,
+                    value: "true",
+                },
+            })
             .then(() => Success, failure);
     }
 }

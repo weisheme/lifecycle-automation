@@ -128,7 +128,7 @@ describe("BuildToPushLifecycle", () => {
             correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
             invocationId: guid(),
             graphClient: {
-                executeQueryFromFile(name: string, variables?: any): Promise<any> {
+                query(): Promise<any> {
                     return Promise.resolve();
                 },
             },

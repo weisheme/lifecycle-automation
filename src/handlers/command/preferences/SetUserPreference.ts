@@ -27,6 +27,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
@@ -95,12 +96,14 @@ export class SetUserPreference implements HandleCommand {
     public label: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query,
-            graphql.ChatId.Variables>(
-                "../../../graphql/query/chatId",
-                { teamId: this.teamId, chatId: this.requester },
-                { fetchPolicy: "network-only" },
-                __dirname)
+        return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
+                name: "chatId",
+                variables: {
+                    teamId: this.teamId,
+                    chatId: this.requester,
+                },
+                options: NoCacheOptions,
+            })
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].members[0].preferences") as graphql.ChatId.Preferences[];
@@ -122,16 +125,16 @@ export class SetUserPreference implements HandleCommand {
                     value = this.value;
                 }
                 preferences[this.name] = value;
-                return ctx.graphClient.executeMutationFromFile<graphql.SetChatUserPreference.Mutation,
-                    graphql.SetChatUserPreference.Variables>("../../../graphql/mutation/setChatUserPreference",
-                    {
-                        teamId: this.teamId,
-                        userId: this.requester,
-                        name: this.key,
-                        value: JSON.stringify(preferences),
-                    },
-                    {},
-                    __dirname);
+                return ctx.graphClient.mutate<graphql.SetChatUserPreference.Mutation,
+                        graphql.SetChatUserPreference.Variables>({
+                        name: "setChatUserPreference",
+                        variables: {
+                            teamId: this.teamId,
+                            userId: this.requester,
+                            name: this.key,
+                            value: JSON.stringify(preferences),
+                        },
+                    });
             })
             .then(() => {
                 const msg: SlackMessage = {

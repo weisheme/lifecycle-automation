@@ -91,16 +91,15 @@ export class InstallGitHubOrgWebhook implements HandleCommand {
 
         return (github.api(this.githubToken, this.apiUrl).orgs as any).createHook(payload)
             .then(result => {
-                return ctx.graphClient.executeMutationFromFile<graphql.SetOwnerLogin.Mutation,
-                    graphql.SetOwnerLogin.Variables>(
-                        "../../../graphql/mutation/setOwnerLogin",
-                        {
+                return ctx.graphClient.mutate<graphql.SetOwnerLogin.Mutation,
+                        graphql.SetOwnerLogin.Variables>({
+                        name: "setOwnerLogin",
+                        variables: {
                             login: this.login,
                             owner: this.owner,
                             providerId: this.provider,
                         },
-                        {},
-                        __dirname)
+                    })
                     .then(() => ctx.messageClient.respond(
                         success("Organization Webhook", `Successfully installed webhook for ${url(
                         orgHookUrl(this.webUrl, this.owner), codeLine(this.owner))}`)))
@@ -304,16 +303,15 @@ function setRepoLogin(owner: string,
                       login: string,
                       providerId: string,
                       ctx: HandlerContext): Promise<any> {
-    return ctx.graphClient.executeMutationFromFile<graphql.SetRepoLogin.Mutation,
-        graphql.SetRepoLogin.Variables>(
-        "../../../graphql/mutation/setRepoLogin",
-        {
-            login,
-            owner,
-            repo: repo.trim(),
-            providerId,
-        },
-        {},
-        __dirname)
+    return ctx.graphClient.mutate<graphql.SetRepoLogin.Mutation,
+            graphql.SetRepoLogin.Variables>({
+            name: "setRepoLogin",
+            variables: {
+                login,
+                owner,
+                repo: repo.trim(),
+                providerId,
+            },
+        })
         .catch(failure);
 }

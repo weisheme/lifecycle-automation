@@ -415,11 +415,14 @@ export class PullRequestCardNodeRenderer extends AbstractIdentifiableContributio
             return Promise.resolve(msg);
         }
 
-        return context.context.graphClient.executeQueryFromFile<graphql.OpenPr.Query, graphql.OpenPr.Variables>(
-            "../../../../graphql/query/openPr",
-            { repo: repo.name, owner: repo.owner, branch: node.branch },
-            {},
-            __dirname)
+        return context.context.graphClient.query<graphql.OpenPr.Query, graphql.OpenPr.Variables>({
+                name: "openPr",
+                variables: {
+                    repo: repo.name,
+                    owner: repo.owner,
+                    branch: node.branch,
+                },
+            })
             .then(result => {
                 const pr = _.get(result, "Repo[0].branches[0].pullRequests[0]") as graphql.OpenPr.PullRequests;
                 if (pr) {

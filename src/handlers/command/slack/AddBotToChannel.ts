@@ -32,12 +32,13 @@ import { AddBotToSlackChannel } from "../../../typings/types";
 export function addBotToSlackChannel(ctx: HandlerContext,
                                      teamId: string,
                                      channelId: string): Promise<AddBotToSlackChannel.Mutation> {
-    return ctx.graphClient.executeMutationFromFile<AddBotToSlackChannel.Mutation, AddBotToSlackChannel.Variables>(
-        "../../../graphql/mutation/addBotToSlackChannel",
-        { teamId, channelId },
-        {},
-        __dirname,
-    );
+    return ctx.graphClient.mutate<AddBotToSlackChannel.Mutation, AddBotToSlackChannel.Variables>({
+            name: "addBotToSlackChannel",
+            variables: {
+                teamId,
+                channelId,
+            },
+        });
 }
 
 @CommandHandler("Invite the Atomist Bot to a channel")

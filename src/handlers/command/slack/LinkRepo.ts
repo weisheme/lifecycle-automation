@@ -50,12 +50,16 @@ export function linkSlackChannelToRepo(
     providerId: string,
 ): Promise<LinkSlackChannelToRepo.Mutation> {
 
-    return ctx.graphClient.executeMutationFromFile<LinkSlackChannelToRepo.Mutation, LinkSlackChannelToRepo.Variables>(
-        "../../../graphql/mutation/linkSlackChannelToRepo",
-        { teamId, channelId, repo, owner, providerId },
-        {},
-        __dirname,
-    );
+    return ctx.graphClient.mutate<LinkSlackChannelToRepo.Mutation, LinkSlackChannelToRepo.Variables>({
+            name: "linkSlackChannelToRepo",
+            variables: {
+                teamId,
+                channelId,
+                repo,
+                owner,
+                providerId,
+            },
+        });
 }
 
 @ConfigurableCommandHandler("Link a repository and channel", {
@@ -116,12 +120,13 @@ export class LinkRepo implements HandleCommand {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));
                 }
-                return ctx.graphClient.executeQueryFromFile<graphql.ProviderIdFromOrg.Query,
-                    graphql.ProviderIdFromOrg.Variables>(
-                    "../../../graphql/query/providerIdFromOrg",
-                    { owner: this.owner },
-                    {},
-                    __dirname)
+                return ctx.graphClient.query<graphql.ProviderIdFromOrg.Query,
+                    graphql.ProviderIdFromOrg.Variables>({
+                        name: "providerIdFromOrg",
+                        variables: {
+                            owner: this.owner,
+                        },
+                    })
                     .then(result => {
                         const providerId = _.get(result, "Org[0].provider.providerId");
                         return linkSlackChannelToRepo(

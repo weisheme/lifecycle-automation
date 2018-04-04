@@ -28,6 +28,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { url } from "@atomist/slack-messages";
 import {
@@ -321,11 +322,13 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
     }
 
     private loadPreferences(ctx: HandlerContext, key: string): Promise<graphql.ChatTeamPreferences.Preferences[]> {
-        return ctx.graphClient.executeQueryFromFile<graphql.ChatTeamPreferences.Query,
-            graphql.ChatTeamPreferences.Variables>("../../../graphql/query/chatTeamPreferences",
-            { teamId: this.teamId },
-            { fetchPolicy: "network-only" },
-            __dirname)
+        return ctx.graphClient.query<graphql.ChatTeamPreferences.Query, graphql.ChatTeamPreferences.Variables>({
+                name: "chatTeamPreferences",
+                variables: {
+                    teamId: this.teamId,
+                },
+                options: NoCacheOptions,
+            })
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].preferences") as graphql.ChatTeamPreferences.Preferences[];

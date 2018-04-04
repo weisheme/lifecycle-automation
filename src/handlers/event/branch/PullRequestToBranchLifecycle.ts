@@ -27,6 +27,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { subscription } from "@atomist/automation-client/graph/graphQL";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import * as graphql from "../../../typings/types";
 import { BranchToBranchLifecycle } from "./BranchToBranchLifecycle";
 
@@ -41,12 +42,12 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
                   ctx: HandlerContext): Promise<HandlerResult> {
         const pr = e.data.PullRequest[0];
 
-        return ctx.graphClient.executeQueryFromFile
-            <graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>(
-            "../../../graphql/query/branchWithPullRequest",
-            { id: pr.branch.id },
-            { fetchPolicy: "network-only" },
-            __dirname)
+        return ctx.graphClient.query
+                <graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>({
+                name: "branchWithPullRequest",
+                variables: { id: pr.branch.id },
+                options: NoCacheOptions,
+            })
             .then(result => {
                 if (result && result.Branch && result.Branch.length > 0) {
                     const handler = new BranchToBranchLifecycle();

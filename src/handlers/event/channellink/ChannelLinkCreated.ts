@@ -30,7 +30,7 @@ import { subscription } from "@atomist/automation-client/graph/graphQL";
 import { guid } from "@atomist/automation-client/internal/util/string";
 import {
     addressSlackChannels,
-    buttonForCommand
+    buttonForCommand,
 } from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages";
 import {
@@ -48,7 +48,7 @@ import { warning } from "../../../util/messages";
 import * as github from "../../command/github/gitHubApi";
 import {
     InstallGitHubOrgWebhook,
-    InstallGitHubRepoWebhook
+    InstallGitHubRepoWebhook,
 } from "../../command/github/InstallGitHubWebhook";
 import { ListRepoLinks } from "../../command/slack/ListRepoLinks";
 import { PushToPushLifecycle } from "../push/PushToPushLifecycle";
@@ -93,11 +93,10 @@ Please use one of the buttons below to install a Webhook in your repository or o
             if (exists) {
                 return true;
             } else if (repo.org.ownerType === "organization") {
-                return ctx.graphClient.executeQueryFromFile<graphql.Webhook.Query, graphql.Webhook.Variables>(
-                    "../../../graphql/query/webhook",
-                    { owner: repo.owner },
-                    {},
-                    __dirname)
+                return ctx.graphClient.query<graphql.Webhook.Query, graphql.Webhook.Variables>({
+                    name: "webhook",
+                    variables: { owner: repo.owner },
+                })
                 .then(result => {
                     return _.get(result, "GitHubOrgWebhook[0].url") != null;
                 })
@@ -176,15 +175,14 @@ function createListRepoLinksAction(msgId: string): Action {
 }
 
 function showLastPush(repo: graphql.ChannelLinkCreated.Repo, token: string, ctx: HandlerContext): Promise<any> {
-    return ctx.graphClient.executeQueryFromFile<graphql.LastPushOnBranch.Query, graphql.LastPushOnBranch.Variables>(
-        "../../../graphql/query/lastPushOnBranch",
-        {
-            owner: repo.owner,
-            name: repo.name,
-            branch: repo.defaultBranch,
-        },
-        {},
-        __dirname)
+    return ctx.graphClient.query<graphql.LastPushOnBranch.Query, graphql.LastPushOnBranch.Variables>({
+            name: "lastPushOnBranch",
+            variables: {
+                owner: repo.owner,
+                name: repo.name,
+                branch: repo.defaultBranch,
+            },
+        })
         .then(result => {
             if (result) {
                 return _.get(result, "Repo[0].branches[0].commit.pushes[0].id");
@@ -193,13 +191,12 @@ function showLastPush(repo: graphql.ChannelLinkCreated.Repo, token: string, ctx:
         })
         .then(id => {
             if (id) {
-                return ctx.graphClient.executeQueryFromFile<graphql.PushById.Query, graphql.PushById.Variables>(
-                    "../../../graphql/query/pushById",
-                    {
+                return ctx.graphClient.query<graphql.PushById.Query, graphql.PushById.Variables>({
+                    name: "pushById",
+                    variables: {
                         id,
                     },
-                    {},
-                    __dirname);
+                });
             }
             return null;
         })

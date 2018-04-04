@@ -321,11 +321,14 @@ export function loadIssueOrPullRequest(owner: string,
                                        repo: string,
                                        names: string[],
                                        ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
-    return ctx.graphClient.executeQueryFromFile<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>(
-        "../graphql/query/issueOrPr",
-        { owner, repo, names },
-        {},
-        __dirname)
+    return ctx.graphClient.query<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>({
+            name: "issueOrPr",
+            variables: {
+                owner,
+                repo,
+                names,
+            },
+        })
         .then(result => {
             if (result && result.Org && result.Org.length > 0) {
                 return result.Org[0];
@@ -405,11 +408,12 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
 
 export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): Promise<graphql.GitHubId.GitHubId[]> {
     if (gitHubIds && gitHubIds.length > 0) {
-        return ctx.graphClient.executeQueryFromFile<graphql.GitHubId.Query, graphql.GitHubId.Variables>(
-            "../graphql/query/gitHubId",
-            { gitHubIds },
-            {},
-            __dirname)
+        return ctx.graphClient.query<graphql.GitHubId.Query, graphql.GitHubId.Variables>({
+                name: "gitHubId",
+                variables: {
+                    gitHubIds,
+                },
+            })
             .then(result => {
                 if (result) {
                     if (result.GitHubId && result.GitHubId.length > 0) {
@@ -429,11 +433,13 @@ export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): 
 }
 
 export function loadGitHubIdByChatId(chatId: string, teamId: string, ctx: HandlerContext): Promise<string> {
-    return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-        "../graphql/query/chatId",
-        { teamId, chatId },
-        {},
-        __dirname)
+    return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
+            name: "chatId",
+            variables: {
+                teamId,
+                chatId,
+            },
+        })
         .then(result => {
             if (result) {
                 return _.get(result, "ChatTeam[0].members[0].person.gitHubId.login");
@@ -448,11 +454,13 @@ export function loadGitHubIdByChatId(chatId: string, teamId: string, ctx: Handle
 
 export function loadChatIdByChatId(chatId: string, teamId: string, ctx: HandlerContext)
     : Promise<graphql.ChatId.Members> {
-    return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-        "../graphql/query/chatId",
-        { teamId, chatId },
-        {},
-        __dirname)
+    return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
+            name: "chatId",
+            variables: {
+                teamId,
+                chatId,
+            },
+        })
         .then(result => {
             if (result) {
                 return _.get(result, "ChatTeam[0].members[0]");
@@ -466,11 +474,12 @@ export function loadChatIdByChatId(chatId: string, teamId: string, ctx: HandlerC
 }
 
 export function loadChatTeam(teamId: string, ctx: HandlerContext): Promise<graphql.ChatTeam.ChatTeam> {
-    return ctx.graphClient.executeQueryFromFile<graphql.ChatTeam.Query, graphql.ChatTeam.Variables>(
-        "../graphql/query/chatTeam",
-        { teamId },
-        {},
-        __dirname)
+    return ctx.graphClient.query<graphql.ChatTeam.Query, graphql.ChatTeam.Variables>({
+            name: "chatTeam",
+            variables: {
+                teamId,
+            },
+        })
         .then(result => {
             return _.get(result, "ChatTeam[0]");
         })
@@ -591,11 +600,13 @@ export function replaceChatIdWithGitHubId(body: string = "", teamId: string, ctx
     const matches = getChatIds(body);
     if (matches != null) {
         return Promise.all(matches.map(m => {
-            return ctx.graphClient.executeQueryFromFile<graphql.ChatId.Query, graphql.ChatId.Variables>(
-                "../graphql/query/chatId",
-                { teamId, chatId: m },
-                {},
-                __dirname)
+            return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
+                    name: "chatId",
+                    variables: {
+                        teamId,
+                        chatId: m,
+                    },
+                })
                 .then(result => {
                     if (result) {
                         const login = _.get(result, "ChatTeam[0].members[0].person.gitHubId.login");

@@ -28,6 +28,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { subscription } from "@atomist/automation-client/graph/graphQL";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -68,14 +69,15 @@ export class CommentOnRelatedIssueClosed
                   ctx: HandlerContext): Promise<HandlerResult> {
         const issue = event.data.Issue[0];
 
-        return ctx.graphClient.executeQuery<any, any>(
-            RelatedIssueQuery,
-            {
-                owner: [issue.repo.owner],
-                repo: [issue.repo.name],
-                issue: [issue.number.toString()],
-            },
-            { fetchPolicy: "network-only" })
+        return ctx.graphClient.query<any, any>({
+                query: RelatedIssueQuery,
+                variables: {
+                    owner: [issue.repo.owner],
+                    repo: [issue.repo.name],
+                    issue: [issue.number.toString()],
+                },
+                options: NoCacheOptions,
+        })
         .then(result => {
             if (result
                 && result.IssueRelationship

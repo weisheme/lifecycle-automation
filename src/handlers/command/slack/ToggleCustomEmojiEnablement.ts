@@ -26,6 +26,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { bold, codeLine, SlackMessage, url } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -59,13 +60,16 @@ export class ToggleCustomEmojiEnablement implements HandleCommand {
                 _.set(preferences, "push.configuration['emoji-style']", enabled);
                 _.set(preferences, "pull_request.configuration['emoji-style']", enabled);
 
-                return ctx.graphClient.executeMutationFromFile<graphql.SetChatTeamPreference.Mutation,
-                    graphql.SetChatTeamPreference.Variables>(
-                    "../../../graphql/mutation/setChatTeamPreference",
-                    { teamId: this.teamId, name: LifecyclePreferencesName, value: JSON.stringify(preferences)},
-                    { fetchPolicy: "no-cache" },
-                    __dirname,
-                )
+                return ctx.graphClient.mutate<graphql.SetChatTeamPreference.Mutation,
+                    graphql.SetChatTeamPreference.Variables>({
+                    name: "setChatTeamPreference",
+                    variables: {
+                        teamId: this.teamId,
+                        name: LifecyclePreferencesName,
+                        value: JSON.stringify(preferences),
+                    },
+                    options: NoCacheOptions,
+                })
                 .then(() => preferencesState);
             })
             .then(preferencesState => {
@@ -105,12 +109,12 @@ export class ToggleCustomEmojiEnablement implements HandleCommand {
 
 export function isCustomEmojisEnabled(teamId: string, ctx: HandlerContext)
 : Promise<{preferences: graphql.ChatTeamPreferences.Preferences, enabled: boolean, domain: string}> {
-    return ctx.graphClient.executeQueryFromFile<graphql.ChatTeamPreferences.Query,
-        graphql.ChatTeamPreferences.Variables>(
-        "../../../graphql/query/chatTeamPreferences",
-        { teamId },
-        { fetchPolicy: "network-only" },
-        __dirname)
+    return ctx.graphClient.query<graphql.ChatTeamPreferences.Query,
+        graphql.ChatTeamPreferences.Variables>({
+            name: "chatTeamPreferences",
+            variables: { teamId },
+            options: NoCacheOptions,
+        })
         .then(result => {
             const preferences = (_.get(result, "ChatTeam[0].preferences")
                 || []) as graphql.ChatTeamPreferences.Preferences[];

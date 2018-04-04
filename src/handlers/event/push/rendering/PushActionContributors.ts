@@ -17,6 +17,7 @@
 import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { guid } from "@atomist/automation-client/internal/util/string";
+import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
@@ -207,10 +208,10 @@ export class TagPushActionContributor extends AbstractIdentifiableContribution
             const client = new ApolloGraphClient("https://api.github.com/graphql",
                 { Authorization: `bearer ${context.orgToken}` });
 
-            return client.executeQueryFromFile("repositoryTags",
-                { owner: repo.owner, name: repo.name },
-                {},
-                __dirname)
+            return client.query<any, any>({
+                    path: "./repositoryTags",
+                    variables: { owner: repo.owner, name: repo.name },
+                })
                 .then(result => {
                     const lastTag = _.get(result, "repository.refs.nodes[0].name");
                     if (lastTag && semver.valid(lastTag)) {
@@ -270,11 +271,15 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
         // If the tag is like 0.5.32-stuff, offer to create a tag like 0.5.32
         const version = this.versionPrefix(tag.name);
         if (version) {
-            return ctx.context.graphClient.executeQueryFromFile<graphql.TagByName.Query, graphql.TagByName.Variables>(
-                    "../../../../graphql/query/tagByName",
-                    { repo: repo.name, owner: repo.owner, name: version },
-                    { fetchPolicy: "network-only" },
-                    __dirname)
+            return ctx.context.graphClient.query<graphql.TagByName.Query, graphql.TagByName.Variables>({
+                    name: "tagByName",
+                    variables: {
+                        repo: repo.name,
+                        owner: repo.owner,
+                        name: version,
+                    },
+                    options: NoCacheOptions,
+                })
                 .then(result => {
                     const et = _.get(result, "Tag[0].name");
                     if (!et) {
@@ -339,11 +344,15 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
         if (ctx.rendererId === "commit") {
             const repo = ctx.lifecycle.extract("repo");
 
-            return ctx.context.graphClient.executeQueryFromFile<graphql.Branch.Query, graphql.Branch.Variables>(
-                "../../../../graphql/query/branch",
-                { repo: repo.name, owner: repo.owner, branch: node.branch },
-                { fetchPolicy: "network-only" },
-                __dirname)
+            return ctx.context.graphClient.query<graphql.Branch.Query, graphql.Branch.Variables>({
+                    name: "branch",
+                    variables: {
+                        repo: repo.name,
+                        owner: repo.owner,
+                        branch: node.branch,
+                    },
+                    options: NoCacheOptions,
+                })
                 .then(result => {
                     let showButton = true;
                     const buttons = [];

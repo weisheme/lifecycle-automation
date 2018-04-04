@@ -269,10 +269,10 @@ export class AssignActionContributor extends AbstractIdentifiableContribution
             const client = new ApolloGraphClient("https://api.github.com/graphql",
                 { Authorization: `bearer ${context.orgToken}` });
 
-            return client.executeQueryFromFile("suggestedAssignees",
-                { owner: repo.owner, name: repo.name },
-                {},
-                __dirname)
+            return client.query<any, any>({
+                    path: "./suggestedAssignees",
+                    variables: { owner: repo.owner, name: repo.name },
+                })
                 .then(result => {
                     const assignees = issue.assignees.map(a => a.login);
                     const suggestedAssignees = (_.get(result, "repository.assignableUsers.nodes") || [])
