@@ -72,7 +72,8 @@ export class IssueNodeRenderer extends AbstractIdentifiableContribution
             footer_icon = "https://images.atomist.com/rug/issue-closed.png";
             if (node.closedAt === node.updatedAt) {
                 if (node.closedBy != null && node.closedBy.login != null) {
-                    pretext = `${url(userUrl(repo, node.closedBy.login), `@${node.closedBy.login}`)} closed issue ${title}`;
+                    pretext = `${url(userUrl(repo, node.closedBy.login),
+                        `@${node.closedBy.login}`)} closed issue ${title}`;
                 } else {
                     pretext = `Closed issue ${title}`;
                 }
