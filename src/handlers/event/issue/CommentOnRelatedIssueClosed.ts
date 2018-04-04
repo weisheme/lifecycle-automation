@@ -25,10 +25,9 @@ import {
     Secrets,
     success,
     Success,
-    SuccessPromise,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -57,8 +56,7 @@ const RelatedIssueQuery = `query RelatedIssue($owner: [String]!, $repo: [String]
 /**
  * Create a comment if a related issue is closed.
  */
-@EventHandler("Create a comment if a related issue is closed",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/commentOnRelatedIssueClosed", __dirname))
+@EventHandler("Create a comment if a related issue is closed", subscription("commentOnRelatedIssueClosed"))
 @Tags("lifecycle", "issue")
 export class CommentOnRelatedIssueClosed
     implements HandleEvent<graphql.CommentOnRelatedIssueClosed.Subscription> {

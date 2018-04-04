@@ -24,12 +24,11 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as graphql from "../../../typings/types";
 import { prNotification } from "../../../util/notifications";
 
-@EventHandler("Notify mentioned user in slack",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/notifyMentionedOnPullRequestComment", __dirname))
+@EventHandler("Notify mentioned user in slack", subscription("notifyMentionedOnPullRequestComment"))
 @Tags("lifecycle", "pr comment", "notification")
 export class NotifyMentionedOnPullRequestComment
     implements HandleEvent<graphql.NotifyMentionedOnPullRequestComment.Subscription> {

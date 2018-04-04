@@ -26,9 +26,12 @@ import {
     success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { addressSlackChannels, buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import {
+    addressSlackChannels,
+    buttonForCommand
+} from "@atomist/automation-client/spi/message/MessageClient";
 import { Action } from "@atomist/slack-messages";
 import {
     bold,
@@ -43,12 +46,14 @@ import {
 } from "../../../util/helpers";
 import { warning } from "../../../util/messages";
 import * as github from "../../command/github/gitHubApi";
-import { InstallGitHubOrgWebhook, InstallGitHubRepoWebhook } from "../../command/github/InstallGitHubWebhook";
+import {
+    InstallGitHubOrgWebhook,
+    InstallGitHubRepoWebhook
+} from "../../command/github/InstallGitHubWebhook";
 import { ListRepoLinks } from "../../command/slack/ListRepoLinks";
 import { PushToPushLifecycle } from "../push/PushToPushLifecycle";
 
-@EventHandler("Display an unlink message when a channel is linked",
-    GraqhQL.subscriptionFromFile("../../../graphql/subscription/channelLinkCreated", __dirname))
+@EventHandler("Display an unlink message when a channel is linked", subscription("channelLinkCreated"))
 @Tags("enrollment")
 export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreated.Subscription> {
 

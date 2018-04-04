@@ -25,12 +25,12 @@ import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
 import { ReviewLifecycleHandler } from "./ReviewLifecycle";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 
 /**
  * Send a lifecycle message on Review events.
  */
-@EventHandler("Send a lifecycle message on Review events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/reviewToReview", __dirname))
+@EventHandler("Send a lifecycle message on Review events", subscription("reviewToReview"))
 @Tags("lifecycle", "review")
 export class ReviewToReviewLifecycle extends ReviewLifecycleHandler<graphql.ReviewToReviewLifecycle.Subscription> {
 

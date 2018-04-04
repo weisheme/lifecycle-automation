@@ -26,15 +26,14 @@ import {
     success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraqhQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { IssueToIssueCardLifecycle } from "../issue/IssueToIssueLifecycle";
 import { PullRequestToPullRequestCardLifecycle } from "../pullrequest/PullRequestToPullRequestLifecycle";
 import { PushToPushCardLifecycle } from "../push/PushToPushLifecycle";
 
-@EventHandler("Send a Push lifecycle card when a new repo has finished onboarding",
-    GraqhQL.subscriptionFromFile("../../../graphql/subscription/repoOnboarded", __dirname))
+@EventHandler("Send a Push lifecycle card when a new repo has finished onboarding", subscription("repoOnboarded"))
 @Tags("enrollment")
 export class RepositoryOnboarded implements HandleEvent<graphql.RepoOnboarded.Subscription> {
 

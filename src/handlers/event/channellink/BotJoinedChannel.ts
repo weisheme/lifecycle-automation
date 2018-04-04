@@ -26,7 +26,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import {
     addressSlackChannels,
     buttonForCommand,
@@ -34,10 +34,10 @@ import {
     MenuSpecification,
     OptionGroup,
 } from "@atomist/automation-client/spi/message/MessageClient";
-import * as slack from "@atomist/slack-messages/SlackMessages";
-import * as _ from "lodash";
 
 import { user } from "@atomist/slack-messages";
+import * as slack from "@atomist/slack-messages/SlackMessages";
+import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import {
     repoChannelName,
@@ -58,8 +58,7 @@ export interface RepoApi {
     api: string;
 }
 
-@EventHandler("Display a helpful message when the bot joins a channel",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/botJoinedChannel", __dirname))
+@EventHandler("Display a helpful message when the bot joins a channel", subscription("botJoinedChannel"))
 @Tags("enrollment")
 export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Subscription> {
 

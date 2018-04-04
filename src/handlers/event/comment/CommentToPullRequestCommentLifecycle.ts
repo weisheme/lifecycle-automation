@@ -19,7 +19,7 @@ import {
     EventHandler,
     Tags,
 } from "@atomist/automation-client";
-import * as GraphQL from "@atomist/automation-client/graph/graphQL";
+import { subscription } from "@atomist/automation-client/graph/graphQL";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
@@ -29,8 +29,7 @@ import { CommentLifecycleHandler } from "./CommentLifecycle";
 /**
  * Send a lifecycle message on Comment events.
  */
-@EventHandler("Send a lifecycle message on Comment events",
-    GraphQL.subscriptionFromFile("../../../graphql/subscription/commentToPullRequestComment", __dirname))
+@EventHandler("Send a lifecycle message on Comment events", subscription("commentToPullRequestComment"))
 @Tags("lifecycle", "pr comment", "comment")
 export class CommentToPullRequestCommentLifecycle
     extends CommentLifecycleHandler<graphql.CommentToPullRequestCommentLifecycle.Subscription> {
