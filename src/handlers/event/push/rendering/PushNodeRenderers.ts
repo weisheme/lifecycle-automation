@@ -142,13 +142,13 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 
         let author = null;
         let commitsByAuthor: any = {};
-        let unkonwCommitter = false;
+        let unkownCommitter = false;
         for (const commit of commits) {
             const ca = (commit.author != null && commit.author.login && commit.author.login !== ""
                 ? commit.author.login : "(unknown)");
 
             if (ca === "(unknown)") {
-                unkonwCommitter = true;
+                unkownCommitter = true;
             }
 
             if (author == null || author !== ca) {
@@ -209,7 +209,7 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         if (attachments.length > 0) {
             const lastAttachment = attachments[attachments.length - 1];
             lastAttachment.actions = actions;
-            if (unkonwCommitter) {
+            if (unkownCommitter) {
                 lastAttachment.footer_icon = "https://images.atomist.com/rug/question.png";
                 lastAttachment.footer = `Unrecognized author. Please use a known email address to commit.`;
             } else {
