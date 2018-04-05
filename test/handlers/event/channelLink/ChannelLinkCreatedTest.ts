@@ -44,7 +44,7 @@ describe("ChannelLinkCreated", () => {
                         org: {
                             ownerType: "organization" as graphql.OwnerType,
                             provider: {
-                                providerType: "github_com",
+                                providerType: "github_com" as graphql.ProviderType,
                             },
                         },
                     },
