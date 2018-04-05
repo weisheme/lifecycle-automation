@@ -389,7 +389,7 @@ export const configuration: Configuration = {
         compress: false,
         termination: {
             gracePeriod: 5000,
-        }
+        },
     },
     logging: {
         level: "debug",
