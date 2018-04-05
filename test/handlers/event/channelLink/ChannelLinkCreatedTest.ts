@@ -43,7 +43,9 @@ describe("ChannelLinkCreated", () => {
                         owner: "atomisthq",
                         org: {
                             ownerType: "organization" as graphql.OwnerType,
-                            provider: null,
+                            provider: {
+                                providerType: "github_com",
+                            },
                         },
                     },
                 }],
