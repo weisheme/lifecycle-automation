@@ -23,7 +23,7 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://r.atomist.com/rySDTsoWoM",
+    "@atomist/automation-client": "https://r.atomist.com/HJ4zF7a7oG",
     "@atomist/slack-messages": "^0.12.1",
     "@octokit/rest": "^14.0.9",
     "@types/zen-observable": "0.5.3",

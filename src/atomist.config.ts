@@ -197,7 +197,6 @@ if (logzioOptions.token) {
 const AdminTeam = "atomist-automation";
 
 export const configuration: Configuration = {
-    policy: config.get("policy"),
     teamIds: config.get("teamIds"),
     groups: config.get("groups"),
     application: secret("applicationId"),
@@ -382,18 +381,11 @@ export const configuration: Configuration = {
         enabled: true,
         teamId: "T29E48P34",
     },
-    cluster: {
-        enabled: notLocal,
-        // worker: 2,
-    },
     statsd: {
-        enabled: notLocal,
+        host: "dd-agent",
+        port: 8125,
     },
     ws: {
-        enabled: true,
-        termination: {
-            graceful: notLocal,
-        },
         compress: false,
     },
     logging: {
