@@ -67,6 +67,7 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
         const teamId = event.data.ChannelLink[0].channel.team.id;
         const repo = event.data.ChannelLink[0].repo;
         const repoLink = repoSlackLink(repo);
+        const providerType = event.data.ChannelLink[0].repo.org.provider.providerType;
 
         const linkMsg = `${repoLink} is now linked to this channel. I will send activity from that \
 repository here. To turn this off, type ${codeLine("@atomist repos")} and click the ${bold("Unlink")} button.`;
@@ -79,66 +80,74 @@ Please use the button below to install a Webhook in your repository.`;
 activity from that repository here because there is no Webhook installed. \
 Please use one of the buttons below to install a Webhook in your repository or organization.`;
 
-        const api = github.api(this.orgToken, apiUrl(repo));
-        return api.repos.getHooks({
-            owner: repo.owner,
-            repo: repo.name,
-        })
-        .then(result => {
-            return hookExists(result.data);
-        }, () => {
-            return false;
-        })
-        .then(exists => {
-            if (exists) {
-                return true;
-            } else if (repo.org.ownerType === "organization") {
-                return ctx.graphClient.query<graphql.Webhook.Query, graphql.Webhook.Variables>({
-                    name: "webhook",
-                    variables: { owner: repo.owner },
-                })
-                .then(result => {
-                    return _.get(result, "GitHubOrgWebhook[0].url") != null;
-                })
-                .catch(() => {
-                    return false;
-                });
-            } else {
+        if (providerType === "github_com" || providerType === "ghe") {
+            const api = github.api(this.orgToken, apiUrl(repo));
+            return api.repos.getHooks({
+                owner: repo.owner,
+                repo: repo.name,
+            })
+            .then(result => {
+                return hookExists(result.data);
+            }, () => {
                 return false;
-            }
-        })
-        .then(exists => {
-            if (exists) {
-                const msg: SlackMessage = {
-                    attachments: [{
-                        author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
-                        author_name: "Channel Linked",
-                        text: linkMsg,
-                        fallback: linkMsg,
-                        color: "#45B254",
-                        mrkdwn_in: [ "text" ],
-                        actions: [
-                            createListRepoLinksAction(msgId),
-                        ],
-                    }],
-                };
-                return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName), { id: msgId });
-            } else {
-                let text;
-                if (repo.org.ownerType === "organization") {
-                    text = noHookMsg;
+            })
+            .then(exists => {
+                if (exists) {
+                    return true;
+                } else if (repo.org.ownerType === "organization") {
+                    return ctx.graphClient.query<graphql.Webhook.Query, graphql.Webhook.Variables>({
+                        name: "webhook",
+                        variables: { owner: repo.owner },
+                    })
+                        .then(result => {
+                            return _.get(result, "GitHubOrgWebhook[0].url") != null;
+                        })
+                        .catch(() => {
+                            return false;
+                        });
                 } else {
-                    text = noRepoHookMsg;
+                    return false;
                 }
-                return ctx.messageClient.send(
-                    warning("Channel Linked", text, ctx,
-                        [...createActions(repo), createListRepoLinksAction(msgId)]),
-                    addressSlackChannels(teamId, channelName),
-                    { id: msgId });
-            }
-        })
-        .then(() => showLastPush(repo, this.orgToken, ctx))
-        .then(success, failure);
+            })
+            .then(exists => {
+                if (exists) {
+                    return this.sendLinkMessage(teamId, channelName, linkMsg, msgId, ctx);
+                } else {
+                    let text;
+                    if (repo.org.ownerType === "organization") {
+                        text = noHookMsg;
+                    } else {
+                        text = noRepoHookMsg;
+                    }
+                    return ctx.messageClient.send(
+                        warning("Channel Linked", text, ctx,
+                            [...createActions(repo), createListRepoLinksAction(msgId)]),
+                        addressSlackChannels(teamId, channelName),
+                        { id: msgId });
+                }
+            })
+            .then(() => showLastPush(repo, this.orgToken, ctx))
+            .then(success, failure);
+        } else {
+            return this.sendLinkMessage(teamId, channelName, linkMsg, msgId, ctx);
+        }
+    }
+
+    private sendLinkMessage(teamId: string, channelName: string, linkMsg: string, msgId, ctx: HandlerContext) {
+        const msg: SlackMessage = {
+            attachments: [{
+                author_icon: `https://images.atomist.com/rug/check-circle.gif?gif=${guid()}`,
+                author_name: "Channel Linked",
+                text: linkMsg,
+                fallback: linkMsg,
+                color: "#45B254",
+                mrkdwn_in: ["text"],
+                actions: [
+                    createListRepoLinksAction(msgId),
+                ],
+            }],
+        };
+        return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName), { id: msgId });
     }
 }
 

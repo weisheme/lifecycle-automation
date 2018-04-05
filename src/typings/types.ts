@@ -2664,6 +2664,7 @@ export namespace ChannelLinkCreated {
     apiUrl?: string | null; 
     url?: string | null; 
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 export namespace CommentOnRelatedIssueClosed {

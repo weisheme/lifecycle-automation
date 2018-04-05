@@ -17,6 +17,7 @@ subscription ChannelLinkCreated {
           apiUrl
           url
           providerId
+          providerType
         }
       }
     }
