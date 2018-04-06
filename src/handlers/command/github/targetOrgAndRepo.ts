@@ -174,7 +174,7 @@ export function repoSelection(prefix: string, text: string, previousHandler: str
 
 export const retrieveIssue = async (ctx: HandlerContext, params: IssueOwnerParameters) => {
     const issueResult = await ctx.graphClient.query<types.IssueOrPr.Query, types.IssueOrPr.Variables>({
-        name: "../../../graphql/query/issueOrPr",
+        name: "issueOrPr",
         variables: {
             owner: params.owner,
             repo: params.repo,
