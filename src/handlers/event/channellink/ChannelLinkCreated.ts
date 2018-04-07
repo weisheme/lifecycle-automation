@@ -67,7 +67,9 @@ export class ChannelLinkCreated implements HandleEvent<graphql.ChannelLinkCreate
         const teamId = event.data.ChannelLink[0].channel.team.id;
         const repo = event.data.ChannelLink[0].repo;
         const repoLink = repoSlackLink(repo);
-        const providerType = event.data.ChannelLink[0].repo.org.provider.providerType;
+
+        // provider might be null for cases when there are no webhooks currently installed
+        const providerType = _.get(event.data, "ChannelLink[0].repo.org.provider.providerType") || "github_com";
 
         const linkMsg = `${repoLink} is now linked to this channel. I will send activity from that \
 repository here. To turn this off, type ${codeLine("@atomist repos")} and click the ${bold("Unlink")} button.`;
