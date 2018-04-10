@@ -377,6 +377,7 @@ export const configuration: Configuration = {
         api: config.get("endpoints.api"),
     },
     applicationEvents: {
+        enabled: true,
         teamId: "T29E48P34",
     },
     statsd: {
