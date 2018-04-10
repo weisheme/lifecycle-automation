@@ -360,7 +360,6 @@ export const configuration: Configuration = {
     listeners,
     token,
     http: {
-        enabled: true,
         auth: {
             basic: {
                 enabled: config.get("http.auth.basic.enabled"),
@@ -378,7 +377,6 @@ export const configuration: Configuration = {
         api: config.get("endpoints.api"),
     },
     applicationEvents: {
-        enabled: true,
         teamId: "T29E48P34",
     },
     statsd: {
