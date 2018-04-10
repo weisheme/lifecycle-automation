@@ -16,8 +16,7 @@
 
 import { ApolloGraphClient } from "@atomist/automation-client/graph/ApolloGraphClient";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { guid } from "@atomist/automation-client/internal/util/string";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
@@ -278,7 +277,7 @@ export class TagTagActionContributor extends AbstractIdentifiableContribution
                         owner: repo.owner,
                         name: version,
                     },
-                    options: NoCacheOptions,
+                    options: QueryNoCacheOptions,
                 })
                 .then(result => {
                     const et = _.get(result, "Tag[0].name");
@@ -351,7 +350,7 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
                         owner: repo.owner,
                         branch: node.branch,
                     },
-                    options: NoCacheOptions,
+                    options: QueryNoCacheOptions,
                 })
                 .then(result => {
                     let showButton = true;

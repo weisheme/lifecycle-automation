@@ -23,12 +23,11 @@ import {
     MappedParameter,
     MappedParameters,
     Parameter,
-    Secret,
     success,
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { url } from "@atomist/slack-messages";
 import {
@@ -327,7 +326,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 variables: {
                     teamId: this.teamId,
                 },
-                options: NoCacheOptions,
+                options: QueryNoCacheOptions,
             })
             .then(result => {
                 const preferences =

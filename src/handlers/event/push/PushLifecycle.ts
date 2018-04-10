@@ -19,7 +19,7 @@ import {
     HandlerContext,
 } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import {
@@ -39,7 +39,6 @@ import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRende
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import { PushToPushLifecycle } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
-import { encode } from "../../../util/base64";
 import { LifecyclePreferences } from "../preferences";
 import {
     ApplicationActionContributor,
@@ -87,7 +86,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                 variables: {
                     key: [lifecycle.id],
                 },
-                options: NoCacheOptions,
+                options: QueryNoCacheOptions,
             })
             .then(result => {
                 const msg = newCardMessage("push");

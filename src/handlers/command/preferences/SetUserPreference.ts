@@ -27,7 +27,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
@@ -102,7 +102,7 @@ export class SetUserPreference implements HandleCommand {
                     teamId: this.teamId,
                     chatId: this.requester,
                 },
-                options: NoCacheOptions,
+                options: QueryNoCacheOptions,
             })
             .then(result => {
                 const preferences =

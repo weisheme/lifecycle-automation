@@ -21,13 +21,19 @@ import {
     HandlerContext,
     HandlerResult,
     MappedParameter,
-    MappedParameters, Parameter,
+    MappedParameters,
+    Parameter,
     success,
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
-import { bold, codeLine, SlackMessage, url } from "@atomist/slack-messages";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import {
+    bold,
+    codeLine,
+    SlackMessage,
+    url,
+} from "@atomist/slack-messages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
 import { supportLink } from "../../../util/messages";
@@ -68,7 +74,6 @@ export class ToggleCustomEmojiEnablement implements HandleCommand {
                         name: LifecyclePreferencesName,
                         value: JSON.stringify(preferences),
                     },
-                    options: NoCacheOptions,
                 })
                 .then(() => preferencesState);
             })
@@ -113,7 +118,7 @@ export function isCustomEmojisEnabled(teamId: string, ctx: HandlerContext)
         graphql.ChatTeamPreferences.Variables>({
             name: "chatTeamPreferences",
             variables: { teamId },
-            options: NoCacheOptions,
+            options: QueryNoCacheOptions,
         })
         .then(result => {
             const preferences = (_.get(result, "ChatTeam[0].preferences")

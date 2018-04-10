@@ -27,7 +27,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { guid } from "@atomist/automation-client/internal/util/string";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -100,7 +100,7 @@ export class SetTeamPreference implements HandleCommand {
                 variables: {
                         teamId: this.teamId,
                 },
-                options: NoCacheOptions,
+                options: QueryNoCacheOptions,
             })
             .then(result => {
                 const preferences =

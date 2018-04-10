@@ -28,7 +28,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { subscription } from "@atomist/automation-client/graph/graphQL";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
@@ -76,7 +76,7 @@ export class CommentOnRelatedIssueClosed
                     repo: [issue.repo.name],
                     issue: [issue.number.toString()],
                 },
-                options: NoCacheOptions,
+                options: QueryNoCacheOptions,
         })
         .then(result => {
             if (result

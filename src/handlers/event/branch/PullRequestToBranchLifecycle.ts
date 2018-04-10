@@ -27,7 +27,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { subscription } from "@atomist/automation-client/graph/graphQL";
-import { NoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import * as graphql from "../../../typings/types";
 import { BranchToBranchLifecycle } from "./BranchToBranchLifecycle";
 
@@ -46,7 +46,7 @@ export class PullRequestToBranchLifecycle implements HandleEvent<graphql.PullReq
                 <graphql.BranchWithPullRequest.Query, graphql.BranchWithPullRequest.Variables>({
                 name: "branchWithPullRequest",
                 variables: { id: pr.branch.id },
-                options: NoCacheOptions,
+                options: QueryNoCacheOptions,
             })
             .then(result => {
                 if (result && result.Branch && result.Branch.length > 0) {
