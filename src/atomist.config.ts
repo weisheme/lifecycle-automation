@@ -395,5 +395,5 @@ export const configuration: Configuration = {
     },
 };
 
-// For now, we enable a couple of interesting memory and heap commands on this automation-client
+// Allow logging of memory footprint
 initMemoryMonitoring(`${appRoot.path}/heap`, false);
