@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Make sure channel is a public or private channel.
  * DMs are not supported right now.
