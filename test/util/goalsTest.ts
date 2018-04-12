@@ -174,7 +174,6 @@ describe("goals", () => {
         "url": null,
         "environment": "2-deploy-prod"
       }
-
     ]`;
 
     it("should sort goals", () => {

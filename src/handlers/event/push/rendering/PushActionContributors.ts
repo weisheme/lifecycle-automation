@@ -499,8 +499,10 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
                 },
                 options: QueryNoCacheOptions,
             });
-            goals.SdmGoal.filter(g => g.state === "waiting_for_approval")
-                .forEach(g => this.createApprovalButton(g, buttons));
+            if (goals && goals.SdmGoal) {
+                goals.SdmGoal.filter(g => g.state === "waiting_for_approval")
+                    .forEach(g => this.createApprovalButton(g, buttons));
+            }
         }
 
         return Promise.resolve(buttons);

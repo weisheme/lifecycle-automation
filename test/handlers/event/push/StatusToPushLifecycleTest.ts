@@ -634,67 +634,7 @@ describe("StatusToPushLifecycle", () => {
             }],
             "message": "Enable deployment to Kubernetes\\n\\nMerge pull request #1",
             "sha": "7a6428da814f2cf541a7400c30e929aca58487a5",
-            "statuses": [{
-              "context": "deploy/atomist/k8s/testing",
-              "description": "Requested deploy by k8-automation",
-              "state": "success",
-              "targetUrl": "https://sdm.atomist.io/T5964N9B7/testing/spring-team/prendergast/",
-              "timestamp": "2018-03-03T00:02:06.314Z"
-            }, {
-              "context": "build/atomist/k8s/master",
-              "description": "Atomist continuous integration build for Google Container Builder",
-              "state": "success",
-              "targetUrl": "https://storage.googleapis.com/reference-implementation-1-build-logs-1/log-3667199a-750e-4ba7-83d7-a4264e31dae1.txt?GoogleAccessId=container-ci-1@reference-implementation-1.iam.gserviceaccount.com&Expires=1520121728&Signature=GxRxtIvSuR7AH32D%2B1fJRYaU%2FtL39gRpbo9OMH9Lniw6ENZJSDsVtkOUrz2fTH8SGIAF%2Fu8wwPkd3sbILTMQ0VeQ8%2FK%2B5nAdCYeNFmnrQJry0wLA2dk%2BwkrsvyS53kDg0YNmTOcdncouagaS5nj8zHKcmH9CIqGhX8Std7BeWvhSP6gIrTvVpzC6xMmHw43RRuC6FeXxqmNN%2Fn0vp27fqb6voOgA4%2Bu8qw%2BtmgQrFrNQlYTlvR%2F3cydkzfUixC8hELX0QTxqFINIizZaU0%2Bzqadb%2FbK7UjpxYVEm2NlknckUYqFz245jsyVoMl15iuLvAHh5fOlXBi%2Bvoga7EzOpDA%3D%3D",
-              "timestamp": "2018-03-03T00:02:08.491Z"
-            }, {
-              "context": "sdm/atomist/0-code/1-scan",
-              "description": "Completed scan",
-              "state": "success",
-              "targetUrl": "https://scan.atomist.com/spring-team/prendergast/7a6428da814f2cf541a7400c30e929aca58487a5",
-              "timestamp": "2018-03-03T00:00:31.232Z"
-            }, {
-              "context": "sdm/atomist/2-prod/3-PCF-prod-deploy",
-              "description": "Skipping deploy to production because verify endpoint in Test failed",
-              "state": "failure",
-              "targetUrl": "",
-              "timestamp": "2018-03-03T00:02:14.725Z"
-            }, {
-              "context": "sdm/atomist/2-prod/4-endpoint",
-              "description": "Skipping find production endpoint because verify endpoint in Test failed",
-              "state": "failure",
-              "targetUrl": "",
-              "timestamp": "2018-03-03T00:02:14.680Z"
-            }, {
-              "context": "sdm/atomist/1-staging/4-endpoint",
-              "description": "Complete: find endpoint in Test",
-              "state": "success",
-              "targetUrl": "https://sdm.atomist.io/T5964N9B7/testing/spring-team/prendergast/",
-              "timestamp": "2018-03-03T00:02:08.691Z"
-            }, {
-              "context": "sdm/atomist/1-staging/5-verifyEndpoint",
-              "description": "Failed to verify endpoint in Test",
-              "state": "failure",
-              "targetUrl": "https://sdm.atomist.io/T5964N9B7/testing/spring-team/prendergast/?atomist:approve=true",
-              "timestamp": "2018-03-03T01:20:47.981Z"
-            }, {
-              "context": "sdm/atomist/0-code/2-build",
-              "description": "Completed sdm/atomist/0-code/2-build",
-              "state": "success",
-              "targetUrl": "https://storage.googleapis.com/reference-implementation-1-build-logs-1/log-6a28cbd7-cbed-4a7f-b2d3-2176b5863725.txt?GoogleAccessId=container-ci-1@reference-implementation-1.iam.gserviceaccount.com&Expires=1520121717&Signature=OZFuIlD1dOzHPmUsJmVZ%2BfkWqqQm1qpBE6mu4NvsAEa9MLuhmWScHCDBesc47M3LI5j4bzMvXT%2BPiQUQPyBQC93rraKHj2W8AAlm1NagR2oNgkB4hv4inqdP5ZAhKaiao5FZ2zKv1M%2BhERcX9Lm5tTN8BCr6c9kMrF6whV8nuNPQOr%2BrL6vh3O06%2FjDdBakvctvARVD4LjfrYgLgV5q79UW6x7%2BzL5NAyqO354RAS3Hwi9A7iDwqHJBRNylO1S7CPaF58JsdjNW8DQxWcKonpMjTPg1S7EnAUHDWap1589m1Rg8la9m%2Fxj%2F50sGgUU8kWEf%2FPZ08p1k9Ie9QSA%2FFdQ%3D%3D",
-              "timestamp": "2018-03-03T00:02:01.213Z"
-            }, {
-              "context": "sdm/atomist/1-staging/3-deploy",
-              "description": "Complete: deploy to Test space",
-              "state": "success",
-              "targetUrl": "",
-              "timestamp": "2018-03-03T00:02:08.465Z"
-            }, {
-              "context": "sdm/atomist/0-code/2.5-artifact",
-              "description": "Complete: find artifact gcr.io/reference-implementation-1/spring-team/prendergast:7a6428da814f2cf541a7400c30e929aca58487a5",
-              "state": "success",
-              "targetUrl": "",
-              "timestamp": "2018-03-03T00:02:01.942Z"
-            }],
+            "statuses": [],
             "tags": []
           },
           "before": {
@@ -839,16 +779,296 @@ describe("StatusToPushLifecycle", () => {
 }`;
     /* tslint:enable */
 
+    const goalsJson = `[
+      {
+        "description": "Build successful",
+        "preConditions": [
+          {
+            "environment": "0-code",
+            "name": "version"
+          }
+        ],
+        "uniqueName": null,
+        "name": "build",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "0e109dd6-b7c1-5832-9ba0-5853e4373be4",
+        "url": null,
+        "environment": "0-code",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Code review passed",
+        "preConditions": [],
+        "uniqueName": null,
+        "name": "review",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "0f096d2b-7017-5981-bf39-fcf54f9f269f",
+        "url": null,
+        "environment": "0-code",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Autofixed",
+        "preConditions": [],
+        "uniqueName": null,
+        "name": "autofix",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "026a5229-9199-57f5-bb54-b21939035790",
+        "url": null,
+        "environment": "0-code",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Docker image built",
+        "preConditions": [
+          {
+            "environment": "0-code",
+            "name": "build"
+          }
+        ],
+        "uniqueName": null,
+        "name": "docker build",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "01e03224-d9b4-5eb1-91f6-0bbfdd4f1f90",
+        "url": null,
+        "environment": "0-code",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Tagged",
+        "preConditions": [
+          {
+            "environment": "0-code",
+            "name": "docker build"
+          },
+          {
+            "environment": "0-code",
+            "name": "build"
+          }
+        ],
+        "uniqueName": null,
+        "name": "tag",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "03fd3ea6-ffa3-5961-9c89-1a487fa526ea",
+        "url": null,
+        "environment": "0-code",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Versioned",
+        "preConditions": [],
+        "uniqueName": null,
+        "name": "version",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
+        "url": null,
+        "environment": "0-code",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Deploy to test",
+        "preConditions": [
+          {
+            "environment": "0-code",
+            "name": "docker build"
+          },
+          {
+            "environment": "0-code",
+            "name": "build"
+          }
+        ],
+        "uniqueName": null,
+        "name": "deploy to test",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
+        "url": null,
+        "environment": "1-deploy-test",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Deploy to prod",
+        "preConditions": [
+          {
+            "environment": "1-deploy-test",
+            "name": "deploy to test"
+          }
+        ],
+        "uniqueName": null,
+        "name": "deploy to prod",
+        "goalSet": "node docker",
+        "state": "waiting_for_approval",
+        "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
+        "url": null,
+        "environment": "2-deploy-prod",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Verify prod",
+        "preConditions": [
+          {
+            "environment": "2-deploy-prod",
+            "name": "deploy to prod"
+          }
+        ],
+        "uniqueName": null,
+        "name": "verify prod",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
+        "url": null,
+        "environment": "2-deploy-prod",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      },
+      {
+        "description": "Notify deployment",
+        "uniqueName": null,
+        "name": "notify prod",
+        "goalSet": "node docker",
+        "state": "success",
+        "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
+        "url": null,
+        "environment": "2-deploy-prod",
+        "provenance": [{
+    "registration": "@atomist/github-sdm",
+    "version": "0.4.0-20180412134641",
+    "name": "OnAnyRequestedSdmGoal",
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "ts": 1523543553349
+  }, {
+    "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
+    "name": "SetGoalsOnPush",
+    "registration": "@atomist/github-sdm",
+    "ts": 1523543548060,
+    "version": "0.4.0-20180412134641"
+  }]
+      }
+    ]`;
+
     it("render goal attachments separately per env", done => {
         let messageSent = false;
         class MockMessageClient {
 
             public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
                 const sm = msg as SlackMessage;
-                assert(sm.attachments.length === 8);
-                assert(sm.attachments[2].author_name === "Goals");
-                assert(sm.attachments[4].actions.length === 1);
-                assert(sm.attachments[4].actions[0].text === "Approve 'Failed to verify endpoint in Test'");
+                assert(sm.attachments.length === 7);
+                assert(sm.attachments[1].author_name === "Goals");
+                assert(sm.attachments[3].actions.length === 1);
+                assert(sm.attachments[3].actions[0].text === "Approve 'deploy to prod'");
                 messageSent = true;
                 return Promise.resolve();
             }
@@ -865,7 +1085,9 @@ describe("StatusToPushLifecycle", () => {
             }
 
             public query(): Promise<any> {
-                return Promise.resolve({});
+                return Promise.resolve({
+                    SdmGoal: JSON.parse(goalsJson),
+                });
             }
 
             public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
@@ -905,219 +1127,4 @@ describe("StatusToPushLifecycle", () => {
             .then(done, done);
 
     });
-
-    /* tslint:disable */
-    const payloadFailure = `{
-  "data": {
-    "Status": [{
-      "_id": 1746986,
-      "commit": {
-        "pushes": [{
-          "after": {
-            "author": {
-              "login": "jessitron",
-              "person": {
-                "chatId": {
-                  "screenName": "jessitron"
-                }
-              }
-            },
-            "fingerprints": [{
-              "data": null,
-              "name": "dependencies",
-              "sha": "e3a95168a2163577f707dd61d7172911034ddc9781698bd593e2365b546877dc048677a6845d7b8d6319cfdf53f39d21b4e2760c8a4c6501dae3050362b3f39b"
-            }],
-            "images": [],
-            "message": "touch",
-            "sha": "2509b1edc1cd533287bbda4471179c6ef69e3154",
-            "statuses": [{
-              "context": "sdm/atomist/0-code2-endpoint",
-              "description": "Skipping endpoint because deploy locally failed",
-              "state": "failure",
-              "targetUrl": "",
-              "timestamp": "2018-03-04T11:17:21.311Z"
-            }, {
-              "context": "sdm/atomist/0-code/1-deploy locally",
-              "description": "Working: deploy locally",
-              "state": "failure",
-              "targetUrl": "",
-              "timestamp": "2018-03-04T11:17:18.956Z"
-            }, {
-              "context": "sdm/atomist/0-code/2-endpoint",
-              "description": "Planning to locate local service endpoint",
-              "state": "pending",
-              "targetUrl": "https://github.com/satellite-of-love/horseguards/commit/2509b1edc1cd533287bbda4471179c6ef69e3154",
-              "timestamp": "2018-03-04T11:17:06.623Z"
-            }],
-            "tags": []
-          },
-          "before": {
-            "sha": "374264fb9541552be0a46e1539754bae75b97c2e"
-          },
-          "branch": "nortissej/kitties",
-          "builds": [],
-          "commits": [{
-            "apps": [{
-              "data": "{}",
-              "domain": "development",
-              "host": "jessicas-macbook-pro.local",
-              "state": "stopping"
-            }],
-            "author": {
-              "login": "jessitron",
-              "person": {
-                "chatId": {
-                  "screenName": "jessitron"
-                }
-              }
-            },
-            "impact": {
-              "data": "[[[\\"deps\\",0]]]",
-              "url": ""
-            },
-            "message": "touch",
-            "resolves": [],
-            "sha": "2509b1edc1cd533287bbda4471179c6ef69e3154",
-            "tags": [],
-            "timestamp": "2018-03-04T11:16:58Z"
-          }],
-          "repo": {
-            "channels": [{
-              "name": "horseguards",
-              "team": {
-                "id": "T1JVCMVH7"
-              }
-            }],
-            "defaultBranch": "master",
-            "labels": [{
-              "name": "bug"
-            }, {
-              "name": "help wanted"
-            }, {
-              "name": "good first issue"
-            }, {
-              "name": "enhancement"
-            }, {
-              "name": "duplicate"
-            }, {
-              "name": "wontfix"
-            }, {
-              "name": "question"
-            }, {
-              "name": "invalid"
-            }],
-            "name": "horseguards",
-            "org": {
-              "provider": {
-                "apiUrl": "https://api.github.com/",
-                "gitUrl": "git@github.com:",
-                "url": "https://github.com/"
-              },
-              "team": {
-                "chatTeams": [{
-                  "id": "T1JVCMVH7",
-                  "preferences": [{
-                    "name": "lifecycle_preferences",
-                    "value": "{\\"push\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\"}},\\"pull_request\\":{\\"configuration\\":{\\"emoji-style\\":\\"atomist\\"}}}"
-                  }, {
-                    "name": "lifecycles",
-                    "value": "{\\"rexacorigal\\":{\\"branch\\":false},\\"horseguards\\":{\\"branch\\":true}}"
-                  }, {
-                    "name": "disable_bot_owner_on_github_activity_notification",
-                    "value": "true"
-                  }]
-                }],
-                "id": "T1JVCMVH7"
-              }
-            },
-            "owner": "satellite-of-love"
-          },
-          "timestamp": "2018-03-04T11:17:02.948Z"
-        }],
-        "timestamp": "2018-03-04T11:16:58Z"
-      },
-      "context": "sdm/atomist/0-code2-endpoint",
-      "description": "Skipping endpoint because deploy locally failed",
-      "state": "failure",
-      "targetUrl": ""
-    }]
-  },
-  "extensions": {
-    "operationName": "StatusToPushLifecycle",
-    "team_id": "T1JVCMVH7",
-    "team_name": "satellite-of-love",
-    "correlation_id": "3e85fbb9-c505-4915-98de-c963c09a8ee3"
-  },
-  "api_version": "1",
-  "secrets": [{
-    "uri": "github://org_token",
-    "value": "7**************************************3"
-  }]
-}`;
-    /* tslint:enable */
-
-    it("render goal attachments correctly if context format is wrong1", done => {
-        let messageSent = false;
-        class MockMessageClient {
-
-            public send(msg: any, destinations: Destination, options?: MessageOptions): Promise<any> {
-                const sm = msg as SlackMessage;
-                assert(sm.attachments.length === 4);
-                assert(sm.attachments[1].author_name === "Goals");
-                messageSent = true;
-                return Promise.resolve();
-            }
-
-        }
-
-        class MockGraphClient implements GraphClient {
-
-            public endpoint = "";
-
-            public query(): Promise<any> {
-                return Promise.resolve({});
-            }
-
-            public mutate<T, Q>(optionsOrName: MutationOptions<Q> | string): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
-            public executeQueryFromFile(queryFile: string, variables?: any): Promise<any> {
-                return Promise.resolve({});
-            }
-
-            public executeQuery<T, Q>(query: string, variables?: Q): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
-            public executeMutationFromFile<T, Q>(mutationFile: string, variables?: Q): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-
-            public executeMutation<T, Q>(mutation: string, variables?: Q): Promise<T> {
-                fail();
-                return Promise.reject("Shouldn't call this");
-            }
-        }
-
-        const ctx = {
-            teamId: "T095SFFBK",
-            correlationId: "14340b3c-e5bc-4101-9b0a-24cb69fc6bb9",
-            invocationId: guid(),
-            graphClient: new MockGraphClient(),
-            messageClient: new MockMessageClient(),
-        };
-        const handler = new StatusToPushLifecycle();
-        handler.handle(JSON.parse(payloadFailure) as EventFired<any>, ctx as any as HandlerContext)
-            .then(result => {
-                assert(messageSent);
-                assert(result.code === 0);
-            })
-            .then(done, done);
-
-    });
-
 });

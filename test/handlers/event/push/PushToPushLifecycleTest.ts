@@ -322,27 +322,31 @@ describe("PushToPushLifecycle", () => {
             invocationId: guid(),
             graphClient: {
                 query(options: QueryOptions<any>): Promise<any> {
-                    assert(options.variables.branch === "cdupuis-patch-37");
-                    return Promise.resolve({
-                        Repo: [
-                            {
-                                name: "handlers",
-                                branches: [
-                                    {
-                                        name: "cdupuis-patch-37",
-                                        pullRequests: [
-                                            {
-                                                state: "open",
-                                                number: 128,
-                                                title: "Simplify filter. Add a note",
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                        ],
-                    });
-                },
+                    if (options.name === "branch" || options.name === "openPr") {
+                        assert(options.variables.branch === "cdupuis-patch-37");
+                        return Promise.resolve({
+                            Repo: [
+                                {
+                                    name: "handlers",
+                                    branches: [
+                                        {
+                                            name: "cdupuis-patch-37",
+                                            pullRequests: [
+                                                {
+                                                    state: "open",
+                                                    number: 128,
+                                                    title: "Simplify filter. Add a note",
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        });
+                    } else {
+                        return Promise.resolve({});
+                    }
+                }
             },
             messageClient: new MockMessageClient(),
         };

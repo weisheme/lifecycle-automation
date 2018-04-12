@@ -204,7 +204,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 
     public supports(node: any): boolean {
         if (node.after) {
-            return this.showOnPush && node.after.statuses && node.after.statuses.length > 0;
+            return this.showOnPush;
         } else {
             return false;
         }
@@ -227,7 +227,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                 options: QueryNoCacheOptions,
             });
 
-        const sortedGoals = sortGoals(goals.SdmGoal);
+        const sortedGoals = sortGoals((goals ? goals.SdmGoal : []) || []);
 
         let counter = 0;
         const attachments: Attachment[] = [];
