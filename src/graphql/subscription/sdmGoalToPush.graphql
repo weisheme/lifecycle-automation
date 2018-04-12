@@ -1,0 +1,11 @@
+subscription SdmGoalToPush {
+  SdmGoal {
+    sha
+    branch
+    repo {
+      name
+      owner
+      providerId
+    }
+  }
+}

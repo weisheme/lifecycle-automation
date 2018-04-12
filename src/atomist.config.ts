@@ -153,6 +153,7 @@ import {
     ReleaseToPushCardLifecycle,
     ReleaseToPushLifecycle,
 } from "./handlers/event/push/ReleaseToPushLifecycle";
+import { SdmGoalToPushLifecycle } from "./handlers/event/push/SdmGoalToPushLifecycle";
 import {
     StatusToPushCardLifecycle,
     StatusToPushLifecycle,
@@ -293,6 +294,7 @@ export const configuration: Configuration = {
         () => new PushToPushLifecycle(),
         () => new PushToUnmappedRepo(),
         () => new ReleaseToPushLifecycle(),
+        () => new SdmGoalToPushLifecycle(),
         () => new StatusToPushLifecycle(),
         () => new TagToPushLifecycle(),
 
@@ -354,9 +356,9 @@ export const configuration: Configuration = {
         () => new IssueToIssueCardLifecycle(),
         () => new CommentToIssueCardLifecycle(),
     ],
-    ingesters: notLocal ? [
+    /*ingesters: notLocal ? [
         issueRelationshipIngester,
-    ] : [],
+    ] : [],*/
     listeners,
     token,
     http: {
