@@ -2176,6 +2176,74 @@ export namespace RepoIssues {
     title?: string | null; 
   } 
 }
+export namespace SdmGoalById {
+  export type Variables = {
+    id: string[];
+  }
+
+  export type Query = {
+    SdmGoal?: SdmGoal[] | null; 
+  } 
+
+  export type SdmGoal = {
+    environment?: string | null; 
+    uniqueName?: string | null; 
+    name?: string | null; 
+    sha?: string | null; 
+    branch?: string | null; 
+    repo?: Repo | null; 
+    fulfillment?: Fulfillment | null; 
+    description?: string | null; 
+    url?: string | null; 
+    state?: string | null; 
+    externalKey?: string | null; 
+    goalSet?: string | null; 
+    ts?: number | null; 
+    error?: string | null; 
+    retryFeasible?: boolean | null; 
+    preConditions?: PreConditions[] | null; 
+    approval?: Approval | null; 
+    provenance?: Provenance[] | null; 
+    data?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    providerId?: string | null; 
+  } 
+
+  export type Fulfillment = {
+    method?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type PreConditions = {
+    environment?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Approval = {
+    correlationId?: string | null; 
+    registration?: string | null; 
+    name?: string | null; 
+    version?: string | null; 
+    ts?: number | null; 
+    userId?: string | null; 
+    channelId?: string | null; 
+  } 
+
+  export type Provenance = {
+    correlationId?: string | null; 
+    registration?: string | null; 
+    name?: string | null; 
+    version?: string | null; 
+    ts?: number | null; 
+    userId?: string | null; 
+    channelId?: string | null; 
+  } 
+}
 export namespace SdmGoalsByCommit {
   export type Variables = {
     sha: string[];
@@ -2187,6 +2255,7 @@ export namespace SdmGoalsByCommit {
   } 
 
   export type SdmGoal = {
+    id?: string | null; 
     name?: string | null; 
     state?: string | null; 
     description?: string | null; 
@@ -5430,5 +5499,55 @@ export namespace PushFields {
 
   export type _ChatId = {
     screenName?: string | null; 
+  } 
+}
+
+export namespace SdmGoalFields {
+  export type Fragment = {
+    goalSet?: string | null; 
+    environment?: string | null; 
+    name?: string | null; 
+    uniqueName?: string | null; 
+    sha?: string | null; 
+    branch?: string | null; 
+    state?: string | null; 
+    fulfillment?: Fulfillment | null; 
+    description?: string | null; 
+    url?: string | null; 
+    externalKey?: string | null; 
+    ts?: number | null; 
+    preConditions?: PreConditions[] | null; 
+    provenance?: Provenance[] | null; 
+    data?: string | null; 
+  } 
+
+  export type Fulfillment = {
+    method?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type PreConditions = {
+    environment?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Provenance = {
+    registration?: string | null; 
+    version?: string | null; 
+    name?: string | null; 
+    correlationId?: string | null; 
+    ts?: number | null; 
+  } 
+}
+
+export namespace SdmGoalRepo {
+  export type Fragment = {
+    repo?: Repo | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    providerId?: string | null; 
   } 
 }

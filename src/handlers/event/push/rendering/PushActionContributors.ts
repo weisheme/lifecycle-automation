@@ -32,8 +32,8 @@ import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import {
     ApprovalGateParam,
-    ApproveGitHubGoalStatus,
-} from "../../../command/github/ApproveGitHubGoalStatus";
+    ApproveSdmGoalStatus,
+} from "../../../command/github/ApproveSdmGoalStatus";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
@@ -483,23 +483,24 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
     }
 
     public supports(node: any): boolean {
-        if (node.after) {
-            const push = node as graphql.PushToPushLifecycle.Push;
-            return push.after.statuses && push.after.statuses.length > 0;
-        } else {
-            return false;
-        }
+        return node.after !== null;
     }
 
-    public buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
-        const repo = context.lifecycle.extract("repo") as graphql.PushFields.Repo;
+    public async buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
         const buttons = [];
 
         if (context.rendererId === "goals") {
-            push.after.statuses.filter(s => {
-                const url = urijs(s.targetUrl);
-                return url.hasQuery(ApprovalGateParam);
-            }).forEach(s => this.createStatusButton(s, push, repo, buttons));
+            const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
+                graphql.SdmGoalsByCommit.Variables>({
+                name: "sdmGoalsByCommit",
+                variables: {
+                    sha: [push.after.sha],
+                    branch: [push.branch],
+                },
+                options: QueryNoCacheOptions,
+            });
+            goals.SdmGoal.filter(g => g.state === "waiting_for_approval")
+                .forEach(g => this.createApprovalButton(g, buttons));
         }
 
         return Promise.resolve(buttons);
@@ -509,23 +510,16 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
         return Promise.resolve([]);
     }
 
-    private createStatusButton(status: graphql.PushFields.Statuses,
-                               push: graphql.PushToPushLifecycle.Push,
-                               repo: graphql.PushFields.Repo,
-                               buttons: any[]) {
+    private createApprovalButton(goal: graphql.SdmGoalsByCommit.SdmGoal,
+                                 buttons: any[]) {
 
         // Add the approve button
-        const approveHandler = new ApproveGitHubGoalStatus();
-        approveHandler.sha = push.after.sha;
-        approveHandler.repo = repo.name;
-        approveHandler.owner = repo.owner;
-        approveHandler.targetUrl = status.targetUrl;
-        approveHandler.context = status.context;
-        approveHandler.description = status.description;
+        const approveHandler = new ApproveSdmGoalStatus();
+        approveHandler.id = goal.id;
 
         buttons.push(buttonForCommand(
             {
-                text: `Approve '${status.description}'`,
+                text: `Approve '${goal.name}'`,
                 role: "global",
             },
             approveHandler));

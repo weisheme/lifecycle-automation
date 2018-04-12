@@ -1,0 +1,29 @@
+fragment SdmGoalFields on SdmGoal {
+  goalSet
+  environment
+  name
+  uniqueName
+  sha
+  branch
+  state
+  fulfillment {
+    method
+    name
+  }
+  description
+  url
+  externalKey
+  ts
+  preConditions {
+    environment
+    name
+  }
+  provenance {
+    registration
+    version
+    name
+    correlationId
+    ts
+  }
+  data
+}

@@ -269,7 +269,8 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         if (attachments.length > 0) {
             const creator = (goals.SdmGoal[0].provenance || []).find(p => p.name === "SetGoalsOnPush");
             attachments.slice(-1)[0].actions = actions;
-            attachments.slice(-1)[0].footer = `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet}`;
+            attachments.slice(-1)[0].footer =
+                `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet}`;
         }
 
         msg.attachments.push(...attachments);
