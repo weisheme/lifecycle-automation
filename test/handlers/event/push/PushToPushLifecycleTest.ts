@@ -346,7 +346,7 @@ describe("PushToPushLifecycle", () => {
                     } else {
                         return Promise.resolve({});
                     }
-                }
+                },
             },
             messageClient: new MockMessageClient(),
         };
