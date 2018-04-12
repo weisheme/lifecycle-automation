@@ -49,7 +49,7 @@ export type ProviderType = "bitbucket_cloud" | "github_com" | "ghe" | "bitbucket
 export type _GitHubProviderOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "url_asc" | "url_desc" | "providerId_asc" | "providerId_desc" | "apiUrl_asc" | "apiUrl_desc" | "gitUrl_asc" | "gitUrl_desc" | "providerType_asc" | "providerType_desc";
 
 /* Ordering Enum for Team */
-export type _TeamOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc";
+export type _TeamOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "name_asc" | "name_desc" | "description_asc" | "description_desc" | "iconUrl_asc" | "iconUrl_desc";
 
 /* Ordering Enum for Person */
 export type _PersonOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "forename_asc" | "forename_desc" | "surname_asc" | "surname_desc" | "name_asc" | "name_desc";
@@ -91,7 +91,7 @@ export type BuildStatus = "passed" | "broken" | "failed" | "started" | "canceled
 export type BuildTrigger = "pull_request" | "push" | "tag" | "cron";
 
 /* Ordering Enum for Build */
-export type _BuildOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "buildId_asc" | "buildId_desc" | "name_asc" | "name_desc" | "status_asc" | "status_desc" | "buildUrl_asc" | "buildUrl_desc" | "compareUrl_asc" | "compareUrl_desc" | "trigger_asc" | "trigger_desc" | "provider_asc" | "provider_desc" | "pullRequestNumber_asc" | "pullRequestNumber_desc" | "startedAt_asc" | "startedAt_desc" | "finishedAt_asc" | "finishedAt_desc" | "timestamp_asc" | "timestamp_desc" | "workflowId_asc" | "workflowId_desc" | "jobName_asc" | "jobName_desc" | "jobId_asc" | "jobId_desc";
+export type _BuildOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "buildId_asc" | "buildId_desc" | "name_asc" | "name_desc" | "status_asc" | "status_desc" | "buildUrl_asc" | "buildUrl_desc" | "compareUrl_asc" | "compareUrl_desc" | "trigger_asc" | "trigger_desc" | "provider_asc" | "provider_desc" | "pullRequestNumber_asc" | "pullRequestNumber_desc" | "startedAt_asc" | "startedAt_desc" | "finishedAt_asc" | "finishedAt_desc" | "timestamp_asc" | "timestamp_desc" | "workflowId_asc" | "workflowId_desc" | "jobName_asc" | "jobName_desc" | "jobId_asc" | "jobId_desc" | "data_asc" | "data_desc";
 
 /* Ordering Enum for Push */
 export type _PushOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "id_desc" | "timestamp_asc" | "timestamp_desc" | "branch_asc" | "branch_desc";
@@ -2141,6 +2141,22 @@ export namespace PushById {
     screenName?: string | null; 
   } 
 }
+export namespace PushByShaAndBranch {
+  export type Variables = {
+    sha: string;
+    branch: string;
+  }
+
+  export type Query = {
+    Commit?: Commit[] | null; 
+  } 
+
+  export type Commit = {
+    pushes?: Pushes[] | null; 
+  } 
+
+  export type Pushes = PushFields.Fragment
+}
 export namespace RepoIssues {
   export type Variables = {
     name: string;
@@ -2158,6 +2174,108 @@ export namespace RepoIssues {
   export type Issue = {
     number?: number | null; 
     title?: string | null; 
+  } 
+}
+export namespace SdmGoalById {
+  export type Variables = {
+    id: string[];
+  }
+
+  export type Query = {
+    SdmGoal?: SdmGoal[] | null; 
+  } 
+
+  export type SdmGoal = {
+    environment?: string | null; 
+    uniqueName?: string | null; 
+    name?: string | null; 
+    sha?: string | null; 
+    branch?: string | null; 
+    repo?: Repo | null; 
+    fulfillment?: Fulfillment | null; 
+    description?: string | null; 
+    url?: string | null; 
+    state?: string | null; 
+    externalKey?: string | null; 
+    goalSet?: string | null; 
+    ts?: number | null; 
+    error?: string | null; 
+    retryFeasible?: boolean | null; 
+    preConditions?: PreConditions[] | null; 
+    approval?: Approval | null; 
+    provenance?: Provenance[] | null; 
+    data?: string | null; 
+    id?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    providerId?: string | null; 
+  } 
+
+  export type Fulfillment = {
+    method?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type PreConditions = {
+    environment?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Approval = {
+    correlationId?: string | null; 
+    registration?: string | null; 
+    name?: string | null; 
+    version?: string | null; 
+    ts?: number | null; 
+    userId?: string | null; 
+    channelId?: string | null; 
+  } 
+
+  export type Provenance = {
+    correlationId?: string | null; 
+    registration?: string | null; 
+    name?: string | null; 
+    version?: string | null; 
+    ts?: number | null; 
+    userId?: string | null; 
+    channelId?: string | null; 
+  } 
+}
+export namespace SdmGoalsByCommit {
+  export type Variables = {
+    sha: string[];
+    branch: string[];
+  }
+
+  export type Query = {
+    SdmGoal?: SdmGoal[] | null; 
+  } 
+
+  export type SdmGoal = {
+    id?: string | null; 
+    name?: string | null; 
+    state?: string | null; 
+    description?: string | null; 
+    goalSet?: string | null; 
+    url?: string | null; 
+    uniqueName?: string | null; 
+    environment?: string | null; 
+    preConditions?: PreConditions[] | null; 
+    provenance?: Provenance[] | null; 
+  } 
+
+  export type PreConditions = {
+    environment?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Provenance = {
+    registration?: string | null; 
+    name?: string | null; 
+    version?: string | null; 
   } 
 }
 export namespace TagByName {
@@ -4495,6 +4613,26 @@ export namespace ReviewToReviewLifecycle {
     id?: string | null; 
   } 
 }
+export namespace SdmGoalToPush {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    SdmGoal?: SdmGoal[] | null; 
+  } 
+
+  export type SdmGoal = {
+    sha?: string | null; 
+    branch?: string | null; 
+    repo?: Repo | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    providerId?: string | null; 
+  } 
+}
 export namespace StatusOnParentImpact {
   export type Variables = {
   }
@@ -5361,5 +5499,55 @@ export namespace PushFields {
 
   export type _ChatId = {
     screenName?: string | null; 
+  } 
+}
+
+export namespace SdmGoalFields {
+  export type Fragment = {
+    goalSet?: string | null; 
+    environment?: string | null; 
+    name?: string | null; 
+    uniqueName?: string | null; 
+    sha?: string | null; 
+    branch?: string | null; 
+    state?: string | null; 
+    fulfillment?: Fulfillment | null; 
+    description?: string | null; 
+    url?: string | null; 
+    externalKey?: string | null; 
+    ts?: number | null; 
+    preConditions?: PreConditions[] | null; 
+    provenance?: Provenance[] | null; 
+    data?: string | null; 
+  } 
+
+  export type Fulfillment = {
+    method?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type PreConditions = {
+    environment?: string | null; 
+    name?: string | null; 
+  } 
+
+  export type Provenance = {
+    registration?: string | null; 
+    version?: string | null; 
+    name?: string | null; 
+    correlationId?: string | null; 
+    ts?: number | null; 
+  } 
+}
+
+export namespace SdmGoalRepo {
+  export type Fragment = {
+    repo?: Repo | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    providerId?: string | null; 
   } 
 }

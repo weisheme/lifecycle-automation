@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import {
     Action,
     Attachment,
@@ -29,6 +30,7 @@ import {
     SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import { sortGoals } from "../../../../util/goals";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
 export class StatusesNodeRenderer extends AbstractIdentifiableContribution
@@ -208,45 +210,41 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         }
     }
 
-    public render(push: graphql.PushToPushLifecycle.Push,
-                  actions: Action[],
-                  msg: SlackMessage,
-                  context: RendererContext): Promise<SlackMessage> {
+    public async render(push: graphql.PushToPushLifecycle.Push,
+                        actions: Action[],
+                        msg: SlackMessage,
+                        context: RendererContext): Promise<SlackMessage> {
 
-        // List all the statuses on the after commit
         const commit = push.after;
-        // exclude build statuses already displayed
-        const goals = commit.statuses.filter(status => status.context.includes("sdm/"))
-            .sort((s1, s2) => s1.context.localeCompare(s2.context)) as graphql.PushFields.Statuses[];
-        if (goals.length === 0) {
-            return Promise.resolve(msg);
-        }
 
-        // sdm/atomist/#-env/#-name
-        const EnvRegexp = /sdm\/atomist\/([0-9]*-[a-zA-Z]*)\/.*/i;
-        const grouped = _.groupBy(goals, s => {
-            const result = EnvRegexp.exec(s.context);
-            if (result) {
-                return result[1];
-            }  else {
-                return null;
-            }
-        });
+        const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
+                graphql.SdmGoalsByCommit.Variables>({
+                name: "sdmGoalsByCommit",
+                variables: {
+                    sha: [commit.sha],
+                    branch: [push.branch],
+                },
+                options: QueryNoCacheOptions,
+            });
+
+        const sortedGoals = sortGoals(goals.SdmGoal);
 
         let counter = 0;
         const attachments: Attachment[] = [];
-        for (const key in grouped) {
-            if (grouped.hasOwnProperty(key)) {
-                const statuses = grouped[key];
+        sortedGoals.forEach(sg => {
+                const statuses = sg.goals;
 
-                const pending = statuses.filter(s => s.state === "pending").length;
-                const success = statuses.filter(s => s.state === "success").length;
+                // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
+                const pending = statuses.filter(s =>
+                    ["planned" , "requested" , "in_process", "waiting_for_approval"].includes(s.state)).length;
+                const success = statuses.filter(s =>
+                    ["success" , "skipped"].includes(s.state) ).length;
                 const error = statuses.length - pending - success;
 
                 // Now each one
-                const lines = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
-                    if (s.targetUrl != null && s.targetUrl.length > 0) {
-                        return `${this.emoji(s.state)} ${url(s.targetUrl, s.description)}`;
+                const lines = statuses.map(s => {
+                    if (s.url != null && s.url.length > 0) {
+                        return `${this.emoji(s.state)} ${url(s.url, s.description)}`;
                     } else {
                         return `${this.emoji(s.state)} ${s.description}`;
                     }
@@ -257,22 +255,22 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                         error > 0 ? "#D94649" :
                             "#45B254";
 
-                const summary = summarizeStatusCounts(pending, success, error, "goal", "goals");
-
                 const attachment: Attachment = {
                     author_name: counter === 0 ? (lines.length > 1 ? "Goals" : "Goal") : undefined,
                     author_icon: counter === 0 ? "https://images.atomist.com/rug/goals.png" : undefined,
                     color,
-                    fallback: summary,
+                    fallback: `${sg.goals[0].goalSet} Goals`,
                     text: lines.join("\n"),
                 };
                 attachments.push(attachment);
                 counter++;
-            }
-        }
+        });
 
         if (attachments.length > 0) {
+            const creator = (goals.SdmGoal[0].provenance || []).find(p => p.name === "SetGoalsOnPush");
             attachments.slice(-1)[0].actions = actions;
+            attachments.slice(-1)[0].footer =
+                `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet}`;
         }
 
         msg.attachments.push(...attachments);
@@ -282,9 +280,13 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 
     private emoji(state: string): string {
         switch (state) {
-            case "pending":
+            case "planned":
+            case "requested":
+            case "in_process":
+            case "waiting_for_approval":
                 return EMOJI_SCHEME[this.emojiStyle].build.started;
             case "success":
+            case "skipped":
                 return EMOJI_SCHEME[this.emojiStyle].build.passed;
             default:
                 return EMOJI_SCHEME[this.emojiStyle].build.failed;

@@ -1,0 +1,21 @@
+query SdmGoalsByCommit($sha: [String!], $branch: [String!]) {
+  SdmGoal(sha: $sha, branch: $branch, _first: 20) {
+    id
+    name
+    state
+    description
+    goalSet
+    url
+    uniqueName
+    environment
+    preConditions {
+      environment
+      name
+    }
+    provenance {
+      registration
+      name
+      version
+    }
+  }
+}
