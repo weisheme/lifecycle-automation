@@ -17,5 +17,6 @@ query SdmGoalsByCommit($sha: [String!], $branch: [String!]) {
       name
       version
     }
+    ts
   }
 }

@@ -22,7 +22,14 @@ export interface EnvironmentWithGoals {
     goals: SdmGoalsByCommit.SdmGoal[];
 }
 
-export function sortGoals(goals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWithGoals[] {
+export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWithGoals[] {
+
+    // only maintain latest version of SdmGoals
+    let goals: SdmGoalsByCommit.SdmGoal[] = [];
+    _.forEach(_.groupBy(allGoals, g => `${g.environment}-${g.name}`), v => {
+        // using the ts property might not be good enough but let's see
+        goals.push(_.maxBy(v, "ts"));
+    });
 
     goals = goals.sort((g1, g2) =>
         `${g1.environment}-${g1.name}`.localeCompare(`${g2.environment}-${g2.name}`));
