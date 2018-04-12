@@ -356,9 +356,9 @@ export const configuration: Configuration = {
         () => new IssueToIssueCardLifecycle(),
         () => new CommentToIssueCardLifecycle(),
     ],
-    /*ingesters: notLocal ? [
+    ingesters: notLocal ? [
         issueRelationshipIngester,
-    ] : [],*/
+    ] : [],
     listeners,
     token,
     http: {
@@ -389,7 +389,7 @@ export const configuration: Configuration = {
     ws: {
         compress: false,
         termination: {
-            gracePeriod: 500,
+            gracePeriod: 5000,
         },
     },
     logging: {
