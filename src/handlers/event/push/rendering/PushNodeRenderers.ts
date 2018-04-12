@@ -577,7 +577,7 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
                     }
                 });
             });
-            envs.forEach(e => {
+            envs.sort((e1, e2) => e1.name.localeCompare(e2.name)).forEach(e => {
                     const terminatedCountMsg = e.terminated > 0 ? ", " + e.terminated + " terminated" : "";
                     const waitingCountMsg = e.waiting > 0 ? ", " + e.waiting + " waiting" : "";
                     const stateOfContainers = `${e.running} running${waitingCountMsg}${terminatedCountMsg}`;
