@@ -461,7 +461,7 @@ export function buildNotification(build: graphql.NotifyPusherOnBuild.Build,
 
     const slackMessage: SlackMessage = {
         // tslint:disable-next-line:max-line-length
-        text: `${url(build.buildUrl, `Build #${build.name}`)} of your push to ${url(repoUrl(repo), repoSlug(repo))} failed`,
+        text: `${build.buildUrl ? url(build.buildUrl, `Build #${build.name}`) : `Build #${build.name}`} of your push to ${url(repoUrl(repo), repoSlug(repo))} failed`,
         attachments: [
             {
                 author_name: `@${commit.author.login}`,
