@@ -36,6 +36,7 @@ import * as graphql from "../../../../typings/types";
 import {
     avatarUrl,
     branchUrl,
+    commitIcon,
     commitUrl,
     isGenerated,
     linkGitHubUsers,
@@ -105,6 +106,7 @@ export class PullRequestNodeRenderer extends AbstractIdentifiableContribution
                     fallback: `#${pr.number} ${escape(pr.title)}`,
                     mrkdwn_in: ["text"],
                     footer: repoAndlabelsAndAssigneesFooter(repo, pr.labels, pr.assignees),
+                    footer_icon: commitIcon(repo),
                     ts: normalizeTimestamp(ts),
                     actions,
                 };
