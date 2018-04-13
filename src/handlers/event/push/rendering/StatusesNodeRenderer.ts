@@ -29,6 +29,7 @@ import {
     RendererContext,
     SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
+import { SdmGoalsByCommit } from "../../../../typings/types";
 import * as graphql from "../../../../typings/types";
 import { sortGoals } from "../../../../util/goals";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
@@ -267,10 +268,15 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         });
 
         if (attachments.length > 0) {
-            const creator = (goals.SdmGoal[0].provenance || []).find(p => p.name === "SetGoalsOnPush");
+            const creator = _.flatten<SdmGoalsByCommit.Provenance>(
+                goals.SdmGoal.map(g => (g.provenance || [])))
+                .find(p => p.name === "SetGoalsOnPush");
+
             attachments.slice(-1)[0].actions = actions;
-            attachments.slice(-1)[0].footer =
-                `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet}`;
+            if (creator) {
+                attachments.slice(-1)[0].footer =
+                    `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet}`;
+            }
         }
 
         msg.attachments.push(...attachments);
