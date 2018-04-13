@@ -1,5 +1,5 @@
-query SdmGoalById($id: [String!]) {
-  SdmGoal(id: [$id]) {
+query SdmGoalById($id: ID!) {
+  SdmGoal(id: $id) {
     id
     environment
     uniqueName
@@ -48,3 +48,4 @@ query SdmGoalById($id: [String!]) {
     data
   }
 }
+
