@@ -282,12 +282,15 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         switch (state) {
             case "planned":
             case "requested":
+                return EMOJI_SCHEME[this.emojiStyle].build.requested;
             case "in_process":
-            case "waiting_for_approval":
                 return EMOJI_SCHEME[this.emojiStyle].build.started;
+            case "waiting_for_approval":
+                return EMOJI_SCHEME[this.emojiStyle].build.waiting;
             case "success":
-            case "skipped":
                 return EMOJI_SCHEME[this.emojiStyle].build.passed;
+            case "skipped":
+                return EMOJI_SCHEME[this.emojiStyle].build.skipped;
             default:
                 return EMOJI_SCHEME[this.emojiStyle].build.failed;
         }

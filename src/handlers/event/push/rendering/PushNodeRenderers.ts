@@ -63,6 +63,9 @@ export const EMOJI_SCHEME = {
             started: "\u25cf",
             failed: "\u2717",
             passed: "\u2713",
+            waiting: "\u23F8",
+            requested: "\u23F9",
+            skipped: "\u23ED",
         },
     },
 
@@ -77,6 +80,9 @@ export const EMOJI_SCHEME = {
             started: slackEmoji("atomist_build_started"),
             failed: slackEmoji("atomist_build_failed"),
             passed: slackEmoji("atomist_build_passed"),
+            waiting: slackEmoji("atomist_build_waiting"),
+            requested: slackEmoji("atomist_build_requested"),
+            skipped: slackEmoji("atomist_build_skipped"),
         },
     },
 };
