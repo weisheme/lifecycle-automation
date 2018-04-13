@@ -24,7 +24,6 @@ import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/Sc
 import { StartCloudFoundryApplication } from "./handlers/command/cloudfoundry/StartCloudFoundryApplication";
 import { StopCloudFoundryApplication } from "./handlers/command/cloudfoundry/StopCloudFoundryApplication";
 import { ApproveGitHubCommit } from "./handlers/command/github/ApproveGitHubCommit";
-import { ApproveSdmGoalStatus } from "./handlers/command/sdm/ApproveSdmGoalStatus";
 import { AssignGitHubPullRequestReviewer } from "./handlers/command/github/AssignGitHubPullRequestReviewer";
 import { AssignToMeGitHubIssue } from "./handlers/command/github/AssignToMeGitHubIssue";
 import { CloseGitHubIssue } from "./handlers/command/github/CloseGitHubIssue";
@@ -74,6 +73,7 @@ import {
 import { ConfigureLifecyclePreferences } from "./handlers/command/preferences/ConfigureLifecyclePreferences";
 import { SetTeamPreference } from "./handlers/command/preferences/SetTeamPreference";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
+import { ApproveSdmGoalStatus } from "./handlers/command/sdm/ApproveSdmGoalStatus";
 import { AddBotToChannel } from "./handlers/command/slack/AddBotToChannel";
 import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
 import { cancelConversation } from "./handlers/command/slack/cancel";

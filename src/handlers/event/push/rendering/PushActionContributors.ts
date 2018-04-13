@@ -30,13 +30,13 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
 import { truncateCommitMessage } from "../../../../util/helpers";
+import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
+import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
+import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
 import {
     ApprovalGateParam,
     ApproveSdmGoalStatus,
 } from "../../../command/sdm/ApproveSdmGoalStatus";
-import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
-import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
-import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
