@@ -1,5 +1,6 @@
 query SdmGoalsByCommit($sha: [String!], $branch: [String!]) {
-  SdmGoal(sha: $sha, branch: $branch, _first: 100) {
+  SdmGoal(sha: $sha, branch: $branch, _first: 200) {
+    id
     name
     state
     description

@@ -61,7 +61,7 @@ export class ApproveSdmGoalStatus implements HandleCommand {
             options: QueryNoCacheOptions,
         });
 
-        const goal = goalResult.SdmGoal[0];
+        const goal = _.cloneDeep(goalResult.SdmGoal[0]);
         const actx = ctx as any as AutomationContextAware;
 
         const prov: SdmGoalById.Provenance = {
@@ -80,6 +80,8 @@ export class ApproveSdmGoalStatus implements HandleCommand {
         ];
         goal.approval = prov;
         goal.state = "success";
+        goal.ts = Date.now();
+        delete goal.id;
 
         return ctx.messageClient.send(goal, addressEvent("SdmGoal"));
     }

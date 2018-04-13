@@ -1,5 +1,6 @@
 query SdmGoalById($id: [String!]) {
   SdmGoal(id: [$id]) {
+    id
     environment
     uniqueName
     name
