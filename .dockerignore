@@ -6,6 +6,7 @@ node_modules/
 scripts/
 src/
 log/
+img/
 test/
 ts*.json
 build/typedoc/
@@ -14,3 +15,4 @@ build/typedoc/
 *~
 *.ts
 *.js
+*.js.map
