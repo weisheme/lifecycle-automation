@@ -1,6 +1,6 @@
 .git*
 .npm*
-.travis.yml
+.*travis.yml
 C*.md
 node_modules/
 scripts/
@@ -12,3 +12,5 @@ build/typedoc/
 *.log
 *.txt
 *~
+*.ts
+*.js
