@@ -33,7 +33,7 @@ import { truncateCommitMessage } from "../../../../util/helpers";
 import {
     ApprovalGateParam,
     ApproveSdmGoalStatus,
-} from "../../../command/github/ApproveSdmGoalStatus";
+} from "../../../command/sdm/ApproveSdmGoalStatus";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
