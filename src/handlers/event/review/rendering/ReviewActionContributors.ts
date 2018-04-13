@@ -24,7 +24,7 @@ import {
 import * as graphql from "../../../../typings/types";
 
 export class CommentActionContributor extends AbstractIdentifiableContribution
-    implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
+    implements SlackActionContributor<graphql.ReviewToReviewLifecycle.Review> {
 
     constructor() {
         super("comment");
@@ -47,7 +47,7 @@ export class CommentActionContributor extends AbstractIdentifiableContribution
         return Promise.resolve(buttons);
     }
 
-    public menusFor(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, context: RendererContext):
+    public menusFor(review: graphql.ReviewToReviewLifecycle.Review, context: RendererContext):
         Promise<Action[]> {
         return Promise.resolve([]);
     }

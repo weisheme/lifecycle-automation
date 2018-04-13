@@ -48,4 +48,3 @@ query SdmGoalById($id: ID!) {
     data
   }
 }
-

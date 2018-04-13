@@ -18,6 +18,7 @@ import "mocha";
 import * as assert from "power-assert";
 import { circleWorkflowtoStages } from "../../../../../src/handlers/event/push/workflow/CircleWorkflow";
 import { WorkflowStage } from "../../../../../src/handlers/event/push/workflow/WorkflowStage";
+import { BuildStatus } from "../../../../../src/typings/types";
 import * as graphql from "../../../../../src/typings/types";
 
 describe("CircleWorkflow", () => {
@@ -175,63 +176,63 @@ describe("CircleWorkflow", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one0",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 24445,
                     longestJobDuration: 23005,
                 },
             }, {
                 name: "test",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 6476,
                     longestJobDuration: 6476,
                 },
             }, {
                 name: "two0",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 33674,
                     longestJobDuration: 29347,
                 },
             }, {
                 name: "publish",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 982,
                     longestJobDuration: 982,
                 },
             }, {
                 name: "three1",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 2040,
                     longestJobDuration: 1216,
                 },
             }, {
                 name: "four0",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 21725,
                     longestJobDuration: 21725,
                 },
             }, {
                 name: "staging",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1049,
                     longestJobDuration: 1049,
                 },
             }, {
                 name: "promote",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1802,
                     longestJobDuration: 1802,
                 },
@@ -249,7 +250,7 @@ describe("CircleWorkflow", () => {
             builds: [
                 {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl1",
                     startedAt: "2017-10-30T17:38:31.564Z",
                     finishedAt: "2017-10-30T17:38:33.516Z",
@@ -257,7 +258,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 1",
                 }, {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl2",
                     startedAt: "2017-10-30T17:38:40.329Z",
                     finishedAt: "2017-10-30T17:38:41.362Z",
@@ -265,7 +266,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 2",
                 }, {
                     id: "build id 1",
-                    status: "failed",
+                    status: "failed" as BuildStatus,
                     buildUrl: "buildUrl3",
                     startedAt: "2017-10-30T17:38:41.009Z",
                     finishedAt: "2017-10-30T17:38:42.085Z",
@@ -273,7 +274,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 3",
                 }, {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl4",
                     startedAt: "2017-10-30T17:38:44.541Z",
                     finishedAt: "2017-10-30T17:38:46.898Z",
@@ -287,14 +288,14 @@ describe("CircleWorkflow", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one1",
                 status: {
-                    state: "failed",
+                    state: "failed" as BuildStatus,
                     totalDuration: 6569,
                     longestJobDuration: 2357,
                 },
@@ -337,7 +338,7 @@ describe("CircleWorkflow", () => {
             builds: [
                 {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl1",
                     startedAt: "2017-10-30T17:38:31.564Z",
                     finishedAt: "2017-10-30T17:38:33.516Z",
@@ -351,7 +352,7 @@ describe("CircleWorkflow", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
@@ -382,7 +383,7 @@ describe("CircleWorkflow", () => {
             builds: [
                 {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl1",
                     startedAt: "2017-10-30T17:38:31.564Z",
                     finishedAt: "2017-10-30T17:38:33.516Z",
@@ -390,7 +391,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 1",
                 }, {
                     id: "build id 2",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl9",
                     startedAt: "2017-10-30T17:40:00.066Z",
                     finishedAt: "2017-10-30T17:40:01.048Z",
@@ -404,14 +405,14 @@ describe("CircleWorkflow", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "two",
                 status: {
-                    state: "started",
+                    state: "started" as BuildStatus,
                     totalDuration: 982,
                     longestJobDuration: 982,
                 },
@@ -446,7 +447,7 @@ describe("CircleWorkflow", () => {
             builds: [
                 {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl1",
                     startedAt: "2017-10-30T17:38:31.564Z",
                     finishedAt: "2017-10-30T17:38:33.516Z",
@@ -460,7 +461,7 @@ describe("CircleWorkflow", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
@@ -501,7 +502,7 @@ describe("CircleWorkflow", () => {
             builds: [
                 {
                     id: "build id 1",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl1",
                     startedAt: "2017-10-30T17:38:31.564Z",
                     finishedAt: "2017-10-30T17:38:33.516Z",
@@ -509,7 +510,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 1",
                 }, {
                     id: "build id 2",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl9",
                     startedAt: "2017-10-30T17:40:00.066Z",
                     finishedAt: "2017-10-30T17:40:01.048Z",
@@ -517,7 +518,7 @@ describe("CircleWorkflow", () => {
                     jobId: "job id 2",
                 }, {
                     id: "build id 3",
-                    status: "passed",
+                    status: "passed" as BuildStatus,
                     buildUrl: "buildUrl2",
                     startedAt: "2017-10-30T17:38:40.329Z",
                     finishedAt: "2017-10-30T17:38:41.362Z",
@@ -531,21 +532,21 @@ describe("CircleWorkflow", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "two",
                 status: {
-                    state: "started",
+                    state: "started" as BuildStatus,
                     totalDuration: 982,
                     longestJobDuration: 982,
                 },
             }, {
                 name: "afterTwo",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1033,
                     longestJobDuration: 1033,
                 },
@@ -603,7 +604,7 @@ describe("CircleWorkflow", () => {
             {
                 name: "init1",
                 status: {
-                    state: "started",
+                    state: "started" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },

@@ -18,6 +18,7 @@ import "mocha";
 import * as assert from "power-assert";
 import {chartUrlFromWorkflow} from "../../../../../src/handlers/event/push/workflow/ChartUrl";
 import {WorkflowStage} from "../../../../../src/handlers/event/push/workflow/WorkflowStage";
+import { BuildStatus } from "../../../../../src/typings/types";
 
 describe("ChartUrl", () => {
 
@@ -26,35 +27,35 @@ describe("ChartUrl", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     longestJobDuration: 2100000,
                     totalDuration: 2520000,
                 },
             }, {
                 name: "unit test",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     longestJobDuration: 100,
                     totalDuration: 100,
                 },
             }, {
                 name: "integration test",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     longestJobDuration: 15180000,
                     totalDuration: 15360000,
                 },
             }, {
                 name: "canary test",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     longestJobDuration: 37200000,
                     totalDuration: 46200000,
                 },
             }, {
                 name: "staging",
                 status: {
-                    state: "failed",
+                    state: "failed" as BuildStatus,
                     longestJobDuration: 100,
                     totalDuration: 100,
                 },
@@ -76,63 +77,63 @@ describe("ChartUrl", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one0",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 24445,
                     longestJobDuration: 23005,
                 },
             }, {
                 name: "test",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 6476,
                     longestJobDuration: 6476,
                 },
             }, {
                 name: "two0",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 33674,
                     longestJobDuration: 29347,
                 },
             }, {
                 name: "publish",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 982,
                     longestJobDuration: 982,
                 },
             }, {
                 name: "three1",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 2040,
                     longestJobDuration: 1216,
                 },
             }, {
                 name: "four0",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 21725,
                     longestJobDuration: 21725,
                 },
             }, {
                 name: "staging",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1049,
                     longestJobDuration: 1049,
                 },
             }, {
                 name: "promote",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1802,
                     longestJobDuration: 1802,
                 },
@@ -152,14 +153,14 @@ describe("ChartUrl", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one1",
                 status: {
-                    state: "failed",
+                    state: "failed" as BuildStatus,
                     totalDuration: 6569,
                     longestJobDuration: 2357,
                 },
@@ -193,14 +194,14 @@ describe("ChartUrl", () => {
             {
                 name: "build",
                 status: {
-                    state: "passed",
+                    state: "passed" as BuildStatus,
                     totalDuration: 1952,
                     longestJobDuration: 1952,
                 },
             }, {
                 name: "one1",
                 status: {
-                    state: "started",
+                    state: "started" as BuildStatus,
                     totalDuration: 6569,
                     longestJobDuration: 2357,
                 },

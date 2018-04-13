@@ -28,7 +28,7 @@ import { chartUrlFromWorkflow } from "./ChartUrl";
 import {circleWorkflowtoStages, PushTrigger} from "./CircleWorkflow";
 
 export class WorkflowNodeRenderer extends AbstractIdentifiableContribution
-    implements SlackNodeRenderer<graphql.PushFields.Builds> {
+    implements SlackNodeRenderer<graphql.PushFields.Workflow> {
 
     constructor() {
         super("workflow");

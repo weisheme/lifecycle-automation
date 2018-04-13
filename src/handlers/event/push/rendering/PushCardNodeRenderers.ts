@@ -217,7 +217,7 @@ export class BuildCardNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class TagCardNodeRenderer extends AbstractIdentifiableContribution
-    implements CardNodeRenderer<graphql.PushFields.Tags> {
+    implements CardNodeRenderer<graphql.PushToPushLifecycle.Push> {
 
     constructor() {
         super("tag");

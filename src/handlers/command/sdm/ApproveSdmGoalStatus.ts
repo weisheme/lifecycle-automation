@@ -56,7 +56,7 @@ export class ApproveSdmGoalStatus implements HandleCommand {
         const goalResult = await ctx.graphClient.query<SdmGoalById.Query, SdmGoalById.Variables>({
             name: "sdmGoalById",
             variables: {
-                id: [this.id],
+                id: this.id,
             },
             options: QueryNoCacheOptions,
         });
