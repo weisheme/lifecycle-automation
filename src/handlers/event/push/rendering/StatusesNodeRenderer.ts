@@ -228,16 +228,6 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                 options: QueryNoCacheOptions,
             });
 
-        const ts = goals.SdmGoal.map(g => g.ts);
-        const min = _.min(ts);
-        const max = _.max(ts);
-
-        console.log(min + " " + max);
-
-        const moment = require("moment");
-        // The following require is need to initialize the format function
-        require("moment-duration-format");
-
         const sortedGoals = sortGoals((goals ? goals.SdmGoal : []) || []);
 
         let counter = 0;
@@ -278,6 +268,13 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         });
 
         if (attachments.length > 0) {
+            const ts = goals.SdmGoal.map(g => g.ts);
+            const min = _.min(ts);
+            const max = _.max(ts);
+
+            const moment = require("moment");
+            // The following require is need to initialize the format function
+            require("moment-duration-format");
             const duration = moment.duration(max - min, "seconds").format("h[h] m[m] s[s]");
             const creator = _.flatten<SdmGoalsByCommit.Provenance>(
                 goals.SdmGoal.map(g => (g.provenance || [])))
