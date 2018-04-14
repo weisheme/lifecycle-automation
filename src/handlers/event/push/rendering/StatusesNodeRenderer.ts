@@ -275,7 +275,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
             const moment = require("moment");
             // The following require is need to initialize the format function
             require("moment-duration-format");
-            const duration = moment.duration(max - min, "seconds").format("h[h] m[m] s[s]");
+            const duration = moment.duration(max - min, "millisecond").format("h[h] m[m] s[s]");
             const creator = _.flatten<SdmGoalsByCommit.Provenance>(
                 goals.SdmGoal.map(g => (g.provenance || [])))
                 .find(p => p.name === "SetGoalsOnPush");
