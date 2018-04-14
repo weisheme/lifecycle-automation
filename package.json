@@ -39,6 +39,8 @@
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
     "logzio-nodejs": "^0.4.4",
+    "moment": "^2.22.0",
+    "moment-duration-format": "^2.2.2",
     "promise-each": "^2.2.0",
     "pusher": "^1.5.1",
     "semver": "^5.4.1",

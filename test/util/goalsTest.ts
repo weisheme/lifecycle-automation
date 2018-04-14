@@ -288,7 +288,7 @@ describe("goals", () => {
     "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
     "url": null,
     "environment": "2-deploy-prod",
-    "ts": 1523543548060,
+    "ts": 1523543549060,
     "provenance": [{
       "registration": "@atomist/github-sdm",
       "version": "0.4.0-20180412134641",
@@ -299,7 +299,7 @@ describe("goals", () => {
       "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
       "name": "SetGoalsOnPush",
       "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
+      "ts": 1523543549060,
       "version": "0.4.0-20180412134641"
     }]
   }
@@ -307,6 +307,7 @@ describe("goals", () => {
 
     it("should sort goals", () => {
         const goals = JSON.parse(goalsJson) as SdmGoalsByCommit.SdmGoal[];
+
         const sortedGoals = sortGoals(_.shuffle(goals));
         console.log(sortedGoals.map(e => `${e.environment}\n${e.goals.map(g => `${g.name}`).join("\n")}`).join("\n\n"));
         console.log("\n");
