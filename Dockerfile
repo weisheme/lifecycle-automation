@@ -14,7 +14,7 @@ COPY . /app
 
 ENV NPM_CONFIG_LOGLEVEL warn
 
-RUN npm install
+RUN npm ci
 
 ENV SUPPRESS_NO_CONFIG_WARNING true
 
