@@ -69,7 +69,7 @@ describe("goals", () => {
             ts: Date.now(),
         };
 
-        const sortedGoals = sortGoals(_.shuffle([goal0, goal1, goal2, goal3, goal4, goal5]));
+        const sortedGoals = sortGoals([goal1, goal0, goal2, goal3, goal4, goal5]);
         assert.equal(sortedGoals.length, 3);
         assert.equal(sortedGoals[0].environment, "code");
         assert.equal(sortedGoals[1].environment, "test");
