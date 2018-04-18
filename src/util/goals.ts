@@ -23,14 +23,21 @@ export interface EnvironmentWithGoals {
     goals: SdmGoalsByCommit.SdmGoal[];
 }
 
-export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWithGoals[] {
-
+export function lastGoalSet(allGoals: SdmGoalsByCommit.SdmGoal[]): SdmGoalsByCommit.SdmGoal[] {
     // only maintain latest version of SdmGoals
     const goals: SdmGoalsByCommit.SdmGoal[] = [];
     _.forEach(_.groupBy(allGoals, g => `${g.environment}-${g.name}`), v => {
         // using the ts property might not be good enough but let's see
         goals.push(_.maxBy(v, "ts"));
     });
+
+    return goals;
+}
+
+export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWithGoals[] {
+
+    // only maintain latest version of SdmGoals
+    const goals = lastGoalSet(allGoals);
 
     // sort envs first
     const envConditions = _.flatten(goals.filter(g => g.preConditions && g.preConditions.length > 0)

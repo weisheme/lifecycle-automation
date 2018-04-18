@@ -29,6 +29,7 @@ import {
     SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
+import { lastGoalSet } from "../../../../util/goals";
 import { truncateCommitMessage } from "../../../../util/helpers";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
@@ -500,7 +501,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
                 options: QueryNoCacheOptions,
             });
             if (goals && goals.SdmGoal) {
-                goals.SdmGoal.filter(g => g.state === "waiting_for_approval")
+                lastGoalSet(goals.SdmGoal).filter(g => g.state === "waiting_for_approval")
                     .forEach(g => this.createApprovalButton(g, buttons));
             }
         }
