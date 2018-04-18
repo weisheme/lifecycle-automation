@@ -16,6 +16,7 @@
 
 import {
     ConfigurableCommandHandler,
+    failure,
     HandleCommand,
     HandlerContext,
     HandlerResult,
@@ -28,8 +29,12 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { commandHandlerFrom } from "@atomist/automation-client/onCommand";
+import { codeLine } from "@atomist/slack-messages";
 import * as slack from "@atomist/slack-messages/SlackMessages";
-import { success } from "../../../util/messages";
+import {
+    success,
+    warning,
+} from "../../../util/messages";
 import * as github from "./gitHubApi";
 import {
     IssueOwnerParameters,
@@ -74,6 +79,14 @@ export class MoveGitHubIssue implements HandleCommand {
             this.targetOwner = JSON.parse(this.targetOwner).owner;
         } catch (err) {
             // Safe to ignore
+        }
+
+        // Validate that target and source aren't same #201
+        if (this.owner === this.targetOwner && this.repo === this.targetRepo) {
+            return ctx.messageClient.respond(
+                warning("Move Issue", `Can't move issue into selected repository ${
+                    codeLine(`${this.targetOwner}/${this.targetRepo}`)}`, ctx))
+                .then(() => Success, failure);
         }
 
         const api = github.api(this.githubToken, this.apiUrl);
