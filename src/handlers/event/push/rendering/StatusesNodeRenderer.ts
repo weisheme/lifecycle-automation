@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { logger } from "@atomist/automation-client";
 import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import {
     Action,
@@ -228,7 +229,12 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                 options: QueryNoCacheOptions,
             });
 
-        const sortedGoals = sortGoals((goals ? goals.SdmGoal : []) || []);
+        const sortedGoals = [];
+        try {
+            sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
+        } catch (err) {
+             logger.warn(`Goal sorting failed with error: '%s'`, err.message);
+        }
 
         let counter = 0;
         const attachments: Attachment[] = [];
@@ -275,6 +281,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
             const moment = require("moment");
             // The following require is need to initialize the format function
             require("moment-duration-format");
+
             const duration = moment.duration(max - min, "millisecond").format("h[h] m[m] s[s]");
             const creator = _.flatten<SdmGoalsByCommit.Provenance>(
                 goals.SdmGoal.map(g => (g.provenance || [])))

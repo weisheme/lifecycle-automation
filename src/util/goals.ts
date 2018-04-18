@@ -15,6 +15,7 @@
  */
 
 import * as _ from "lodash";
+import * as toposort from "toposort";
 import { SdmGoalsByCommit } from "../typings/types";
 
 export interface EnvironmentWithGoals {
@@ -25,69 +26,47 @@ export interface EnvironmentWithGoals {
 export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWithGoals[] {
 
     // only maintain latest version of SdmGoals
-    let goals: SdmGoalsByCommit.SdmGoal[] = [];
+    const goals: SdmGoalsByCommit.SdmGoal[] = [];
     _.forEach(_.groupBy(allGoals, g => `${g.environment}-${g.name}`), v => {
         // using the ts property might not be good enough but let's see
         goals.push(_.maxBy(v, "ts"));
     });
 
-    goals = goals.sort((g1, g2) =>
-        `${g1.environment}-${g1.name}`.localeCompare(`${g2.environment}-${g2.name}`));
-
-    const sortedGoalsWithEnvironment: EnvironmentWithGoals[] = [];
-    goals.forEach(sg => {
-        const sgwe = sortedGoalsWithEnvironment.find(e => e.environment === sg.environment);
-        if (sgwe) {
-            sgwe.goals.push(sg);
-        } else {
-            sortedGoalsWithEnvironment.push({
-                environment: sg.environment,
-                goals: [sg],
-            });
-        }
-    });
-
-    sortedGoalsWithEnvironment.forEach(sgwe => {
-        // sort goals without preconditions or with preconditions in earlier environments first
-        let sg: SdmGoalsByCommit.SdmGoal[] = [];
-
-        // insert goals without preconditions first
-        sg.push(...sgwe.goals.filter(g =>
-            !g.preConditions || g.preConditions.length === 0 ||
-            !g.preConditions.some(p => p.environment === sgwe.environment)));
-        sg = sg.sort((g1, g2) => g1.name.localeCompare(g2.name));
-
-        const pcgs = sgwe.goals.filter(g =>
-            (g.preConditions || []).some(p => p.environment === sgwe.environment));
-
-        pcgs.forEach(pcg => {
-            const ix = _.max([maxIndexOfPrecondition(pcg, sg), sg.length - 1]);
-            if (ix === -1) {
-                sg.push(pcg);
+    // sort envs first
+    const envConditions = _.flatten(goals.filter(g => g.preConditions && g.preConditions.length > 0)
+        .map(g => g.preConditions.map(p => {
+            if (g.environment !== p.environment) {
+                return[g.environment, p.environment];
             } else {
-                sg.splice(ix + 1, 0, pcg);
+                return null;
             }
-        });
+        })));
+    const sortedEnvs = toposort(envConditions.filter(c => c !== null)).reverse();
 
-        sgwe.goals = sg;
+    // if we have no conditions between goals of different environments we need up manually add all envs
+    if (sortedEnvs.length === 0) {
+        sortedEnvs.push(..._.uniq(goals.map(g => g.environment)));
+    }
+
+    // add the goals per each environment
+    const sortedGoalsWithEnvironment: EnvironmentWithGoals[] = sortedEnvs.map(env => ({
+        environment: env,
+        goals: goals.filter(g => g.environment === env),
+    }));
+
+    // sort goals within an environment
+    sortedGoalsWithEnvironment.forEach(env => {
+        const goalConditions = _.flatten(env.goals.map(g => {
+            const preConditions = (g.preConditions || []).filter(p => p.environment === env.environment);
+            if (preConditions.length > 0) {
+                return preConditions.map(p => [g.name, p.name]);
+            } else {
+                return [g.name, env.environment];
+            }
+        }));
+        const sortedGoals = toposort(goalConditions).reverse();
+        env.goals = _.sortBy<SdmGoalsByCommit.SdmGoal>(env.goals, g => sortedGoals.indexOf(g.name));
     });
 
     return sortedGoalsWithEnvironment;
-}
-
-function maxIndexOfPrecondition(goal: SdmGoalsByCommit.SdmGoal, goals: SdmGoalsByCommit.SdmGoal[]): number {
-    if (!goal.preConditions || goal.preConditions.length === 0) {
-        return -1;
-    } else {
-        return _.max(goal.preConditions.map(p => indexOfPrecondition(p.name, p.environment, goals)));
-    }
-}
-
-function indexOfPrecondition(name: string, environment: string, goals: SdmGoalsByCommit.SdmGoal[]): number {
-    const goal = goals.find(g => g.name === name && g.environment === environment);
-    if (goal) {
-        return goals.indexOf(goal);
-    } else {
-        return -1;
-    }
 }

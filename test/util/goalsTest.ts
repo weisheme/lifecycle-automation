@@ -17,300 +17,115 @@
 import { LoggingConfig } from "@atomist/automation-client/internal/util/logger";
 import * as _ from "lodash";
 import "mocha";
-import {
-    SdmGoalsByCommit,
-} from "../../src/typings/types";
+import * as assert from "power-assert";
+import { SdmGoalsByCommit } from "../../src/typings/types";
 import { sortGoals } from "../../src/util/goals";
 
 LoggingConfig.format = "cli";
 
 describe("goals", () => {
 
-    const goalsJson = `[{
-    "description": "Build successful",
-    "preConditions": [{
-      "environment": "0-code",
-      "name": "version"
-    }],
-    "uniqueName": null,
-    "name": "build",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "0e109dd6-b7c1-5832-9ba0-5853e4373be4",
-    "url": null,
-    "environment": "0-code",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Code review passed",
-    "preConditions": [],
-    "uniqueName": null,
-    "name": "review",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "0f096d2b-7017-5981-bf39-fcf54f9f269f",
-    "url": null,
-    "environment": "0-code",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Autofixed",
-    "preConditions": [],
-    "uniqueName": null,
-    "name": "autofix",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "026a5229-9199-57f5-bb54-b21939035790",
-    "url": null,
-    "environment": "0-code",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Docker image built",
-    "preConditions": [{
-      "environment": "0-code",
-      "name": "build"
-    }],
-    "uniqueName": null,
-    "name": "docker build",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "01e03224-d9b4-5eb1-91f6-0bbfdd4f1f90",
-    "url": null,
-    "environment": "0-code",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Tagged",
-    "preConditions": [{
-        "environment": "0-code",
-        "name": "docker build"
-      },
-      {
-        "environment": "0-code",
-        "name": "build"
-      }
-    ],
-    "uniqueName": null,
-    "name": "tag",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "03fd3ea6-ffa3-5961-9c89-1a487fa526ea",
-    "url": null,
-    "environment": "0-code",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Versioned",
-    "preConditions": [],
-    "uniqueName": null,
-    "name": "version",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
-    "url": null,
-    "environment": "0-code",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Deploy to test",
-    "preConditions": [{
-        "environment": "0-code",
-        "name": "docker build"
-      },
-      {
-        "environment": "0-code",
-        "name": "build"
-      }
-    ],
-    "uniqueName": null,
-    "name": "deploy to test",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
-    "url": null,
-    "environment": "1-deploy-test",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Deploy to prod",
-    "preConditions": [{
-      "environment": "1-deploy-test",
-      "name": "deploy to test"
-    }],
-    "uniqueName": null,
-    "name": "deploy to prod",
-    "goalSet": "node docker",
-    "state": "waiting_for_approval",
-    "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
-    "url": null,
-    "environment": "2-deploy-prod",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Verify prod",
-    "preConditions": [{
-      "environment": "2-deploy-prod",
-      "name": "deploy to prod"
-    }],
-    "uniqueName": null,
-    "name": "verify prod",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
-    "url": null,
-    "environment": "2-deploy-prod",
-    "ts": 1523543548060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543548060,
-      "version": "0.4.0-20180412134641"
-    }]
-  },
-  {
-    "description": "Notify deployment",
-    "uniqueName": null,
-    "name": "notify prod",
-    "goalSet": "node docker",
-    "state": "success",
-    "id": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
-    "url": null,
-    "environment": "2-deploy-prod",
-    "ts": 1523543549060,
-    "provenance": [{
-      "registration": "@atomist/github-sdm",
-      "version": "0.4.0-20180412134641",
-      "name": "OnAnyRequestedSdmGoal",
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "ts": 1523543553349
-    }, {
-      "correlationId": "963d58db-5b49-4a01-8616-3f9922ee6fd6",
-      "name": "SetGoalsOnPush",
-      "registration": "@atomist/github-sdm",
-      "ts": 1523543549060,
-      "version": "0.4.0-20180412134641"
-    }]
-  }
-]`;
-
     it("should sort goals", () => {
-        const goals = JSON.parse(goalsJson) as SdmGoalsByCommit.SdmGoal[];
+        const goal0: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "review",
+            ts: Date.now(),
+        };
+        const goal1: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "autofix",
+            ts: Date.now(),
+        };
+        const goal2: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "build",
+            ts: Date.now(),
+        };
+        const goal3: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "docker build",
+            preConditions: [{
+                environment: "code",
+                name: "build",
+            }],
+            ts: Date.now(),
+        };
+        const goal4: SdmGoalsByCommit.SdmGoal = {
+            environment: "test",
+            name: "deployToTest",
+            preConditions: [{
+                environment: "code",
+                name: "build",
+            }],
+            ts: Date.now(),
+        };
+        const goal5: SdmGoalsByCommit.SdmGoal = {
+            environment: "prod",
+            name: "deployToProd",
+            preConditions: [{
+                environment: "test",
+                name: "deployToTest",
+            }],
+            ts: Date.now(),
+        };
 
-        const sortedGoals = sortGoals(_.shuffle(goals));
-        console.log(sortedGoals.map(e => `${e.environment}\n${e.goals.map(g => `${g.name}`).join("\n")}`).join("\n\n"));
-        console.log("\n");
+        const sortedGoals = sortGoals(_.shuffle([goal0, goal1, goal2, goal3, goal4, goal5]));
+        assert.equal(sortedGoals.length, 3);
+        assert.equal(sortedGoals[0].environment, "code");
+        assert.equal(sortedGoals[1].environment, "test");
+        assert.equal(sortedGoals[2].environment, "prod");
+        assert.deepEqual(sortedGoals[0].goals, [goal1, goal0, goal2, goal3]);
+        assert.deepEqual(sortedGoals[1].goals, [goal4]);
+        assert.deepEqual(sortedGoals[2].goals, [goal5]);
+    });
+
+    it("sort goals for only one environment", () => {
+        const goal1: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "build",
+            ts: Date.now(),
+        };
+        const goal2: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "docker build",
+            preConditions: [{
+                environment: "code",
+                name: "build",
+            }],
+            ts: Date.now(),
+        };
+
+        const sortedGoals = sortGoals(_.shuffle([goal1, goal2]));
+        assert.equal(sortedGoals.length, 1);
+        assert.equal(sortedGoals[0].environment, "code");
+        assert.deepEqual(sortedGoals[0].goals, [goal1, goal2]);
+    });
+
+    it("handle cycle properly", () => {
+        const goal1: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "build",
+            preConditions: [{
+                environment: "code",
+                name: "docker build",
+            }],
+            ts: Date.now(),
+        };
+        const goal2: SdmGoalsByCommit.SdmGoal = {
+            environment: "code",
+            name: "docker build",
+            preConditions: [{
+                environment: "code",
+                name: "build",
+            }],
+            ts: Date.now(),
+        };
+
+        try {
+            sortGoals(_.shuffle([goal1, goal2]));
+        } catch (err) {
+            assert(err.message.indexOf("Cyclic dependency") >= 0);
+        }
 
     });
 

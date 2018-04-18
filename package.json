@@ -46,6 +46,7 @@
     "semver": "^5.4.1",
     "shortid": "^2.2.8",
     "stripchar": "^1.2.1",
+    "toposort": "^1.0.6",
     "urijs": "^1.19.1",
     "winston-logzio": "^1.0.3",
     "zen-observable": "^0.8.0"
