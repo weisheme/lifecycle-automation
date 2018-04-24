@@ -144,7 +144,7 @@ export function prNotification(id: string,
                                     text,
                                     attachments: [
                                         {
-                                            author_name: `@${pr.author.login}`,
+                                            author_name: `@${author.login}`,
                                             author_link: userUrl(repo, author.login),
                                             author_icon: avatarUrl(repo, author.login),
                                             text: removeAtomistMarkers(linkIssues(b, repo)),
