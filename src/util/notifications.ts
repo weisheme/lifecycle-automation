@@ -116,7 +116,8 @@ export function prNotification(id: string,
                                author: graphql.NotifyMentionedOnPullRequest.Author,
                                pr: graphql.NotifyMentionedOnPullRequest.PullRequest,
                                repo: graphql.NotifyMentionedOnPullRequest.Repo,
-                               ctx: HandlerContext): Promise<any[]> {
+                               ctx: HandlerContext,
+                               actions?: Action[]): Promise<any[]> {
 
     // Don't send any DMs for generated comments/issues/bodies
     if (body.includes(AtomistGeneratedLabel)) {
@@ -152,6 +153,7 @@ export function prNotification(id: string,
                                             footer: repoAndChannelFooter(repo),
                                             footer_icon,
                                             ts: Math.floor(Date.now() / 1000),
+                                            actions,
                                         },
                                     ],
                                 };

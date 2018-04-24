@@ -25,8 +25,12 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import { subscription } from "@atomist/automation-client/graph/graphQL";
+import { buttonForCommand } from "@atomist/automation-client/spi/message/MessageClient";
+import { Action } from "@atomist/slack-messages";
 import * as graphql from "../../../typings/types";
 import { prNotification } from "../../../util/notifications";
+import { CommentGitHubIssue } from "../../command/github/CommentGitHubIssue";
+import { ReactGitHubIssueComment } from "../../command/github/ReactGitHubIssueComment";
 
 @EventHandler("Notify mentioned user in slack", subscription("notifyMentionedOnPullRequestComment"))
 @Tags("lifecycle", "pr comment", "notification")
@@ -47,4 +51,28 @@ export class NotifyMentionedOnPullRequestComment
             return Promise.resolve(Success);
         }
     }
+}
+
+/**
+ * Add comment and +1 action into the DM
+ * @param {NotifyMentionedOnPullRequestComment.Comment} comment
+ * @returns {Action[]}
+ */
+function createActions(comment: graphql.NotifyMentionedOnPullRequestComment.Comment): Action[] {
+
+    const commentIssue = new CommentGitHubIssue();
+    commentIssue.owner = comment.pullRequest.repo.owner;
+    commentIssue.repo = comment.pullRequest.repo.name;
+    commentIssue.issue = comment.pullRequest.number;
+
+    const reactComment = new ReactGitHubIssueComment();
+    reactComment.owner = comment.pullRequest.repo.owner;
+    reactComment.repo = comment.pullRequest.repo.name;
+    reactComment.comment = comment.gitHubId;
+    reactComment.reaction = "+1";
+
+    return [
+        buttonForCommand({ text: "Comment" }, commentIssue),
+        buttonForCommand( { text: ":+1:" }, reactComment),
+    ];
 }
