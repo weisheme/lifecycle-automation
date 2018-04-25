@@ -74,7 +74,7 @@ describe("goals", () => {
         assert.equal(sortedGoals[0].environment, "code");
         assert.equal(sortedGoals[1].environment, "test");
         assert.equal(sortedGoals[2].environment, "prod");
-        assert.deepEqual(sortedGoals[0].goals, [goal1, goal0, goal2, goal3]);
+        assert.deepEqual(sortedGoals[0].goals, [goal1, goal2, goal0, goal3]);
         assert.deepEqual(sortedGoals[1].goals, [goal4]);
         assert.deepEqual(sortedGoals[2].goals, [goal5]);
     });
