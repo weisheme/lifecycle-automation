@@ -74,7 +74,8 @@ export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWith
         const sortedGoals = toposort(goalConditions).reverse();
         env.goals = _.sortBy<SdmGoalsByCommit.SdmGoal>(env.goals, g => sortedGoals.indexOf(g.name))
             .sort((g1, g2) => {
-                if ((!g1.preConditions || g1.preConditions.length === 0) && (!g2.preConditions || g2.preConditions.length === 0)) {
+                if ((!g1.preConditions || g1.preConditions.length === 0)
+                    && (!g2.preConditions || g2.preConditions.length === 0)) {
                     return g1.name.localeCompare(g2.name);
                 } else {
                     return 0;
