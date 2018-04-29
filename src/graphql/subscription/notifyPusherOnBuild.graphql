@@ -36,6 +36,8 @@ subscription NotifyPusherOnBuild {
         provider {
           url
           apiUrl
+          providerId
+          providerType
         }
       }
       channels {

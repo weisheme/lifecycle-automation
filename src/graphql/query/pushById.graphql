@@ -115,6 +115,8 @@ query PushById($id: ID!) {
           url
           apiUrl
           gitUrl
+          providerId
+          providerType
         }
         team {
           id

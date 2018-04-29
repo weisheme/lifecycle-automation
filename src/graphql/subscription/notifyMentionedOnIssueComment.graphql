@@ -36,6 +36,8 @@ subscription NotifyMentionedOnIssueComment {
         org {
           provider {
             url
+            providerId
+            providerType
           }
         }
         channels {

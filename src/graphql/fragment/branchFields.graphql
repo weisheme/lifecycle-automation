@@ -34,6 +34,8 @@ fragment BranchFields on Branch {
         id
         apiUrl
         url
+        providerId
+        providerType
       }
     }
   }

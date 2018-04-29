@@ -73,7 +73,9 @@ describe("BranchToBranchLifecycle", () => {
                             }]
                         }]
                     },
-                    "provider": {}
+                    "provider": {
+                        "providerType": "github_com"
+                    }
                 }
             },
             "timestamp": "2017-11-28T12:26:08.008Z"
@@ -256,7 +258,9 @@ describe("BranchToBranchLifecycle", () => {
                             }]
                         }]
                     },
-                    "provider": {}
+                    "provider": {
+                        "providerType": "github_com"
+                    }
                 }
             },
             "timestamp": "2017-11-28T12:26:08.008Z"

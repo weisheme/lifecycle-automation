@@ -131,7 +131,9 @@ describe("PullRequestToBranchLifecycle", () => {
                         }]
                     }]
                 },
-                "provider": null
+                "provider": {
+                    "providerType": "github_com"
+                }
             }
         },
         "timestamp": "2017-12-21T13:15:10.685Z"

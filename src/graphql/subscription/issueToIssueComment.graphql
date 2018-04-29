@@ -17,6 +17,8 @@ subscription IssueToIssueCommentLifecycle {
         provider {
           apiUrl
           url
+          providerId
+          providerType
         }
         team {
           id

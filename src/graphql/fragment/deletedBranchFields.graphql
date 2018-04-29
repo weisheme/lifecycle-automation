@@ -34,6 +34,8 @@ fragment DeletedBranchFields on DeletedBranch {
         id
         apiUrl
         url
+        providerId
+        providerType
       }
     }
   }

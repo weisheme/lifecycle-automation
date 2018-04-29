@@ -35,6 +35,8 @@ query BranchWithPullRequest($id: ID!) {
           id
           apiUrl
           url
+          providerId
+          providerType
         }
       }
     }

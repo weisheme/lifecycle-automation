@@ -114,6 +114,8 @@ fragment PushFields on Push {
         url
         apiUrl
         gitUrl
+        providerId
+        providerType
       }
       team {
         id

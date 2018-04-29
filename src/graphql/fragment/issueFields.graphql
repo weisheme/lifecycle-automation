@@ -53,6 +53,7 @@ fragment IssueFields on Issue {
         gitUrl
         url
         providerId
+        providerType
       }
       team {
         id

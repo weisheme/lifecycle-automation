@@ -37,6 +37,8 @@ subscription NotifyMentionedOnPullRequestComment {
         org {
           provider {
             url
+            providerId
+            providerType
           }
         }
         channels {

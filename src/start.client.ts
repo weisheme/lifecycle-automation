@@ -16,11 +16,9 @@
 
 import { automationClient } from "@atomist/automation-client/automationClient";
 import {
-    findConfiguration,
     loadConfiguration,
 } from "@atomist/automation-client/configuration";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { enableDefaultScanning } from "@atomist/automation-client/scan";
 import {
     loadSecretsFromCloudFoundryEnvironment,
     loadSecretsFromConfigServer,

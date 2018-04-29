@@ -82,6 +82,8 @@ subscription NotifyMentionedOnPullRequest {
           apiUrl
           gitUrl
           url
+          providerId
+          providerType
         }
       }
     }

@@ -18,6 +18,8 @@ subscription PullRequestToPullRequestCommentLifecycle {
         provider {
           apiUrl
           url
+          providerId
+          providerType
         }
         team {
           id
