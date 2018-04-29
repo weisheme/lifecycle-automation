@@ -28,6 +28,7 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import * as slack from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 
@@ -41,13 +42,30 @@ import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
 import { linkSlackChannelToRepo } from "./LinkRepo";
 
-export function checkRepo(token: string, url: string, provider: string, repo: string, owner: string): Promise<boolean> {
-    if (provider === "bitbucketcloud" || provider === "bitbucket") {
-        return Promise.resolve(true);
-    } else {
-        return github.api(token, url).repos.get({ owner, repo })
-            .then(() => true, () => false);
-    }
+export function checkRepo(token: string,
+                          url: string,
+                          providerId: string,
+                          name: string,
+                          owner: string,
+                          ctx: HandlerContext): Promise<boolean> {
+    return ctx.graphClient.query<graphql.ProviderTypeFromRepo.Query, graphql.ProviderTypeFromRepo.Variables>({
+        name: "providerTypeFromRepo",
+        variables: {
+            name,
+            owner,
+            providerId,
+        },
+        options: QueryNoCacheOptions,
+    })
+    .then(result => {
+        const provider = _.get(result, "Repo[0].org.provider.providerType");
+        if (provider === "bitbucket_cloud" || provider === "bitbucket") {
+            return Promise.resolve(true);
+        } else {
+            return github.api(token, url).repos.get({ owner, repo: name })
+                .then(() => true, () => false);
+        }
+    })
 }
 
 export function noRepoMessage(repo: string, owner: string, ctx: HandlerContext): slack.SlackMessage {
@@ -120,26 +138,14 @@ export class AssociateRepo implements HandleCommand {
             return ctx.messageClient.respond(err)
                 .then(() => Success, failure);
         }
-        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.repo, this.owner)
+        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.repo, this.owner, ctx)
             .then(repoExists => {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx));
                 }
                 return addBotToSlackChannel(ctx, this.teamId, this.channelId)
-                    .then(() => {
-                        return ctx.graphClient.query<graphql.ProviderIdFromOrg.Query,
-                            graphql.ProviderIdFromOrg.Variables>({
-                                name: "providerIdFromOrg",
-                                variables: {
-                                    owner: this.owner,
-                                },
-                            })
-                            .then(result => {
-                                const providerId = _.get(result, "Org[0].provider.providerId");
-                                return linkSlackChannelToRepo(
-                                    ctx, this.teamId, this.channelId, this.repo, this.owner, providerId);
-                            });
-                    })
+                    .then(() => linkSlackChannelToRepo(
+                                ctx, this.teamId, this.channelId, this.repo, this.owner, this.provider))
                     .then(() => inviteUserToSlackChannel(ctx, this.teamId, this.channelId, this.userId))
                     .then(() => {
                         const msg = `Linked ${slack.bold(this.owner + "/" + this.repo)} to ` +

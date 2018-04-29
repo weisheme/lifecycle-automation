@@ -115,29 +115,19 @@ export class LinkRepo implements HandleCommand {
             return ctx.messageClient.addressChannels(err, this.channelName)
                 .then(() => Success, failure);
         }
-        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.name, this.owner)
+        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.name, this.owner, ctx)
             .then(repoExists => {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));
                 }
-                return ctx.graphClient.query<graphql.ProviderIdFromOrg.Query,
-                    graphql.ProviderIdFromOrg.Variables>({
-                        name: "providerIdFromOrg",
-                        variables: {
-                            owner: this.owner,
-                        },
-                    })
-                    .then(result => {
-                        const providerId = _.get(result, "Org[0].provider.providerId");
-                        return linkSlackChannelToRepo(
-                            ctx, this.teamId, this.channelId, this.name, this.owner, providerId)
-                            .then(() => {
-                                if (this.msgId) {
-                                    return ctx.messageClient.addressChannels(
-                                        this.msg, this.channelName, { id: this.msgId });
-                                }
-                                return Success;
-                            });
+                return linkSlackChannelToRepo(
+                    ctx, this.teamId, this.channelId, this.name, this.owner, this.provider)
+                    .then(() => {
+                        if (this.msgId) {
+                            return ctx.messageClient.addressChannels(
+                                this.msg, this.channelName, { id: this.msgId });
+                        }
+                        return Success;
                     });
             })
             .then(() => Success, failure);

@@ -79,7 +79,7 @@ export class UnlinkRepo implements HandleCommand {
     public msgId: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.name, this.owner)
+        return checkRepo(this.githubToken, this.apiUrl, this.provider, this.name, this.owner, ctx)
             .then(repoExists => {
                 if (!repoExists) {
                     return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));
