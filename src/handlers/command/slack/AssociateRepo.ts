@@ -65,7 +65,7 @@ export function checkRepo(token: string,
             return github.api(token, url).repos.get({ owner, repo: name })
                 .then(() => true, () => false);
         }
-    })
+    });
 }
 
 export function noRepoMessage(repo: string, owner: string, ctx: HandlerContext): slack.SlackMessage {

@@ -1,4 +1,8 @@
-query ProviderTypeFromRepo($name: String!, $owner: String!, $providerId: String!){
+query ProviderTypeFromRepo(
+  $name: String!
+  $owner: String!
+  $providerId: String!
+) {
   Repo(name: $name) {
     org(owner: $owner) @required {
       owner
