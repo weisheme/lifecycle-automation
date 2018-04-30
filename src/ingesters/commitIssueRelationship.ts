@@ -47,8 +47,9 @@ export const commitIssueRelationshipIngester: IngesterBuilder = ingester(CommitI
         .withStringField("owner", "", ["compositeId"])
         .withStringField("repo", "", ["compositeId"])
         .withStringField("sha", "", ["compositeId"]))
-    .withEnum(buildEnum("type", ["fixes", "references"]))
+    .withEnum(buildEnum("CommitIssueRelationshipType", ["fixes", "references"]))
     .withType(buildType("CommitIssueRelationship")
+        .withEnumField("type", "CommitIssueRelationshipType")
         .withObjectField(
             "commit",
             "CommitIssueRelationshipCommit",

@@ -45,5 +45,8 @@ export const deploymentIngester: IngesterBuilder = ingester(DeploymentRootType)
             "DeploymentCommit",
             "The commit that got deployed",
             ["owner", "repo", "sha"])
-        .withStringField("environment", "", ["compositeId"])
+        .withStringField(
+            "environment",
+            "The name of environment the commit got deployed",
+            ["compositeId"])
         .withIntField("ts"));
