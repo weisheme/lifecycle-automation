@@ -17,4 +17,3 @@ subscription DeploymentOnK8Pod {
     }
   }
 }
-
