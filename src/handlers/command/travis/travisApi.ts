@@ -19,7 +19,7 @@ import axios from "axios";
 export function retrieveToken(apiUrl: string,
                               owner: string,
                               repo: string,
-                              githubToken: string): Promise<string> {
+                              githubToken: string): Promise<{ tld: string, token: string }> {
     let tld = "com";
     return axios.get(`${apiUrl}repos/${owner}/${repo}`,
         { headers: { Authorization: `token ${githubToken}` } })
@@ -41,6 +41,6 @@ export function retrieveToken(apiUrl: string,
                 });
         })
         .then(response => {
-            return response.data.access_token;
+            return { tld, token: response.data.access_token };
         });
 }

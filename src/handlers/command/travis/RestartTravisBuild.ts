@@ -67,15 +67,14 @@ export class RestartTravisBuild implements HandleCommand {
     public githubToken: string;
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
-        const tld = "com";
         return retrieveToken(this.apiUrl, this.owner, this.repo, this.githubToken)
-            .then(token => {
-                return axios.post(`https://api.travis-ci.${tld}/builds/${this.buildId}/restart`,
+            .then(response => {
+                return axios.post(`https://api.travis-ci.${response.tld}/builds/${this.buildId}/restart`,
                     {},
                     {
                         headers: {
                             "Accept": "application/vnd.travis-ci.2+json",
-                            "Authorization": `token ${token}`,
+                            "Authorization": `token ${response.token}`,
                             "User-Agent": "Travis/1.6.8",
                         },
                     });
