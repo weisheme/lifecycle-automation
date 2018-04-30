@@ -3885,6 +3885,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "containersCrashLoopBackOff",
+                  "description": "containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "resourceVersion",
                   "description": "resourceVersion of K8Pod",
                   "type": {
@@ -4063,6 +4073,20 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "containersCrashLoopBackOffs",
+                  "description": "containersCrashLoopBackOffs is list variant of containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "resourceVersions",
                   "description": "resourceVersions is list variant of resourceVersion of K8Pod",
                   "type": {
@@ -4212,6 +4236,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "stateReason",
+                  "description": "stateReason of K8Container",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "ready",
                   "description": "ready of K8Container",
                   "type": {
@@ -4334,6 +4368,20 @@
                 {
                   "name": "states",
                   "description": "states is list variant of state of K8Container",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "stateReasons",
+                  "description": "stateReasons is list variant of stateReason of K8Container",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -8420,6 +8468,121 @@
               "deprecationReason": null
             },
             {
+              "name": "AtomistLog",
+              "description": "Auto-generated query for AtomistLog",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AtomistLog"
+                }
+              },
+              "args": [
+                {
+                  "name": "id",
+                  "description": "The ID of this AtomistLog",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ID"
+                  }
+                },
+                {
+                  "name": "_offset",
+                  "description": "Paging offset (default 0)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_first",
+                  "description": "Return the first X results (default 10)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_orderBy",
+                  "description": "Name of property to sort on",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_ordering",
+                  "description": "Direction of ordering",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "_Ordering"
+                  }
+                },
+                {
+                  "name": "_search",
+                  "description": "Elastic Search simple full text search syntax",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                },
+                {
+                  "name": "timestamp",
+                  "description": "Status timestamp",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int"
+                    }
+                  }
+                },
+                {
+                  "name": "team_id",
+                  "description": "Team ID for which log message is produced",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "level",
+                  "description": "Log message level: debug, info, warn, error, fatal",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "message",
+                  "description": "Log message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                }
+              ]
+            },
+            {
               "name": "Card",
               "description": "Auto-generated query for Card",
               "type": {
@@ -8542,6 +8705,133 @@
                 },
                 {
                   "name": "shortTitle",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Message",
+              "description": "Auto-generated query for Message",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Message"
+                }
+              },
+              "args": [
+                {
+                  "name": "id",
+                  "description": "The ID of this Message",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ID"
+                  }
+                },
+                {
+                  "name": "_offset",
+                  "description": "Paging offset (default 0)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_first",
+                  "description": "Return the first X results (default 10)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_orderBy",
+                  "description": "Name of property to sort on",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_ordering",
+                  "description": "Direction of ordering",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "_Ordering"
+                  }
+                },
+                {
+                  "name": "_search",
+                  "description": "Elastic Search simple full text search syntax",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                },
+                {
+                  "name": "ts",
+                  "description": "Timestamp of the message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int"
+                    }
+                  }
+                },
+                {
+                  "name": "key",
+                  "description": "Key of the message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "trigger",
+                  "description": "Trigger (event or command) that caused this message to render",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "options",
+                  "description": "Serialized message options",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "message",
+                  "description": "Serialized message",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -8854,6 +9144,18 @@
                   }
                 },
                 {
+                  "name": "goalSetId",
+                  "description": "Id if goal set execution",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
                   "name": "ts",
                   "description": "Timestamp of goal",
                   "type": {
@@ -8880,6 +9182,18 @@
                 {
                   "name": "retryFeasible",
                   "description": "Goal can be retried",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean"
+                    }
+                  }
+                },
+                {
+                  "name": "approvalRequired",
+                  "description": "Does this goal require manual approval",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -8971,6 +9285,18 @@
                 {
                   "name": "sha",
                   "description": "Commit sha",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "branch",
+                  "description": "Branch of commit",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -9074,6 +9400,163 @@
               ]
             },
             {
+              "name": "CommitIssueRelationship",
+              "description": "Auto-generated query for CommitIssueRelationship",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CommitIssueRelationship"
+                }
+              },
+              "args": [
+                {
+                  "name": "id",
+                  "description": "The ID of this CommitIssueRelationship",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ID"
+                  }
+                },
+                {
+                  "name": "_offset",
+                  "description": "Paging offset (default 0)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_first",
+                  "description": "Return the first X results (default 10)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_orderBy",
+                  "description": "Name of property to sort on",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_ordering",
+                  "description": "Direction of ordering",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "_Ordering"
+                  }
+                },
+                {
+                  "name": "_search",
+                  "description": "Elastic Search simple full text search syntax",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Deployment",
+              "description": "Auto-generated query for Deployment",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Deployment"
+                }
+              },
+              "args": [
+                {
+                  "name": "id",
+                  "description": "The ID of this Deployment",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ID"
+                  }
+                },
+                {
+                  "name": "_offset",
+                  "description": "Paging offset (default 0)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_first",
+                  "description": "Return the first X results (default 10)",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_orderBy",
+                  "description": "Name of property to sort on",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "_ordering",
+                  "description": "Direction of ordering",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "_Ordering"
+                  }
+                },
+                {
+                  "name": "_search",
+                  "description": "Elastic Search simple full text search syntax",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                },
+                {
+                  "name": "environment",
+                  "description": "The name of environment the commit got deployed",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "ts",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int"
+                    }
+                  }
+                }
+              ]
+            },
+            {
               "name": "IssueRelationship",
               "description": "Auto-generated query for IssueRelationship",
               "type": {
@@ -9165,6 +9648,28 @@
                   "name": "state",
                   "type": {
                     "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "commitBySha",
+              "description": "Find a commit by sha",
+              "type": {
+                "kind": "OBJECT",
+                "name": "Commit"
+              },
+              "args": [
+                {
+                  "name": "sha",
+                  "description": "The sha of the commit",
+                  "type": {
+                    "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
                       "kind": "SCALAR",
@@ -34533,6 +35038,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "containersCrashLoopBackOff",
+                  "description": "containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "resourceVersion",
                   "description": "resourceVersion of K8Pod",
                   "type": {
@@ -34705,6 +35220,20 @@
                     "ofType": {
                       "kind": "SCALAR",
                       "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "containersCrashLoopBackOffs",
+                  "description": "containersCrashLoopBackOffs is list variant of containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
                       "ofType": null
                     }
                   },
@@ -35007,6 +35536,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "stateReason",
+                  "description": "stateReason of K8Container",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "ready",
                   "description": "ready of K8Container",
                   "type": {
@@ -35129,6 +35668,20 @@
                 {
                   "name": "states",
                   "description": "states is list variant of state of K8Container",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "stateReasons",
+                  "description": "stateReasons is list variant of stateReason of K8Container",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -35449,6 +36002,18 @@
               "deprecationReason": null
             },
             {
+              "name": "containersCrashLoopBackOff",
+              "description": "containersCrashLoopBackOff of  K8Pod",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "resourceVersion",
               "description": "resourceVersion of  K8Pod",
               "args": [],
@@ -35672,6 +36237,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "stateReason",
+                  "description": "stateReason of K8Container",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "ready",
                   "description": "ready of K8Container",
                   "type": {
@@ -35794,6 +36369,20 @@
                 {
                   "name": "states",
                   "description": "states is list variant of state of K8Container",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "stateReasons",
+                  "description": "stateReasons is list variant of stateReason of K8Container",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -36101,6 +36690,18 @@
               "deprecationReason": null
             },
             {
+              "name": "stateReason",
+              "description": "stateReason of  K8Container",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "ready",
               "description": "ready of  K8Container",
               "args": [],
@@ -36384,6 +36985,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "containersCrashLoopBackOff",
+                  "description": "containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "resourceVersion",
                   "description": "resourceVersion of K8Pod",
                   "type": {
@@ -36556,6 +37167,20 @@
                     "ofType": {
                       "kind": "SCALAR",
                       "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "containersCrashLoopBackOffs",
+                  "description": "containersCrashLoopBackOffs is list variant of containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
                       "ofType": null
                     }
                   },
@@ -36769,6 +37394,18 @@
               "deprecationReason": null
             },
             {
+              "name": "containersCrashLoopBackOff_asc",
+              "description": "Ascending sort for containersCrashLoopBackOff",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "containersCrashLoopBackOff_desc",
+              "description": "Descending sort for containersCrashLoopBackOff",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "resourceVersion_asc",
               "description": "Ascending sort for resourceVersion",
               "isDeprecated": false,
@@ -36872,6 +37509,18 @@
             {
               "name": "state_desc",
               "description": "Descending sort for state",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stateReason_asc",
+              "description": "Ascending sort for stateReason",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stateReason_desc",
+              "description": "Descending sort for stateReason",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -47304,1724 +47953,6 @@
         },
         {
           "kind": "OBJECT",
-          "name": "CardRepository",
-          "fields": [
-            {
-              "name": "owner",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "slug",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardCollaborator",
-          "fields": [
-            {
-              "name": "avatar",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "login",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "link",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardProvenance",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "Card",
-          "fields": [
-            {
-              "name": "ts",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int"
-              },
-              "args": []
-            },
-            {
-              "name": "ttl",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int"
-              },
-              "args": []
-            },
-            {
-              "name": "post",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "key",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Key of the Card",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "repository",
-              "args": [
-                {
-                  "name": "slug",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "name",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "owner",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "CardRepository"
-              },
-              "description": "Repository this card was created for"
-            },
-            {
-              "name": "type",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "shortTitle",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "title",
-              "type": {
-                "kind": "OBJECT",
-                "name": "CardTitle"
-              },
-              "args": []
-            },
-            {
-              "name": "body",
-              "type": {
-                "kind": "OBJECT",
-                "name": "CardBody"
-              },
-              "args": []
-            },
-            {
-              "name": "correlations",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardCorrelation"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "collaborators",
-              "args": [
-                {
-                  "name": "login",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardCollaborator"
-                }
-              },
-              "description": "Collaborator on this card"
-            },
-            {
-              "name": "events",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardEvent"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "actions",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardAction"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "actionGroups",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardActionGroup"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "comments",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardBody"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "reactions",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardReaction"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "provenance",
-              "args": [
-                {
-                  "name": "name",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardProvenance"
-                }
-              },
-              "description": "Provenance information about what automation created or modified this card"
-            },
-            {
-              "name": "id",
-              "description": "The ID of this Card",
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardTitle",
-          "fields": [
-            {
-              "name": "icon",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "text",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardBody",
-          "fields": [
-            {
-              "name": "avatar",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "login",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "text",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "hint",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "ts",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardReaction",
-          "fields": [
-            {
-              "name": "avatar",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "login",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "reaction",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardCorrelation",
-          "fields": [
-            {
-              "name": "type",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "icon",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "title",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "shortTitle",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "link",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "body",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CorrelationBody"
-                }
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CorrelationBody",
-          "fields": [
-            {
-              "name": "icon",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "text",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardEvent",
-          "fields": [
-            {
-              "name": "icon",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "text",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "ts",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int"
-              },
-              "args": []
-            },
-            {
-              "name": "actions",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardAction"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "actionGroups",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardActionGroup"
-                }
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardAction",
-          "fields": [
-            {
-              "name": "text",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "type",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "registration",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "command",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "role",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "parameters",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardActionParameter"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "parameterName",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "parameterOptions",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardActionParameterOption"
-                }
-              },
-              "args": []
-            },
-            {
-              "name": "parameterOptionGroups",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardActionParameterOptionGroup"
-                }
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardActionGroup",
-          "fields": [
-            {
-              "name": "text",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "actions",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardAction"
-                }
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardActionParameter",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "value",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardActionParameterOption",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "value",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CardActionParameterOptionGroup",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "options",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CardActionParameterOption"
-                }
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmDeployEnablement",
-          "fields": [
-            {
-              "name": "owner",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "The name of the repo owner (org or user)",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "repo",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "The name of the repo",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "providerId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "The internal providerId of the org/repo",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "state",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "State of deploy enablement (requested or disabled)",
-              "args": []
-            },
-            {
-              "name": "id",
-              "description": "The ID of this SdmDeployEnablement",
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmRepository",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "owner",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "providerId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmCondition",
-          "fields": [
-            {
-              "name": "environment",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmProvenance",
-          "fields": [
-            {
-              "name": "correlationId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "registration",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "version",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "ts",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int"
-              },
-              "args": []
-            },
-            {
-              "name": "userId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "channelId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmGoalFulfillment",
-          "fields": [
-            {
-              "name": "method",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmGoal",
-          "fields": [
-            {
-              "name": "environment",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Environment the goal runs in",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "uniqueName",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Unique name of the goal",
-              "args": []
-            },
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Name of the goal",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "sha",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Commit that the goal belongs to",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "branch",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Branch of the goal's commit",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "repo",
-              "args": [
-                {
-                  "name": "name",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "owner",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "providerId",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "SdmRepository"
-              },
-              "description": "Repository the commit was observed from"
-            },
-            {
-              "name": "fulfillment",
-              "args": [
-                {
-                  "name": "method",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "name",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "SdmGoalFulfillment"
-              },
-              "description": "How the goal gets fulfilled"
-            },
-            {
-              "name": "description",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Description of the goal",
-              "args": []
-            },
-            {
-              "name": "url",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "URL of the goal",
-              "args": []
-            },
-            {
-              "name": "state",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "State of goal",
-              "args": []
-            },
-            {
-              "name": "externalKey",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "key to a corresponding commit status in GitHub/BitBucket (optional)",
-              "args": []
-            },
-            {
-              "name": "goalSet",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Goal set the goal is a part of",
-              "args": []
-            },
-            {
-              "name": "ts",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int"
-              },
-              "description": "Timestamp of goal",
-              "args": []
-            },
-            {
-              "name": "error",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Error occurred during goal execution",
-              "args": []
-            },
-            {
-              "name": "retryFeasible",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean"
-              },
-              "description": "Goal can be retried",
-              "args": []
-            },
-            {
-              "name": "preConditions",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "SdmCondition"
-                }
-              },
-              "description": "Preconditions of goal",
-              "args": []
-            },
-            {
-              "name": "approval",
-              "type": {
-                "kind": "OBJECT",
-                "name": "SdmProvenance"
-              },
-              "description": "Where and how the goal was approved",
-              "args": []
-            },
-            {
-              "name": "provenance",
-              "type": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "SdmProvenance"
-                }
-              },
-              "description": "Changes to goal",
-              "args": []
-            },
-            {
-              "name": "data",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Serialized data of the goal execution",
-              "args": []
-            },
-            {
-              "name": "id",
-              "description": "The ID of this SdmGoal",
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmVersionRepository",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "owner",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "providerId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmVersion",
-          "fields": [
-            {
-              "name": "sha",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Commit sha",
-              "args": []
-            },
-            {
-              "name": "version",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Version associated with a commit",
-              "args": []
-            },
-            {
-              "name": "repo",
-              "args": [
-                {
-                  "name": "name",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "owner",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "providerId",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "SdmVersionRepository"
-              },
-              "description": "Repository the commit/version was observed from"
-            },
-            {
-              "name": "id",
-              "description": "The ID of this SdmVersion",
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmBuildIdentifierRepository",
-          "fields": [
-            {
-              "name": "name",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "owner",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "providerId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SdmBuildIdentifier",
-          "fields": [
-            {
-              "name": "identifier",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Identifier of build",
-              "args": []
-            },
-            {
-              "name": "repo",
-              "args": [
-                {
-                  "name": "name",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "directives": [
-                    {
-                      "name": "compositeId"
-                    }
-                  ],
-                  "defaultValue": null
-                },
-                {
-                  "name": "owner",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "directives": [
-                    {
-                      "name": "compositeId"
-                    }
-                  ],
-                  "defaultValue": null
-                },
-                {
-                  "name": "providerId",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "directives": [
-                    {
-                      "name": "compositeId"
-                    }
-                  ],
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "SdmBuildIdentifierRepository"
-              },
-              "description": "Repository the commit/version was observed from"
-            },
-            {
-              "name": "id",
-              "description": "The ID of this SdmBuildIdentifier",
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "IssueRelationshipIssue",
-          "fields": [
-            {
-              "name": "owner",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "repo",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "issue",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "OBJECT",
-          "name": "IssueRelationship",
-          "fields": [
-            {
-              "name": "relationshipId",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "description": "Unique id of the issue relationship",
-              "directives": [
-                {
-                  "name": "compositeId"
-                }
-              ],
-              "args": []
-            },
-            {
-              "name": "type",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "state",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              },
-              "args": []
-            },
-            {
-              "name": "source",
-              "args": [
-                {
-                  "name": "owner",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "repo",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "issue",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "IssueRelationshipIssue"
-              },
-              "description": "The source issue of the relationship"
-            },
-            {
-              "name": "target",
-              "args": [
-                {
-                  "name": "owner",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "repo",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "issue",
-                  "type": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String"
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "IssueRelationshipIssue"
-              },
-              "description": "The target issue of the relationship"
-            },
-            {
-              "name": "id",
-              "description": "The ID of this IssueRelationship",
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID"
-              },
-              "args": []
-            }
-          ],
-          "interfaces": []
-        },
-        {
-          "kind": "ENUM",
-          "name": "_Ordering",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "description": "asc or desc ordering. Must be used with orderBy",
-          "enumValues": [
-            {
-              "name": "desc",
-              "description": "Descending order",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "asc",
-              "description": "Ascending order",
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ]
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UserPreference",
-          "description": "A user's preferences as key/value pairs",
-          "interfaces": [],
-          "fields": [
-            {
-              "name": "name",
-              "description": "The name of the preference",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              }
-            },
-            {
-              "name": "value",
-              "description": "The value of the preference",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "OBJECT",
-          "name": "PersonPreference",
-          "description": "A person's preferences as key/value pairs",
-          "interfaces": [],
-          "fields": [
-            {
-              "name": "name",
-              "description": "The name of the preference",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              }
-            },
-            {
-              "name": "value",
-              "description": "The value of the preference",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "OBJECT",
-          "name": "TeamPreference",
-          "description": "A team's preferences as key/value pairs",
-          "interfaces": [],
-          "fields": [
-            {
-              "name": "name",
-              "description": "The name of the preference",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              }
-            },
-            {
-              "name": "value",
-              "description": "The value of the preference",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "OBJECT",
           "name": "SubscriptionType",
           "description": null,
           "fields": [
@@ -52894,6 +51825,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "containersCrashLoopBackOff",
+                  "description": "containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "resourceVersion",
                   "description": "resourceVersion of K8Pod",
                   "type": {
@@ -53072,6 +52013,20 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "containersCrashLoopBackOffs",
+                  "description": "containersCrashLoopBackOffs is list variant of containersCrashLoopBackOff of K8Pod",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "resourceVersions",
                   "description": "resourceVersions is list variant of resourceVersion of K8Pod",
                   "type": {
@@ -53221,6 +52176,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "stateReason",
+                  "description": "stateReason of K8Container",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "ready",
                   "description": "ready of K8Container",
                   "type": {
@@ -53343,6 +52308,20 @@
                 {
                   "name": "states",
                   "description": "states is list variant of state of K8Container",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "stateReasons",
+                  "description": "stateReasons is list variant of stateReason of K8Container",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -57429,8 +56408,70 @@
               "deprecationReason": null
             },
             {
+              "name": "AtomistLog",
+              "description": "Auto-generated subscription for AtomistLog",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AtomistLog"
+                }
+              },
+              "args": [
+                {
+                  "name": "timestamp",
+                  "description": "Status timestamp",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int"
+                    }
+                  }
+                },
+                {
+                  "name": "team_id",
+                  "description": "Team ID for which log message is produced",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "level",
+                  "description": "Log message level: debug, info, warn, error, fatal",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "message",
+                  "description": "Log message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                }
+              ]
+            },
+            {
               "name": "Card",
-              "description": "Auto-generated query for Card",
+              "description": "Auto-generated subscription for Card",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -57440,59 +56481,6 @@
                 }
               },
               "args": [
-                {
-                  "name": "id",
-                  "description": "The ID of this Card",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID"
-                  }
-                },
-                {
-                  "name": "_offset",
-                  "description": "Paging offset (default 0)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_first",
-                  "description": "Return the first X results (default 10)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_orderBy",
-                  "description": "Name of property to sort on",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_ordering",
-                  "description": "Direction of ordering",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "_Ordering"
-                  }
-                },
-                {
-                  "name": "_search",
-                  "description": "Elastic Search simple full text search syntax",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  }
-                },
                 {
                   "name": "ts",
                   "type": {
@@ -57563,8 +56551,82 @@
               ]
             },
             {
+              "name": "Message",
+              "description": "Auto-generated subscription for Message",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Message"
+                }
+              },
+              "args": [
+                {
+                  "name": "ts",
+                  "description": "Timestamp of the message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int"
+                    }
+                  }
+                },
+                {
+                  "name": "key",
+                  "description": "Key of the message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "trigger",
+                  "description": "Trigger (event or command) that caused this message to render",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "options",
+                  "description": "Serialized message options",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "message",
+                  "description": "Serialized message",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                }
+              ]
+            },
+            {
               "name": "SdmDeployEnablement",
-              "description": "Auto-generated query for SdmDeployEnablement",
+              "description": "Auto-generated subscription for SdmDeployEnablement",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -57574,59 +56636,6 @@
                 }
               },
               "args": [
-                {
-                  "name": "id",
-                  "description": "The ID of this SdmDeployEnablement",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID"
-                  }
-                },
-                {
-                  "name": "_offset",
-                  "description": "Paging offset (default 0)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_first",
-                  "description": "Return the first X results (default 10)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_orderBy",
-                  "description": "Name of property to sort on",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_ordering",
-                  "description": "Direction of ordering",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "_Ordering"
-                  }
-                },
-                {
-                  "name": "_search",
-                  "description": "Elastic Search simple full text search syntax",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  }
-                },
                 {
                   "name": "owner",
                   "description": "The name of the repo owner (org or user)",
@@ -57679,7 +56688,7 @@
             },
             {
               "name": "SdmGoal",
-              "description": "Auto-generated query for SdmGoal",
+              "description": "Auto-generated subscription for SdmGoal",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -57689,59 +56698,6 @@
                 }
               },
               "args": [
-                {
-                  "name": "id",
-                  "description": "The ID of this SdmGoal",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID"
-                  }
-                },
-                {
-                  "name": "_offset",
-                  "description": "Paging offset (default 0)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_first",
-                  "description": "Return the first X results (default 10)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_orderBy",
-                  "description": "Name of property to sort on",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_ordering",
-                  "description": "Direction of ordering",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "_Ordering"
-                  }
-                },
-                {
-                  "name": "_search",
-                  "description": "Elastic Search simple full text search syntax",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  }
-                },
                 {
                   "name": "environment",
                   "description": "Environment the goal runs in",
@@ -57863,6 +56819,18 @@
                   }
                 },
                 {
+                  "name": "goalSetId",
+                  "description": "Id if goal set execution",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
                   "name": "ts",
                   "description": "Timestamp of goal",
                   "type": {
@@ -57899,6 +56867,18 @@
                   }
                 },
                 {
+                  "name": "approvalRequired",
+                  "description": "Does this goal require manual approval",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean"
+                    }
+                  }
+                },
+                {
                   "name": "data",
                   "description": "Serialized data of the goal execution",
                   "type": {
@@ -57914,7 +56894,7 @@
             },
             {
               "name": "SdmVersion",
-              "description": "Auto-generated query for SdmVersion",
+              "description": "Auto-generated subscription for SdmVersion",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -57925,61 +56905,20 @@
               },
               "args": [
                 {
-                  "name": "id",
-                  "description": "The ID of this SdmVersion",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID"
-                  }
-                },
-                {
-                  "name": "_offset",
-                  "description": "Paging offset (default 0)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_first",
-                  "description": "Return the first X results (default 10)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_orderBy",
-                  "description": "Name of property to sort on",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_ordering",
-                  "description": "Direction of ordering",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "_Ordering"
-                  }
-                },
-                {
-                  "name": "_search",
-                  "description": "Elastic Search simple full text search syntax",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  }
-                },
-                {
                   "name": "sha",
                   "description": "Commit sha",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "branch",
+                  "description": "Branch of commit",
                   "type": {
                     "kind": "LIST",
                     "name": null,
@@ -58005,7 +56944,7 @@
             },
             {
               "name": "SdmBuildIdentifier",
-              "description": "Auto-generated query for SdmBuildIdentifier",
+              "description": "Auto-generated subscription for SdmBuildIdentifier",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -58015,59 +56954,6 @@
                 }
               },
               "args": [
-                {
-                  "name": "id",
-                  "description": "The ID of this SdmBuildIdentifier",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID"
-                  }
-                },
-                {
-                  "name": "_offset",
-                  "description": "Paging offset (default 0)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_first",
-                  "description": "Return the first X results (default 10)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_orderBy",
-                  "description": "Name of property to sort on",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_ordering",
-                  "description": "Direction of ordering",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "_Ordering"
-                  }
-                },
-                {
-                  "name": "_search",
-                  "description": "Elastic Search simple full text search syntax",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  }
-                },
                 {
                   "name": "identifier",
                   "description": "Identifier of build",
@@ -58083,8 +56969,58 @@
               ]
             },
             {
+              "name": "CommitIssueRelationship",
+              "description": "Auto-generated subscription for CommitIssueRelationship",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CommitIssueRelationship"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "Deployment",
+              "description": "Auto-generated subscription for Deployment",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Deployment"
+                }
+              },
+              "args": [
+                {
+                  "name": "environment",
+                  "description": "The name of environment the commit got deployed",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  }
+                },
+                {
+                  "name": "ts",
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int"
+                    }
+                  }
+                }
+              ]
+            },
+            {
               "name": "IssueRelationship",
-              "description": "Auto-generated query for IssueRelationship",
+              "description": "Auto-generated subscription for IssueRelationship",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -58094,59 +57030,6 @@
                 }
               },
               "args": [
-                {
-                  "name": "id",
-                  "description": "The ID of this IssueRelationship",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID"
-                  }
-                },
-                {
-                  "name": "_offset",
-                  "description": "Paging offset (default 0)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_first",
-                  "description": "Return the first X results (default 10)",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_orderBy",
-                  "description": "Name of property to sort on",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "_ordering",
-                  "description": "Direction of ordering",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "_Ordering"
-                  }
-                },
-                {
-                  "name": "_search",
-                  "description": "Elastic Search simple full text search syntax",
-                  "defaultValue": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String"
-                  }
-                },
                 {
                   "name": "relationshipId",
                   "description": "Unique id of the issue relationship",
@@ -58200,6 +57083,2531 @@
           "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "AtomistLog",
+          "description": "Atomist log messages",
+          "fields": [
+            {
+              "name": "timestamp",
+              "description": "Status timestamp",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            },
+            {
+              "name": "team_id",
+              "description": "Team ID for which log message is produced",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "level",
+              "description": "Log message level: debug, info, warn, error, fatal",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "message",
+              "description": "Log message",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "correlation_context",
+              "description": "Atomist log correlation context",
+              "args": [
+                {
+                  "name": "correlation_id",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "AtomistLogCorrelationContext"
+              }
+            },
+            {
+              "name": "id",
+              "description": "The ID of this AtomistLog",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "AtomistLogCorrelationContext",
+          "description": "Atomist log correlation context",
+          "fields": [
+            {
+              "name": "correlation_id",
+              "description": "Correlation ID",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "automation",
+              "description": "Automation for which log message is produced",
+              "type": {
+                "kind": "OBJECT",
+                "name": "AtomistLogAutomation"
+              },
+              "args": [
+                {
+                  "name": "name",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                },
+                {
+                  "name": "version",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String"
+                  }
+                }
+              ]
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "AtomistLogAutomation",
+          "description": "Automation for which log message is produced",
+          "fields": [
+            {
+              "name": "name",
+              "description": "Automation name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "version",
+              "description": "Automation description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardRepository",
+          "fields": [
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "slug",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardCollaborator",
+          "fields": [
+            {
+              "name": "avatar",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "login",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "link",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardProvenance",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Card",
+          "fields": [
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            },
+            {
+              "name": "ttl",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            },
+            {
+              "name": "post",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "key",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Key of the Card",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "repository",
+              "args": [
+                {
+                  "name": "slug",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "directives": [
+                    {
+                      "name": "searchable"
+                    }
+                  ],
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CardRepository"
+              },
+              "description": "Repository this card was created for"
+            },
+            {
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "shortTitle",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "title",
+              "type": {
+                "kind": "OBJECT",
+                "name": "CardTitle"
+              },
+              "args": []
+            },
+            {
+              "name": "body",
+              "type": {
+                "kind": "OBJECT",
+                "name": "CardBody"
+              },
+              "args": []
+            },
+            {
+              "name": "correlations",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardCorrelation"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "collaborators",
+              "args": [
+                {
+                  "name": "login",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "directives": [
+                    {
+                      "name": "searchable"
+                    }
+                  ],
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardCollaborator"
+                }
+              },
+              "description": "Collaborator on this card"
+            },
+            {
+              "name": "events",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardEvent"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "actions",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardAction"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "actionGroups",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardActionGroup"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "comments",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardBody"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "reactions",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardReaction"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "provenance",
+              "args": [
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardProvenance"
+                }
+              },
+              "description": "Provenance information about what automation created or modified this card"
+            },
+            {
+              "name": "id",
+              "description": "The ID of this Card",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardTitle",
+          "fields": [
+            {
+              "name": "icon",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardBody",
+          "fields": [
+            {
+              "name": "avatar",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "login",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "hint",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardReaction",
+          "fields": [
+            {
+              "name": "avatar",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "login",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "reaction",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardCorrelation",
+          "fields": [
+            {
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "icon",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "title",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "shortTitle",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "link",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "body",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CorrelationBody"
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CorrelationBody",
+          "fields": [
+            {
+              "name": "icon",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardEvent",
+          "fields": [
+            {
+              "name": "icon",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "searchable"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            },
+            {
+              "name": "actions",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardAction"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "actionGroups",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardActionGroup"
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardAction",
+          "fields": [
+            {
+              "name": "text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "registration",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "command",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "role",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "parameters",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardActionParameter"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "parameterName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "parameterOptions",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardActionParameterOption"
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "parameterOptionGroups",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardActionParameterOptionGroup"
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardActionGroup",
+          "fields": [
+            {
+              "name": "text",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "actions",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardAction"
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardActionParameter",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "value",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardActionParameterOption",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "value",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CardActionParameterOptionGroup",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CardActionParameterOption"
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "MessageProvenance",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Name of handler that created or modified this message",
+              "args": []
+            },
+            {
+              "name": "registration",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Name of registration that contains the handler",
+              "args": []
+            },
+            {
+              "name": "version",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Version of handler that created or modified this message",
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "MessageDestination",
+          "fields": [
+            {
+              "name": "user",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "User this message was addressed to",
+              "args": []
+            },
+            {
+              "name": "channel",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Channel this message was addressed to",
+              "args": []
+            },
+            {
+              "name": "chatTeamId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "ID of the chat team this message was addressed to",
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Message",
+          "fields": [
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "description": "Timestamp of the message",
+              "args": []
+            },
+            {
+              "name": "key",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Key of the message",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Trigger (event or command) that caused this message to render",
+              "args": []
+            },
+            {
+              "name": "options",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Serialized message options",
+              "args": []
+            },
+            {
+              "name": "message",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Serialized message",
+              "args": []
+            },
+            {
+              "name": "provenance",
+              "args": [
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "description": "Name of handler that created or modified this message",
+                  "defaultValue": null
+                },
+                {
+                  "name": "registration",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "description": "Name of registration that contains the handler",
+                  "defaultValue": null
+                },
+                {
+                  "name": "version",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "description": "Version of handler that created or modified this message",
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "MessageProvenance"
+                }
+              },
+              "description": "Provenance information about what automation created or modified this message"
+            },
+            {
+              "name": "destination",
+              "args": [
+                {
+                  "name": "user",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "description": "User this message was addressed to",
+                  "defaultValue": null
+                },
+                {
+                  "name": "channel",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "description": "Channel this message was addressed to",
+                  "defaultValue": null
+                },
+                {
+                  "name": "chatTeamId",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "description": "ID of the chat team this message was addressed to",
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "MessageDestination"
+                }
+              },
+              "description": "Destinations of the message"
+            },
+            {
+              "name": "id",
+              "description": "The ID of this Message",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmDeployEnablement",
+          "fields": [
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "The name of the repo owner (org or user)",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "repo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "The name of the repo",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "providerId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "The internal providerId of the org/repo",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "state",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "State of deploy enablement (requested or disabled)",
+              "args": []
+            },
+            {
+              "name": "id",
+              "description": "The ID of this SdmDeployEnablement",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmRepository",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "providerId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmCondition",
+          "fields": [
+            {
+              "name": "environment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmProvenance",
+          "fields": [
+            {
+              "name": "correlationId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "registration",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "version",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            },
+            {
+              "name": "userId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "channelId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmGoalFulfillment",
+          "fields": [
+            {
+              "name": "method",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmGoal",
+          "fields": [
+            {
+              "name": "environment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Environment the goal runs in",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "uniqueName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Unique name of the goal",
+              "args": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Name of the goal",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "sha",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Commit that the goal belongs to",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "branch",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Branch of the goal's commit",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "repo",
+              "args": [
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerId",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SdmRepository"
+              },
+              "description": "Repository the commit was observed from"
+            },
+            {
+              "name": "fulfillment",
+              "args": [
+                {
+                  "name": "method",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SdmGoalFulfillment"
+              },
+              "description": "How the goal gets fulfilled"
+            },
+            {
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Description of the goal",
+              "args": []
+            },
+            {
+              "name": "url",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "URL of the goal",
+              "args": []
+            },
+            {
+              "name": "state",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "State of goal",
+              "args": []
+            },
+            {
+              "name": "externalKey",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "key to a corresponding commit status in GitHub/BitBucket (optional)",
+              "args": []
+            },
+            {
+              "name": "goalSet",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Goal set the goal is a part of",
+              "args": []
+            },
+            {
+              "name": "goalSetId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Id if goal set execution",
+              "args": []
+            },
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "description": "Timestamp of goal",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "error",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Error occurred during goal execution",
+              "args": []
+            },
+            {
+              "name": "retryFeasible",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              },
+              "description": "Goal can be retried",
+              "args": []
+            },
+            {
+              "name": "preConditions",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SdmCondition"
+                }
+              },
+              "description": "Preconditions of goal",
+              "args": []
+            },
+            {
+              "name": "approval",
+              "type": {
+                "kind": "OBJECT",
+                "name": "SdmProvenance"
+              },
+              "description": "Where and how the goal was approved",
+              "args": []
+            },
+            {
+              "name": "approvalRequired",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean"
+              },
+              "description": "Does this goal require manual approval",
+              "args": []
+            },
+            {
+              "name": "provenance",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SdmProvenance"
+                }
+              },
+              "description": "Changes to goal",
+              "args": []
+            },
+            {
+              "name": "data",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Serialized data of the goal execution",
+              "args": []
+            },
+            {
+              "name": "id",
+              "description": "The ID of this SdmGoal",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmVersionRepository",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "providerId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmVersion",
+          "fields": [
+            {
+              "name": "sha",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Commit sha",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "branch",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Branch of commit",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "version",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Version associated with a commit",
+              "args": []
+            },
+            {
+              "name": "repo",
+              "args": [
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerId",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SdmVersionRepository"
+              },
+              "description": "Repository the commit/version was observed from"
+            },
+            {
+              "name": "id",
+              "description": "The ID of this SdmVersion",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmBuildIdentifierRepository",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "providerId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SdmBuildIdentifier",
+          "fields": [
+            {
+              "name": "identifier",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Identifier of build",
+              "args": []
+            },
+            {
+              "name": "repo",
+              "args": [
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerId",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SdmBuildIdentifierRepository"
+              },
+              "description": "Repository the commit/version was observed from"
+            },
+            {
+              "name": "id",
+              "description": "The ID of this SdmBuildIdentifier",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "ENUM",
+          "name": "CommitIssueRelationshipType",
+          "enumValues": [
+            {
+              "name": "fixes"
+            },
+            {
+              "name": "references"
+            }
+          ],
+          "interfaces": [],
+          "fields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CommitIssueRelationshipIssue",
+          "fields": [
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "repo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CommitIssueRelationshipCommit",
+          "fields": [
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "repo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "sha",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "CommitIssueRelationship",
+          "fields": [
+            {
+              "name": "type",
+              "type": {
+                "kind": "ENUM",
+                "name": "CommitIssueRelationshipType"
+              },
+              "args": []
+            },
+            {
+              "name": "commit",
+              "args": [
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repo",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "sha",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CommitIssueRelationshipCommit"
+              },
+              "description": "The commit that references the issue"
+            },
+            {
+              "name": "issue",
+              "args": [
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repo",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CommitIssueRelationshipIssue"
+              },
+              "description": "The target issue of the relationship"
+            },
+            {
+              "name": "id",
+              "description": "The ID of this CommitIssueRelationship",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DeploymentCommit",
+          "fields": [
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "repo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "sha",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Deployment",
+          "fields": [
+            {
+              "name": "commit",
+              "args": [
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repo",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "sha",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DeploymentCommit"
+              },
+              "description": "The commit that got deployed"
+            },
+            {
+              "name": "environment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "The name of environment the commit got deployed",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "ts",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int"
+              },
+              "args": []
+            },
+            {
+              "name": "id",
+              "description": "The ID of this Deployment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "IssueRelationshipIssue",
+          "fields": [
+            {
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "repo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "issue",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "IssueRelationship",
+          "fields": [
+            {
+              "name": "relationshipId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "description": "Unique id of the issue relationship",
+              "directives": [
+                {
+                  "name": "compositeId"
+                }
+              ],
+              "args": []
+            },
+            {
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "state",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              },
+              "args": []
+            },
+            {
+              "name": "source",
+              "args": [
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repo",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "issue",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "IssueRelationshipIssue"
+              },
+              "description": "The source issue of the relationship"
+            },
+            {
+              "name": "target",
+              "args": [
+                {
+                  "name": "owner",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repo",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "issue",
+                  "type": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String"
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "IssueRelationshipIssue"
+              },
+              "description": "The target issue of the relationship"
+            },
+            {
+              "name": "id",
+              "description": "The ID of this IssueRelationship",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID"
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "ENUM",
+          "name": "_Ordering",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "description": "asc or desc ordering. Must be used with orderBy",
+          "enumValues": [
+            {
+              "name": "desc",
+              "description": "Descending order",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "asc",
+              "description": "Ascending order",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "UserPreference",
+          "description": "A user's preferences as key/value pairs",
+          "interfaces": [],
+          "fields": [
+            {
+              "name": "name",
+              "description": "The name of the preference",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            {
+              "name": "value",
+              "description": "The value of the preference",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PersonPreference",
+          "description": "A person's preferences as key/value pairs",
+          "interfaces": [],
+          "fields": [
+            {
+              "name": "name",
+              "description": "The name of the preference",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            {
+              "name": "value",
+              "description": "The value of the preference",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "TeamPreference",
+          "description": "A team's preferences as key/value pairs",
+          "interfaces": [],
+          "fields": [
+            {
+              "name": "name",
+              "description": "The name of the preference",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            },
+            {
+              "name": "value",
+              "description": "The value of the preference",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String"
+              }
+            }
+          ]
         },
         {
           "kind": "OBJECT",
@@ -58448,6 +59856,6 @@
     }
   },
   "extensions": {
-    "correlation_id": "e4ab96ec-96d9-45bc-a045-0bcb67a378c7"
+    "correlation_id": "d2e0c320-3d07-4f7a-8dd5-ac0c1d786387"
   }
 }
