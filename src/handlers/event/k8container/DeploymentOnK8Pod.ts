@@ -31,25 +31,28 @@ import {
 import * as graphql from "../../../typings/types";
 
 @EventHandler("Create a deployment on running K8 container events",
-    subscription("deploymentOnK8Container"))
-export class DeploymentOnK8Container implements HandleEvent<graphql.DeploymentOnK8Container.Subscription> {
+    subscription("deploymentOnK8Pod"))
+export class DeploymentOnK8Pod implements HandleEvent<graphql.DeploymentOnK8Pod.Subscription> {
 
-    public async handle(e: EventFired<graphql.DeploymentOnK8Container.Subscription>,
+    public async handle(e: EventFired<graphql.DeploymentOnK8Pod.Subscription>,
                         ctx: HandlerContext): Promise<HandlerResult> {
-        const container = e.data.K8Container[0];
-        const commit = container.image.commits[0];
+        const containers = e.data.K8Pod[0].containers;
 
-        const deployment: Deployment = {
-            commit: {
-                owner: commit.repo.owner,
-                repo: commit.repo.name,
-                sha: commit.sha,
-            },
-            environment: container.environment,
-            ts: Date.now(),
-        };
+        for (const container of containers) {
+            const commit = container.image.commits[0];
 
-        await ctx.messageClient.send(deployment, addressEvent(DeploymentRootType));
+            const deployment: Deployment = {
+                commit: {
+                    owner: commit.repo.owner,
+                    repo: commit.repo.name,
+                    sha: commit.sha,
+                },
+                environment: container.environment,
+                ts: Date.now(),
+            };
+
+            await ctx.messageClient.send(deployment, addressEvent(DeploymentRootType));
+        }
 
         return SuccessPromise;
     }

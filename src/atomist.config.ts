@@ -107,7 +107,7 @@ import {
     IssueToIssueLifecycle,
 } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
-import { DeploymentOnK8Container } from "./handlers/event/k8container/DeploymentOnK8Container";
+import { DeploymentOnK8Pod } from "./handlers/event/k8container/DeploymentOnK8Pod";
 import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
 import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild";
 import { AutoMergeOnPullRequest } from "./handlers/event/pullrequest/AutoMergeOnPullRequest";
@@ -308,7 +308,7 @@ export const configuration: Configuration = {
         () => new NotifyMentionedOnIssue(),
 
         // k8container
-        () => new DeploymentOnK8Container(),
+        () => new DeploymentOnK8Pod(),
 
         // onboarded
         () => new RepositoryOnboarded(),

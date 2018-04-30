@@ -1,19 +1,3 @@
-/*
- * Copyright © 2018 Atomist, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 /* tslint:disable */
 
 /* Long type */
@@ -106,10 +90,10 @@ export type _ReleaseOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "id_asc" | "
 export type _DockerImageOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "image_asc" | "image_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc";
 
 /* Ordering Enum for K8Pod */
-export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "phase_asc" | "phase_desc" | "environment_asc" | "environment_desc" | "timestamp_asc" | "timestamp_desc" | "baseName_asc" | "baseName_desc" | "namespace_asc" | "namespace_desc" | "statusJSON_asc" | "statusJSON_desc" | "host_asc" | "host_desc" | "state_asc" | "state_desc" | "specsJSON_asc" | "specsJSON_desc" | "envJSON_asc" | "envJSON_desc" | "metadataJSON_asc" | "metadataJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc";
+export type _K8PodOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "phase_asc" | "phase_desc" | "environment_asc" | "environment_desc" | "timestamp_asc" | "timestamp_desc" | "baseName_asc" | "baseName_desc" | "namespace_asc" | "namespace_desc" | "statusJSON_asc" | "statusJSON_desc" | "host_asc" | "host_desc" | "state_asc" | "state_desc" | "specsJSON_asc" | "specsJSON_desc" | "envJSON_asc" | "envJSON_desc" | "metadataJSON_asc" | "metadataJSON_desc" | "containersCrashLoopBackOff_asc" | "containersCrashLoopBackOff_desc" | "resourceVersion_asc" | "resourceVersion_desc";
 
 /* Ordering Enum for K8Container */
-export type _K8ContainerOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc" | "environment_asc" | "environment_desc" | "containerJSON_asc" | "containerJSON_desc" | "state_asc" | "state_desc" | "ready_asc" | "ready_desc" | "restartCount_asc" | "restartCount_desc" | "statusJSON_asc" | "statusJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc" | "containerID_asc" | "containerID_desc";
+export type _K8ContainerOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "name_asc" | "name_desc" | "imageName_asc" | "imageName_desc" | "timestamp_asc" | "timestamp_desc" | "environment_asc" | "environment_desc" | "containerJSON_asc" | "containerJSON_desc" | "state_asc" | "state_desc" | "stateReason_asc" | "stateReason_desc" | "ready_asc" | "ready_desc" | "restartCount_asc" | "restartCount_desc" | "statusJSON_asc" | "statusJSON_desc" | "resourceVersion_asc" | "resourceVersion_desc" | "containerID_asc" | "containerID_desc";
 
 /* Ordering Enum for SpinnakerPipeline */
 export type _SpinnakerPipelineOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "executionId_asc" | "executionId_desc" | "application_asc" | "application_desc" | "eventType_asc" | "eventType_desc" | "taskName_asc" | "taskName_desc" | "stageName_asc" | "stageName_desc" | "stageType_asc" | "stageType_desc" | "waitingForJudgement_asc" | "waitingForJudgement_desc";
@@ -170,6 +154,9 @@ export type _UserJoinedChannelOrdering = "atmTeamId_asc" | "atmTeamId_desc" | "i
 
 /* asc or desc ordering. Must be used with orderBy */
 export type _Ordering = "desc" | "asc";
+
+
+export type CommitIssueRelationshipType = "fixes" | "references";
 
 export namespace AddBotToSlackChannel {
   export type Variables = {
@@ -3197,16 +3184,21 @@ export namespace DeletedBranchToPullRequestLifecycle {
 
   export type PullRequests = PullRequestFields.Fragment
 }
-export namespace DeploymentOnK8Container {
+export namespace DeploymentOnK8Pod {
   export type Variables = {
   }
 
   export type Subscription = {
-    K8Container?: K8Container[] | null; 
+    K8Pod?: K8Pod[] | null; 
   } 
 
-  export type K8Container = {
+  export type K8Pod = {
+    containers?: Containers[] | null; 
+  } 
+
+  export type Containers = {
     name?: string | null; 
+    state?: string | null; 
     environment?: string | null; 
     timestamp?: string | null; 
     image?: Image | null; 

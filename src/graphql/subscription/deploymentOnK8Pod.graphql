@@ -1,0 +1,20 @@
+subscription DeploymentOnK8Pod {
+  K8Pod {
+    containers(state: "running") @required {
+      name
+      state
+      environment
+      timestamp
+      image {
+        commits @required {
+          sha
+          repo @required {
+            name
+            owner
+          }
+        }
+      }
+    }
+  }
+}
+
