@@ -1,19 +1,3 @@
-/*
- * Copyright © 2018 Atomist, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 /* tslint:disable */
 
 /* Long type */
@@ -3196,6 +3180,64 @@ export namespace DeletedBranchToPullRequestLifecycle {
   } 
 
   export type PullRequests = PullRequestFields.Fragment
+}
+export namespace DeploymentOnK8Container {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    K8Container?: K8Container[] | null; 
+  } 
+
+  export type K8Container = {
+    name?: string | null; 
+    environment?: string | null; 
+    timestamp?: string | null; 
+    image?: Image | null; 
+  } 
+
+  export type Image = {
+    commits?: Commits[] | null; 
+  } 
+
+  export type Commits = {
+    sha?: string | null; 
+    repo?: Repo | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+  } 
+}
+export namespace IssueRelationshipOnCommit {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Commit?: Commit[] | null; 
+  } 
+
+  export type Commit = {
+    repo?: Repo | null; 
+    sha?: string | null; 
+    message?: string | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+    org?: Org | null; 
+  } 
+
+  export type Org = {
+    provider?: Provider | null; 
+  } 
+
+  export type Provider = {
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
+  } 
 }
 export namespace IssueToIssueLifecycle {
   export type Variables = {

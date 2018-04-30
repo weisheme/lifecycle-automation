@@ -1,0 +1,16 @@
+subscription IssueRelationshipOnCommit {
+  Commit {
+    repo {
+      name
+      owner
+      org {
+        provider {
+          providerId
+          providerType
+        }
+      }
+    }
+    sha
+    message
+  }
+}

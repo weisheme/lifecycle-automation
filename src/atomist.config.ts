@@ -99,6 +99,7 @@ import { NotifyMentionedOnPullRequestComment } from "./handlers/event/comment/No
 import {
     PullRequestToPullRequestCommentLifecycle,
 } from "./handlers/event/comment/PullRequestToPullRequestCommentLifecycle";
+import { IssueRelationshipOnCommit } from "./handlers/event/commit/IssueRelationshipOnCommit";
 import { CommentOnRelatedIssueClosed } from "./handlers/event/issue/CommentOnRelatedIssueClosed";
 import { CommentToIssueCardLifecycle } from "./handlers/event/issue/CommentToIssueLifecycle";
 import {
@@ -106,6 +107,7 @@ import {
     IssueToIssueLifecycle,
 } from "./handlers/event/issue/IssueToIssueLifecycle";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
+import { DeploymentOnK8Container } from "./handlers/event/k8container/DeploymentOnK8Container";
 import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
 import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild";
 import { AutoMergeOnPullRequest } from "./handlers/event/pullrequest/AutoMergeOnPullRequest";
@@ -164,6 +166,8 @@ import {
 } from "./handlers/event/push/TagToPushLifecycle";
 import { NotifyAuthorOnReview } from "./handlers/event/review/NotifyAuthorOnReview";
 import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCreated";
+import { commitIssueRelationshipIngester } from "./ingesters/commitIssueRelationship";
+import { deploymentIngester } from "./ingesters/deployment";
 import { issueRelationshipIngester } from "./ingesters/issueRelationship";
 import {
     LogzioAutomationEventListener,
@@ -303,6 +307,9 @@ export const configuration: Configuration = {
         () => new IssueToIssueLifecycle(),
         () => new NotifyMentionedOnIssue(),
 
+        // k8container
+        () => new DeploymentOnK8Container(),
+
         // onboarded
         () => new RepositoryOnboarded(),
 
@@ -327,6 +334,9 @@ export const configuration: Configuration = {
         () => new NotifyMentionedOnIssueComment(),
         () => new NotifyMentionedOnPullRequestComment(),
         () => new PullRequestToPullRequestCommentLifecycle(),
+
+        // commit
+        () => new IssueRelationshipOnCommit(),
 
         // review
         () => new NotifyAuthorOnReview(),
@@ -357,6 +367,8 @@ export const configuration: Configuration = {
         () => new CommentToIssueCardLifecycle(),
     ],
     ingesters: notLocal ? [
+        commitIssueRelationshipIngester,
+        deploymentIngester,
         issueRelationshipIngester,
     ] : [],
     listeners,
