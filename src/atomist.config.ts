@@ -82,6 +82,7 @@ import { LinkOwnerRepo } from "./handlers/command/slack/LinkOwnerRepo";
 import { LinkRepo } from "./handlers/command/slack/LinkRepo";
 import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
+import { CreateDeployment } from "./handlers/command/slack/test";
 import { ToggleCustomEmojiEnablement } from "./handlers/command/slack/ToggleCustomEmojiEnablement";
 import { UnlinkRepo } from "./handlers/command/slack/UnlinkRepo";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
@@ -106,6 +107,7 @@ import {
     IssueToIssueCardLifecycle,
     IssueToIssueLifecycle,
 } from "./handlers/event/issue/IssueToIssueLifecycle";
+import { LabelIssueOnDeployment } from "./handlers/event/issue/LabelIssueOnDeployment";
 import { NotifyMentionedOnIssue } from "./handlers/event/issue/NotifyMentionedOnIssue";
 import { DeploymentOnK8Pod } from "./handlers/event/k8container/DeploymentOnK8Pod";
 import { RepositoryOnboarded } from "./handlers/event/onboarded/RepositoryOnboarded";
@@ -270,6 +272,8 @@ export const configuration: Configuration = {
 
         // travis
         () => new RestartTravisBuild(),
+
+        () => new CreateDeployment(),
     ],
     events: [
         // branch
@@ -305,6 +309,7 @@ export const configuration: Configuration = {
         // issue
         () => new CommentOnRelatedIssueClosed(),
         () => new IssueToIssueLifecycle(),
+        () => new LabelIssueOnDeployment(),
         () => new NotifyMentionedOnIssue(),
 
         // k8container

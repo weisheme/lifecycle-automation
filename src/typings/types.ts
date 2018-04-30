@@ -685,6 +685,86 @@ export namespace ChatTeamPreferences {
     value?: string | null; 
   } 
 }
+export namespace CommitIssueRelationshipByCommit {
+  export type Variables = {
+    owner: string[];
+    repo: string[];
+    sha: string[];
+  }
+
+  export type Query = {
+    CommitIssueRelationship?: CommitIssueRelationship[] | null; 
+  } 
+
+  export type CommitIssueRelationship = {
+    commit?: Commit | null; 
+    issue?: Issue | null; 
+  } 
+
+  export type Commit = {
+    owner?: string | null; 
+    repo?: string | null; 
+    sha?: string | null; 
+  } 
+
+  export type Issue = {
+    owner?: string | null; 
+    repo?: string | null; 
+    name?: string | null; 
+  } 
+}
+export namespace CommitsForRepoAndBranch {
+  export type Variables = {
+    owner: string;
+    repo: string;
+    branch: string;
+    page: number;
+    offset: number;
+  }
+
+  export type Query = {
+    Push?: Push[] | null; 
+  } 
+
+  export type Push = {
+    repo?: Repo | null; 
+    branch?: string | null; 
+    commits?: Commits[] | null; 
+  } 
+
+  export type Repo = {
+    name?: string | null; 
+    owner?: string | null; 
+  } 
+
+  export type Commits = {
+    sha?: string | null; 
+    timestamp?: string | null; 
+  } 
+}
+export namespace DeploymentsForRepo {
+  export type Variables = {
+    owner: string[];
+    repo: string[];
+    environment: string[];
+  }
+
+  export type Query = {
+    Deployment?: Deployment[] | null; 
+  } 
+
+  export type Deployment = {
+    commit?: Commit | null; 
+    environment?: string | null; 
+    ts?: number | null; 
+  } 
+
+  export type Commit = {
+    owner?: string | null; 
+    repo?: string | null; 
+    sha?: string | null; 
+  } 
+}
 export namespace EMailAndGitHubIdByUserId {
   export type Variables = {
     userId: string;
@@ -3442,6 +3522,25 @@ export namespace K8PodToPushLifecycle {
   } 
 
   export type Pushes = PushFields.Fragment
+}
+export namespace LabelIssuesOnDeployment {
+  export type Variables = {
+  }
+
+  export type Subscription = {
+    Deployment?: Deployment[] | null; 
+  } 
+
+  export type Deployment = {
+    commit?: Commit | null; 
+    environment?: string | null; 
+  } 
+
+  export type Commit = {
+    owner?: string | null; 
+    repo?: string | null; 
+    sha?: string | null; 
+  } 
 }
 export namespace NotifyAuthorOnReview {
   export type Variables = {

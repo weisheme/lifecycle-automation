@@ -25,6 +25,7 @@ import { MessageOptions } from "@atomist/automation-client/spi/message/MessageCl
 import * as GitHubApi from "@octokit/rest";
 import * as URL from "url";
 import { error } from "../../../util/messages";
+import { AutoMergeLabel } from "../../event/pullrequest/autoMerge";
 
 export const DefaultGitHubApiUrl = "https://api.github.com/";
 export const DefaultGitHubUrl = "https://github.com/";
@@ -86,4 +87,23 @@ export function handleError(title: string,
             return failure(err);
 
     }
+}
+
+export function createLabel(owner: string, repo: string, label: string, api: GitHubApi): Promise<void> {
+    // Verify that label exists
+    return api.issues.getLabel({
+        name: label,
+        repo,
+        owner,
+    })
+    // Label doesn't exist; create it
+    .catch(() => {
+        return api.issues.createLabel({
+            owner,
+            repo,
+            name: label,
+            color: "277D7D",
+        })
+    })
+    .then(() => null);
 }
