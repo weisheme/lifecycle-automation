@@ -398,6 +398,9 @@ export function renderDecorator(build: graphql.PushFields.Builds,
     } else if (build.status === "started") {
         color = "#cccc00";
         emoji = EMOJI_SCHEME[emojiStyle].build.started;
+    } else if (build.status === "canceled") {
+        color = "#45B254";
+        emoji = EMOJI_SCHEME[emojiStyle].build.skipped;
     } else {
         color = "#D94649";
         emoji = EMOJI_SCHEME[emojiStyle].build.failed;

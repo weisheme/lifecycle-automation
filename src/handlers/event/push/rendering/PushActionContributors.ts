@@ -22,7 +22,6 @@ import { githubToSlack } from "@atomist/slack-messages/Markdown";
 import { Action } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
 import * as semver from "semver";
-import * as urijs from "urijs";
 import {
     AbstractIdentifiableContribution,
     RendererContext,
@@ -34,10 +33,7 @@ import { truncateCommitMessage } from "../../../../util/helpers";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
-import {
-    ApprovalGateParam,
-    ApproveSdmGoalStatus,
-} from "../../../command/sdm/ApproveSdmGoalStatus";
+import { ApproveSdmGoalStatus } from "../../../command/sdm/ApproveSdmGoalStatus";
 import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
@@ -55,11 +51,13 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
     public buttonsFor(build: graphql.PushFields.Builds, context: RendererContext): Promise<Action[]> {
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
-        if (build.status === "failed" || build.status === "broken") {
-            // Travis restart
-            if (build.provider === "travis") {
-                const button = this.travisRestartAction(build, repo);
-                buttons.push(button);
+        if (build.provider === "travis") {
+            if (build.status === "failed" || build.status === "broken") {
+                // Travis restart
+                buttons.push(this.travisRestartAction(build, repo));
+            } else if (build.status === "started") {
+                // Travis cancel
+                buttons.push(this.travisCancelAction(build, repo));
             }
         }
         return Promise.resolve(buttons);
@@ -76,6 +74,20 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
                 role: "global",
              },
             "RestartTravisBuild",
+            {
+                buildId: build.buildId,
+                repo: repo.name,
+                org: repo.owner,
+            });
+    }
+
+    private travisCancelAction(build: graphql.PushFields.Builds, repo: any): Action {
+        return buttonForCommand(
+            {
+                text: "Cancel",
+                role: "global",
+             },
+            "CancelTravisBuild",
             {
                 buildId: build.buildId,
                 repo: repo.name,

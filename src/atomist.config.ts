@@ -84,6 +84,7 @@ import { ListRepoLinks } from "./handlers/command/slack/ListRepoLinks";
 import { NoLinkRepo } from "./handlers/command/slack/NoLinkRepo";
 import { ToggleCustomEmojiEnablement } from "./handlers/command/slack/ToggleCustomEmojiEnablement";
 import { UnlinkRepo } from "./handlers/command/slack/UnlinkRepo";
+import { CancelTravisBuild } from "./handlers/command/travis/CancelTravisBuild";
 import { RestartTravisBuild } from "./handlers/command/travis/RestartTravisBuild";
 import { BranchToBranchLifecycle } from "./handlers/event/branch/BranchToBranchLifecycle";
 import { DeletedBranchToBranchLifecycle } from "./handlers/event/branch/DeletedBranchToBranchLifecycle";
@@ -269,6 +270,7 @@ export const configuration: Configuration = {
         () => new UnlinkRepo(),
 
         // travis
+        () => new CancelTravisBuild(),
         () => new RestartTravisBuild(),
     ],
     events: [

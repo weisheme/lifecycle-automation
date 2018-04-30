@@ -36,20 +36,15 @@ import {
     error,
     success,
 } from "../../../util/messages";
+import { BuildIdParameter } from "./RestartTravisBuild";
 import { retrieveToken } from "./travisApi";
 
-export const BuildIdParameter = {
-    displayName: "Build ID",
-    description: "Travis CI identifier of build to restart",
-    pattern: /^\d+$/,
-};
-
-@ConfigurableCommandHandler("Restart a Travis CI build", {
-    intent: [ "restart build", "restart travis build" ],
+@ConfigurableCommandHandler("Cancel a Travis CI build", {
+    intent: [ "cancel build", "cancel travis build" ],
     autoSubmit: true,
 })
-@Tags("travis", "ci", "restart")
-export class RestartTravisBuild implements HandleCommand {
+@Tags("travis", "ci", "cancel")
+export class CancelTravisBuild implements HandleCommand {
 
     @Parameter(BuildIdParameter)
     public buildId: string;
@@ -70,7 +65,7 @@ export class RestartTravisBuild implements HandleCommand {
         const tld = "com";
         return retrieveToken(this.apiUrl, this.owner, this.repo, this.githubToken)
             .then(token => {
-                return axios.post(`https://api.travis-ci.${tld}/builds/${this.buildId}/restart`,
+                return axios.post(`https://api.travis-ci.${tld}/builds/${this.buildId}/cancel`,
                     {},
                     {
                         headers: {
@@ -82,14 +77,14 @@ export class RestartTravisBuild implements HandleCommand {
             })
             .then(() => {
                 return ctx.messageClient.respond(success(
-                    "Restart Build",
-                    `Successfully restarted build ${
+                    "Cancel Build",
+                    `Successfully canceled build ${
                         codeLine(this.buildId)} on ${codeLine(`${this.owner}/${this.repo}`)}`));
             })
             .catch(reason => {
                 return ctx.messageClient.respond(error(
-                    "Restart Build",
-                    `Failed to restart build ${codeLine(this.buildId)}:\n ${codeBlock(reason)}`, ctx))
+                    "Cancel Build",
+                    `Failed to cancel build ${codeLine(this.buildId)}:\n ${codeBlock(reason)}`, ctx))
                     .then(() => {
                         return Failure;
                     });
