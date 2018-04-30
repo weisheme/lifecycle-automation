@@ -39,6 +39,8 @@ subscription NotifyAuthorOnReview {
         org {
           provider {
             url
+            providerId
+            providerType
           }
         }
         channels {

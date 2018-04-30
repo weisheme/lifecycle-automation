@@ -60,7 +60,9 @@ describe("PushToPushLifecycle", () => {
                     "name": "accepted"
                 }],
                 "org": {
-                    "provider": null,
+                    "provider": {
+                        "providerType": "github_com"
+                    },
                     "team": {
                         "id": "T095SFFBK",
                         "chatTeams": [{
@@ -269,7 +271,9 @@ describe("PushToPushLifecycle", () => {
                     "name": "UX"
                 }],
                 "org": {
-                    "provider": null,
+                    "provider": {
+                        "providerType": "github_com"
+                    },
                     "chatTeam": {}
                 },
                 "defaultBranch": "master"

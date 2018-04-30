@@ -102,7 +102,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
 
                         // Second trigger rendering
                         renderers.push(msg => {
-                            return lifecycle.contributors.filter(c => c.supports(n)).reduce((p, f) => {
+                            return lifecycle.contributors.filter(c => c.supports(n, context)).reduce((p, f) => {
                                 return p.then(actions => {
                                     return f.buttonsFor(n, context)
                                         .then(buttons => {
@@ -560,7 +560,7 @@ export interface ActionContributor<T, A> extends IdentifiableContribution {
     /**
      * Indicate if a ActionContributor supports a provided cortex node.
      */
-    supports(node: any): boolean;
+    supports(node: any, context: RendererContext): boolean;
 
     /**
      * Create buttons for the provided node.
@@ -616,8 +616,8 @@ export class CardActionContributorWrapper implements CardActionContributor<any> 
     constructor(private delegate: SlackActionContributor<any>) {
     }
 
-    public supports(node: any): boolean {
-        return this.delegate.supports(node);
+    public supports(node: any, context: RendererContext): boolean {
+        return this.delegate.supports(node, context);
     }
 
     public buttonsFor(node: any, context: RendererContext): Promise<CardAction[]> {

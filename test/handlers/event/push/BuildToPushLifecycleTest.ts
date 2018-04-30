@@ -74,7 +74,9 @@ describe("BuildToPushLifecycle", () => {
             "name": "enhancement"
           }],
           "org": {
-            "provider": null
+            "provider": {
+              "providerType": "github_com"
+            }
           },
           "defaultBranch": "master"
         },

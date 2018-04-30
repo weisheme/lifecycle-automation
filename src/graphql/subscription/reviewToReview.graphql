@@ -28,6 +28,8 @@ subscription ReviewToReviewLifecycle {
           provider {
             url
             apiUrl
+            providerId
+            providerType
           }
           team {
             id

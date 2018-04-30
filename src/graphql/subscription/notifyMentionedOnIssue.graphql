@@ -66,6 +66,8 @@ subscription NotifyMentionedOnIssue {
           apiUrl
           gitUrl
           url
+          providerId
+          providerType
         }
       }
     }

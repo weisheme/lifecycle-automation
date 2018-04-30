@@ -46,6 +46,7 @@ query LastIssueOnRepo($name: String!, $owner: String!) {
             gitUrl
             url
             providerId
+            providerType
           }
         }
       }

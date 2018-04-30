@@ -161,6 +161,8 @@ query LastPullRequestOnRepo($name: String!, $owner: String!) {
             url
             apiUrl
             gitUrl
+            providerId
+            providerType
           }
           team {
             id

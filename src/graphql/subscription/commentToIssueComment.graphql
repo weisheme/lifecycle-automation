@@ -33,6 +33,8 @@ subscription CommentToIssueCommentLifecycle {
           provider {
             apiUrl
             url
+            providerId
+            providerType
           }
           team {
             id

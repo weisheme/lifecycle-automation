@@ -85,7 +85,15 @@ export function repoChannelName(repoName: string): string {
 }
 
 export function branchUrl(repo: any, branch: string): string {
-    return `${htmlUrl(repo)}/${repoSlug(repo)}/tree/${branch}`;
+    if (isGitHub(repo)) {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/tree/${branch}`;
+    } else if (isBitBucketCloud(repo)) {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/branch/${branch}`;
+    } else if (isBitBucketOnPrem(repo)) {
+        return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}/browse?at=${branch}`;
+    } else {
+        throw new Error("Repository is missing providerType");
+    }
 }
 
 export function htmlUrl(repo: any): string {
@@ -101,11 +109,10 @@ export function htmlUrl(repo: any): string {
 }
 
 export function commitIcon(repo: any): string {
-    if (repo.org != null &&
-        repo.org.provider != null &&
-        repo.org.provider.url != null &&
-        repo.org.provider.url === DefaultGitHubUrl) {
+    if (isGitHub(repo)) {
         return "https://images.atomist.com/rug/github_grey.png";
+    } else if (isBitBucket(repo)) {
+        return "https://images.atomist.com/rug/bitbucket.png";
     } else {
         return "https://images.atomist.com/rug/commit.png";
     }
@@ -124,7 +131,11 @@ export function apiUrl(repo: any): string {
 }
 
 export function repoUrl(repo: any): string {
-    return `${htmlUrl(repo)}/${repoSlug(repo)}`;
+    if (isBitBucketOnPrem(repo)) {
+        return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}`;
+    } else {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}`;
+    }
 }
 
 export function repoSlackLink(repo: any): string {
@@ -132,29 +143,35 @@ export function repoSlackLink(repo: any): string {
 }
 
 export function userUrl(repo: any, login: string): string {
-    return `${htmlUrl(repo)}/${login}`;
-}
-
-export function avatarUrl(repo: any, login: string): string {
-    if (repo.org != null &&
-        repo.org.provider != null &&
-        repo.org.provider.url != null &&
-        repo.org.provider.url !== DefaultGitHubUrl) {
-        return `${htmlUrl(repo)}/avatars/${login}`;
+    if (isGitHub(repo) || isBitBucketCloud(repo)) {
+        return `${htmlUrl(repo)}/${login}`;
+    } else if (isBitBucketOnPrem(repo)) {
+        return `${htmlUrl(repo)}/users/${login}`;
     } else {
-        return `https://avatars.githubusercontent.com/${login}`;
+        throw new Error("Repository is missing providerType");
     }
 }
 
-export function isGitHubCom(repo: any): boolean {
-    return repo.org != null &&
-        repo.org.provider != null &&
-        repo.org.provider.url != null &&
-        repo.org.provider.url === DefaultGitHubUrl;
+export function avatarUrl(repo: any, login: string): string {
+    if (isGitHubCom(repo)) {
+        return `https://avatars.githubusercontent.com/${login}`;
+    } else if (isGitHub(repo)) {
+        return `${htmlUrl(repo)}/avatars/${login}`;
+    } else if (isBitBucket(repo)) {
+        // https://bitbucket.org/account/cdupuis/avatar/64/?ts=1523010025
+        return `${htmlUrl(repo)}/account/${login}/avatar/16`;
+    }
 }
-
 export function commitUrl(repo: any, commit: any): string {
-    return `${htmlUrl(repo)}/${repoSlug(repo)}/commit/${commit.sha}`;
+    if (isGitHub(repo)) {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/commit/${commit.sha}`;
+    } else if (isBitBucketCloud(repo)) {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/commits/${commit.sha}`;
+    } else if (isBitBucketOnPrem(repo)) {
+        return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}/commits/${commit.sha}`;
+    } else {
+        throw new Error("Repository is missing providerType");
+    }
 }
 
 export function tagUrl(repo: any, tag: any): string {
@@ -162,7 +179,14 @@ export function tagUrl(repo: any, tag: any): string {
 }
 
 export function prUrl(repo: any, pr: any): string {
-    return `${htmlUrl(repo)}/${repoSlug(repo)}/pull/${pr.number}`;
+    if (isGitHub(repo)) {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/pull/${pr.number}`;
+    } else if (isBitBucket(repo)) {
+        // https://bitbucket.org/slimslenderslacks/jimtest/pull-requests/1
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/pull-requests/${pr.number}`;
+    } else {
+        throw new Error("Repository is missing providerType");
+    }
 }
 
 export function reviewUrl(repo: any, pr: any, review: any): string {
@@ -182,6 +206,38 @@ export function issueUrl(repo: any, issue: any, comment?: any): string {
 export function labelUrl(repo: any, label: string): string {
     // https://github.com/atomisthq/spring-team-handlers/labels/bug
     return `${htmlUrl(repo)}/${repoSlug(repo)}/labels/${label}`;
+}
+
+export function isGitHubCom(repo: any): boolean {
+    return repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.providerType != null &&
+        repo.org.provider.providerType === "github_com";
+}
+
+export function isGitHub(repo: any): boolean {
+    return repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.providerType != null &&
+        (repo.org.provider.providerType === "github_com" || repo.org.provider.providerType === "ghe");
+}
+
+export function isBitBucket(repo: any): boolean {
+    return isBitBucketCloud(repo) || isBitBucketOnPrem(repo);
+}
+
+export function isBitBucketCloud(repo: any): boolean {
+    return repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.providerType != null &&
+        repo.org.provider.providerType === "bitbucket_cloud";
+}
+
+export function isBitBucketOnPrem(repo: any): boolean {
+    return repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.providerType != null &&
+        repo.org.provider.providerType === "bitbucket";
 }
 
 export const AtomistGeneratedLabel = "atomist:generated";

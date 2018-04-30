@@ -171,6 +171,8 @@ query PullRequest(
                   url
                   apiUrl
                   gitUrl
+                  providerId
+                  providerType
                 }
                 team {
                   id

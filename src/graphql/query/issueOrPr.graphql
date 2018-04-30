@@ -17,6 +17,8 @@ query IssueOrPr($owner: String!, $repo: String!, $names: [String]!) {
               url
               apiUrl
               gitUrl
+              providerId
+              providerType
             }
           }
         }
@@ -38,6 +40,8 @@ query IssueOrPr($owner: String!, $repo: String!, $names: [String]!) {
               url
               apiUrl
               gitUrl
+              providerId
+              providerType
             }
           }
         }

@@ -432,6 +432,8 @@ export namespace BranchWithPullRequest {
     id?: string | null; 
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 export namespace CardEvents {
@@ -605,6 +607,7 @@ export namespace ChatChannelByChannelId {
   export type Provider = {
     url?: string | null; 
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 export namespace ChatId {
@@ -871,6 +874,7 @@ export namespace Issue {
     gitUrl?: string | null; 
     url?: string | null; 
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Labels = {
@@ -923,6 +927,8 @@ export namespace IssueOrPr {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Author = {
@@ -953,6 +959,8 @@ export namespace IssueOrPr {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type OpenedBy = {
@@ -1161,6 +1169,7 @@ export namespace LastIssueOnRepo {
     gitUrl?: string | null; 
     url?: string | null; 
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Labels = {
@@ -1428,6 +1437,8 @@ export namespace LastPullRequestOnRepo {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -1884,6 +1895,8 @@ export namespace PullRequest {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type __Team = {
@@ -2080,6 +2093,8 @@ export namespace PushById {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -2945,6 +2960,8 @@ export namespace CommentToIssueCommentLifecycle {
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -3087,6 +3104,8 @@ export namespace CommentToPullRequestCommentLifecycle {
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -3235,6 +3254,8 @@ export namespace IssueToIssueCommentLifecycle {
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -3449,6 +3470,8 @@ export namespace NotifyAuthorOnReview {
 
   export type Provider = {
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Channels = {
@@ -3609,6 +3632,8 @@ export namespace NotifyMentionedOnIssue {
     apiUrl?: string | null; 
     gitUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 export namespace NotifyMentionedOnIssueComment {
@@ -3683,6 +3708,8 @@ export namespace NotifyMentionedOnIssueComment {
 
   export type Provider = {
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Channels = {
@@ -3834,6 +3861,8 @@ export namespace NotifyMentionedOnPullRequest {
     apiUrl?: string | null; 
     gitUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 export namespace NotifyMentionedOnPullRequestComment {
@@ -3909,6 +3938,8 @@ export namespace NotifyMentionedOnPullRequestComment {
 
   export type Provider = {
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Channels = {
@@ -3985,6 +4016,8 @@ export namespace NotifyPusherOnBuild {
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Channels = {
@@ -4021,6 +4054,7 @@ export namespace NotifyReviewerOnPush {
     apiUrl?: string | null; 
     url?: string | null; 
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Commits = {
@@ -4211,6 +4245,8 @@ export namespace PullRequestToPullRequestCommentLifecycle {
   export type Provider = {
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -4345,6 +4381,8 @@ export namespace PullRequestToReviewLifecycle {
 
   export type Provider = {
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Team = {
@@ -4417,6 +4455,7 @@ export namespace PushToUnmappedRepo {
 
   export type Provider = {
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
@@ -4533,6 +4572,8 @@ export namespace RepoOnboarded {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Team = {
@@ -4613,6 +4654,8 @@ export namespace ReviewToReviewLifecycle {
   export type Provider = {
     url?: string | null; 
     apiUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type Team = {
@@ -4691,6 +4734,8 @@ export namespace StatusOnParentImpact {
 
   export type Provider = {
     apiUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 export namespace StatusToPullRequestLifecycle {
@@ -4820,6 +4865,8 @@ export namespace BranchFields {
     id?: string | null; 
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 
@@ -4884,6 +4931,8 @@ export namespace DeletedBranchFields {
     id?: string | null; 
     apiUrl?: string | null; 
     url?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 }
 
@@ -4979,6 +5028,7 @@ export namespace IssueFields {
     gitUrl?: string | null; 
     url?: string | null; 
     providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -5252,6 +5302,8 @@ export namespace PullRequestFields {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {
@@ -5441,6 +5493,8 @@ export namespace PushFields {
     url?: string | null; 
     apiUrl?: string | null; 
     gitUrl?: string | null; 
+    providerId?: string | null; 
+    providerType?: ProviderType | null; 
   } 
 
   export type _Team = {

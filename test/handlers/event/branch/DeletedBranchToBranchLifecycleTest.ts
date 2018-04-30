@@ -80,7 +80,9 @@ describe("DeletedBranchToBranchLifecycle", () => {
                             }]
                         }]
                     },
-                    "provider": null
+                    "provider": {
+                        "providerType": "github_com"
+                    }
                 },
                 "owner": "atomisthqa"
             },

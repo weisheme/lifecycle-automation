@@ -36,7 +36,9 @@ describe("NotifyReviewerOnPush", () => {
         "owner": "atomisthqa",
         "org": {
           "owner": "atomisthqa",
-          "provider": null
+          "provider": {
+            "providerType": "github_com"
+          }
         }
       },
       "commits": [{
