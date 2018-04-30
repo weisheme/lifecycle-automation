@@ -103,7 +103,9 @@ describe("StatusToPushLifecycle", () => {
               "name": "enhancement"
             }],
             "org": {
-              "provider": null
+              "provider": {
+                        "providerType": "github_com"
+                    }
             },
             "defaultBranch": "master"
           },
@@ -449,7 +451,9 @@ describe("StatusToPushLifecycle", () => {
               "name": "enhancement"
             }],
             "org": {
-              "provider": null,
+              "provider": {
+                        "providerType": "github_com"
+                    },
               "team": {
                 "id": "T095SFFBK",
                 "chatTeams": [{
@@ -737,7 +741,8 @@ describe("StatusToPushLifecycle", () => {
               "provider": {
                 "apiUrl": "https://api.github.com/",
                 "gitUrl": "git@github.com:",
-                "url": "https://github.com/"
+                "url": "https://github.com/",
+                "providerType": "github_com"
               },
               "team": {
                 "chatTeams": [{
