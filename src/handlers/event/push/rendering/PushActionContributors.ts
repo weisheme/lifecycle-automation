@@ -52,7 +52,7 @@ export class BuildActionContributor extends AbstractIdentifiableContribution
         const repo = context.lifecycle.extract("repo");
         const buttons = [];
         if (build.provider === "travis") {
-            if (build.status === "failed" || build.status === "broken") {
+            if (build.status === "failed" || build.status === "broken" || build.status === "canceled") {
                 // Travis restart
                 buttons.push(this.travisRestartAction(build, repo));
             } else if (build.status === "started") {
