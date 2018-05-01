@@ -291,8 +291,8 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
             attachment.actions = actions;
             if (creator) {
                 attachment.footer =
-                    `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet} (${
-                    goals.SdmGoal[0].goalSetId.slice(0, 6)}) | ${duration}`;
+                    `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet} | ${
+                    goals.SdmGoal[0].goalSetId.slice(0, 6)} | ${duration}`;
             } else {
                 attachment.footer = duration;
             }
