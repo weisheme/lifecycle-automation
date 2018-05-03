@@ -6,6 +6,10 @@
           {
             "env": [
               {
+                "name": "FORCE_COLOR",
+                "value": "1",
+              },
+              {
                 "name": "NODE_ENV",
                 "valueFrom": {
                   "fieldRef": {
