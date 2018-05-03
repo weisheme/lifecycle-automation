@@ -75,7 +75,6 @@ fragment PushFields on Push {
         namespace
         timestamp
         baseName
-        namespace
         resourceVersion
         containers {
           _id

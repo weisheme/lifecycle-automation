@@ -5490,7 +5490,6 @@ export namespace PushFields {
     namespace?: string | null; 
     timestamp?: string | null; 
     baseName?: string | null; 
-    namespace?: string | null; 
     resourceVersion?: Long | null; 
     containers?: Containers[] | null; 
   } 
