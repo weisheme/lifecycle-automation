@@ -183,7 +183,7 @@ export const configuration: Configuration = {
 
         // github
         () => new ApproveGitHubCommit(),
-        () => new ApproveSdmGoalStatus(),
+        secured.githubTeam(() => new ApproveSdmGoalStatus(), AdminTeam),
         () => new AssignGitHubPullRequestReviewer(),
         () => new AssignToMeGitHubIssue(),
         () => new CloseGitHubIssue(),
