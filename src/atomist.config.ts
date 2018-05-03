@@ -15,10 +15,7 @@
  */
 
 import { Configuration } from "@atomist/automation-client";
-import { initMemoryMonitoring } from "@atomist/automation-client/internal/util/memory";
 import * as secured from "@atomist/automation-client/secured";
-import * as appRoot from "app-root-path";
-import * as config from "config";
 import { CloudFoundryApplicationDetail } from "./handlers/command/cloudfoundry/CloudFoundryApplicationDetail";
 import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/ScaleCloudFoundryApplication";
 import { StartCloudFoundryApplication } from "./handlers/command/cloudfoundry/StartCloudFoundryApplication";
@@ -170,43 +167,13 @@ import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCrea
 import { commitIssueRelationshipIngester } from "./ingesters/commitIssueRelationship";
 import { deploymentIngester } from "./ingesters/deployment";
 import { issueRelationshipIngester } from "./ingesters/issueRelationship";
-import {
-    LogzioAutomationEventListener,
-    LogzioOptions,
-} from "./util/logzio";
-import { secret } from "./util/secrets";
+import { configureLogzio } from "./util/logzio";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
-// tslint:disable-next-line:no-var-requires
-const pj = require(`${appRoot.path}/package.json`);
-
-const token = secret("github.token", process.env.GITHUB_TOKEN);
-
 const notLocal = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
-
-const logzioOptions: LogzioOptions = {
-    applicationId: secret("applicationId"),
-    environmentId: secret("environmentId"),
-    token: secret("logzio.token", process.env.LOGZIO_TOKEN),
-};
-
-// Set uo automation event listeners
-const listeners = [
-    new ShortenUrlAutomationEventListener(),
-];
-
-// Logz.io will only work in certain environments
-if (logzioOptions.token) {
-    listeners.push(new LogzioAutomationEventListener(logzioOptions));
-}
-
 const AdminTeam = "atomist-automation";
 
 export const configuration: Configuration = {
-    teamIds: config.get("teamIds"),
-    groups: config.get("groups"),
-    application: secret("applicationId"),
-    environment: secret("environmentId"),
     commands: [
         // cloudfoundry
         secured.githubTeam(() => new CloudFoundryApplicationDetail(), AdminTeam),
@@ -216,7 +183,7 @@ export const configuration: Configuration = {
 
         // github
         () => new ApproveGitHubCommit(),
-        () => new ApproveSdmGoalStatus(),
+        secured.githubTeam(() => new ApproveSdmGoalStatus(), AdminTeam),
         () => new AssignGitHubPullRequestReviewer(),
         () => new AssignToMeGitHubIssue(),
         () => new CloseGitHubIssue(),
@@ -373,43 +340,8 @@ export const configuration: Configuration = {
         deploymentIngester,
         issueRelationshipIngester,
     ] : [],
-    listeners,
-    token,
-    http: {
-        auth: {
-            basic: {
-                enabled: config.get("http.auth.basic.enabled"),
-                username: secret("dashboard.user"),
-                password: secret("dashboard.password"),
-            },
-            bearer: {
-                enabled: config.get("http.auth.bearer.enabled"),
-                adminOrg: "atomisthq",
-            },
-        },
-    },
-    endpoints: {
-        graphql: config.get("endpoints.graphql"),
-        api: config.get("endpoints.api"),
-    },
-    applicationEvents: {
-        enabled: true,
-        teamId: "T29E48P34",
-    },
-    statsd: {
-        host: "dd-agent",
-        port: 8125,
-    },
-    ws: {
-        compress: false,
-        termination: {
-            gracePeriod: 5000,
-        },
-    },
-    logging: {
-        level: "debug",
-    },
+    listeners: [
+        new ShortenUrlAutomationEventListener(),
+    ],
+    postProcessors: [configureLogzio],
 };
-
-// Allow logging of memory footprint
-initMemoryMonitoring(`${appRoot.path}/heap`, false);

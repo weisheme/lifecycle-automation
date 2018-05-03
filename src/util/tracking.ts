@@ -21,7 +21,6 @@ import * as _ from "lodash";
 import * as shortId from "shortid";
 import { CardMessage, isCardMessage } from "../lifecycle/card";
 import { encode } from "./base64";
-import { secret } from "./secrets";
 
 /**
  * Wraps all links inside the given SlackMessage with Mixpanel tracking links
@@ -80,31 +79,6 @@ export function wrapLinks(message: SlackMessage | CardMessage, event: string):
 }
 
 /**
- * Put event information in JSON structure and base64 encode the
- * stringified result.
- * @param url link URL
- * @param event name of event triggering this message
- * @return base 64 encoded stringified version of JSON payload
- */
-export function encodePayload(url: string, event: string): string {
-    const token = secret("mixpanel.token");
-    const payload = {
-        event,
-        properties: {
-            distinct_id: namespace.get().teamId,
-            token,
-            messageid: namespace.get().invocationId,
-            teamid: namespace.get().teamId,
-            url,
-            archive: `${namespace.get().name}@${namespace.get().version}`,
-            name: namespace.get().operation,
-            version: namespace.get().version,
-        },
-    };
-    return encode(JSON.stringify(payload));
-}
-
-/**
  * Wraps a given url in a Mixpanel tracking url
  * @param url
  * @param event
@@ -116,14 +90,6 @@ export function trackableAndShortenedLink(url: string, event: string, hashToUrl:
     if (!url) {
         return url;
     }
-
-    /* tslint:disable */
-    /** if (secret("mixpanel.token")) {
-        const data = encodePayload(url, event);
-        const encodedUrl = encodeURIComponent(url);
-        url = `https://api.mixpanel.com/track/?data=${data}&ip=1&redirect=${encodedUrl}`;
-    }*/
-    /* tslint:enable */
 
     const [hash, shortUrl] = generateHash();
     hashToUrl.push([hash, url]);

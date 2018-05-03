@@ -19,8 +19,7 @@ import "mocha";
 import * as assert from "power-assert";
 
 import * as namespace from "@atomist/automation-client/internal/util/cls";
-import { secrets } from "../../src/util/secrets";
-import { encodePayload, wrapLinksInText } from "../../src/util/tracking";
+import { wrapLinksInText } from "../../src/util/tracking";
 
 const event = "RemEvent";
 const teamId = "TREM1980";
@@ -41,78 +40,7 @@ describe("tracking", () => {
             invocationId: messageId,
             ts: new Date().getTime(),
         });
-        secrets.mixpanel = { token: "xxx" };
     }
-
-    describe("encodePayload", () => {
-
-        it("should encode a payload", () => {
-            const ses = namespace.init();
-            ses.run(() => {
-                setup();
-
-                const u = "http://www.rem.com/murmur/01-radio-free-europe.html";
-                const payloadEncoded = encodePayload(u, event);
-                const payloadDecoded = base64.toByteArray(payloadEncoded);
-                const payloadString = String.fromCharCode.apply(null, payloadDecoded);
-                const payload = JSON.parse(payloadString);
-                assert(payload.event === event);
-                assert(payload.properties.distinct_id === teamId);
-                assert(payload.properties.teamid === teamId);
-                assert(payload.properties.messageid === messageId);
-                assert(payload.properties.url === u);
-                assert(payload.properties.name === operation);
-            });
-        });
-
-        it("should encode an HTTPS payload", () => {
-            const ses = namespace.init();
-            ses.run(() => {
-                setup();
-                const u = "https://www.rem.com/murmur/01-radio-free-europe.html";
-                const payloadEncoded = encodePayload(u, event);
-                const payloadDecoded = base64.toByteArray(payloadEncoded);
-                const payloadString = String.fromCharCode.apply(null, payloadDecoded);
-                const payload = JSON.parse(payloadString);
-                assert(payload.event === event);
-                assert(payload.properties.distinct_id === teamId);
-                assert(payload.properties.teamid === teamId);
-                assert(payload.properties.messageid === messageId);
-                assert(payload.properties.url === u);
-                assert(payload.properties.name === operation);
-            });
-        });
-
-        it("should encode a payload with URI escapes", () => {
-            const ses = namespace.init();
-            ses.run(() => {
-                setup();
-                const u = `http://www.rem.com/reckoning/01-%2BDon%31t%20Go%20Back%20to%2C%20Rockvillle.html`;
-                const payloadEncoded = encodePayload(u, event);
-                const payloadDecoded = base64.toByteArray(payloadEncoded);
-                const payloadString = String.fromCharCode.apply(null, payloadDecoded);
-                const payload = JSON.parse(payloadString);
-                assert(payload.event === event);
-                assert(payload.properties.distinct_id === teamId);
-                assert(payload.properties.teamid === teamId);
-                assert(payload.properties.messageid === messageId);
-                assert(payload.properties.url === u);
-                assert(payload.properties.name === operation);
-            });
-        });
-
-        it("should encode a payload the same way twice", () => {
-            const ses = namespace.init();
-            ses.run(() => {
-                setup();
-                const u = `http://www.rem.com/reckoning/01-%2BDon%31t%20Go%20Back%20to%2C%20Rockvillle.html`;
-                const payloadEncoded1 = encodePayload(u, event);
-                const payloadEncoded2 = encodePayload(u, event);
-                assert(payloadEncoded1 === payloadEncoded2);
-            });
-        });
-
-    });
 
     describe("wrapLinksInText", () => {
 
