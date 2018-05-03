@@ -528,7 +528,7 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
             text: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
             author_name: ix === 0 ? "Services" : undefined,
             author_icon: ix === 0 ? `https://images.atomist.com/rug/tasks.png` : undefined,
-            fallback: `${domain.name} ${domainMessage.join(", ")}`,
+            fallback: `${domain.name.split("_").join(":")} ${domainMessage.join(", ")}`,
             // color: "#767676",
             mrkdwn_in: ["text"],
             actions,
