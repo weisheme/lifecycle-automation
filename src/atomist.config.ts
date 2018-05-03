@@ -16,8 +16,6 @@
 
 import { Configuration } from "@atomist/automation-client";
 import * as secured from "@atomist/automation-client/secured";
-import * as appRoot from "app-root-path";
-import * as config from "config";
 import { CloudFoundryApplicationDetail } from "./handlers/command/cloudfoundry/CloudFoundryApplicationDetail";
 import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/ScaleCloudFoundryApplication";
 import { StartCloudFoundryApplication } from "./handlers/command/cloudfoundry/StartCloudFoundryApplication";
@@ -178,10 +176,10 @@ const AdminTeam = "atomist-automation";
 export const configuration: Configuration = {
     commands: [
         // cloudfoundry
-        // secured.githubTeam(() => new CloudFoundryApplicationDetail(), AdminTeam),
-        // secured.githubTeam(() => new ScaleCloudFoundryApplication(), AdminTeam),
-        // secured.githubTeam(() => new StartCloudFoundryApplication(), AdminTeam),
-        // secured.githubTeam(() => new StopCloudFoundryApplication(), AdminTeam),
+        secured.githubTeam(() => new CloudFoundryApplicationDetail(), AdminTeam),
+        secured.githubTeam(() => new ScaleCloudFoundryApplication(), AdminTeam),
+        secured.githubTeam(() => new StartCloudFoundryApplication(), AdminTeam),
+        secured.githubTeam(() => new StopCloudFoundryApplication(), AdminTeam),
 
         // github
         () => new ApproveGitHubCommit(),
