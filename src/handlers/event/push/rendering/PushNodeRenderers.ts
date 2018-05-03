@@ -566,10 +566,11 @@ export class K8PodNodeRenderer extends AbstractIdentifiableContribution
             const envs: Environment[] = [];
             if (_.isEmpty(pods)) { return; }
             pods.forEach(pod => {
-                let env = envs.find(e => e.name === pod.environment);
+                let env = envs.find(e => e.name
+                    === `${pod.environment}${pod.namespace ? ":" + pod.namespace: ""}`);
                 if (_.isUndefined(env)) {
                     env = {
-                        name: pod.environment,
+                        name: `${pod.environment}${pod.namespace ? ":" + pod.namespace: ""}`,
                         running: 0,
                         waiting: 0,
                         terminated: 0,

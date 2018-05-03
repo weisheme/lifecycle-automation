@@ -72,6 +72,7 @@ fragment PushFields on Push {
         name
         phase
         environment
+        namespace
         timestamp
         baseName
         namespace

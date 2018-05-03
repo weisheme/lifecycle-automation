@@ -5487,6 +5487,7 @@ export namespace PushFields {
     name?: string | null; 
     phase?: string | null; 
     environment?: string | null; 
+    namespace?: string | null; 
     timestamp?: string | null; 
     baseName?: string | null; 
     namespace?: string | null; 

@@ -650,6 +650,7 @@ describe("K8PodNodeRenderer", () => {
                             }
                           ],
                           "environment": "prod",
+                          "namespace": "default",
                           "timestamp": "2018-01-16T11:39:57Z",
                           "namespace": ""
                         }
@@ -669,6 +670,7 @@ describe("K8PodNodeRenderer", () => {
                           "containers": [
                           ],
                           "environment": "prod",
+                          "namespace": "default",
                           "timestamp": "2018-01-16T11:39:57Z",
                           "namespace": ""
                         }
