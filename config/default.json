@@ -1,26 +1,4 @@
 {
-  // configuration that goes into atomist.config.ts
-  "endpoints": {
-    "api":"https://automation-staging.atomist.services/registration",
-    "graphql": "https://automation-staging.atomist.services/graphql/team",
-    "events": "https://app-staging.atomist.services/v1/lifecycle"
-  },
-  "groups": [], // [ "all" ],
-  "teamIds": [ "T1L0VDKJP" ],
-  // "teamIds": [  ],
-  "policy": null,
-  "http": {
-    "auth": {
-      "bearer": {
-        "enabled": true
-      },
-      "basic": {
-        "enabled": false
-      }
-    }
-  },
-
-  // lifecycle configuration
   "lifecycles": {
     "push": {
       "configuration": {
@@ -38,7 +16,7 @@
     },
     "pull_request": {
       "configuration": {
-        "emoji-style": "default",
+        "emoji-style": "default"
       }
     }
   },

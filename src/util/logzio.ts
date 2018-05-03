@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,10 +15,11 @@
  */
 
 import {
-    AutomationContextAware,
+    Configuration,
     EventFired,
     HandlerContext,
     HandlerResult,
+    logger,
 } from "@atomist/automation-client";
 import { CommandInvocation } from "@atomist/automation-client/internal/invoker/Payload";
 import {
@@ -26,32 +27,30 @@ import {
     EventIncoming,
 } from "@atomist/automation-client/internal/transport/RequestProcessor";
 import * as nsp from "@atomist/automation-client/internal/util/cls";
-import { AutomationContext } from "@atomist/automation-client/internal/util/cls";
-import { logger } from "@atomist/automation-client/internal/util/logger";
 import {
     AutomationEventListener,
     AutomationEventListenerSupport,
 } from "@atomist/automation-client/server/AutomationEventListener";
-import {
-    Destination,
-    MessageOptions,
-} from "@atomist/automation-client/spi/message/MessageClient";
-import * as appRoot from "app-root-path";
-import * as cluster from "cluster";
-import { createLogger } from "logzio-nodejs";
-import * as serializeError from "serialize-error";
+import { Destination, MessageOptions } from "@atomist/automation-client/spi/message/MessageClient";
 
-/* tslint:disable */
-const logzioWinstonTransport = require("winston-logzio");
-const zlib = require("zlib");
-const _assign = require("lodash.assign");
-const pj = require(`${appRoot.path}/package.json`);
-/* tslint:enable */
+import * as _ from "lodash";
+import { createLogger } from "logzio-nodejs";
+import * as os from "os";
+import * as serializeError from "serialize-error";
+import logzioWinstonTransport = require("winston-logzio");
+
+export interface LogzioOptions {
+    token: string;
+    name: string;
+    version: string;
+    environment: string;
+    application: string;
+}
 
 export class LogzioAutomationEventListener extends AutomationEventListenerSupport
     implements AutomationEventListener {
 
-    private logzio;
+    private logzio: any;
 
     constructor(options: LogzioOptions) {
         super();
@@ -64,23 +63,23 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     public commandStarting(payload: CommandInvocation,
                            ctx: HandlerContext) {
-        this.sendOperation("Command", "operation", "command-handler",
-            payload.name, "starting", ctx);
+        this.sendOperation("CommandHandler", "operation", "command-handler",
+            payload.name, "starting");
     }
 
     public commandSuccessful(payload: CommandInvocation,
                              ctx: HandlerContext,
                              result: HandlerResult): Promise<any> {
-        this.sendOperation("Command", "operation", "command-handler",
-            payload.name, "successful", ctx, result);
+        this.sendOperation("CommandHandler", "operation", "command-handler",
+            payload.name, "successful", result);
         return Promise.resolve();
     }
 
     public commandFailed(payload: CommandInvocation,
                          ctx: HandlerContext,
                          err: any): Promise<any> {
-        this.sendOperation("Command", "operation", "command-handler",
-            payload.name, "failed", ctx, err);
+        this.sendOperation("CommandHandler", "operation", "command-handler",
+            payload.name, "failed", err);
         return Promise.resolve();
     }
 
@@ -90,22 +89,22 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     public eventStarting(payload: EventFired<any>,
                          ctx: HandlerContext) {
-        this.sendOperation("Event", "operation", "event-handler",
-            payload.extensions.operationName, "starting", ctx);
+        this.sendOperation("EventHandler", "operation", "event-handler",
+            payload.extensions.operationName, "starting");
     }
 
     public eventSuccessful(payload: EventFired<any>,
                            ctx: HandlerContext,
                            result: HandlerResult[]): Promise<any> {
-        this.sendOperation("Event", "operation", "event-handler",
-            payload.extensions.operationName, "successful", ctx, result);
+        this.sendOperation("EventHandler", "operation", "event-handler",
+            payload.extensions.operationName, "successful", result);
         return Promise.resolve();
     }
 
     public eventFailed(payload: EventFired<any>,
                        ctx: HandlerContext, err: any): Promise<any> {
-        this.sendOperation("Event", "operation", "event-handler",
-            payload.extensions.operationName, "failed", ctx, err);
+        this.sendOperation("EventHandler", "operation", "event-handler",
+            payload.extensions.operationName, "failed", err);
         return Promise.resolve();
     }
 
@@ -116,7 +115,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             message,
             destinations,
             options,
-        }, ctx);
+        });
     }
 
     private sendOperation(identifier: string,
@@ -124,24 +123,22 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                           type: string,
                           name: string,
                           status: string,
-                          ctx: HandlerContext,
                           err?: any) {
-        const session = getContext(ctx);
-
+        const start = nsp.get().ts;
         const data: any = {
             "operation-type": type,
             "operation-name": name,
-            "artifact": session.name,
-            "version": session.version,
-            "team-id": session.teamId,
-            "team-name": session.teamName,
+            "artifact": nsp.get().name,
+            "version": nsp.get().version,
+            "team-id": nsp.get().teamId,
+            "team-name": nsp.get().teamName,
             "event-type": eventType,
             "level": status === "failed" ? "error" : "info",
             status,
-            "execution-time": Date.now() - session.ts,
-            "correlation-id": session.correlationId,
-            "invocation-id": session.invocationId,
-            "message": `${identifier} ${name} invocation ${status} for ${session.teamName} '${session.teamId}'`,
+            "execution-time": Date.now() - start,
+            "correlation-id": nsp.get().correlationId,
+            "invocation-id": nsp.get().invocationId,
+            "message": `${identifier} ${name} invocation ${status} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
         };
         if (err) {
             if (status === "failed") {
@@ -157,32 +154,23 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
 
     private sendEvent(identifier: string,
                       type: string,
-                      payload: any,
-                      ctx?: HandlerContext) {
-
-        const session = getContext(ctx);
-
-        const data: any = {
-            "operation-name": session.operation,
-            "artifact": session.name,
-            "version": session.version,
-            "team-id": session.teamId,
-            "team-name": session.teamName,
+                      payload: any) {
+        const data = {
+            "operation-name": nsp.get().operation,
+            "artifact": nsp.get().name,
+            "version": nsp.get().version,
+            "team-id": nsp.get().teamId,
+            "team-name": nsp.get().teamName,
             "event-type": type,
             "level": "info",
-            "correlation-id": session.correlationId,
-            "invocation-id": session.invocationId,
-            "message": `${identifier} of ${session.operation} for ${session.teamName} '${session.teamId}'`,
+            "correlation-id": nsp.get().correlationId,
+            "invocation-id": nsp.get().invocationId,
+            "message": `${identifier} of ${nsp.get().operation} for ${nsp.get().teamName} '${nsp.get().teamId}'`,
+            "payload": JSON.stringify(payload),
         };
-
-        zlib.deflate(
-            JSON.stringify(payload, null, 2),
-            (err, result) => {
-                data.payload = result.toString("base64");
-                if (this.logzio) {
-                    this.logzio.log(data);
-                }
-            });
+        if (this.logzio) {
+            this.logzio.log(data);
+        }
     }
 
     private initLogzioLogging(options: LogzioOptions) {
@@ -194,19 +182,20 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             protocol: "https",
             bufferSize: 10,
             extraFields: {
-                "service": pj.name,
-                "artifact": pj.name,
-                "version": pj.version,
-                "environment": options.environmentId,
-                "application-id": options.applicationId,
+                "service": options.name,
+                "artifact": options.name,
+                "version": options.version,
+                "environment": options.environment,
+                "application-id": options.application,
                 "process-id": process.pid,
-                "cluster-role": cluster.isMaster ? "master" : "worker",
+                "host": os.hostname(),
             },
         };
         // create the logzio event logger
         this.logzio = createLogger(logzioOptions);
 
-        logzioWinstonTransport.prototype.log = function(level, msg, meta, callback) {
+        // tslint:disable:no-parameter-reassignment
+        logzioWinstonTransport.prototype.log = function(level: any, msg: any, meta: any, callback: any) {
 
             if (typeof msg !== "string" && typeof msg !== "object") {
                 msg = { message: this.safeToString(msg) };
@@ -219,7 +208,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
             }
 
             if (nsp && nsp.get()) {
-                _assign(msg, {
+                _.assign(msg, {
                     level,
                     "meta": meta,
                     "operation-name": nsp.get().operation,
@@ -231,7 +220,7 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
                     "invocation-id": nsp.get().invocationId,
                 });
             } else {
-                _assign(msg, {
+                _.assign(msg, {
                     level,
                     meta,
                 });
@@ -248,20 +237,20 @@ export class LogzioAutomationEventListener extends AutomationEventListenerSuppor
     }
 }
 
-export interface LogzioOptions {
-
-    token: string;
-    environmentId: string;
-    applicationId: string;
-
-}
-
-function getContext(ctx: HandlerContext) {
-    let session: AutomationContext;
-    if (ctx && (ctx as any).context) {
-        session = (ctx as any as AutomationContextAware).context;
-    } else {
-        session = nsp.get();
+/**
+ * Configure logzio logging if token exists in configuration.
+ */
+export function configureLogzio(configuration: Configuration): Promise<Configuration> {
+    if (_.get(configuration, "custom.logzio.token")) {
+        logger.debug(`adding logzio listener`);
+        const options: LogzioOptions = {
+            token: configuration.custom.logzio.token,
+            name: configuration.name,
+            version: configuration.version,
+            environment: configuration.environment,
+            application: configuration.application,
+        };
+        configuration.listeners.push(new LogzioAutomationEventListener(options));
     }
-    return session;
+    return Promise.resolve(configuration);
 }
