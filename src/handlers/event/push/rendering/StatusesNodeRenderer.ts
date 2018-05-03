@@ -226,7 +226,6 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                     sha: [commit.sha],
                     branch: [push.branch],
                 },
-                options: QueryNoCacheOptions,
             });
 
         const sortedGoals = [];
