@@ -525,7 +525,7 @@ export class ApplicationNodeRenderer extends AbstractIdentifiableContribution
 
         // sort the domains by name and render an attachment per domain
         const attachment: Attachment = {
-            text: `${codeLine(domain.name)} ${domainMessage.join(", ")}`,
+            text: `${codeLine(domain.name.split("_").join(":"))} ${domainMessage.join(", ")}`,
             author_name: ix === 0 ? "Services" : undefined,
             author_icon: ix === 0 ? `https://images.atomist.com/rug/tasks.png` : undefined,
             fallback: `${domain.name.split("_").join(":")} ${domainMessage.join(", ")}`,
