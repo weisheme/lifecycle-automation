@@ -1,6 +1,8 @@
 query SdmGoalById($id: ID!) {
   SdmGoal(id: $id) {
     id
+    goalSet
+    goalSetId
     environment
     uniqueName
     name
@@ -19,7 +21,6 @@ query SdmGoalById($id: ID!) {
     url
     state
     externalKey
-    goalSet
     ts
     error
     retryFeasible
