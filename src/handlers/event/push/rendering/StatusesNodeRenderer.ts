@@ -235,9 +235,8 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
              logger.warn(`Goal sorting failed with error: '%s'`, err.message);
         }
 
-        let counter = 0;
         const attachments: Attachment[] = [];
-        sortedGoals.forEach(sg => {
+        sortedGoals.forEach((sg, ix) => {
                 const statuses = sg.goals;
 
                 // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
@@ -246,6 +245,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                 const success = statuses.filter(s =>
                     ["success" , "skipped"].includes(s.state) ).length;
                 const error = statuses.length - pending - success;
+                const nonPlanned = statuses.some(s => s.state !== "planned");
 
                 // Now each one
                 const lines = statuses.map(s => {
@@ -261,15 +261,16 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                         error > 0 ? "#D94649" :
                             "#45B254";
 
-                const attachment: Attachment = {
-                    author_name: counter === 0 ? (lines.length > 1 ? "Goals" : "Goal") : undefined,
-                    author_icon: counter === 0 ? "https://images.atomist.com/rug/goals.png" : undefined,
-                    color,
-                    fallback: `${sg.goals[0].goalSet} Goals`,
-                    text: lines.join("\n"),
-                };
-                attachments.push(attachment);
-                counter++;
+                if (ix === 0 || nonPlanned) {
+                    const attachment: Attachment = {
+                        author_name: ix === 0 ? (lines.length > 1 ? "Goals" : "Goal") : undefined,
+                        author_icon: ix === 0 ? "https://images.atomist.com/rug/goals.png" : undefined,
+                        color,
+                        fallback: `${sg.goals[ 0 ].goalSet} Goals`,
+                        text: lines.join("\n"),
+                    };
+                    attachments.push(attachment);
+                }
         });
 
         if (attachments.length > 0) {
