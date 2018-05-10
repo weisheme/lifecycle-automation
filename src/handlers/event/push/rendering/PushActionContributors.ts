@@ -513,10 +513,10 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
                 options: QueryNoCacheOptions,
             });
             if (goals && goals.SdmGoal) {
-                lastGoalSet(goals.SdmGoal).filter(g => g.state === "waiting_for_approval")
-                    .forEach(g => this.createApprovalButton(g, buttons));
                 lastGoalSet(goals.SdmGoal).filter(g => g.state === "failure")
-                    .forEach(g => this.createRestartButton(g, buttons));
+                    .forEach(g => this.createButton("requested", "Restart", g, buttons));
+                lastGoalSet(goals.SdmGoal).filter(g => g.state === "waiting_for_approval")
+                    .forEach(g => this.createButton("success", "Approve", g, buttons));
             }
         }
 
@@ -527,35 +527,21 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
         return Promise.resolve([]);
     }
 
-    private createApprovalButton(goal: graphql.SdmGoalsByCommit.SdmGoal,
-                                 buttons: any[]) {
+    private createButton(state: string,
+                         label: string,
+                         goal: graphql.SdmGoalsByCommit.SdmGoal,
+                         buttons: any[]) {
 
         // Add the approve button
-        const approveHandler = new UpdateSdmGoalState();
-        approveHandler.id = goal.id;
-        approveHandler.state = "success";
+        const handler = new UpdateSdmGoalState();
+        handler.id = goal.id;
+        handler.state = state;
 
         buttons.push(buttonForCommand(
             {
-                text: `Approve '${goal.name}'`,
+                text: `${label} '${goal.name}'`,
                 role: "global",
             },
-            approveHandler));
-    }
-
-    private createRestartButton(goal: graphql.SdmGoalsByCommit.SdmGoal,
-                                buttons: any[]) {
-
-        // Add the restart button
-        const restartHandler = new UpdateSdmGoalState();
-        restartHandler.id = goal.id;
-        restartHandler.state = "requested";
-
-        buttons.push(buttonForCommand(
-            {
-                text: `Restart '${goal.name}'`,
-                role: "global",
-            },
-            restartHandler));
+            handler));
     }
 }
