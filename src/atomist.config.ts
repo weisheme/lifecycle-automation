@@ -70,7 +70,7 @@ import {
 import { ConfigureLifecyclePreferences } from "./handlers/command/preferences/ConfigureLifecyclePreferences";
 import { SetTeamPreference } from "./handlers/command/preferences/SetTeamPreference";
 import { SetUserPreference } from "./handlers/command/preferences/SetUserPreference";
-import { ApproveSdmGoalStatus } from "./handlers/command/sdm/ApproveSdmGoalStatus";
+import { UpdateSdmGoalState } from "./handlers/command/sdm/UpdateSdmGoalState";
 import { AddBotToChannel } from "./handlers/command/slack/AddBotToChannel";
 import { AssociateRepo } from "./handlers/command/slack/AssociateRepo";
 import { cancelConversation } from "./handlers/command/slack/cancel";
@@ -183,7 +183,7 @@ export const configuration: Configuration = {
 
         // github
         () => new ApproveGitHubCommit(),
-        secured.githubTeam(() => new ApproveSdmGoalStatus(), AdminTeam),
+        secured.githubTeam(() => new UpdateSdmGoalState(), AdminTeam),
         () => new AssignGitHubPullRequestReviewer(),
         () => new AssignToMeGitHubIssue(),
         () => new CloseGitHubIssue(),

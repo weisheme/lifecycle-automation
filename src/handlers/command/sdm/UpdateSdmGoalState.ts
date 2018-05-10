@@ -36,11 +36,14 @@ export const ApprovalGateParam = "atomist:approve";
  * Approve Approve SDM goal.
  */
 @CommandHandler("Approve SDM goal")
-@Tags("sdm goal", "approve")
-export class ApproveSdmGoalStatus implements HandleCommand {
+@Tags("sdm goal", "update")
+export class UpdateSdmGoalState implements HandleCommand {
 
     @Parameter({ description: "id", pattern: /^.*$/, required: true })
     public id: string;
+
+    @Parameter({ description: "state", pattern: /^.*$/, required: true })
+    public state: string;
 
     @MappedParameter(MappedParameters.SlackUser)
     public requester: string;
@@ -79,7 +82,7 @@ export class ApproveSdmGoalStatus implements HandleCommand {
             prov,
         ];
         goal.approval = prov;
-        goal.state = "success";
+        goal.state = this.state;
         goal.ts = Date.now();
         delete goal.id;
 

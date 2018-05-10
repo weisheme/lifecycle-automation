@@ -33,7 +33,7 @@ import { truncateCommitMessage } from "../../../../util/helpers";
 import { CreateGitHubRelease } from "../../../command/github/CreateGitHubRelease";
 import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
-import { ApproveSdmGoalStatus } from "../../../command/sdm/ApproveSdmGoalStatus";
+import { UpdateSdmGoalState } from "../../../command/sdm/UpdateSdmGoalState";
 import { LifecycleActionPreferences } from "../../preferences";
 import { Domain } from "../PushLifecycle";
 
@@ -515,6 +515,8 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
             if (goals && goals.SdmGoal) {
                 lastGoalSet(goals.SdmGoal).filter(g => g.state === "waiting_for_approval")
                     .forEach(g => this.createApprovalButton(g, buttons));
+                lastGoalSet(goals.SdmGoal).filter(g => g.state === "failure")
+                    .forEach(g => this.createRestartButton(g, buttons));
             }
         }
 
@@ -529,8 +531,9 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
                                  buttons: any[]) {
 
         // Add the approve button
-        const approveHandler = new ApproveSdmGoalStatus();
+        const approveHandler = new UpdateSdmGoalState();
         approveHandler.id = goal.id;
+        approveHandler.state = "success";
 
         buttons.push(buttonForCommand(
             {
@@ -538,5 +541,21 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
                 role: "global",
             },
             approveHandler));
+    }
+
+    private createRestartButton(goal: graphql.SdmGoalsByCommit.SdmGoal,
+                                buttons: any[]) {
+
+        // Add the restart button
+        const restartHandler = new UpdateSdmGoalState();
+        restartHandler.id = goal.id;
+        restartHandler.state = "requested";
+
+        buttons.push(buttonForCommand(
+            {
+                text: `Restart '${goal.name}'`,
+                role: "global",
+            },
+            restartHandler));
     }
 }
