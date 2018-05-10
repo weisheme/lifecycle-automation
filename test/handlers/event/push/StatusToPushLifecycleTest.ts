@@ -1082,7 +1082,7 @@ describe("StatusToPushLifecycle", () => {
                 assert(sm.attachments.length === 7);
                 assert(sm.attachments[1].author_name === "Goals");
                 assert(sm.attachments[3].actions.length === 1);
-                assert(sm.attachments[3].actions[0].text === "Approve 'Deploy to prod'");
+                assert(sm.attachments[3].actions[0].text === "Approve 'deploy to prod'");
                 messageSent = true;
                 return Promise.resolve();
             }

@@ -537,7 +537,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
 
         buttons.push(buttonForCommand(
             {
-                text: `Approve '${_.upperFirst(goal.name)}'`,
+                text: `Approve '${goal.name}'`,
                 role: "global",
             },
             approveHandler));
@@ -553,7 +553,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
 
         buttons.push(buttonForCommand(
             {
-                text: `Restart '${_.upperFirst(goal.name)}'`,
+                text: `Restart '${goal.name}'`,
                 role: "global",
             },
             restartHandler));
