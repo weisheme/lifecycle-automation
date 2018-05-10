@@ -48,7 +48,7 @@ export function checkRepo(token: string,
                           name: string,
                           owner: string,
                           ctx: HandlerContext): Promise<boolean> {
-    return ctx.graphClient.query<graphql.ProviderTypeFromRepo.Query, graphql.ProviderTypeFromRepo.Variables>({
+    /*return ctx.graphClient.query<graphql.ProviderTypeFromRepo.Query, graphql.ProviderTypeFromRepo.Variables>({
         name: "providerTypeFromRepo",
         variables: {
             name,
@@ -65,7 +65,8 @@ export function checkRepo(token: string,
             return github.api(token, url).repos.get({ owner, repo: name })
                 .then(() => true, () => false);
         }
-    });
+    });*/
+    return Promise.resolve(true);
 }
 
 export function noRepoMessage(repo: string, owner: string, ctx: HandlerContext): slack.SlackMessage {
