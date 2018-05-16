@@ -30,11 +30,13 @@ function findMatchingRegex(text: string, regexes: string[]): string {
     return regexes.find(r => new RegExp(r.replace(new RegExp("^/(.*?)/"), "$1")).test(text));
 }
 
-export function circleWorkflowtoStages(workflow: graphql.PushFields.Workflow,
-                                       workflowPush: PushTrigger = {name: "master", type: "branch"}): WorkflowStage[] {
+export function circleWorkflowtoStages(
+    workflow: graphql.PushFields.Workflow,
+    workflowPush: PushTrigger = { name: "master", type: "branch" },
+): WorkflowStage[] {
 
     const doc = yaml.load(workflow.config);
-    const jobsConfig = _.find(_.values(doc.workflows), v => v.jobs).jobs;
+    const jobsConfig = (_.find(_.values(doc.workflows), v => v.jobs) as any).jobs;
     const stages: Stage[] = [];
     jobsConfig.forEach(jc => {
         const name = typeof jc === "string" ? jc : _.head(_.keys(jc));
