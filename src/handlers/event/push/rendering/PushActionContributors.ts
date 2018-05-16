@@ -514,9 +514,9 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
             });
             if (goals && goals.SdmGoal) {
                 lastGoalSet(goals.SdmGoal).filter(g => g.state === "failure")
-                    .forEach(g => this.createButton("requested", "Restart", g, buttons));
+                    .forEach(g => this.createButton("requested", "Restart", g, push, buttons));
                 lastGoalSet(goals.SdmGoal).filter(g => g.state === "waiting_for_approval")
-                    .forEach(g => this.createButton("success", "Approve", g, buttons));
+                    .forEach(g => this.createButton("success", "Approve", g, push, buttons));
             }
         }
 
@@ -530,12 +530,14 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
     private createButton(state: string,
                          label: string,
                          goal: graphql.SdmGoalsByCommit.SdmGoal,
+                         push: graphql.PushToPushLifecycle.Push,
                          buttons: any[]) {
 
         // Add the approve button
         const handler = new UpdateSdmGoalState();
         handler.id = goal.id;
         handler.state = state;
+        (handler as any).__atomist_github_owner = push.repo.owner;
 
         buttons.push(buttonForCommand(
             {

@@ -139,7 +139,7 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
         // List all the statuses on the after commit
         const commit = push.after;
         // exclude build statuses already displayed
-        const statuses = commit.statuses.filter(status => notAlreadyDisplayed(push, status));
+        const statuses = commit.statuses.filter(status => notAlreadyDisplayed(push, status, false));
         if (statuses.length === 0) {
             return Promise.resolve(msg);
         }
@@ -218,7 +218,6 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                         context: RendererContext): Promise<SlackMessage> {
 
         const commit = push.after;
-
         const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
                 graphql.SdmGoalsByCommit.Variables>({
                 name: "sdmGoalsByCommit",
@@ -226,6 +225,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                     sha: [commit.sha],
                     branch: [push.branch],
                 },
+                options: QueryNoCacheOptions,
             });
 
         const sortedGoals = [];
@@ -334,68 +334,99 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        if (node.after) {
-            return node.after.statuses && node.after.statuses.length > 0;
-        } else {
-            return false;
-        }
+        return node.after;
     }
 
-    public render(push: graphql.PushToPushLifecycle.Push,
-                  actions: CardAction[],
-                  msg: CardMessage,
-                  context: RendererContext): Promise<CardMessage> {
-
-        // List all the statuses on the after commit
+    public async render(push: graphql.PushToPushLifecycle.Push,
+                        actions: CardAction[],
+                        msg: CardMessage,
+                        context: RendererContext): Promise<CardMessage> {
         const commit = push.after;
-        // exclude build statuses already displayed
-        const goals = commit.statuses.filter(status => status.context.includes("sdm/"));
-        if (goals.length === 0) {
-            return Promise.resolve(msg);
+        const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
+            graphql.SdmGoalsByCommit.Variables>({
+            name: "sdmGoalsByCommit",
+            variables: {
+                sha: [commit.sha],
+                branch: [push.branch],
+            },
+            options: QueryNoCacheOptions,
+        });
+
+        const sortedGoals = [];
+        try {
+            sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
+        } catch (err) {
+            logger.warn(`Goal sorting failed with error: '%s'`, err.message);
         }
 
-        const success = goals.filter(s => s.state === "success").length;
+        const body = [];
+        let success = 0;
+        let total = 0;
+        let pending = 0;
+        sortedGoals.forEach(sg => {
+            const statuses = sg.goals;
 
-        // Now each one
-        const body = goals.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+            // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
+            success += statuses.filter(s =>
+                ["success" , "skipped"].includes(s.state) ).length;
+            pending += statuses.filter(s =>
+                ["planned" , "requested" , "in_process", "waiting_for_approval"].includes(s.state)).length;
+            total += statuses.length;
 
-            let icon;
-            if (s.state === "success") {
-                icon = "css://icon-status-check";
-            } else if (s.state === "pending") {
-                icon = "css://icon-status-check alert";
-            } else {
-                icon = "css://icon-status-check fail";
-            }
+            // Now each one
+            statuses.forEach(s => {
+                let approval = "";
+                let text = "";
+                if (s.approval && s.approval.userId) {
+                    approval = ` | approved by @${s.approval.userId}`;
+                }
+                if (s.url != null && s.url.length > 0) {
+                    text = `${url(s.url, s.description)}${approval}`;
+                } else {
+                    text = `${s.description}${approval}`;
+                }
+                const icon = this.emoji(s.state);
 
-            let text;
-            if (s.targetUrl != null && s.targetUrl.length > 0) {
-                text = `${url(s.targetUrl, s.description)}`;
-            } else {
-                text = `${s.description}`;
-            }
-
-            return {
-                icon,
-                text,
-            };
+                body.push({
+                    icon,
+                    text,
+                });
+            });
         });
 
-        msg.correlations.push({
-            type: "status",
-            icon: "css://icon-panels",
-            shortTitle: `${success}/${goals.length}`,
-            title: `${goals.length} ${goals.length === 1 ? "Goal" : "Goals"}`,
-            body,
-        });
+        if (total > 0) {
+            msg.correlations.push({
+                type: "goal",
+                icon: `css://icon-panels${pending > 0 ? " alert" : ""}`,
+                shortTitle: `${success}/${total}`,
+                title: `${total} ${total === 1 ? "Goal" : "Goals"}`,
+                body,
+            });
 
-        msg.actions.push(...actions);
+            msg.actions.push(...actions);
+        }
 
         return Promise.resolve(msg);
     }
+
+    private emoji(state: string): string {
+        switch (state) {
+            case "planned":
+            case "requested":
+            case "in_process":
+            case "waiting_for_approval":
+                return "css://icon-status-check alert";
+            case "success":
+                return "css://icon-status-check";
+            case "skipped":
+                return "css://icon-status-check";
+            default:
+                return "css://icon-status-check fail";
+        }
+    }
 }
 
-function notAlreadyDisplayed(push: any, status: any): boolean {
+function notAlreadyDisplayed(push: any, status: any, hideSdm: boolean = true): boolean {
     if (status.context.indexOf("travis-ci") >= 0 && push.builds != null &&
         push.builds.some(b => b.provider === "travis")) {
         return false;
@@ -408,7 +439,7 @@ function notAlreadyDisplayed(push: any, status: any): boolean {
         push.builds.some(b => b.provider === "jenkins")) {
         return false;
     }
-    if (status.context.indexOf("sdm/") >= 0) {
+    if (status.context.indexOf("sdm/") >= 0 && hideSdm) {
         return false;
     }
     return true;

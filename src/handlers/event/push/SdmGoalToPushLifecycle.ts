@@ -20,6 +20,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    reduceResults,
     Secret,
     Secrets,
     Tags,
@@ -28,7 +29,10 @@ import { subscription } from "@atomist/automation-client/graph/graphQL";
 import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import * as _ from "lodash";
 import * as graphql from "../../../typings/types";
-import { PushToPushLifecycle } from "./PushToPushLifecycle";
+import {
+    PushToPushCardLifecycle,
+    PushToPushLifecycle,
+} from "./PushToPushLifecycle";
 
 /**
  * Send a Push lifecycle message on SdmGoal events.
@@ -60,7 +64,10 @@ export class SdmGoalToPushLifecycle implements HandleEvent<graphql.SdmGoalToPush
         const handler = new PushToPushLifecycle();
         handler.orgToken = this.orgToken;
 
-        return handler.handle({
+        const cardHandler = new PushToPushCardLifecycle();
+        cardHandler.orgToken = this.orgToken;
+
+        return Promise.all([handler.handle({
             data: {
                 Push: [push],
             },
@@ -69,6 +76,17 @@ export class SdmGoalToPushLifecycle implements HandleEvent<graphql.SdmGoalToPush
                 ...e.extensions,
                 operationName: "PushToPushLifecycle",
             },
-        }, ctx);
+        }, ctx),
+            cardHandler.handle({
+                data: {
+                    Push: [push],
+                },
+                secrets: e.secrets,
+                extensions: {
+                    ...e.extensions,
+                    operationName: "PushToPushCardLifecycle",
+                },
+            }, ctx)])
+            .then(results => reduceResults(results));
     }
 }

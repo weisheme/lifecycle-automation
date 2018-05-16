@@ -45,8 +45,11 @@ export class UpdateSdmGoalState implements HandleCommand {
     @Parameter({ description: "state", pattern: /^.*$/, required: true })
     public state: string;
 
-    @MappedParameter(MappedParameters.SlackUserName)
-    public requester: string;
+    @MappedParameter(MappedParameters.SlackUserName, false)
+    public slackRequester: string;
+
+    @MappedParameter(MappedParameters.GitHubUserLogin, false)
+    public githubRequester: string;
 
     @MappedParameter(MappedParameters.SlackTeam, false)
     public teamId: string;
@@ -74,7 +77,7 @@ export class UpdateSdmGoalState implements HandleCommand {
             correlationId: actx.context.correlationId,
             ts: Date.now(),
             channelId: this.channel,
-            userId: this.requester,
+            userId: this.slackRequester ? this.slackRequester : this.githubRequester,
         };
 
         goal.provenance = [

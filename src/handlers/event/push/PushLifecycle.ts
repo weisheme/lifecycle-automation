@@ -19,7 +19,6 @@ import {
     HandlerContext,
 } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import {
@@ -37,8 +36,8 @@ import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/Colla
 import { EventsCardNodeRenderer } from "../../../lifecycle/rendering/EventsCardNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
-import { PushToPushLifecycle } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
+import { PushToPushLifecycle } from "../../../typings/types";
 import { LifecyclePreferences } from "../preferences";
 import {
     ApplicationActionContributor,
@@ -81,25 +80,15 @@ import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
 export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
     protected prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<CardMessage> {
-        return ctx.graphClient.query<graphql.CardEvents.Query, graphql.CardEvents.Variables>({
-                name: "cardEvents",
-                variables: {
-                    key: [lifecycle.id],
-                },
-                options: QueryNoCacheOptions,
-            })
-            .then(result => {
-                const msg = newCardMessage("push");
-                const repo = lifecycle.extract("repo");
-                msg.repository = {
-                    owner: repo.owner,
-                    name: repo.name,
-                    slug: `${repo.owner}/${repo.name}`,
-                };
-                msg.ts = +lifecycle.timestamp;
-                msg.events = _.cloneDeep(_.get(result, "Card[0].events") || []);
-                return Promise.resolve(msg);
-            });
+            const msg = newCardMessage("push");
+            const repo = lifecycle.extract("repo");
+            msg.repository = {
+                owner: repo.owner,
+                name: repo.name,
+                slug: `${repo.owner}/${repo.name}`,
+            };
+            msg.ts = +lifecycle.timestamp;
+            return Promise.resolve(msg);
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
@@ -136,7 +125,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                     new CardActionContributorWrapper(new ReleaseActionContributor()),
                     new CardActionContributorWrapper(new BuildActionContributor()),
                     new CardActionContributorWrapper(new PullRequestActionContributor()),
-                    // new CardActionContributorWrapper(new ApproveGoalActionContributor()),
+                    new CardActionContributorWrapper(new ApproveGoalActionContributor()),
                     // new CardActionContributorWrapper(new ApplicationActionContributor()),
                 ],
                 id: `push_lifecycle/${push.repo.owner}/${push.repo.name}/${push.branch}/${push.after.sha}`,
