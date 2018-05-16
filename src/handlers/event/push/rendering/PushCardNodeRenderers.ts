@@ -294,10 +294,10 @@ export class ApplicationCardNodeRenderer extends AbstractIdentifiableContributio
         }
 
         msg.correlations.push({
-            type: "application",
+            type: `application-${domain.name}`,
             icon: "css://icon-servers",
-            title: `${domain.name}`,
-            shortTitle: `${domain.name}`,
+            title: `${domain.name.split("_").join(":")}`,
+            shortTitle: `${domain.name.split("_").join(":")}`,
             body: domainMessage.map(d => ({
                 text: d,
             })),
