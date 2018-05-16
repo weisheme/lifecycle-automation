@@ -249,10 +249,14 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 
                 // Now each one
                 const lines = statuses.map(s => {
+                    let approval = "";
+                    if (s.approval && s.approval.userId) {
+                        approval = ` | approved by @${s.approval.userId}`;
+                    }
                     if (s.url != null && s.url.length > 0) {
-                        return `${this.emoji(s.state)} ${url(s.url, s.description)}`;
+                        return `${this.emoji(s.state)} ${url(s.url, s.description)}${approval}`;
                     } else {
-                        return `${this.emoji(s.state)} ${s.description}`;
+                        return `${this.emoji(s.state)} ${s.description}${approval}`;
                     }
                 });
 

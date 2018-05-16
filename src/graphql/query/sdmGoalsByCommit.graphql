@@ -19,5 +19,8 @@ query SdmGoalsByCommit($sha: [String!], $branch: [String!]) {
       version
     }
     ts
+    approval {
+      userId
+    }
   }
 }

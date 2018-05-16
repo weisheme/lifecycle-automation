@@ -2214,6 +2214,8 @@ export namespace SdmGoalById {
 
   export type SdmGoal = {
     id?: string | null; 
+    goalSet?: string | null; 
+    goalSetId?: string | null; 
     environment?: string | null; 
     uniqueName?: string | null; 
     name?: string | null; 
@@ -2225,7 +2227,6 @@ export namespace SdmGoalById {
     url?: string | null; 
     state?: string | null; 
     externalKey?: string | null; 
-    goalSet?: string | null; 
     ts?: number | null; 
     error?: string | null; 
     retryFeasible?: boolean | null; 
@@ -2294,6 +2295,7 @@ export namespace SdmGoalsByCommit {
     preConditions?: PreConditions[] | null; 
     provenance?: Provenance[] | null; 
     ts?: number | null; 
+    approval?: Approval | null; 
   } 
 
   export type PreConditions = {
@@ -2305,6 +2307,10 @@ export namespace SdmGoalsByCommit {
     registration?: string | null; 
     name?: string | null; 
     version?: string | null; 
+  } 
+
+  export type Approval = {
+    userId?: string | null; 
   } 
 }
 export namespace TagByName {
