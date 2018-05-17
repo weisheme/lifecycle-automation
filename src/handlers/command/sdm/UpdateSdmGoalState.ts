@@ -43,7 +43,7 @@ export class UpdateSdmGoalState implements HandleCommand {
     public id: string;
 
     @Parameter({ description: "state", pattern: /^.*$/, required: true })
-    public state: string;
+    public state: "success" | "requested";
 
     @MappedParameter(MappedParameters.SlackUserName, false)
     public slackRequester: string;
