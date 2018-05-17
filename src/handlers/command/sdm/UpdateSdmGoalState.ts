@@ -84,7 +84,12 @@ export class UpdateSdmGoalState implements HandleCommand {
             ...goal.provenance,
             prov,
         ];
-        goal.approval = prov;
+
+        // Don't set approval for restart updates
+        if (this.state === "success") {
+            goal.approval = prov;
+        }
+
         goal.state = this.state;
         goal.ts = Date.now();
         delete goal.id;
