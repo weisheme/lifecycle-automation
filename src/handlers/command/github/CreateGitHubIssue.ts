@@ -66,6 +66,9 @@ export class CreateGitHubIssue implements HandleCommand {
     @MappedParameter(MappedParameters.GitHubOwner)
     public owner: string;
 
+    @MappedParameter(MappedParameters.GitHubRepositoryProvider)
+    public providerId: string;
+
     @MappedParameter(MappedParameters.GitHubApiUrl)
     public apiUrl: string;
 
@@ -119,10 +122,24 @@ export class CreateGitHubIssue implements HandleCommand {
                 }
             })
             .then(result => {
+                return ctx.graphClient.query<graphql.ProviderTypeFromRepo.Query,
+                    graphql.ProviderTypeFromRepo.Variables>({
+                        name: "providerTypeFromRepo",
+                        variables: {
+                            owner: this.owner,
+                            name: this.repo,
+                            providerId: this.providerId,
+                        },
+                    })
+                    .then(providerResult => {
+                        return {issue: result.data, provider: _.get(providerResult, "Repo[0].org.provider")};
+                    });
+            })
+            .then(result => {
                 // if the originating channel isn't mapped to the repo, we render the issue right here
                 // by re-using all the rendering logic from lifecycle.
-                if (result) {
-                    const gi = result.data;
+                if (result && result.issue && result.provider) {
+                    const gi = result.issue;
                     const issue: graphql.IssueToIssueLifecycle.Issue = {
                         number: gi.number,
                         body: gi.body,
@@ -138,6 +155,9 @@ export class CreateGitHubIssue implements HandleCommand {
                                     id: this.teamId,
                                 },
                             }],
+                            org: {
+                                provider: result.provider,
+                            },
                         },
                         createdAt: gi.created_at,
                         updatedAt: gi.updated_at,
