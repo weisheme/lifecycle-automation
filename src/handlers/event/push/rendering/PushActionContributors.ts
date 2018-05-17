@@ -536,7 +536,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
         // Add the approve button
         const handler = new UpdateSdmGoalState();
         handler.id = goal.id;
-        handler.state = state;
+        handler.state = state as "requested" | "success";
         (handler as any).__atomist_github_owner = push.repo.owner;
 
         buttons.push(buttonForCommand(
