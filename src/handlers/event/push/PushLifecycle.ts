@@ -38,6 +38,7 @@ import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRende
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
 import { PushToPushLifecycle } from "../../../typings/types";
+import { isGitHub } from "../../../util/helpers";
 import { LifecyclePreferences } from "../preferences";
 import {
     ApplicationActionContributor,
@@ -119,14 +120,18 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                     new ApplicationCardNodeRenderer(),
                     new CollaboratorCardNodeRenderer(node => node.after != null),
                 ],
-                contributors: [
+                contributors: isGitHub(push.repo) ? [
                     new CardActionContributorWrapper(new TagPushActionContributor()),
                     new CardActionContributorWrapper(new TagTagActionContributor()),
                     new CardActionContributorWrapper(new ReleaseActionContributor()),
                     new CardActionContributorWrapper(new BuildActionContributor()),
                     new CardActionContributorWrapper(new PullRequestActionContributor()),
                     new CardActionContributorWrapper(new ApproveGoalActionContributor()),
-                    // new CardActionContributorWrapper(new ApplicationActionContributor()),
+                    new CardActionContributorWrapper(new ApplicationActionContributor()),
+                ] : [
+                    new CardActionContributorWrapper(new BuildActionContributor()),
+                    new CardActionContributorWrapper(new ApproveGoalActionContributor()),
+                    new CardActionContributorWrapper(new ApplicationActionContributor()),
                 ],
                 id: `push_lifecycle/${push.repo.owner}/${push.repo.name}/${push.branch}/${push.after.sha}`,
                 timestamp: Date.now().toString(),
@@ -195,12 +200,16 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
                     new K8PodNodeRenderer(),
                     new BlackDuckFingerprintNodeRenderer(),
                     new FooterNodeRenderer((node: any) => node.after)],
-                contributors: [
+                contributors: isGitHub(push.repo) ? [
                     new TagPushActionContributor(),
                     new TagTagActionContributor(),
                     new ReleaseActionContributor(),
                     new BuildActionContributor(),
                     new PullRequestActionContributor(),
+                    new ApproveGoalActionContributor(),
+                    new ApplicationActionContributor(),
+                    ] : [
+                    new BuildActionContributor(),
                     new ApproveGoalActionContributor(),
                     new ApplicationActionContributor(),
                 ],

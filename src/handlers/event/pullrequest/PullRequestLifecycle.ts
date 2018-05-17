@@ -27,6 +27,7 @@ import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/Colla
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
 import * as graphql from "../../../typings/types";
+import { isGitHub } from "../../../util/helpers";
 import { LifecyclePreferences } from "../preferences";
 import {
     ApproveActionContributor,
@@ -96,7 +97,7 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
                 new ReviewCardNodeRenderer(),
                 new CollaboratorCardNodeRenderer(node => node.baseBranchName != null),
             ],
-            contributors: [
+            contributors: isGitHub(pullrequest.repo) ? [
                 new CardActionContributorWrapper(new MergeActionContributor()),
                 new CardActionContributorWrapper(new AssignReviewerActionContributor()),
                 new CardActionContributorWrapper(new AutoMergeActionContributor()),
@@ -104,6 +105,7 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
                 new CardActionContributorWrapper(new ThumbsUpActionContributor()),
                 new CardActionContributorWrapper(new ApproveActionContributor()),
                 new CardActionContributorWrapper(new DeleteActionContributor()),
+            ] : [
             ],
             id: `pullrequest_lifecycle/${repo.owner}/${repo.name}/${pullrequest.number}`,
             timestamp,
@@ -174,7 +176,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
                 new ReferencedIssuesNodeRenderer(),
                 new AttachImagesNodeRenderer(node => node.state === "open"),
                 new FooterNodeRenderer(node => node.baseBranchName)],
-            contributors: [
+            contributors: isGitHub(pullrequest.repo) ? [
                 new MergeActionContributor(),
                 new AssignReviewerActionContributor(),
                 new AutoMergeActionContributor(),
@@ -182,6 +184,7 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
                 new ThumbsUpActionContributor(),
                 new ApproveActionContributor(),
                 new DeleteActionContributor(),
+            ] : [
             ],
             id: `pullrequest_lifecycle/${repo.owner}/${repo.name}/${pullrequest.number}`,
             timestamp,
