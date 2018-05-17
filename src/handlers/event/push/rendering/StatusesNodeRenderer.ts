@@ -412,16 +412,19 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
     private emoji(state: string): string {
         switch (state) {
             case "planned":
+                return "css://icon-requested alert";
             case "requested":
+                return "css://icon-waiting alert";
             case "in_process":
+                return "css://icon-oval-icon alert";
             case "waiting_for_approval":
-                return "css://icon-status-check alert";
+                return "css://icon-waiting-on-approval alert";
             case "success":
-                return "css://icon-status-check";
+                return "css://icon-circle-check";
             case "skipped":
-                return "css://icon-status-check";
+                return "css://icon-skipped";
             default:
-                return "css://icon-status-check fail";
+                return "css://icon-circle-x fail";
         }
     }
 }
