@@ -236,7 +236,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         }
 
         const attachments: Attachment[] = [];
-        sortedGoals.forEach((sg, ix) => {
+        sortedGoals.filter(sg => sg.goals && sg.goals.length > 0).forEach((sg, ix) => {
                 const statuses = sg.goals;
 
                 // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
@@ -363,7 +363,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
         let success = 0;
         let total = 0;
         let pending = 0;
-        sortedGoals.forEach(sg => {
+        sortedGoals.filter(sg => sg.goals && sg.goals.length > 0).forEach(sg => {
             const statuses = sg.goals;
 
             // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
