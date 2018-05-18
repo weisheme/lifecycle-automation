@@ -15,11 +15,9 @@
  */
 
 import {
-    buildEnum,
+    buildIngester,
     buildType,
-    ingester,
     IngesterBuilder,
-    type,
 } from "@atomist/automation-client/ingesters";
 
 export const DeploymentRootType = "Deployment";
@@ -34,7 +32,7 @@ export interface Deployment {
     ts: number;
 }
 
-export const deploymentIngester: IngesterBuilder = ingester(DeploymentRootType)
+export const deploymentIngester: IngesterBuilder = buildIngester(DeploymentRootType)
     .withType(buildType("DeploymentCommit")
         .withStringField("owner", "", ["compositeId"])
         .withStringField("repo", "", ["compositeId"])

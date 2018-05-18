@@ -15,6 +15,8 @@
  */
 
 import { Configuration } from "@atomist/automation-client";
+import { configureLogzio } from "@atomist/automation-client-ext-logzio";
+import { configureRaven } from "@atomist/automation-client-ext-raven";
 import * as secured from "@atomist/automation-client/secured";
 import { CloudFoundryApplicationDetail } from "./handlers/command/cloudfoundry/CloudFoundryApplicationDetail";
 import { ScaleCloudFoundryApplication } from "./handlers/command/cloudfoundry/ScaleCloudFoundryApplication";
@@ -167,13 +169,12 @@ import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCrea
 import { commitIssueRelationshipIngester } from "./ingesters/commitIssueRelationship";
 import { deploymentIngester } from "./ingesters/deployment";
 import { issueRelationshipIngester } from "./ingesters/issueRelationship";
-import { configureLogzio } from "./util/logzio";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
 const notLocal = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 const AdminTeam = "atomist-automation";
 
-export const configuration: Configuration = {
+export const configuration: any = {
     commands: [
         // cloudfoundry
         secured.githubTeam(() => new CloudFoundryApplicationDetail(), AdminTeam),
@@ -343,5 +344,8 @@ export const configuration: Configuration = {
     listeners: [
         new ShortenUrlAutomationEventListener(),
     ],
-    postProcessors: [configureLogzio],
+    postProcessors: [
+        configureLogzio,
+        configureRaven,
+    ],
 };

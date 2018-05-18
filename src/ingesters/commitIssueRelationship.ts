@@ -16,10 +16,9 @@
 
 import {
     buildEnum,
+    buildIngester,
     buildType,
-    ingester,
     IngesterBuilder,
-    type,
 } from "@atomist/automation-client/ingesters";
 
 export const CommitIssueRelationshipRootType = "CommitIssueRelationship";
@@ -38,7 +37,7 @@ export interface CommitIssueRelationship {
     };
 }
 
-export const commitIssueRelationshipIngester: IngesterBuilder = ingester(CommitIssueRelationshipRootType)
+export const commitIssueRelationshipIngester: IngesterBuilder = buildIngester(CommitIssueRelationshipRootType)
     .withType(buildType("CommitIssueRelationshipIssue")
         .withStringField("owner", "", ["compositeId"])
         .withStringField("repo", "", ["compositeId"])

@@ -15,9 +15,9 @@
  */
 
 import {
-    ingester,
+    buildIngester,
+    buildType,
     IngesterBuilder,
-    type,
 } from "@atomist/automation-client/ingesters";
 
 export interface IssueRelationship {
@@ -36,12 +36,12 @@ export interface IssueRelationship {
     };
 }
 
-export const issueRelationshipIngester: IngesterBuilder = ingester("IssueRelationship")
-    .withType(type("IssueRelationshipIssue")
+export const issueRelationshipIngester: IngesterBuilder = buildIngester("IssueRelationship")
+    .withType(buildType("IssueRelationshipIssue")
         .withStringField("owner")
         .withStringField("repo")
         .withStringField("issue"))
-    .withType(type("IssueRelationship")
+    .withType(buildType("IssueRelationship")
         .withStringField(
             "relationshipId",
             "Unique id of the issue relationship",
