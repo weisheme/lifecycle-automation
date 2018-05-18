@@ -132,14 +132,14 @@ export class CreateGitHubIssue implements HandleCommand {
                         },
                     })
                     .then(providerResult => {
-                        return {issue: result.data, provider: _.get(providerResult, "Repo[0].org.provider")};
+                        return {issue: result, provider: _.get(providerResult, "Repo[0].org.provider")};
                     });
             })
             .then(result => {
                 // if the originating channel isn't mapped to the repo, we render the issue right here
                 // by re-using all the rendering logic from lifecycle.
-                if (result && result.issue && result.provider) {
-                    const gi = result.issue;
+                if (result && result.issue && result.issue.data && result.provider) {
+                    const gi = result.issue.data;
                     const issue: graphql.IssueToIssueLifecycle.Issue = {
                         number: gi.number,
                         body: gi.body,
