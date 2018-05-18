@@ -32,7 +32,10 @@ import {
 } from "../../../../lifecycle/Lifecycle";
 import { SdmGoalsByCommit } from "../../../../typings/types";
 import * as graphql from "../../../../typings/types";
-import { sortGoals } from "../../../../util/goals";
+import {
+    lastGoalSet,
+    sortGoals,
+} from "../../../../util/goals";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
 export class StatusesNodeRenderer extends AbstractIdentifiableContribution
@@ -278,7 +281,8 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         });
 
         if (attachments.length > 0) {
-            const ts = goals.SdmGoal.map(g => g.ts);
+            const lastGoals = lastGoalSet(goals.SdmGoal);
+            const ts = lastGoals.map(g => g.ts);
             const min = _.min(ts);
             const max = _.max(ts);
 
@@ -288,15 +292,15 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 
             const duration = moment.duration(max - min, "millisecond").format("h[h] m[m] s[s]");
             const creator = _.flatten<SdmGoalsByCommit.Provenance>(
-                goals.SdmGoal.map(g => (g.provenance || [])))
+                lastGoals.map(g => (g.provenance || [])))
                 .find(p => p.name === "SetGoalsOnPush");
 
             const attachment = attachments.slice(-1)[0];
             attachment.actions = actions;
             if (creator) {
                 attachment.footer =
-                    `${creator.registration}:${creator.version} | ${goals.SdmGoal[0].goalSet} | ${
-                    goals.SdmGoal[0].goalSetId.slice(0, 7)} | ${duration}`;
+                    `${creator.registration}:${creator.version} | ${lastGoals[0].goalSet} | ${
+                        lastGoals[0].goalSetId.slice(0, 7)} | ${duration}`;
             } else {
                 attachment.footer = duration;
             }
