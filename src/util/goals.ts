@@ -27,11 +27,12 @@ export function lastGoalSet(allGoals: SdmGoalsByCommit.SdmGoal[]): SdmGoalsByCom
     // find latest goal set
     const goalSet = _.maxBy(_.map(_.groupBy(allGoals, g => g.goalSetId), v => {
         return ({ goalSetId: v[0].goalSetId, ts: _.max(v.map(vv => vv.ts))});
-    }), "ts").goalSetId;
+    }), "ts");
 
     // only maintain latest version of SdmGoals
     const goals: SdmGoalsByCommit.SdmGoal[] = [];
-    _.forEach(_.groupBy(allGoals.filter(g => g.goalSetId === goalSet), g => `${g.environment}-${g.name}`), v => {
+    _.forEach(_.groupBy(allGoals.filter(g => g.goalSetId === goalSet.goalSetId),
+            g => `${g.environment}-${g.name}`), v => {
         // using the ts property might not be good enough but let's see
         goals.push(_.maxBy(v, "ts"));
     });

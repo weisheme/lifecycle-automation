@@ -1822,4 +1822,8 @@ describe("goals", () => {
         const goals = JSON.parse(twoGoalSets);
         sortGoals(_.shuffle(goals));
     });
+
+    it("handle no goals", () => {
+        sortGoals(_.shuffle([]));
+    });
 });
