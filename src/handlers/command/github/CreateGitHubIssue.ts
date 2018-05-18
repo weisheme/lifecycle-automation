@@ -174,7 +174,6 @@ export class CreateGitHubIssue implements HandleCommand {
                     return Success;
                 }
             })
-            .catch(failure);
     }
 }
 
