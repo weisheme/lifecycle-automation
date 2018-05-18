@@ -173,7 +173,7 @@ export class CreateGitHubIssue implements HandleCommand {
                 } else {
                     return Success;
                 }
-            })
+            });
     }
 }
 
