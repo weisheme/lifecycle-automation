@@ -36,7 +36,8 @@ export class DeploymentOnK8Pod implements HandleEvent<graphql.DeploymentOnK8Pod.
 
     public async handle(e: EventFired<graphql.DeploymentOnK8Pod.Subscription>,
                         ctx: HandlerContext): Promise<HandlerResult> {
-        const containers = e.data.K8Pod[0].containers;
+        const pod = e.data.K8Pod[0];
+        const containers = pod.containers;
 
         for (const container of containers) {
             const commit = container.image.commits[0];
@@ -47,7 +48,7 @@ export class DeploymentOnK8Pod implements HandleEvent<graphql.DeploymentOnK8Pod.
                     repo: commit.repo.name,
                     sha: commit.sha,
                 },
-                environment: container.environment,
+                environment: `${pod.environment}:${pod.namespace}`,
                 ts: Date.now(),
             };
 

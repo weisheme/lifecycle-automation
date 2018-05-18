@@ -4287,6 +4287,8 @@ export namespace DeploymentOnK8Pod {
 
   export type K8Pod = {
     __typename?: "K8Pod";
+    namespace?: string | null;
+    environment?: string | null;
     containers?: Containers[] | null;
   };
 
@@ -4294,7 +4296,6 @@ export namespace DeploymentOnK8Pod {
     __typename?: "K8Container";
     name?: string | null;
     state?: string | null;
-    environment?: string | null;
     timestamp?: string | null;
     image?: Image | null;
   };

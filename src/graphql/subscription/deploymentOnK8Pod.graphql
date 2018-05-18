@@ -1,9 +1,10 @@
 subscription DeploymentOnK8Pod {
   K8Pod {
+    namespace
+    environment
     containers(state: "running") @required {
       name
       state
-      environment
       timestamp
       image {
         commits @required {
