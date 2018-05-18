@@ -23,7 +23,7 @@ export interface EnvironmentWithGoals {
     goals: SdmGoalsByCommit.SdmGoal[];
 }
 
-export function lastGoalSet(allGoals: SdmGoalsByCommit.SdmGoal[]): SdmGoalsByCommit.SdmGoal[] {
+export function lastGoalSet(allGoals: SdmGoalsByCommit.SdmGoal[] = []): SdmGoalsByCommit.SdmGoal[] {
     // find latest goal set
     const goalSet = _.maxBy(_.map(_.groupBy(allGoals, g => g.goalSetId), v => {
         return ({ goalSetId: v[0].goalSetId, ts: _.max(v.map(vv => vv.ts))});
@@ -40,7 +40,7 @@ export function lastGoalSet(allGoals: SdmGoalsByCommit.SdmGoal[]): SdmGoalsByCom
     return goals;
 }
 
-export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[]): EnvironmentWithGoals[] {
+export function sortGoals(allGoals: SdmGoalsByCommit.SdmGoal[] = []): EnvironmentWithGoals[] {
 
     // only maintain latest version of SdmGoals
     const goals = lastGoalSet(allGoals);
