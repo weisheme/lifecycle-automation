@@ -56,8 +56,8 @@ export class PushToPushLifecycle extends PushLifecycleHandler<graphql.PushToPush
 export class PushToPushCardLifecycle extends PushCardLifecycleHandler<graphql.PushToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.PushToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], { type: string, node: any }] {
-        return [event.data.Push, { type: "commit", node: event.data.Push[0].commits }];
+        graphql.PushToPushLifecycle.Push[] {
+        return event.data.Push;
     }
 
     protected extractPreferences(

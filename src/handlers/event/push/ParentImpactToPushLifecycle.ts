@@ -59,8 +59,8 @@ export class ParentImpactToPushCardLifecycle
     extends PushCardLifecycleHandler<graphql.ParentImpactToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ParentImpactToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], {type: string, node: any}] {
-        return [event.data.ParentImpact[0].commit.pushes, null];
+        graphql.PushToPushLifecycle.Push[] {
+        return event.data.ParentImpact[0].commit.pushes;
     }
 
     protected extractPreferences(

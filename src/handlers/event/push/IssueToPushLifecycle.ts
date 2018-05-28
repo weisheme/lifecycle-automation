@@ -60,11 +60,11 @@ export class IssueToPushLifecycle extends PushLifecycleHandler<graphql.IssueToPu
 export class IssueToPushCardLifecycle extends PushCardLifecycleHandler<graphql.IssueToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.IssueToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], {type: string, node: any}] {
+        graphql.PushToPushLifecycle.Push[] {
 
         const pushes = [];
         event.data.Issue[0].resolvingCommits.forEach(c => pushes.push(...c.pushes));
-        return [pushes, null];
+        return pushes;
     }
 
     protected extractPreferences(

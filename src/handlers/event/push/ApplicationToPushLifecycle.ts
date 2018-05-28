@@ -61,11 +61,11 @@ export class ApplicationToPushCardLifecycle
     extends PushCardLifecycleHandler<graphql.ApplicationToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.ApplicationToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], {type: string, node: any}] {
+        graphql.PushToPushLifecycle.Push[] {
 
         const pushes = [];
         event.data.Application[0].commits.forEach(c => pushes.push(...c.pushes));
-        return [pushes, null];
+        return pushes;
     }
 
     protected extractPreferences(

@@ -57,8 +57,8 @@ export class BuildToPushCardLifecycle
     extends PushCardLifecycleHandler<graphql.BuildToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.BuildToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], { type: string, node: any }] {
-        return [[event.data.Build[0].push], { type: "build", node: event.data.Build[0] }];
+        graphql.PushToPushLifecycle.Push[] {
+        return [event.data.Build[0].push];
     }
 
     protected extractPreferences(

@@ -60,11 +60,11 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
 export class K8PodToPushCardLifecycle extends PushCardLifecycleHandler<graphql.K8PodToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.K8PodToPushLifecycle.Subscription>):
-        [graphql.K8PodToPushLifecycle.Pushes[], {type: string, node: any}] {
+        graphql.K8PodToPushLifecycle.Pushes[] {
 
         const pushes = [];
         event.data.K8Pod[0].images.forEach(i => pushes.push(...i.commits[0].pushes));
-        return [pushes, null];
+        return pushes;
     }
 
     protected extractPreferences(

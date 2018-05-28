@@ -56,15 +56,15 @@ export class StatusToPushLifecycle extends PushLifecycleHandler<graphql.StatusTo
 export class StatusToPushCardLifecycle extends PushCardLifecycleHandler<graphql.StatusToPushLifecycle.Subscription> {
 
     protected extractNodes(event: EventFired<graphql.StatusToPushLifecycle.Subscription>):
-        [graphql.PushToPushLifecycle.Push[], { type: string, node: any }] {
+        graphql.PushToPushLifecycle.Push[] {
 
         // filter CI statuses as we don't want them to overwrite
         const cis = ["travis", "jenkins", "circle", "codeship"];
         const status = event.data.Status[0];
         if (!cis.some(ci => status.context.includes(ci))) {
-            return [event.data.Status[0].commit.pushes, { type: "status", node: event.data.Status[0] }];
+            return event.data.Status[0].commit.pushes;
         } else {
-            return [[], null];
+            return [];
         }
     }
 

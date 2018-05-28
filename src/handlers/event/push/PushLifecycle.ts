@@ -93,9 +93,9 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
-        const [pushes, events] = this.extractNodes(event);
+        const pushes = this.extractNodes(event);
 
-        return pushes.filter(p => p).map(push => {
+        return pushes.filter(p => p && p.after).map(push => {
             const nodes: any[] = orderNodes(push);
 
             // Verify that there is at least a push and repo node
@@ -147,7 +147,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
                     } else if (type === "domains") {
                         return extractDomains(push).sort((d1, d2) => d1.name.localeCompare(d2.name));
                     } else if (type === "events") {
-                        return events;
+                        return null;
                     }
                     return null;
                 },
@@ -156,7 +156,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
         });
     }
 
-    protected abstract extractNodes(event: EventFired<R>): [PushToPushLifecycle.Push[], {type: string, node: any}];
+    protected abstract extractNodes(event: EventFired<R>): PushToPushLifecycle.Push[];
 }
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
@@ -172,7 +172,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
         const pushes = this.extractNodes(event);
         const preferences = this.extractPreferences(event);
 
-        return pushes.filter(p => p).map(push => {
+        return pushes.filter(p => p && p.after).map(push => {
             const channels = this.filterChannels(push, preferences);
             const nodes: any[] = orderNodes(push);
 
