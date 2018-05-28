@@ -23,9 +23,9 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "https://r.atomist.com/rJE1M9O6AG",
-    "@atomist/automation-client-ext-raven": "https://r.atomist.com/ByPx65T_60f",
-    "@atomist/automation-client-ext-logzio": "https://r.atomist.com/BJvleYiC20f",
+    "@atomist/automation-client": "https://r.atomist.com/rJErv0hKyX",
+    "@atomist/automation-client-ext-raven": "https://r.atomist.com/ryLx5trycJX",
+    "@atomist/automation-client-ext-logzio": "https://r.atomist.com/S18xo_Skc17",
     "@atomist/slack-messages": "^0.12.1",
     "@octokit/rest": "^14.0.9",
     "@types/zen-observable": "0.5.3",
