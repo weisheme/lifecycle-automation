@@ -503,15 +503,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
         const buttons = [];
 
         if (context.rendererId === "goals") {
-            const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
-                graphql.SdmGoalsByCommit.Variables>({
-                name: "sdmGoalsByCommit",
-                variables: {
-                    sha: [push.after.sha],
-                    branch: [push.branch],
-                },
-                options: QueryNoCacheOptions,
-            });
+            const goals = context.lifecycle.extract("goal") || [];
             if (goals && goals.SdmGoal) {
                 lastGoalSet(goals.SdmGoal).filter(g => g.state === "failure")
                     .forEach(g => this.createButton("requested", "Restart", g, push, buttons));

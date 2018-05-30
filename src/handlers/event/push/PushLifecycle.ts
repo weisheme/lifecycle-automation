@@ -19,6 +19,7 @@ import {
     HandlerContext,
 } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
+import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import {
@@ -80,16 +81,38 @@ import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
 
 export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<CardMessage> {
-            const msg = newCardMessage("push");
-            const repo = lifecycle.extract("repo");
-            msg.repository = {
-                owner: repo.owner,
-                name: repo.name,
-                slug: `${repo.owner}/${repo.name}`,
-            };
-            msg.ts = +lifecycle.timestamp;
-            return Promise.resolve(msg);
+    protected async prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<CardMessage> {
+        const msg = newCardMessage("push");
+        const repo = lifecycle.extract("repo");
+        const push = lifecycle.extract("push");
+        msg.repository = {
+            owner: repo.owner,
+            name: repo.name,
+            slug: `${repo.owner}/${repo.name}`,
+        };
+        msg.ts = +lifecycle.timestamp;
+
+        // Load the SdmGoals
+        const goals = await ctx.graphClient.query<graphql.SdmGoalsByCommit.Query,
+            graphql.SdmGoalsByCommit.Variables>({
+            name: "sdmGoalsByCommit",
+            variables: {
+                sha: [push.after.sha],
+                branch: [push.branch],
+            },
+            options: QueryNoCacheOptions,
+        });
+
+        const delegate = lifecycle.extract;
+        lifecycle.extract = type => {
+            if (type === "goal") {
+                return goals;
+            } else {
+                return delegate(type);
+            }
+        };
+
+        return Promise.resolve(msg);
     }
 
     protected prepareLifecycle(event: EventFired<R>, ctx: HandlerContext): Lifecycle[] {
@@ -161,7 +184,28 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
 export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
-    protected prepareMessage(): Promise<SlackMessage> {
+    protected async prepareMessage(lifecycle: Lifecycle, ctx: HandlerContext): Promise<SlackMessage> {
+        const push = lifecycle.extract("push");
+        // Load the SdmGoals
+        const goals = await ctx.graphClient.query<graphql.SdmGoalsByCommit.Query,
+            graphql.SdmGoalsByCommit.Variables>({
+            name: "sdmGoalsByCommit",
+            variables: {
+                sha: [push.after.sha],
+                branch: [push.branch],
+            },
+            options: QueryNoCacheOptions,
+        });
+
+        const delegate = lifecycle.extract;
+        lifecycle.extract = type => {
+            if (type === "goal") {
+                return goals;
+            } else {
+                return delegate(type);
+            }
+        };
+
         return Promise.resolve({
             text: null,
             attachments: [],

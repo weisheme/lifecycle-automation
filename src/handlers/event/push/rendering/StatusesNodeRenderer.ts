@@ -220,18 +220,9 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                         msg: SlackMessage,
                         context: RendererContext): Promise<SlackMessage> {
 
-        const commit = push.after;
-        const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
-                graphql.SdmGoalsByCommit.Variables>({
-                name: "sdmGoalsByCommit",
-                variables: {
-                    sha: [commit.sha],
-                    branch: [push.branch],
-                },
-                options: QueryNoCacheOptions,
-            });
-
+        const goals = context.lifecycle.extract("goal") || [];
         const sortedGoals = [];
+
         try {
             sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
         } catch (err) {
@@ -345,18 +336,9 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
                         actions: CardAction[],
                         msg: CardMessage,
                         context: RendererContext): Promise<CardMessage> {
-        const commit = push.after;
-        const goals = await context.context.graphClient.query<graphql.SdmGoalsByCommit.Query,
-            graphql.SdmGoalsByCommit.Variables>({
-            name: "sdmGoalsByCommit",
-            variables: {
-                sha: [commit.sha],
-                branch: [push.branch],
-            },
-            options: QueryNoCacheOptions,
-        });
-
+        const goals = context.lifecycle.extract("goal") || [];
         const sortedGoals = [];
+
         try {
             sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
         } catch (err) {
