@@ -30,12 +30,10 @@ import { addressEvent } from "@atomist/automation-client/spi/message/MessageClie
 import * as _ from "lodash";
 import { SdmGoalById } from "../../../typings/types";
 
-export const ApprovalGateParam = "atomist:approve";
-
 /**
- * Approve Approve SDM goal.
+ * Update SDM goal.
  */
-@CommandHandler("Approve SDM goal")
+@CommandHandler("Update SDM goal", "update goal")
 @Tags("sdm goal", "update")
 export class UpdateSdmGoalState implements HandleCommand {
 
