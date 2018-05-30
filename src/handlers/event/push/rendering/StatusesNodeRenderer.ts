@@ -15,7 +15,6 @@
  */
 
 import { logger } from "@atomist/automation-client";
-import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import {
     Action,
     Attachment,
@@ -23,15 +22,19 @@ import {
     url,
 } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
-import { Action as CardAction, CardMessage } from "../../../../lifecycle/card";
 import {
-    AbstractIdentifiableContribution, CardNodeRenderer,
+    Action as CardAction,
+    CardMessage,
+} from "../../../../lifecycle/card";
+import {
+    AbstractIdentifiableContribution,
+    CardNodeRenderer,
     LifecycleConfiguration,
     RendererContext,
     SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
-import { SdmGoalsByCommit } from "../../../../typings/types";
 import * as graphql from "../../../../typings/types";
+import { SdmGoalsByCommit } from "../../../../typings/types";
 import {
     lastGoalSet,
     sortGoals,
