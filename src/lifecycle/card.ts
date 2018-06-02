@@ -73,6 +73,15 @@ export interface CardMessage {
 
     correlations?: Correlation[];
 
+    sdm?: {
+        goalSet: string;
+        goalSetId: string;
+        goals: Goal[];
+        actions: Action[];
+        duration: number;
+        ts: number;
+    };
+
     collaborators?: Array<{
         avatar: string;
         login: string;
@@ -90,6 +99,17 @@ export interface CardMessage {
         login: string;
         reaction: string;
     }>;
+
+    provenance?: Array<{name: string}>;
+}
+
+export interface Goal {
+    name: string;
+    description: string;
+    link: string;
+    environment: string;
+    state: "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
+    ts: number;
 }
 
 export interface Body {

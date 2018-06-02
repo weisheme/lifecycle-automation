@@ -25,6 +25,7 @@ import * as _ from "lodash";
 import {
     Action as CardAction,
     CardMessage,
+    Goal,
 } from "../../../../lifecycle/card";
 import {
     AbstractIdentifiableContribution,
@@ -348,73 +349,45 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
             logger.warn(`Goal sorting failed with error: '%s'`, err.message);
         }
 
-        const body = [];
-        let success = 0;
         let total = 0;
-        let pending = 0;
+        const g: Goal[] = [];
         sortedGoals.filter(sg => sg.goals && sg.goals.length > 0).forEach(sg => {
-            const statuses = sg.goals;
-
-            // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
-            success += statuses.filter(s =>
-                ["success" , "skipped"].includes(s.state) ).length;
-            pending += statuses.filter(s =>
-                ["planned" , "requested" , "in_process", "waiting_for_approval"].includes(s.state)).length;
-            total += statuses.length;
+            total += sg.goals.length;
 
             // Now each one
-            statuses.forEach(s => {
+            sg.goals.forEach(s => {
                 let approval = "";
-                let text = "";
                 if (s.approval && s.approval.userId) {
                     approval = ` | approved by @${s.approval.userId}`;
                 }
-                if (s.url != null && s.url.length > 0) {
-                    text = `${url(s.url, s.description)}${approval}`;
-                } else {
-                    text = `${s.description}${approval}`;
-                }
-                const icon = this.emoji(s.state);
-
-                body.push({
-                    icon,
-                    text,
+                g.push({
+                    name: s.name,
+                    description: s.description,
+                    state: s.state,
+                    environment: sg.environment,
+                    ts: s.ts,
+                    link: s.url,
                 });
             });
         });
 
         if (total > 0) {
-            msg.correlations.push({
-                type: "goal",
-                icon: `css://icon-panels${pending > 0 ? " alert" : ""}`,
-                shortTitle: `${success}/${total}`,
-                title: `${total} ${total === 1 ? "Goal" : "Goals"}`,
-                body,
-            });
+            const lastGoals = lastGoalSet(goals.SdmGoal);
+            const ts = lastGoals.map(g => g.ts);
+            const min = _.min(ts);
+            const max = _.max(ts);
 
-            msg.actions.push(...actions);
+            msg.sdm = {
+                goalSet: lastGoals[0].goalSet,
+                goalSetId: lastGoals[0].goalSetId,
+                ts: Date.now(),
+                duration: max - min,
+                actions,
+                goals: g,
+            }
         }
 
         return Promise.resolve(msg);
-    }
-
-    private emoji(state: string): string {
-        switch (state) {
-            case "planned":
-                return "css://icon-requested alert";
-            case "requested":
-                return "css://icon-waiting alert";
-            case "in_process":
-                return "css://icon-oval-icon alert";
-            case "waiting_for_approval":
-                return "css://icon-waiting-on-approval alert";
-            case "success":
-                return "css://icon-circle-check";
-            case "skipped":
-                return "css://icon-skipped";
-            default:
-                return "css://icon-circle-x fail";
-        }
     }
 }
 
