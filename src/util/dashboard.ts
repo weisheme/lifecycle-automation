@@ -95,7 +95,8 @@ export class DashboardAutomationEventListener extends AutomationEventListenerSup
 
         if (isSlackMessage(message) && !ignore) {
 
-            const actions: NotifactionAction[] = _.flatten<Action>(message.attachments.map(a => a.actions)).map(a => {
+            const actions: NotifactionAction[] = _.flatten<Action>(message.attachments.map(a => a.actions))
+                .filter(a => a).map(a => {
                 const cra = a as any as CommandReferencingAction;
 
                 const parameters = [];
