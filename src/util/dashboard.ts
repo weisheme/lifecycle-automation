@@ -88,11 +88,11 @@ const LoginQuery = `query ChatIdByScreenName($teamId: ID, $screenName: String!) 
 export class DashboardAutomationEventListener extends AutomationEventListenerSupport {
 
     public async messageSent(message: any,
-                       destinations: Destination | Destination[],
-                       options: MessageOptions,
-                       ctx: HandlerContext) {
+                             destinations: Destination | Destination[],
+                             options: MessageOptions,
+                             ctx: HandlerContext) {
         const ignore = options && options.id && options.id.includes("lifecycle");
-        
+
         if (isSlackMessage(message) && !ignore) {
 
             const actions: NotifactionAction[] = _.flatten<Action>(message.attachments.map(a => a.actions)).map(a => {
@@ -172,12 +172,12 @@ export class DashboardAutomationEventListener extends AutomationEventListenerSup
                             await ctx.messageClient.send({
                                 ..._.cloneDeep(msg) as Notification,
                                 login,
-                            }, addressEvent(UserNotificationRootType))
+                            }, addressEvent(UserNotificationRootType));
                         }
                     }
                 }
             }
-        } 
+        }
     }
 }
 

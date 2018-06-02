@@ -350,7 +350,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
         }
 
         let total = 0;
-        const g: Goal[] = [];
+        const gs: Goal[] = [];
         sortedGoals.filter(sg => sg.goals && sg.goals.length > 0).forEach(sg => {
             total += sg.goals.length;
 
@@ -360,9 +360,9 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
                 if (s.approval && s.approval.userId) {
                     approval = ` | approved by @${s.approval.userId}`;
                 }
-                g.push({
+                gs.push({
                     name: s.name,
-                    description: s.description,
+                    description: `${s.description}${approval}`,
                     state: s.state,
                     environment: sg.environment,
                     ts: s.ts,
@@ -383,8 +383,8 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
                 ts: Date.now(),
                 duration: max - min,
                 actions,
-                goals: g,
-            }
+                goals: gs,
+            };
         }
 
         return Promise.resolve(msg);
