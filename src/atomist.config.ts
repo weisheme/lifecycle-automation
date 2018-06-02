@@ -169,6 +169,7 @@ import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCrea
 import { commitIssueRelationshipIngester } from "./ingesters/commitIssueRelationship";
 import { deploymentIngester } from "./ingesters/deployment";
 import { issueRelationshipIngester } from "./ingesters/issueRelationship";
+import { configureDashboardNotifications } from "./util/dashboard";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
 const notLocal = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
@@ -347,5 +348,6 @@ export const configuration: any = {
     postProcessors: [
         configureLogzio,
         configureRaven,
+        configureDashboardNotifications,
     ],
 };
