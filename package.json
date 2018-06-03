@@ -24,8 +24,8 @@
   ],
   "dependencies": {
     "@atomist/automation-client": "https://r.atomist.com/S1EGATByxm",
-    "@atomist/automation-client-ext-raven": "https://r.atomist.com/BkN5R282JQ",
-    "@atomist/automation-client-ext-logzio": "https://r.atomist.com/S18xo_Skc17",
+    "@atomist/automation-client-ext-raven": "https://r.atomist.com/S1VhRYQZl7",
+    "@atomist/automation-client-ext-logzio": "https://r.atomist.com/SyVX997Zgm",
     "@atomist/slack-messages": "^0.12.1",
     "@octokit/rest": "^14.0.9",
     "@types/zen-observable": "0.5.3",
