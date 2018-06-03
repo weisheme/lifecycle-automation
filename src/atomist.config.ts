@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Configuration } from "@atomist/automation-client";
+import { configureDashboardNotifications } from "@atomist/automation-client-ext-dashboard";
 import { configureLogzio } from "@atomist/automation-client-ext-logzio";
 import { configureRaven } from "@atomist/automation-client-ext-raven";
 import * as secured from "@atomist/automation-client/secured";
@@ -169,7 +169,6 @@ import { GitHubWebhookCreated } from "./handlers/event/webhook/GitHubWebhookCrea
 import { commitIssueRelationshipIngester } from "./ingesters/commitIssueRelationship";
 import { deploymentIngester } from "./ingesters/deployment";
 import { issueRelationshipIngester } from "./ingesters/issueRelationship";
-import { configureDashboardNotifications } from "./util/dashboard";
 import { ShortenUrlAutomationEventListener } from "./util/shorten";
 
 const notLocal = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
@@ -346,8 +345,8 @@ export const configuration: any = {
         new ShortenUrlAutomationEventListener(),
     ],
     postProcessors: [
-        configureLogzio,
-        configureRaven,
         configureDashboardNotifications,
+        configureRaven,
+        configureLogzio,
     ],
 };
