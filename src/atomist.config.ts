@@ -346,7 +346,7 @@ export const configuration: any = {
     ],
     postProcessors: [
         configureDashboardNotifications,
-        configureLogzio,
         configureRaven,
+        configureLogzio
     ],
 };
