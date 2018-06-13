@@ -28,7 +28,7 @@ import * as graphql from "../typings/types";
  * markup.
  */
 export function truncateCommitMessage(message: string, repo: any): string {
-    const title = message.split("\n")[0];
+    const title = (message || "").split("\n")[0];
     const escapedTitle = slack.escape(title);
     const linkedTitle = linkIssues(escapedTitle, repo);
 
