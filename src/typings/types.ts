@@ -1297,6 +1297,7 @@ export namespace ChatId {
 
   export type Members = {
     __typename?: "ChatId";
+    id?: string | null;
     screenName?: string | null;
     preferences?: Preferences[] | null;
     chatTeam?: _ChatTeam | null;

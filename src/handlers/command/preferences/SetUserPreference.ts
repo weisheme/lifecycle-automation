@@ -107,32 +107,33 @@ export class SetUserPreference implements HandleCommand {
             .then(result => {
                 const preferences =
                     _.get(result, "ChatTeam[0].members[0].preferences") as graphql.ChatId.Preferences[];
+                const id = _.get(result, "ChatTeam[0].members[0].id") as string;
                 if (preferences) {
                     const keyPreferences = preferences.find(p => p.name === this.key);
                     if (keyPreferences) {
-                        return JSON.parse(keyPreferences.value);
+                        return {id, preferences: JSON.parse(keyPreferences.value)};
                     }
                 }
-                return {};
+                return {id, preferences: {}};
             })
-            .then(preferences => {
+            .then(result => {
                 let value: any;
                 try {
                     value = JSON.parse(this.value);
                 } catch (e) {
                     const err = (e as Error).message;
-                    console.error(`failed to parse config value '${this.value}' using string: ${err}`);
+                    console.error(`Failed to parse config value '${this.value}' using string: ${err}`);
                     value = this.value;
                 }
-                preferences[this.name] = value;
+                result.preferences[this.name] = value;
                 return ctx.graphClient.mutate<graphql.SetChatUserPreference.Mutation,
                         graphql.SetChatUserPreference.Variables>({
                         name: "setChatUserPreference",
                         variables: {
                             teamId: this.teamId,
-                            userId: this.requester,
+                            userId: result.id,
                             name: this.key,
-                            value: JSON.stringify(preferences),
+                            value: JSON.stringify(result.preferences),
                         },
                     });
             })
