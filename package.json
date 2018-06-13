@@ -23,8 +23,8 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "0.17.2-20180613124603",
-    "@atomist/automation-client-ext-dashboard": "^0.1.0-20180613131246",
+    "@atomist/automation-client": "0.17.2-20180613153815",
+    "@atomist/automation-client-ext-dashboard": "^0.1.0-20180613153605",
     "@atomist/automation-client-ext-raven": "^0.1.0-20180613131132",
     "@atomist/automation-client-ext-logzio": "^0.1.0-20180613131229",
     "@atomist/slack-messages": "^0.12.1",
