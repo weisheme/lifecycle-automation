@@ -48,7 +48,7 @@ export class FooterNodeRenderer implements SlackNodeRenderer<any> {
 
             // Render feedback url in the footer
             const feedbackUrl =
-                `https://atomist.typeform.com/to/yvnyOj?message_id=${base64.encode(context.context.invocationId)}`;
+                `https://atomist.typeform.com/to/yvnyOj?message_id=${base64.encode(context.lifecycle.id)}`;
             const feedbackFooter = `${url(feedbackUrl, "Feedback")}`;
             if (attachment.footer != null) {
                 const footer = `${attachment.footer} | ${feedbackFooter}`;
