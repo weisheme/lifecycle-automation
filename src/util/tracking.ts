@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import * as namespace from "@atomist/automation-client/internal/util/cls";
 import { isSlackMessage } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
-import * as shortId from "shortid";
+import * as mmh3 from "murmurhash3";
 import { CardMessage, isCardMessage } from "../lifecycle/card";
-import { encode } from "./base64";
 
 /**
  * Wraps all links inside the given SlackMessage with Mixpanel tracking links
@@ -91,7 +89,7 @@ export function trackableAndShortenedLink(url: string, event: string, hashToUrl:
         return url;
     }
 
-    const [hash, shortUrl] = generateHash();
+    const [hash, shortUrl] = generateHash(url);
     hashToUrl.push([hash, url]);
 
     return shortUrl;
@@ -111,7 +109,7 @@ export function wrapLinksInText(text: string, event: string, hashToUrl: Array<[s
     });
 }
 
-function generateHash(): [string, string] {
-    const hash = shortId.generate();
+function generateHash(url: string): [string, string] {
+    const hash = mmh3.murmur32Sync(url);
     return [hash, `https://r.atomist.com/${hash}`];
 }
