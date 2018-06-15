@@ -17,7 +17,7 @@
 import { isSlackMessage } from "@atomist/automation-client/spi/message/MessageClient";
 import { SlackMessage } from "@atomist/slack-messages/SlackMessages";
 import * as _ from "lodash";
-import * as mmh3 from "murmurhash3";
+import * as mmh3 from "murmurhash3js";
 import { CardMessage, isCardMessage } from "../lifecycle/card";
 
 /**
@@ -110,6 +110,6 @@ export function wrapLinksInText(text: string, event: string, hashToUrl: Array<[s
 }
 
 function generateHash(url: string): [string, string] {
-    const hash = mmh3.murmur32Sync(url);
+    const hash = mmh3.x86.hash32(url);
     return [hash, `https://r.atomist.com/${hash}`];
 }
