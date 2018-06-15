@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "@atomist/automation-client": "0.17.2-20180613153815",
-    "@atomist/automation-client-ext-dashboard": "^0.1.0-20180614223756",
+    "@atomist/automation-client-ext-dashboard": "^0.1.0-20180615072636",
     "@atomist/automation-client-ext-raven": "^0.1.0-20180613131132",
     "@atomist/automation-client-ext-logzio": "^0.1.0-20180613131229",
     "@atomist/slack-messages": "^0.12.1",
