@@ -3248,6 +3248,7 @@ export namespace SdmGoalsByCommit {
     provenance?: Provenance[] | null;
     ts?: number | null;
     approval?: Approval | null;
+    retryFeasible?: boolean | null;
   };
 
   export type PreConditions = {

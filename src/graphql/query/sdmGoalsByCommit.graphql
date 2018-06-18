@@ -22,5 +22,6 @@ query SdmGoalsByCommit($sha: [String!], $branch: [String!]) {
     approval {
       userId
     }
+    retryFeasible
   }
 }
