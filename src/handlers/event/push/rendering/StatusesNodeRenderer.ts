@@ -230,49 +230,49 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         try {
             sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
         } catch (err) {
-             logger.warn(`Goal sorting failed with error: '%s'`, err.message);
+            logger.warn(`Goal sorting failed with error: '%s'`, err.message);
         }
 
         const attachments: Attachment[] = [];
         sortedGoals.filter(sg => sg.goals && sg.goals.length > 0).forEach((sg, ix) => {
-                const statuses = sg.goals;
+            const statuses = sg.goals;
 
-                // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
-                const pending = statuses.filter(s =>
-                    ["planned" , "requested" , "in_process", "waiting_for_approval"].includes(s.state)).length;
-                const success = statuses.filter(s =>
-                    ["success" , "skipped"].includes(s.state) ).length;
-                const error = statuses.length - pending - success;
-                const nonPlanned = statuses.some(s => s.state !== "planned");
+            // "planned" | "requested" | "in_process" | "waiting_for_approval" | "success" | "failure" | "skipped";
+            const pending = statuses.filter(s =>
+                ["planned", "requested", "in_process", "waiting_for_approval"].includes(s.state)).length;
+            const success = statuses.filter(s =>
+                ["success", "skipped"].includes(s.state)).length;
+            const error = statuses.length - pending - success;
+            const nonPlanned = statuses.some(s => s.state !== "planned");
 
-                // Now each one
-                const lines = statuses.map(s => {
-                    let approval = "";
-                    if (s.approval && s.approval.userId) {
-                        approval = ` | approved by @${s.approval.userId}`;
-                    }
-                    if (s.url != null && s.url.length > 0) {
-                        return `${this.emoji(s.state)} ${url(s.url, s.description)}${approval}`;
-                    } else {
-                        return `${this.emoji(s.state)} ${s.description}${approval}`;
-                    }
-                });
-
-                const color =
-                    pending > 0 ? "#cccc00" :
-                        error > 0 ? "#D94649" :
-                            "#45B254";
-
-                if (ix === 0 || nonPlanned) {
-                    const attachment: Attachment = {
-                        author_name: ix === 0 ? (lines.length > 1 ? "Goals" : "Goal") : undefined,
-                        author_icon: ix === 0 ? "https://images.atomist.com/rug/goals.png" : undefined,
-                        color,
-                        fallback: `${sg.goals[ 0 ].goalSet} Goals`,
-                        text: lines.join("\n"),
-                    };
-                    attachments.push(attachment);
+            // Now each one
+            const lines = statuses.map(s => {
+                let approval = "";
+                if (s.approval && s.approval.userId) {
+                    approval = ` | approved by @${s.approval.userId}`;
                 }
+                if (s.url != null && s.url.length > 0) {
+                    return `${this.emoji(s.state)} ${url(s.url, s.description)}${approval}`;
+                } else {
+                    return `${this.emoji(s.state)} ${s.description}${approval}`;
+                }
+            });
+
+            const color =
+                pending > 0 ? "#cccc00" :
+                    error > 0 ? "#D94649" :
+                        "#45B254";
+
+            if (ix === 0 || nonPlanned) {
+                const attachment: Attachment = {
+                    author_name: ix === 0 ? (lines.length > 1 ? "Goals" : "Goal") : undefined,
+                    author_icon: ix === 0 ? "https://images.atomist.com/rug/goals.png" : undefined,
+                    color,
+                    fallback: `${sg.goals[0].goalSet} Goals`,
+                    text: lines.join("\n"),
+                };
+                attachments.push(attachment);
+            }
         });
 
         if (attachments.length > 0) {
@@ -295,7 +295,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
             if (creator) {
                 attachment.footer =
                     `${creator.registration}:${creator.version} | ${lastGoals[0].goalSet} | ${
-                        lastGoals[0].goalSetId.slice(0, 7)} | ${duration}`;
+                    lastGoals[0].goalSetId.slice(0, 7)} | ${duration}`;
             } else {
                 attachment.footer = duration;
             }
@@ -392,16 +392,20 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
 }
 
 function notAlreadyDisplayed(push: any, status: any, hideSdm: boolean = true): boolean {
-    if (status.context.indexOf("travis-ci") >= 0 && push.builds != null &&
+    if (status.context.includes("travis-ci") && push.builds != null &&
         push.builds.some(b => b.provider === "travis")) {
         return false;
     }
-    if (status.context.indexOf("circleci") >= 0 && push.builds != null &&
+    if (status.context.includes("circleci") && push.builds != null &&
         push.builds.some(b => b.provider === "circle")) {
         return false;
     }
-    if (status.context.indexOf("jenkins") >= 0 && push.builds != null &&
+    if (status.context.includes("jenkins") && push.builds != null &&
         push.builds.some(b => b.provider === "jenkins")) {
+        return false;
+    }
+    if (status.context.includes("codeship") && push.builds != null &&
+        push.builds.some(b => b.provider.includes("codeship"))) {
         return false;
     }
     if (status.context.indexOf("sdm/") >= 0 && hideSdm) {
