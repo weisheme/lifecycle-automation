@@ -243,7 +243,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
             const success = statuses.filter(s =>
                 ["success", "skipped"].includes(s.state)).length;
             const error = statuses.length - pending - success;
-            const nonPlanned = statuses.some(s => s.state !== "planned");
+            const nonPlanned = statuses.some(s => s.state !== "planned" && s.state !== "skipped");
 
             // Now each one
             const lines = statuses.map(s => {
