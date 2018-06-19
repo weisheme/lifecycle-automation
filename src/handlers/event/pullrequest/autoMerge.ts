@@ -28,7 +28,7 @@ import {
 import * as github from "../../command/github/gitHubApi";
 
 export const AutoMergeLabel = "atomist:merge-on-approve";
-export const AutoMergeBuildSuccessLabel = "atomist:merge-on-check-success";
+export const AutoMergeCheckSuccessLabel = "atomist:merge-on-check-success";
 export const AutoMergeTag = "[atomist:merge]";
 
 export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: string): Promise<HandlerResult> {
@@ -78,7 +78,7 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
 * ${statusComment(pr)}
 
 [${AtomistGeneratedLabel}] [${isPrTagged(
-    pr, AutoMergeBuildSuccessLabel) ? AutoMergeBuildSuccessLabel : AutoMergeLabel}]`;
+    pr, AutoMergeCheckSuccessLabel) ? AutoMergeCheckSuccessLabel : AutoMergeLabel}]`;
 
                         return api.issues.createComment({
                             owner: pr.repo.owner,
@@ -107,7 +107,7 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
 }
 
 export function isPrAutoMergeEnabled(pr: graphql.AutoMergeOnReview.PullRequest): boolean {
-    return isPrTagged(pr, AutoMergeLabel) || isPrTagged(pr, AutoMergeBuildSuccessLabel);
+    return isPrTagged(pr, AutoMergeLabel) || isPrTagged(pr, AutoMergeCheckSuccessLabel);
 }
 
 function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest, label: string = AutoMergeLabel) {
