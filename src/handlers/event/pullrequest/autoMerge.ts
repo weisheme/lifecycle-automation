@@ -27,17 +27,21 @@ import {
 } from "../../../util/helpers";
 import * as github from "../../command/github/gitHubApi";
 
-export const AutoMergeLabel = "atomist:auto-merge";
-export const AutoMergeTag = "atomist:auto-merge-enabled";
+export const AutoMergeLabel = "atomist:merge-on-approve";
+export const AutoMergeBuildSuccessLabel = "atomist:merge-on-check-success";
+export const AutoMergeTag = "[atomist:merge]";
 
 export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: string): Promise<HandlerResult> {
     if (pr) {
         // Couple of rules for auto-merging
-        // 1. at least one approved review
-        if (!pr.reviews || pr.reviews.length === 0) {
-            return Promise.resolve(Success);
-        } else if (pr.reviews.some(r => r.state !== "approved")) {
-            return Promise.resolve(Success);
+
+        // 1. at least one approved review if PR isn't set to merge on successful build
+        if (isPrTagged(pr, AutoMergeLabel)) {
+            if (!pr.reviews || pr.reviews.length === 0) {
+                return Promise.resolve(Success);
+            } else if (pr.reviews.some(r => r.state !== "approved")) {
+                return Promise.resolve(Success);
+            }
         }
 
         // 2. all status checks are successful and there is at least one check
@@ -49,7 +53,7 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
             return Promise.resolve(Success);
         }
 
-        if (isPrTagged(pr)) {
+        if (isPrAutoMergeEnabled(pr)) {
             const api = github.api(token, apiUrl(pr.repo));
 
             return api.pullRequests.get({
@@ -70,11 +74,11 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
                     .then(() => {
                         const body = `Pull request auto merged by Atomist.
 
-* ${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews.map(
-                            r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}
-* ${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}
+* ${reviewComment(pr)}
+* ${statusComment(pr)}
 
-[${AtomistGeneratedLabel}] [${AutoMergeLabel}]`;
+[${AtomistGeneratedLabel}] [${isPrTagged(
+    pr, AutoMergeBuildSuccessLabel) ? AutoMergeBuildSuccessLabel : AutoMergeLabel}]`;
 
                         return api.issues.createComment({
                             owner: pr.repo.owner,
@@ -102,9 +106,13 @@ export function autoMerge(pr: graphql.AutoMergeOnReview.PullRequest, token: stri
     return Promise.resolve(Success);
 }
 
-export function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest) {
+export function isPrAutoMergeEnabled(pr: graphql.AutoMergeOnReview.PullRequest): boolean {
+    return isPrTagged(pr, AutoMergeLabel) || isPrTagged(pr, AutoMergeBuildSuccessLabel);
+}
+
+function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest, label: string = AutoMergeLabel) {
     // 0. check labels
-    if (pr.labels && pr.labels.some(l => l.name === AutoMergeLabel)) {
+    if (pr.labels && pr.labels.some(l => l.name === label)) {
         return true;
     }
 
@@ -126,6 +134,23 @@ export function isPrTagged(pr: graphql.AutoMergeOnReview.PullRequest) {
     return false;
 }
 
-export function isTagged(msg: string) {
+function isTagged(msg: string) {
     return msg && msg.indexOf(AutoMergeTag) >= 0;
+}
+
+function reviewComment(pr: graphql.AutoMergeOnReview.PullRequest): string {
+    if (pr.reviews && pr.reviews.length > 0) {
+        return `${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews.map(
+                            r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}`;
+    } else {
+        return "No reviews";
+    }
+}
+
+function statusComment(pr: graphql.AutoMergeOnReview.PullRequest): string {
+    if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
+        return `${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}`;
+    } else {
+        return "No checks";
+    }
 }

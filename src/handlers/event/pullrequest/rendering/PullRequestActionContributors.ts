@@ -32,7 +32,7 @@ import { isGenerated } from "../../../../util/helpers";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
 import * as github from "../../../command/github/gitHubApi";
 import { LifecycleActionPreferences } from "../../preferences";
-import { isPrTagged } from "../autoMerge";
+import { isPrAutoMergeEnabled } from "../autoMerge";
 
 export class MergeActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.PullRequestToPullRequestLifecycle.PullRequest> {
@@ -152,7 +152,7 @@ export class AutoMergeActionContributor extends AbstractIdentifiableContribution
             return false;
         } else if (node.baseBranchName) {
             const pr = node as graphql.PullRequestToPullRequestLifecycle.PullRequest;
-            return pr.state === "open" && !isPrTagged(pr);
+            return pr.state === "open" && !isPrAutoMergeEnabled(pr);
         } else {
             return false;
         }
