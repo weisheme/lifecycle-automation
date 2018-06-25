@@ -395,7 +395,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
                 state = SdmGoalState.success;
             }
 
-            msg.sdm.push({
+            msg.goalSets.push({
                 goalSet: lastGoals[0].goalSet,
                 goalSetId: lastGoals[0].goalSetId,
                 ts: Date.now(),

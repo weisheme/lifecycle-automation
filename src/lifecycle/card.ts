@@ -25,7 +25,7 @@ export function newCardMessage(type: string, ts: number = Date.now()): CardMessa
         events: [],
         actions: [],
         actionGroups: [],
-        sdm: [],
+        goalSets: [],
     };
 }
 
@@ -74,7 +74,7 @@ export interface CardMessage {
 
     correlations?: Correlation[];
 
-    sdm?: Array<{
+    goalSets?: Array<{
         goalSet: string;
         goalSetId: string;
         sdm: string;
