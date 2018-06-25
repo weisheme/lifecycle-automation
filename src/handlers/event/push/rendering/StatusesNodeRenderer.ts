@@ -18,6 +18,7 @@ import { logger } from "@atomist/automation-client";
 import {
     Action,
     Attachment,
+    emoji,
     SlackMessage,
     url,
 } from "@atomist/slack-messages/SlackMessages";
@@ -241,14 +242,17 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 
             // Now each one
             const lines = statuses.map(s => {
-                let approval = "";
+                let details = "";
+                if (s.externalUrl) {
+                    details = ` | ${url(s.externalUrl, emoji("package"))}`;
+                }
                 if (s.approval && s.approval.userId) {
-                    approval = ` | approved by @${s.approval.userId}`;
+                    details += ` | approved by @${s.approval.userId}`;
                 }
                 if (s.url != null && s.url.length > 0) {
-                    return `${this.emoji(s.state)} ${url(s.url, s.description)}${approval}`;
+                    return `${this.emoji(s.state)} ${url(s.url, s.description)}${details}`;
                 } else {
-                    return `${this.emoji(s.state)} ${s.description}${approval}`;
+                    return `${this.emoji(s.state)} ${s.description}${details}`;
                 }
             });
 
