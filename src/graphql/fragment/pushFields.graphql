@@ -179,6 +179,6 @@ fragment PushFields on Push {
   timestamp
   branch
   goals {
-    ... SdmGoalFields
+    ...SdmGoalFields
   }
 }
