@@ -1,4 +1,5 @@
 fragment SdmGoalFields on SdmGoal {
+  id
   goalSet
   goalSetId
   environment
@@ -13,6 +14,7 @@ fragment SdmGoalFields on SdmGoal {
   }
   description
   url
+  externalUrl
   externalKey
   ts
   preConditions {
@@ -25,6 +27,10 @@ fragment SdmGoalFields on SdmGoal {
     name
     correlationId
     ts
+  }
+  repo {
+    owner
+    name
   }
   data
 }

@@ -17,16 +17,9 @@
 import {
     EventFired,
     EventHandler,
-    HandleEvent,
-    HandlerContext,
-    HandlerResult,
-    reduceResults,
-    Secret,
-    Secrets,
     Tags,
 } from "@atomist/automation-client";
 import { subscription } from "@atomist/automation-client/graph/graphQL";
-import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
@@ -35,10 +28,6 @@ import {
     PushCardLifecycleHandler,
     PushLifecycleHandler,
 } from "./PushLifecycle";
-import {
-    PushToPushCardLifecycle,
-    PushToPushLifecycle,
-} from "./PushToPushLifecycle";
 
 /**
  * Send a Push lifecycle message on SdmGoal events.

@@ -11639,6 +11639,7 @@ export namespace PushFields {
 export namespace SdmGoalFields {
   export type Fragment = {
     __typename?: "SdmGoal";
+    id?: string | null;
     goalSet?: string | null;
     goalSetId?: string | null;
     environment?: string | null;
@@ -11650,10 +11651,12 @@ export namespace SdmGoalFields {
     fulfillment?: Fulfillment | null;
     description?: string | null;
     url?: string | null;
+    externalUrl?: string | null;
     externalKey?: string | null;
     ts?: number | null;
     preConditions?: PreConditions[] | null;
     provenance?: Provenance[] | null;
+    repo?: Repo | null;
     data?: string | null;
   };
 
@@ -11676,6 +11679,12 @@ export namespace SdmGoalFields {
     name?: string | null;
     correlationId?: string | null;
     ts?: number | null;
+  };
+
+  export type Repo = {
+    __typename?: "SdmRepository";
+    owner?: string | null;
+    name?: string | null;
   };
 }
 

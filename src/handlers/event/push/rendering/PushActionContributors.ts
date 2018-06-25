@@ -524,7 +524,7 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
 
     private createButton(state: SdmGoalState,
                          label: string,
-                         goal: graphql.SdmGoalsByCommit.SdmGoal,
+                         goal: graphql.PushFields.Goals,
                          buttons: any[]) {
 
         // Add the approve button
