@@ -36,7 +36,10 @@ import {
     SlackNodeRenderer,
 } from "../../../../lifecycle/Lifecycle";
 import * as graphql from "../../../../typings/types";
-import { SdmGoalsByCommit } from "../../../../typings/types";
+import {
+    SdmGoalsByCommit,
+    SdmGoalState,
+} from "../../../../typings/types";
 import {
     lastGoalSet,
     sortGoals,
@@ -325,25 +328,24 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
-    implements CardNodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements CardNodeRenderer<GoalSet> {
 
     constructor() {
         super("goals");
     }
 
     public supports(node: any): boolean {
-        return node.goals;
+        return node.goals && node.goalSetId;
     }
 
-    public async render(push: graphql.PushToPushLifecycle.Push,
+    public async render(goalSet: GoalSet,
                         actions: CardAction[],
                         msg: CardMessage,
                         context: RendererContext): Promise<CardMessage> {
-        const goals = context.lifecycle.extract("goal") || [];
         const sortedGoals = [];
 
         try {
-            sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
+            sortedGoals.push(...sortGoals((goalSet ? goalSet.goals : []) || []));
         } catch (err) {
             logger.warn(`Goal sorting failed with error: '%s'`, err.message);
         }
@@ -371,19 +373,38 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
         });
 
         if (total > 0) {
-            const lastGoals = lastGoalSet(goals.SdmGoal);
+            const lastGoals = lastGoalSet(goalSet.goals);
             const ts = lastGoals.map(g => g.ts);
             const min = _.min(ts);
             const max = _.max(ts);
 
-            msg.sdm = {
+            const creator = _.flatten<SdmGoalsByCommit.Provenance>(
+                lastGoals.map(g => (g.provenance || [])))
+                .find(p => p.name === "SetGoalsOnPush" || p.name === "ResetGoalsOnCommit");
+
+            let state: SdmGoalState;
+            if (lastGoals.some(g => g.state === SdmGoalState.failure)) {
+                state = SdmGoalState.failure
+            } else if (lastGoals.some(g => g.state === SdmGoalState.waiting_for_approval)) {
+                state = SdmGoalState.waiting_for_approval;
+            } else if (lastGoals.some(g => g.state === SdmGoalState.requested)) {
+                state = SdmGoalState.requested;
+            } else if (lastGoals.some(g => g.state === SdmGoalState.planned)) {
+                state = SdmGoalState.planned;
+            } else if (lastGoals.some(g => g.state === SdmGoalState.success)) {
+                state = SdmGoalState.success;
+            }
+
+            msg.sdm.push({
                 goalSet: lastGoals[0].goalSet,
                 goalSetId: lastGoals[0].goalSetId,
                 ts: Date.now(),
                 duration: max - min,
                 actions,
                 goals: gs,
-            };
+                sdm: creator ? `${creator.registration}:${creator.version}` : undefined,
+                state,
+            });
         }
 
         return Promise.resolve(msg);

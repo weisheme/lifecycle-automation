@@ -81,7 +81,6 @@ import {
     StatusesNodeRenderer,
 } from "./rendering/StatusesNodeRenderer";
 import { WorkflowNodeRenderer } from "./workflow/WorkflowNodeRenderer";
-import SdmGoal = SdmGoalsByCommit.SdmGoal;
 
 export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
