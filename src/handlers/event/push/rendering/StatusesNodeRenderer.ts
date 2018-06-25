@@ -242,17 +242,20 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
 
             // Now each one
             const lines = statuses.map(s => {
-                let details = "";
-                if (s.externalUrl) {
-                    details = ` | ${url(s.externalUrl, emoji("package"))}`;
+                let icon = "";
+                if (s.log && s.log.length > 0) {
+                    icon = `${url(s.log, this.emoji(s.state))}`;
+                } else {
+                    icon = this.emoji(s.state);
                 }
+                let details = "";
                 if (s.approval && s.approval.userId) {
                     details += ` | approved by @${s.approval.userId}`;
                 }
-                if (s.url != null && s.url.length > 0) {
-                    return `${this.emoji(s.state)} ${url(s.url, s.description)}${details}`;
+                if (s.externalUrl != null && s.externalUrl.length > 0) {
+                    return `${icon} ${url(s.externalUrl, s.description)}${details}`;
                 } else {
-                    return `${this.emoji(s.state)} ${s.description}${details}`;
+                    return `${icon} ${s.description}${details}`;
                 }
             });
 
