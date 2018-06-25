@@ -384,7 +384,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
 
             let state: SdmGoalState;
             if (lastGoals.some(g => g.state === SdmGoalState.failure)) {
-                state = SdmGoalState.failure
+                state = SdmGoalState.failure;
             } else if (lastGoals.some(g => g.state === SdmGoalState.waiting_for_approval)) {
                 state = SdmGoalState.waiting_for_approval;
             } else if (lastGoals.some(g => g.state === SdmGoalState.requested)) {
