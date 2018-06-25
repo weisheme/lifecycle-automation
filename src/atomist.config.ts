@@ -155,7 +155,10 @@ import {
     ReleaseToPushCardLifecycle,
     ReleaseToPushLifecycle,
 } from "./handlers/event/push/ReleaseToPushLifecycle";
-import { SdmGoalToPushLifecycle } from "./handlers/event/push/SdmGoalToPushLifecycle";
+import {
+    SdmGoalToPushCardLifecycle,
+    SdmGoalToPushLifecycle,
+} from "./handlers/event/push/SdmGoalToPushLifecycle";
 import {
     StatusToPushCardLifecycle,
     StatusToPushLifecycle,
@@ -326,6 +329,7 @@ export const configuration: any = {
         () => new ParentImpactToPushCardLifecycle(),
         () => new PushToPushCardLifecycle(),
         () => new ReleaseToPushCardLifecycle(),
+        () => new SdmGoalToPushCardLifecycle(),
         () => new StatusToPushCardLifecycle(),
         () => new TagToPushCardLifecycle(),
 

@@ -27,6 +27,7 @@ import {
     RendererContext,
     SlackActionContributor,
 } from "../../../../lifecycle/Lifecycle";
+import { SdmGoalState } from "../../../../typings/types";
 import * as graphql from "../../../../typings/types";
 import { lastGoalSet } from "../../../../util/goals";
 import { truncateCommitMessage } from "../../../../util/helpers";
@@ -35,7 +36,10 @@ import { CreateGitHubTag } from "../../../command/github/CreateGitHubTag";
 import { DefaultGitHubApiUrl } from "../../../command/github/gitHubApi";
 import { UpdateSdmGoalState } from "../../../command/sdm/UpdateSdmGoalState";
 import { LifecycleActionPreferences } from "../../preferences";
-import { Domain } from "../PushLifecycle";
+import {
+    Domain,
+    GoalSet,
+} from "../PushLifecycle";
 
 export class BuildActionContributor extends AbstractIdentifiableContribution
     implements SlackActionContributor<graphql.PushFields.Builds> {
@@ -489,47 +493,45 @@ export class ApplicationActionContributor extends AbstractIdentifiableContributi
 }
 
 export class ApproveGoalActionContributor extends AbstractIdentifiableContribution
-    implements SlackActionContributor<graphql.PushToPushLifecycle.Push> {
+    implements SlackActionContributor<GoalSet> {
 
     constructor() {
         super(LifecycleActionPreferences.push.approve_goal.id);
     }
 
     public supports(node: any): boolean {
-        return node.after !== null;
+        return node.goals && node.goalSetId;
     }
 
-    public async buttonsFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+    public async buttonsFor(goalSet: GoalSet, context: RendererContext): Promise<Action[]> {
         const buttons = [];
 
         if (context.rendererId === "goals") {
-            const goals = context.lifecycle.extract("goal") || [];
-            if (goals && goals.SdmGoal) {
-                lastGoalSet(goals.SdmGoal).filter(g => g.state === "failure").filter(g => g.retryFeasible === true)
-                    .forEach(g => this.createButton("requested", "Restart", g, push, buttons));
-                lastGoalSet(goals.SdmGoal).filter(g => g.state === "waiting_for_approval")
-                    .forEach(g => this.createButton("success", "Approve", g, push, buttons));
+            if (goalSet && goalSet.goals) {
+                lastGoalSet(goalSet.goals).filter(g => g.state === "failure").filter(g => g.retryFeasible === true)
+                    .forEach(g => this.createButton(SdmGoalState.requested,"Restart", g, buttons));
+                lastGoalSet(goalSet.goals).filter(g => g.state === "waiting_for_approval")
+                    .forEach(g => this.createButton(SdmGoalState.success,"Approve", g, buttons));
             }
         }
 
         return Promise.resolve(buttons);
     }
 
-    public menusFor(push: graphql.PushToPushLifecycle.Push, context: RendererContext): Promise<Action[]> {
+    public menusFor(goalSet: GoalSet, context: RendererContext): Promise<Action[]> {
         return Promise.resolve([]);
     }
 
-    private createButton(state: string,
+    private createButton(state: SdmGoalState,
                          label: string,
                          goal: graphql.SdmGoalsByCommit.SdmGoal,
-                         push: graphql.PushToPushLifecycle.Push,
                          buttons: any[]) {
 
         // Add the approve button
         const handler = new UpdateSdmGoalState();
         handler.id = goal.id;
-        handler.state = state as "requested" | "success";
-        (handler as any).__atomist_github_owner = push.repo.owner;
+        handler.state = state;
+        (handler as any).__atomist_github_owner = goal.repo.owner;
 
         buttons.push(buttonForCommand(
             {

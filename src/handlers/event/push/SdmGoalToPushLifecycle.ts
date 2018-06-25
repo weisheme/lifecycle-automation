@@ -28,7 +28,13 @@ import {
 import { subscription } from "@atomist/automation-client/graph/graphQL";
 import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import * as _ from "lodash";
+import { Preferences } from "../../../lifecycle/Lifecycle";
+import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
+import {
+    PushCardLifecycleHandler,
+    PushLifecycleHandler,
+} from "./PushLifecycle";
 import {
     PushToPushCardLifecycle,
     PushToPushLifecycle,
@@ -39,54 +45,35 @@ import {
  */
 @EventHandler("Send a lifecycle message on SdmGoal events", subscription("sdmGoalToPush"))
 @Tags("lifecycle", "push", "sdm goal")
-export class SdmGoalToPushLifecycle implements HandleEvent<graphql.SdmGoalToPush.Subscription> {
+export class SdmGoalToPushLifecycle extends PushLifecycleHandler<graphql.SdmGoalToPush.Subscription> {
 
-    @Secret(Secrets.OrgToken)
-    public orgToken: string;
+    protected extractNodes(event: EventFired<graphql.SdmGoalToPush.Subscription>):
+        graphql.PushToPushLifecycle.Push[] {
+        return [event.data.SdmGoal[0].push];
+    }
 
-    public async handle(e: EventFired<graphql.SdmGoalToPush.Subscription>,
-                        ctx: HandlerContext): Promise<HandlerResult> {
-        const sha = e.data.SdmGoal[0].sha;
-        const branch = e.data.SdmGoal[0].branch;
+    protected extractPreferences(
+        event: EventFired<graphql.SdmGoalToPush.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return chatTeamsToPreferences(_.get(event, "data.SdmGoal[0].push.repo.org.team.chatTeams"));
+    }
+}
 
-        const commit = await ctx.graphClient.query<graphql.PushByShaAndBranch.Query,
-            graphql.PushByShaAndBranch.Variables>({
-                name: "pushByShaAndBranch",
-                variables: {
-                    branch,
-                    sha,
-                },
-                options: QueryNoCacheOptions,
-            });
+/**
+ * Send a lifecycle card on SdmGoal events.
+ */
+@EventHandler("Send a lifecycle card on Release events", subscription("sdmGoalToPush"))
+@Tags("lifecycle", "push", "sdm release")
+export class SdmGoalToPushCardLifecycle extends PushCardLifecycleHandler<graphql.SdmGoalToPush.Subscription> {
 
-        const push = _.get(commit, "Commit[0].pushes[0]") as graphql.PushByShaAndBranch.Pushes;
+    protected extractNodes(event: EventFired<graphql.SdmGoalToPush.Subscription>):
+        graphql.PushToPushLifecycle.Push[] {
+        return [event.data.SdmGoal[0].push];
+    }
 
-        const handler = new PushToPushLifecycle();
-        handler.orgToken = this.orgToken;
-
-        const cardHandler = new PushToPushCardLifecycle();
-        cardHandler.orgToken = this.orgToken;
-
-        return Promise.all([handler.handle({
-            data: {
-                Push: [push],
-            },
-            secrets: e.secrets,
-            extensions: {
-                ...e.extensions,
-                operationName: "PushToPushLifecycle",
-            },
-        }, ctx),
-            cardHandler.handle({
-                data: {
-                    Push: [push],
-                },
-                secrets: e.secrets,
-                extensions: {
-                    ...e.extensions,
-                    operationName: "PushToPushCardLifecycle",
-                },
-            }, ctx)])
-            .then(results => reduceResults(results));
+    protected extractPreferences(
+        event: EventFired<graphql.SdmGoalToPush.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return {};
     }
 }

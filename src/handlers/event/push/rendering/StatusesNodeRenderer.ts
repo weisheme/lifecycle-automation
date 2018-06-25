@@ -40,6 +40,7 @@ import {
     lastGoalSet,
     sortGoals,
 } from "../../../../util/goals";
+import { GoalSet } from "../PushLifecycle";
 import { EMOJI_SCHEME } from "./PushNodeRenderers";
 
 export class StatusesNodeRenderer extends AbstractIdentifiableContribution
@@ -172,12 +173,6 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
                 text = `${s.description} | ${s.context}`;
             }
 
-            /*msg.events.push({
-               icon,
-               text,
-               ts: Date.parse(s.timestamp),
-            });*/
-
             return {
                 icon,
                 text,
@@ -197,7 +192,7 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
 }
 
 export class GoalNodeRenderer extends AbstractIdentifiableContribution
-    implements SlackNodeRenderer<graphql.PushToPushLifecycle.Push> {
+    implements SlackNodeRenderer<GoalSet> {
 
     public showOnPush: boolean;
     public emojiStyle: "default" | "atomist";
@@ -212,23 +207,22 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        if (node.after) {
+        if (node.goals && node.goalSetId) {
             return this.showOnPush;
         } else {
             return false;
         }
     }
 
-    public async render(push: graphql.PushToPushLifecycle.Push,
+    public async render(goalSet: GoalSet,
                         actions: Action[],
                         msg: SlackMessage,
                         context: RendererContext): Promise<SlackMessage> {
 
-        const goals = context.lifecycle.extract("goal") || [];
         const sortedGoals = [];
 
         try {
-            sortedGoals.push(...sortGoals((goals ? goals.SdmGoal : []) || []));
+            sortedGoals.push(...sortGoals((goalSet ? goalSet.goals : []) || []));
         } catch (err) {
             logger.warn(`Goal sorting failed with error: '%s'`, err.message);
         }
@@ -276,22 +270,23 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
         });
 
         if (attachments.length > 0) {
-            const lastGoals = lastGoalSet(goals.SdmGoal);
+            const lastGoals = lastGoalSet(goalSet.goals);
             const ts = lastGoals.map(g => g.ts);
             const min = _.min(ts);
             const max = _.max(ts);
 
             const moment = require("moment");
-            // The following require is need to initialize the format function
+            // The following require is needed to initialize the format function
             require("moment-duration-format");
 
             const duration = moment.duration(max - min, "millisecond").format("h[h] m[m] s[s]");
             const creator = _.flatten<SdmGoalsByCommit.Provenance>(
                 lastGoals.map(g => (g.provenance || [])))
-                .find(p => p.name === "SetGoalsOnPush");
+                .find(p => p.name === "SetGoalsOnPush" || p.name === "ResetGoalsOnCommit");
 
             const attachment = attachments.slice(-1)[0];
             attachment.actions = actions;
+            attachment.ts = Math.floor(max / 1000);
             if (creator) {
                 attachment.footer =
                     `${creator.registration}:${creator.version} | ${lastGoals[0].goalSet} | ${
@@ -333,7 +328,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.after;
+        return node.goals;
     }
 
     public async render(push: graphql.PushToPushLifecycle.Push,

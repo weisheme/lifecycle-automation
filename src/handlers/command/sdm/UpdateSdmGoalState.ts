@@ -28,7 +28,10 @@ import {
 import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { addressEvent } from "@atomist/automation-client/spi/message/MessageClient";
 import * as _ from "lodash";
-import { SdmGoalById } from "../../../typings/types";
+import {
+    SdmGoalById,
+    SdmGoalState,
+} from "../../../typings/types";
 
 /**
  * Update SDM goal.
@@ -41,7 +44,7 @@ export class UpdateSdmGoalState implements HandleCommand {
     public id: string;
 
     @Parameter({ description: "state", pattern: /^.*$/, required: true })
-    public state: "success" | "requested";
+    public state: SdmGoalState;
 
     @MappedParameter(MappedParameters.SlackUserName, false)
     public slackRequester: string;
@@ -84,7 +87,7 @@ export class UpdateSdmGoalState implements HandleCommand {
         ];
 
         // Don't set approval for restart updates
-        if (this.state === "success") {
+        if (this.state === SdmGoalState.success) {
             goal.approval = prov;
         }
 

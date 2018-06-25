@@ -23,5 +23,8 @@ query SdmGoalsByCommit($sha: [String!], $branch: [String!]) {
       userId
     }
     retryFeasible
+    repo {
+      owner
+    }
   }
 }
