@@ -1104,7 +1104,6 @@ describe("StatusToPushLifecycle", () => {
 }`;
     /* tslint:enable */
 
-
     it("render goal attachments separately per env", done => {
         let messageSent = false;
         class MockMessageClient {
