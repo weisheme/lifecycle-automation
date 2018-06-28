@@ -8,18 +8,18 @@ This page details all runtime OSS dependencies of `@atomist/lifecycle-automation
 
 | License | Count |
 |---------|-------|
-|AFLv2.1|1|
-|Apache-2.0|22|
-|BSD-2-Clause|10|
-|BSD-3-Clause|27|
-|BSD|8|
-|Custom: https://github.com/douglascrockford/JSON-js|1|
-|GPL-3.0|4|
-|ISC|38|
-|MIT|511|
-|Public Domain|1|
-|Unlicense|2|
-|WTFPL|1|
+|[AFLv2.1](#aflv21)|1|
+|[Apache-2.0](#apache-20)|22|
+|[BSD-2-Clause](#bsd-2-clause)|10|
+|[BSD-3-Clause](#bsd-3-clause)|27|
+|[BSD](#bsd)|8|
+|[Custom: https://github.com/douglascrockford/JSON-js](#custom-httpsgithubcomdouglascrockfordjson-js)|1|
+|[GPL-3.0](#gpl-30)|4|
+|[ISC](#isc)|38|
+|[MIT](#mit)|511|
+|[Public Domain](#public-domain)|1|
+|[Unlicense](#unlicense)|2|
+|[WTFPL](#wtfpl)|1|
 
 #### AFLv2.1
 
