@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Update logzio extension to latest version [#229](https://github.com/atomist/lifecycle-automation/issues/229)
 
+### Added
+
+-   Hide SDM status from dashboard cards [#230](https://github.com/atomist/lifecycle-automation/issues/230)
+
 ## [0.8.31](https://github.com/atomist/lifecycle-automation/compare/0.2.6...0.8.31) - 2018-06-28
 
 ### Fixed
