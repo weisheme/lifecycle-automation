@@ -151,7 +151,7 @@ export class StatusesCardNodeRenderer extends AbstractIdentifiableContribution
         // List all the statuses on the after commit
         const commit = push.after;
         // exclude build statuses already displayed
-        const statuses = commit.statuses.filter(status => notAlreadyDisplayed(push, status, false));
+        const statuses = commit.statuses.filter(status => notAlreadyDisplayed(push, status));
         if (statuses.length === 0) {
             return Promise.resolve(msg);
         }
@@ -413,7 +413,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
     }
 }
 
-function notAlreadyDisplayed(push: any, status: any, hideSdm: boolean = true): boolean {
+function notAlreadyDisplayed(push: any, status: any): boolean {
     if (status.context.includes("travis-ci") && push.builds != null &&
         push.builds.some(b => b.provider === "travis")) {
         return false;
@@ -430,7 +430,7 @@ function notAlreadyDisplayed(push: any, status: any, hideSdm: boolean = true): b
         push.builds.some(b => b.provider.includes("codeship"))) {
         return false;
     }
-    if (status.context.indexOf("sdm/") >= 0 && hideSdm) {
+    if (status.context.includes("sdm/")) {
         return false;
     }
     return true;
