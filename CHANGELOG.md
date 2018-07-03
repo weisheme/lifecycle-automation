@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/lifecycle-automation/compare/0.8.32...HEAD)
 
+### Fixed
+
+-   Restart button missing on retry-able goals [#233](https://github.com/atomist/lifecycle-automation/issues/233)
+
 ## [0.8.32](https://github.com/atomist/lifecycle-automation/compare/0.8.31...0.8.32) - 2018-06-30
 
 ### Fixed
