@@ -11653,6 +11653,7 @@ export namespace SdmGoalFields {
     url?: string | null;
     externalUrl?: string | null;
     externalKey?: string | null;
+    retryFeasible?: boolean | null;
     ts?: number | null;
     preConditions?: PreConditions[] | null;
     provenance?: Provenance[] | null;

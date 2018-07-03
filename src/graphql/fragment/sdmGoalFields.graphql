@@ -16,6 +16,7 @@ fragment SdmGoalFields on SdmGoal {
   url
   externalUrl
   externalKey
+  retryFeasible
   ts
   preConditions {
     environment

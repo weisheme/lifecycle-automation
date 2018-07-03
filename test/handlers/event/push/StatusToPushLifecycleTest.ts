@@ -598,7 +598,8 @@ describe("StatusToPushLifecycle", () => {
     "name": "build",
     "goalSet": "node docker",
     "goalSetId": "32787e94-7743-5024-bf7b-ec2fe6f55a76",
-    "state": "success",
+    "state": "failure",
+    "retryFeasible": true,
     "id": "0e109dd6-b7c1-5832-9ba0-5853e4373be4",
     "url": null,
     "environment": "0-code",
@@ -1112,8 +1113,9 @@ describe("StatusToPushLifecycle", () => {
                 const sm = msg as SlackMessage;
                 assert(sm.attachments.length === 7);
                 assert(sm.attachments[1].author_name === "Goals");
-                assert(sm.attachments[3].actions.length === 1);
-                assert(sm.attachments[3].actions[0].text === "Approve 'deploy to prod'");
+                assert(sm.attachments[3].actions.length === 2);
+                assert(sm.attachments[3].actions[0].text === "Restart 'build'");
+                assert(sm.attachments[3].actions[1].text === "Approve 'deploy to prod'");
                 messageSent = true;
                 return Promise.resolve();
             }

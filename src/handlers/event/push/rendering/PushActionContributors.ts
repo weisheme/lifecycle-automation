@@ -508,9 +508,9 @@ export class ApproveGoalActionContributor extends AbstractIdentifiableContributi
 
         if (context.rendererId === "goals") {
             if (goalSet && goalSet.goals) {
-                lastGoalSet(goalSet.goals).filter(g => g.state === "failure").filter(g => g.retryFeasible === true)
+                lastGoalSet(goalSet.goals).filter(g => g.state === SdmGoalState.failure).filter(g => g.retryFeasible === true)
                     .forEach(g => this.createButton(SdmGoalState.requested, "Restart", g, buttons));
-                lastGoalSet(goalSet.goals).filter(g => g.state === "waiting_for_approval")
+                lastGoalSet(goalSet.goals).filter(g => g.state === SdmGoalState.waiting_for_approval)
                     .forEach(g => this.createButton(SdmGoalState.success, "Approve", g, buttons));
             }
         }
