@@ -32,6 +32,9 @@ fragment PushFields on Push {
   after {
     sha
     message
+    email {
+      address
+    }
     author {
       login
       person {
@@ -133,6 +136,9 @@ fragment PushFields on Push {
   commits {
     sha
     message
+    email {
+      address
+    }
     resolves {
       number
       name

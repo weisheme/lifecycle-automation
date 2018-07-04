@@ -95,6 +95,9 @@ fragment PullRequestFields on PullRequest {
     sha
     timestamp
     message
+    email {
+      address
+    }
     tags {
       name
       release {

@@ -11196,10 +11196,16 @@ export namespace PullRequestFields {
     sha?: string | null;
     timestamp?: string | null;
     message?: string | null;
+    email?: Email | null;
     tags?: Tags[] | null;
     statuses?: Statuses[] | null;
     author?: _Author | null;
     builds?: Builds[] | null;
+  };
+
+  export type Email = {
+    __typename?: "Email";
+    address?: string | null;
   };
 
   export type Tags = {
@@ -11394,11 +11400,17 @@ export namespace PushFields {
     __typename?: "Commit";
     sha?: string | null;
     message?: string | null;
+    email?: Email | null;
     author?: Author | null;
     statuses?: Statuses[] | null;
     tags?: Tags[] | null;
     images?: Images[] | null;
     fingerprints?: Fingerprints[] | null;
+  };
+
+  export type Email = {
+    __typename?: "Email";
+    address?: string | null;
   };
 
   export type Author = {
@@ -11556,12 +11568,18 @@ export namespace PushFields {
     __typename?: "Commit";
     sha?: string | null;
     message?: string | null;
+    email?: _Email | null;
     resolves?: Resolves[] | null;
     impact?: Impact | null;
     apps?: Apps[] | null;
     tags?: _Tags[] | null;
     author?: _Author | null;
     timestamp?: string | null;
+  };
+
+  export type _Email = {
+    __typename?: "Email";
+    address?: string | null;
   };
 
   export type Resolves = {

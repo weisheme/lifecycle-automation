@@ -148,14 +148,9 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
 
         let author = null;
         let commitsByAuthor: any = {};
-        let unkownCommitter = false;
         for (const commit of commits) {
             const ca = (commit.author != null && commit.author.login && commit.author.login !== ""
-                ? commit.author.login : "(unknown)");
-
-            if (ca === "(unknown)") {
-                unkownCommitter = true;
-            }
+                ? commit.author.login : commit.email.address);
 
             if (author == null || author !== ca) {
                 commitsByAuthor = {
@@ -215,18 +210,13 @@ export class CommitNodeRenderer extends AbstractIdentifiableContribution
         if (attachments.length > 0) {
             const lastAttachment = attachments[attachments.length - 1];
             lastAttachment.actions = actions;
-            if (unkownCommitter) {
-                lastAttachment.footer_icon = "https://images.atomist.com/rug/question.png";
-                lastAttachment.footer = `Unrecognized author. Please use a known email address to commit.`;
+            lastAttachment.footer_icon = commitIcon(repo);
+            if (lastAttachment.footer != null) {
+                lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
             } else {
-                lastAttachment.footer_icon = commitIcon(repo);
-                if (lastAttachment.footer != null) {
-                    lastAttachment.footer = `${url(repoUrl(repo), repoSlug(repo))} - ${lastAttachment.footer}`;
-                } else {
-                    lastAttachment.footer = url(repoUrl(repo), repoSlug(repo));
-                }
-                lastAttachment.ts = Math.floor(Date.parse(push.timestamp) / 1000);
+                lastAttachment.footer = url(repoUrl(repo), repoSlug(repo));
             }
+            lastAttachment.ts = Math.floor(Date.parse(push.timestamp) / 1000);
         }
 
         msg.attachments = msg.attachments.concat(attachments);

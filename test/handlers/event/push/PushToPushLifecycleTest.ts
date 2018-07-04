@@ -87,6 +87,9 @@ describe("PushToPushLifecycle", () => {
                     "login": "",
                     "person": null
                 },
+                "email": {
+                    "address": "cd@test.com"
+                },
                 "timestamp": "2017-10-17T01:46:12Z"
             }],
             "timestamp": "2017-10-17T01:46:14.409Z",
