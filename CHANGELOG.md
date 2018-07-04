@@ -7,19 +7,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/lifecycle-automation/compare/0.8.32...HEAD)
 
+### Added
+
+-   Fallback to email address on commit if there is no author. [#231](https://github.com/atomist/lifecycle-automation/issues/231)
+
 ### Fixed
 
 -   Restart button missing on retry-able goals. [#233](https://github.com/atomist/lifecycle-automation/issues/233)
 
 ## [0.8.32](https://github.com/atomist/lifecycle-automation/compare/0.8.31...0.8.32) - 2018-06-30
 
-### Fixed
-
--   Update logzio extension to latest version. [#229](https://github.com/atomist/lifecycle-automation/issues/229)
-
 ### Added
 
 -   Hide SDM status from dashboard cards. [#230](https://github.com/atomist/lifecycle-automation/issues/230)
+
+### Fixed
+
+-   Update logzio extension to latest version. [#229](https://github.com/atomist/lifecycle-automation/issues/229)
 
 ## [0.8.31](https://github.com/atomist/lifecycle-automation/compare/0.2.6...0.8.31) - 2018-06-28
 
@@ -45,13 +49,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.5](https://github.com/atomist/lifecycle-automation/compare/0.2.4...0.2.5) - 2017-11-15
 
-### Fixed
-
--   Auto-Merge button now correctly disappears again once auto-merge is enabled.
-
 ### Added
 
 -   Request Review is now a drop-down if there are suggested reviewers on GitHub.
+
+### Fixed
+
+-   Auto-Merge button now correctly disappears again once auto-merge is enabled.
 
 ## [0.2.4](https://github.com/atomist/lifecycle-automation/compare/0.2.3...0.2.4) - 2017-11-13
 
