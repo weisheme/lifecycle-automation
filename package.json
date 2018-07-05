@@ -23,10 +23,10 @@
     "travis-ci"
   ],
   "dependencies": {
-    "@atomist/automation-client": "0.18.0-20180704102519",
-    "@atomist/automation-client-ext-dashboard": "^0.1.0-20180618202825",
-    "@atomist/automation-client-ext-logzio": "^0.1.0-20180628224529",
-    "@atomist/automation-client-ext-raven": "^0.1.0-20180613131132",
+    "@atomist/automation-client": "0.18.0-20180705162739",
+    "@atomist/automation-client-ext-dashboard": "0.1.0-20180705210657",
+    "@atomist/automation-client-ext-logzio": "0.1.0-20180628224529",
+    "@atomist/automation-client-ext-raven": "0.1.0-20180613131132",
     "@atomist/slack-messages": "^0.12.1",
     "@octokit/rest": "^14.0.9",
     "@types/zen-observable": "0.5.3",
