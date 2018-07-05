@@ -19,6 +19,7 @@ import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    logger,
     Success,
 } from "@atomist/automation-client";
 import {
@@ -55,7 +56,7 @@ export abstract class AbstractCloudFoundryApplicationCommand implements HandleCo
         }).then(() => {
             return Success;
         }).catch(err => {
-            console.error(err);
+            logger.error(err);
             return failure(err);
         });
     }

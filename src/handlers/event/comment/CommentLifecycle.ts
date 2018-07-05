@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { EventFired, HandlerContext } from "@atomist/automation-client";
+import {
+    EventFired,
+    HandlerContext,
+    logger,
+} from "@atomist/automation-client";
 import { SlackMessage } from "@atomist/slack-messages";
 import {
     CardMessage,
@@ -77,7 +81,7 @@ export abstract class CommentLifecycleHandler<R> extends LifecycleHandler<R> {
 
                 // Verify that there is at least a comment and repo node
                 if (comment == null || repo == null) {
-                    console.debug(`Lifecycle event is missing comment and/or repo node`);
+                    logger.debug(`Lifecycle event is missing comment and/or repo node`);
                     return null;
                 }
 

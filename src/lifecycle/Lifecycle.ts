@@ -167,7 +167,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                         return configuration;
                     }
                 } catch (err) {
-                    console.warn(`Lifecycle configuration corrupt: '${lifecycles.value}'`);
+                    logger.warn(`Lifecycle configuration corrupt: '${lifecycles.value}'`);
                 }
             }
         }
@@ -319,7 +319,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                     return false;
                 }
             } catch (e) {
-                console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
+                logger.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
                 return false;
             }
         } else {
@@ -411,7 +411,7 @@ export abstract class LifecycleHandler<R> implements HandleEvent<R> {
                         preferenceConfiguration[c.id()] == null || preferenceConfiguration[c.id()].enabled);
                 }
             } catch (e) {
-                console.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
+                logger.error(`Failed to parse lifecycle configuration: '${preference.value}'`);
             }
         } else {
             contributions = contributions.filter(c =>

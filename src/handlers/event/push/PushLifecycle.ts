@@ -105,7 +105,7 @@ export abstract class PushCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
             // Verify that there is at least a push and repo node
             if (!nodes) {
-                console.debug(`Lifecycle event is missing push, commits and/or repo node`);
+                logger.debug(`Lifecycle event is missing push, commits and/or repo node`);
                 return null;
             }
 
@@ -183,7 +183,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 
             // Verify that there is at least a push and repo node
             if (!nodes) {
-                console.debug(`Lifecycle event is missing push, commits and/or repo node`);
+                logger.debug(`Lifecycle event is missing push, commits and/or repo node`);
                 return null;
             }
 
@@ -299,7 +299,7 @@ export abstract class PushLifecycleHandler<R> extends LifecycleHandler<R> {
 function orderNodes(push: graphql.PushToPushLifecycle.Push): any[] {
     // Verify that there is at least a push and repo node
     if (!push || !push.repo || !push.commits || push.commits.length === 0) {
-        console.debug(`Lifecycle event is missing push, commits and/or repo node`);
+        logger.debug(`Lifecycle event is missing push, commits and/or repo node`);
         return null;
     }
 

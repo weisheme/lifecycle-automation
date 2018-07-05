@@ -20,6 +20,7 @@ import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    logger,
     MappedParameter,
     MappedParameters,
     Parameter,
@@ -67,7 +68,7 @@ export class LinkOwnerRepo implements HandleCommand {
         if (!slugApiParts || slugApiParts.length !== 2 || !slugApiParts[0]) {
             const err = `failed to parse slug '${this.slug}' into slug and API, ` +
                 `not linking to #${this.channelName}`;
-            console.error(err);
+            logger.error(err);
             return ctx.messageClient.respond(err)
                 .then(() => Success, failure);
         }
@@ -76,7 +77,7 @@ export class LinkOwnerRepo implements HandleCommand {
         if (!slugParts || slugParts.length !== 2 || !slugParts[0] || !slugParts[1]) {
             const err = `failed to parse repo slug '${slugApiParts[0]}' into owner and name, ` +
                 `not linking to #${this.channelName}`;
-            console.error(err);
+            logger.error(err);
             return ctx.messageClient.respond(err)
                 .then(() => Success, failure);
         }

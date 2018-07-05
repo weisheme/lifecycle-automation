@@ -21,6 +21,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    logger,
     Secret,
     Secrets,
     Success,
@@ -69,24 +70,24 @@ export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Su
 
         return Promise.all(e.data.UserJoinedChannel.map(j => {
             if (!j.user) {
-                console.log(`UserJoinedChannel.user is false, probably not the bot joining a channel`);
+                logger.debug(`UserJoinedChannel.user is false, probably not the bot joining a channel`);
                 return Success;
             }
             if (j.user.isAtomistBot !== "true") {
-                console.log(`user joining the channel is not the bot: ${j.user.screenName}`);
+                logger.debug(`user joining the channel is not the bot: ${j.user.screenName}`);
                 return Success;
             }
             if (!j.channel) {
-                console.log(`UserJoinedChannel.channel is false, strange`);
+                logger.debug(`UserJoinedChannel.channel is false, strange`);
                 return Success;
             }
             if (!j.channel.name) {
-                console.log(`the channel has no name, odd`);
+                logger.debug(`the channel has no name, odd`);
                 return Success;
             }
             const channelName = j.channel.name;
             if (j.channel.botInvitedSelf) {
-                console.log(`bot invited self to #${channelName}, not sending message`);
+                logger.debug(`bot invited self to #${channelName}, not sending message`);
                 return Success;
             }
             const botName = (j.user.screenName) ? j.user.screenName : DefaultBotName;

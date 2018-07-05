@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { EventFired } from "@atomist/automation-client";
+import {
+    EventFired,
+    logger,
+} from "@atomist/automation-client";
 import { SlackMessage } from "@atomist/slack-messages";
 import {
     Lifecycle,
@@ -58,7 +61,7 @@ export abstract class ReviewLifecycleHandler<R> extends LifecycleHandler<R> {
 
                 // Verify that there is at least a pullrequest and repo node
                 if (review == null || review.pullRequest == null) {
-                    console.log(`Lifecycle event is missing review and/or repo node`);
+                    logger.debug(`Lifecycle event is missing review and/or repo node`);
                     return null;
                 }
 

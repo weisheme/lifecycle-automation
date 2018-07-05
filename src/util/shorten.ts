@@ -75,7 +75,7 @@ export function shortenUrls(message: SlackMessage | CardMessage,
             logger.debug("Finished url shortening");
             return markShortened(wrappedSlackMessage);
         }, err => {
-            console.warn(`Error shortening urls: '${err.message}'`);
+            logger.warn(`Error shortening urls: '${err.message}'`);
             return markShortened(message);
         });
 }

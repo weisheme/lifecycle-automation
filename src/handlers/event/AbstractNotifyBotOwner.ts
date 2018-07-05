@@ -20,6 +20,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    logger,
     Success,
 } from "@atomist/automation-client";
 import { addressSlackUsers } from "@atomist/automation-client/spi/message/MessageClient";
@@ -91,7 +92,7 @@ function handleResult(team: ChatTeam,
             })
             .then(owners => {
                 if (owners && owners.length > 0) {
-                    console.log(`Notifying '${owners.join(", ")}' about GitHub activity`);
+                    logger.debug(`Notifying '${owners.join(", ")}' about GitHub activity`);
                     return ctx.messageClient.send(
                         Message, addressSlackUsers(team.id, ...owners),
                         { id: `bot_owner/github/notification`, ttl: 1000 * 60 * 60 * 24 * 7});
@@ -99,7 +100,7 @@ function handleResult(team: ChatTeam,
             })
             .then(() => Success, failure);
     } else {
-        console.log(`Setting team preferences '${PreferenceKey}' to 'true'`);
+        logger.debug(`Setting team preferences '${PreferenceKey}' to 'true'`);
         return ctx.graphClient.mutate<graphql.SetChatTeamPreference.Mutation,
                 graphql.SetChatTeamPreference.Variables>({
                 name: "setChatTeamPreference",

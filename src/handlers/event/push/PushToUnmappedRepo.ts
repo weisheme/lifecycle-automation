@@ -21,6 +21,7 @@ import {
     HandleEvent,
     HandlerContext,
     HandlerResult,
+    logger,
     Success,
     Tags,
 } from "@atomist/automation-client";
@@ -165,7 +166,7 @@ function getDisabledRepos(preferences: graphql.PushToUnmappedRepo._Preferences[]
         mappingConfig = JSON.parse(repoMappingFlow.value);
     } catch (e) {
         const err = (e as Error).message;
-        console.error(`failed to parse ${repoMappingConfigKey} value '${repoMappingFlow.value}': ${err}`);
+        logger.error(`failed to parse ${repoMappingConfigKey} value '${repoMappingFlow.value}': ${err}`);
         return [];
     }
     if (!mappingConfig[disabledReposConfigKey]) {

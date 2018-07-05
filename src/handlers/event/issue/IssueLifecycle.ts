@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { EventFired, HandlerContext } from "@atomist/automation-client";
+import {
+    EventFired,
+    HandlerContext,
+    logger,
+} from "@atomist/automation-client";
 import { SlackMessage } from "@atomist/slack-messages";
 import {
     CardMessage,
@@ -79,7 +83,7 @@ export abstract class IssueCardLifecycleHandler<R> extends LifecycleHandler<R> {
 
         // Verify that there is at least a issue and repo node
         if (issue == null) {
-            console.debug(`Lifecycle event is missing issue and/or repo node`);
+            logger.debug(`Lifecycle event is missing issue and/or repo node`);
             return null;
         }
 
@@ -152,7 +156,7 @@ export abstract class IssueLifecycleHandler<R> extends LifecycleHandler<R> {
 
         // Verify that there is at least a issue and repo node
         if (issue == null) {
-            console.debug(`Lifecycle event is missing issue and/or repo node`);
+            logger.debug(`Lifecycle event is missing issue and/or repo node`);
             return null;
         }
 

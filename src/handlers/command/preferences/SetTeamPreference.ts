@@ -20,6 +20,7 @@ import {
     HandleCommand,
     HandlerContext,
     HandlerResult,
+    logger,
     MappedParameter,
     MappedParameters,
     Parameter,
@@ -119,7 +120,7 @@ export class SetTeamPreference implements HandleCommand {
                     value = JSON.parse(this.value);
                 } catch (e) {
                     const err = (e as Error).message;
-                    console.error(`failed to parse config value '${this.value}' using string: ${err}`);
+                    logger.error(`failed to parse config value '${this.value}' using string: ${err}`);
                     value = this.value;
                 }
                 preferences[this.name] = value;

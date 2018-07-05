@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { EventFired, HandlerContext } from "@atomist/automation-client";
+import {
+    EventFired,
+    HandlerContext,
+    logger,
+} from "@atomist/automation-client";
 import { SlackMessage } from "@atomist/slack-messages";
 import { CardMessage, newCardMessage } from "../../../lifecycle/card";
 import {
@@ -79,10 +83,10 @@ export abstract class PullRequestCardLifecycleHandler<R> extends LifecycleHandle
 
         // Verify that there is at least a pullrequest and repo node
         if (pullrequest == null || repo == null) {
-            console.debug(`Lifecycle event is missing pullrequest and/or repo node`);
+            logger.debug(`Lifecycle event is missing pullrequest and/or repo node`);
             return null;
         } else if (pullrequest.merged && !pullrequest.merger) {
-            console.debug(`Lifecycle event is missing merger for merged pullrequest`);
+            logger.debug(`Lifecycle event is missing merger for merged pullrequest`);
             return null;
         }
 
@@ -157,10 +161,10 @@ export abstract class PullRequestLifecycleHandler<R> extends LifecycleHandler<R>
 
         // Verify that there is at least a pullrequest and repo node
         if (pullrequest == null || repo == null) {
-            console.debug(`Lifecycle event is missing pullrequest and/or repo node`);
+            logger.debug(`Lifecycle event is missing pullrequest and/or repo node`);
             return null;
         } else if (pullrequest.merged && !pullrequest.merger) {
-            console.debug(`Lifecycle event is missing merger for merged pullrequest`);
+            logger.debug(`Lifecycle event is missing merger for merged pullrequest`);
             return null;
         }
 
