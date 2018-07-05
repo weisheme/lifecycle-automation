@@ -404,7 +404,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
                 duration: max - min,
                 actions,
                 goals: gs,
-                sdm: creator ? `${creator.registration}:${creator.version}` : undefined,
+                registration: creator ? `${creator.registration}:${creator.version}` : undefined,
                 state,
             });
         }

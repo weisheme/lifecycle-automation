@@ -77,7 +77,7 @@ export interface CardMessage {
     goalSets?: Array<{
         goalSet: string;
         goalSetId: string;
-        sdm: string;
+        registration: string;
         state: string;
         goals: Goal[];
         actions: Action[];
