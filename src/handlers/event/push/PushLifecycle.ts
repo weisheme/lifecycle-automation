@@ -19,7 +19,6 @@ import {
     HandlerContext,
 } from "@atomist/automation-client";
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
 import { SlackMessage } from "@atomist/slack-messages";
 import * as _ from "lodash";
 import {
@@ -37,11 +36,10 @@ import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/Colla
 import { EventsCardNodeRenderer } from "../../../lifecycle/rendering/EventsCardNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
-import { SdmGoalFields } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
 import {
     PushToPushLifecycle,
-    SdmGoalsByCommit,
+    SdmGoalFields,
 } from "../../../typings/types";
 import { isGitHub } from "../../../util/helpers";
 import { LifecyclePreferences } from "../preferences";
