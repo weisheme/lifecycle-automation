@@ -37,6 +37,7 @@ import { CollaboratorCardNodeRenderer } from "../../../lifecycle/rendering/Colla
 import { EventsCardNodeRenderer } from "../../../lifecycle/rendering/EventsCardNodeRenderer";
 import { FooterNodeRenderer } from "../../../lifecycle/rendering/FooterNodeRenderer";
 import { ReferencedIssuesNodeRenderer } from "../../../lifecycle/rendering/ReferencedIssuesNodeRenderer";
+import { SdmGoalFields } from "../../../typings/types";
 import * as graphql from "../../../typings/types";
 import {
     PushToPushLifecycle,
@@ -376,6 +377,6 @@ export interface Domain {
 
 export interface GoalSet {
     goalSetId: string;
-    goals: SdmGoalsByCommit.SdmGoal[];
+    goals: SdmGoalFields.Fragment[];
     ts: number;
 }

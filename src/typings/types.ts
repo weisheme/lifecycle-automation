@@ -11676,6 +11676,8 @@ export namespace SdmGoalFields {
     preConditions?: PreConditions[] | null;
     provenance?: Provenance[] | null;
     repo?: Repo | null;
+    approval?: Approval | null;
+    approvalRequired?: boolean | null;
     data?: string | null;
   };
 
@@ -11704,6 +11706,17 @@ export namespace SdmGoalFields {
     __typename?: "SdmRepository";
     owner?: string | null;
     name?: string | null;
+  };
+
+  export type Approval = {
+    __typename?: "SdmProvenance";
+    channelId?: string | null;
+    correlationId?: string | null;
+    name?: string | null;
+    registration?: string | null;
+    ts?: number | null;
+    userId?: string | null;
+    version?: string | null;
   };
 }
 
