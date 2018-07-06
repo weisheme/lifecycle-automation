@@ -34,14 +34,14 @@ fragment SdmGoalFields on SdmGoal {
     name
   }
   approval {
-      channelId
-      correlationId
-      name
-      registration
-      ts
-      userId
-      version
-    }
-    approvalRequired
+    channelId
+    correlationId
+    name
+    registration
+    ts
+    userId
+    version
+  }
+  approvalRequired
   data
 }
