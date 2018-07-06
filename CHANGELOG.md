@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/lifecycle-automation/compare/0.8.33...HEAD)
 
+### Fixed
+
+-   Goal approval missing in push rendering. [#234](https://github.com/atomist/lifecycle-automation/issues/234)
+
 ## [0.8.33](https://github.com/atomist/lifecycle-automation/compare/0.8.32...0.8.33) - 2018-07-04
 
 ### Added
