@@ -136,7 +136,7 @@ export function repoUrl(repo: any): string {
     if (isBitBucketOnPrem(repo)) {
         return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}`;
     } else if (isGitlabEnterprise(repo)) {
-        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}`
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}`;
     } else {
         return `${htmlUrl(repo)}/${repoSlug(repo)}`;
     }
@@ -166,7 +166,7 @@ export function avatarUrl(repo: any, login: string): string {
         // do pass them on the webhook events so we might be able to get them
         // into the graph. I don't think we can determine them though. Maybe
         // the alternative would be to query gravatar by email or something.
-        return "https://www.gravatar.com/avatar/8c306e13e0afacb17204b8d5fd87226b?s=800&d=identicon"
+        return "https://www.gravatar.com/avatar/8c306e13e0afacb17204b8d5fd87226b?s=800&d=identicon";
     } else if (isBitBucket(repo)) {
         // https://bitbucket.org/account/cdupuis/avatar/64/?ts=1523010025
         return `${htmlUrl(repo)}/account/${login}/avatar/16`;
@@ -180,7 +180,7 @@ export function commitUrl(repo: any, commit: any): string {
     } else if (isBitBucketOnPrem(repo)) {
         return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}/commits/${commit.sha}`;
     } else if (isGitlabEnterprise(repo)) {
-        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/commit/${commit.sha}`
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/commit/${commit.sha}`;
     } else {
         throw new Error("Repository is missing providerType");
     }
@@ -188,7 +188,7 @@ export function commitUrl(repo: any, commit: any): string {
 
 export function tagUrl(repo: any, tag: any): string {
     if (isGitlabEnterprise(repo)) {
-        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/tags/${tag.name}`
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/tags/${tag.name}`;
     } else {
         return `${htmlUrl(repo)}/${repoSlug(repo)}/releases/tag/${tag.name}`;
     }
@@ -201,7 +201,7 @@ export function prUrl(repo: any, pr: any): string {
         // https://bitbucket.org/slimslenderslacks/jimtest/pull-requests/1
         return `${htmlUrl(repo)}/${repoSlug(repo)}/pull-requests/${pr.number}`;
     } else if (isGitlab(repo)) {
-        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/merge_requests/${pr.number}`
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/merge_requests/${pr.number}`;
     } else {
         throw new Error("Repository is missing providerType");
     }
@@ -350,9 +350,9 @@ export function extractImageUrls(body: string): slack.Attachment[] {
 }
 
 export function extractLinkedIssues(body: string,
-    repo: any,
-    ignore: string[] = [],
-    ctx: HandlerContext): Promise<ReferencedIssues> {
+                                    repo: any,
+                                    ignore: string[] = [],
+                                    ctx: HandlerContext): Promise<ReferencedIssues> {
     const promises = [];
 
     let match;
@@ -402,9 +402,9 @@ export function extractLinkedIssues(body: string,
 }
 
 export function loadIssueOrPullRequest(owner: string,
-    repo: string,
-    names: string[],
-    ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
+                                       repo: string,
+                                       names: string[],
+                                       ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
     return ctx.graphClient.query<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>({
         name: "issueOrPr",
         variables: {
@@ -774,5 +774,5 @@ export function repoAndlabelsAndAssigneesFooter(repo: any, labels: any, assignee
 export class ReferencedIssues {
 
     constructor(public issues: graphql.IssueOrPr.Issue[],
-        public prs: graphql.IssueOrPr.PullRequest[]) { }
+                public prs: graphql.IssueOrPr.PullRequest[]) { }
 }
