@@ -91,6 +91,8 @@ export function branchUrl(repo: any, branch: string): string {
         return `${htmlUrl(repo)}/${repoSlug(repo)}/branch/${branch}`;
     } else if (isBitBucketOnPrem(repo)) {
         return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}/browse?at=${branch}`;
+    } else if (isGitlabEnterprise(repo)) {
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/tree/${branch}`;
     } else {
         throw new Error("Repository is missing providerType");
     }
@@ -133,6 +135,8 @@ export function apiUrl(repo: any): string {
 export function repoUrl(repo: any): string {
     if (isBitBucketOnPrem(repo)) {
         return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}`;
+    } else if (isGitlabEnterprise(repo)) {
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}`;
     } else {
         return `${htmlUrl(repo)}/${repoSlug(repo)}`;
     }
@@ -143,7 +147,7 @@ export function repoSlackLink(repo: any): string {
 }
 
 export function userUrl(repo: any, login: string): string {
-    if (isGitHub(repo) || isBitBucketCloud(repo)) {
+    if (isGitHub(repo) || isBitBucketCloud(repo) || isGitlab(repo)) {
         return `${htmlUrl(repo)}/${login}`;
     } else if (isBitBucketOnPrem(repo)) {
         return `${htmlUrl(repo)}/users/${login}`;
@@ -157,6 +161,12 @@ export function avatarUrl(repo: any, login: string): string {
         return `https://avatars.githubusercontent.com/${login}`;
     } else if (isGitHub(repo)) {
         return `${htmlUrl(repo)}/avatars/${login}`;
+    } else if (isGitlab(repo)) {
+        // not sure the best thing to do here - they seem to use gravatar. They
+        // do pass them on the webhook events so we might be able to get them
+        // into the graph. I don't think we can determine them though. Maybe
+        // the alternative would be to query gravatar by email or something.
+        return "https://www.gravatar.com/avatar/8c306e13e0afacb17204b8d5fd87226b?s=800&d=identicon";
     } else if (isBitBucket(repo)) {
         // https://bitbucket.org/account/cdupuis/avatar/64/?ts=1523010025
         return `${htmlUrl(repo)}/account/${login}/avatar/16`;
@@ -169,13 +179,19 @@ export function commitUrl(repo: any, commit: any): string {
         return `${htmlUrl(repo)}/${repoSlug(repo)}/commits/${commit.sha}`;
     } else if (isBitBucketOnPrem(repo)) {
         return `${htmlUrl(repo)}/projects/${repo.owner}/repos/${repo.name}/commits/${commit.sha}`;
+    } else if (isGitlabEnterprise(repo)) {
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/commit/${commit.sha}`;
     } else {
         throw new Error("Repository is missing providerType");
     }
 }
 
 export function tagUrl(repo: any, tag: any): string {
-    return `${htmlUrl(repo)}/${repoSlug(repo)}/releases/tag/${tag.name}`;
+    if (isGitlabEnterprise(repo)) {
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/tags/${tag.name}`;
+    } else {
+        return `${htmlUrl(repo)}/${repoSlug(repo)}/releases/tag/${tag.name}`;
+    }
 }
 
 export function prUrl(repo: any, pr: any): string {
@@ -184,6 +200,8 @@ export function prUrl(repo: any, pr: any): string {
     } else if (isBitBucket(repo)) {
         // https://bitbucket.org/slimslenderslacks/jimtest/pull-requests/1
         return `${htmlUrl(repo)}/${repoSlug(repo)}/pull-requests/${pr.number}`;
+    } else if (isGitlab(repo)) {
+        return `${htmlUrl(repo)}/${repo.owner}/${repo.name}/merge_requests/${pr.number}`;
     } else {
         throw new Error("Repository is missing providerType");
     }
@@ -200,7 +218,6 @@ export function issueUrl(repo: any, issue: any, comment?: any): string {
     } else {
         return `${htmlUrl(repo)}/${repoSlug(repo)}/issues/${issue.number}#issuecomment-${comment.gitHubId}`;
     }
-
 }
 
 export function labelUrl(repo: any, label: string): string {
@@ -226,11 +243,22 @@ export function isBitBucket(repo: any): boolean {
     return isBitBucketCloud(repo) || isBitBucketOnPrem(repo);
 }
 
+export function isGitlab(repo: any): boolean {
+    return isGitlabEnterprise(repo);
+}
+
 export function isBitBucketCloud(repo: any): boolean {
     return repo.org != null &&
         repo.org.provider != null &&
         repo.org.provider.providerType != null &&
         repo.org.provider.providerType === "bitbucket_cloud";
+}
+
+export function isGitlabEnterprise(repo: any): boolean {
+    return repo.org != null &&
+        repo.org.provider != null &&
+        repo.org.provider.providerType != null &&
+        repo.org.provider.providerType === "gitlab";
 }
 
 export function isBitBucketOnPrem(repo: any): boolean {
@@ -378,13 +406,13 @@ export function loadIssueOrPullRequest(owner: string,
                                        names: string[],
                                        ctx: HandlerContext): Promise<graphql.IssueOrPr.Org> {
     return ctx.graphClient.query<graphql.IssueOrPr.Query, graphql.IssueOrPr.Variables>({
-            name: "issueOrPr",
-            variables: {
-                owner,
-                repo,
-                names,
-            },
-        })
+        name: "issueOrPr",
+        variables: {
+            owner,
+            repo,
+            names,
+        },
+    })
         .then(result => {
             if (result && result.Org && result.Org.length > 0) {
                 return result.Org[0];
@@ -465,11 +493,11 @@ function gitHubUserMentionRegExp(ghUser?: string): RegExp {
 export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): Promise<graphql.GitHubId.GitHubId[]> {
     if (gitHubIds && gitHubIds.length > 0) {
         return ctx.graphClient.query<graphql.GitHubId.Query, graphql.GitHubId.Variables>({
-                name: "gitHubId",
-                variables: {
-                    gitHubIds,
-                },
-            })
+            name: "gitHubId",
+            variables: {
+                gitHubIds,
+            },
+        })
             .then(result => {
                 if (result) {
                     if (result.GitHubId && result.GitHubId.length > 0) {
@@ -490,12 +518,12 @@ export function loadChatIdByGitHubId(ctx: HandlerContext, gitHubIds: string[]): 
 
 export function loadGitHubIdByChatId(chatId: string, teamId: string, ctx: HandlerContext): Promise<string> {
     return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
-            name: "chatId",
-            variables: {
-                teamId,
-                chatId,
-            },
-        })
+        name: "chatId",
+        variables: {
+            teamId,
+            chatId,
+        },
+    })
         .then(result => {
             if (result) {
                 return _.get(result, "ChatTeam[0].members[0].person.gitHubId.login");
@@ -511,12 +539,12 @@ export function loadGitHubIdByChatId(chatId: string, teamId: string, ctx: Handle
 export function loadChatIdByChatId(chatId: string, teamId: string, ctx: HandlerContext)
     : Promise<graphql.ChatId.Members> {
     return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
-            name: "chatId",
-            variables: {
-                teamId,
-                chatId,
-            },
-        })
+        name: "chatId",
+        variables: {
+            teamId,
+            chatId,
+        },
+    })
         .then(result => {
             if (result) {
                 return _.get(result, "ChatTeam[0].members[0]");
@@ -531,11 +559,11 @@ export function loadChatIdByChatId(chatId: string, teamId: string, ctx: HandlerC
 
 export function loadChatTeam(teamId: string, ctx: HandlerContext): Promise<graphql.ChatTeam.ChatTeam> {
     return ctx.graphClient.query<graphql.ChatTeam.Query, graphql.ChatTeam.Variables>({
-            name: "chatTeam",
-            variables: {
-                teamId,
-            },
-        })
+        name: "chatTeam",
+        variables: {
+            teamId,
+        },
+    })
         .then(result => {
             return _.get(result, "ChatTeam[0]");
         })
@@ -657,12 +685,12 @@ export function replaceChatIdWithGitHubId(body: string = "", teamId: string, ctx
     if (matches != null) {
         return Promise.all(matches.map(m => {
             return ctx.graphClient.query<graphql.ChatId.Query, graphql.ChatId.Variables>({
-                    name: "chatId",
-                    variables: {
-                        teamId,
-                        chatId: m,
-                    },
-                })
+                name: "chatId",
+                variables: {
+                    teamId,
+                    chatId: m,
+                },
+            })
                 .then(result => {
                     if (result) {
                         const login = _.get(result, "ChatTeam[0].members[0].person.gitHubId.login");
