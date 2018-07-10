@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/lifecycle-automation/compare/0.8.38...HEAD)
 
+### Added
+
+-   Some lifecycle event handlers are missing for PR on cards. [#236](https://github.com/atomist/lifecycle-automation/issues/236)
+
 ## [0.8.38](https://github.com/atomist/lifecycle-automation/compare/0.8.37...0.8.38) - 2018-07-10
 
 ## [0.8.37](https://github.com/atomist/lifecycle-automation/compare/0.8.36...0.8.37) - 2018-07-10
