@@ -171,7 +171,7 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
             .filter(c => c.statuses != null && c.statuses.length > 0);
 
         if (commits && commits.length > 0) {
-            const statuses = commits[0].statuses
+            const statuses = commits[0].statuses;
             const success = statuses.filter(s => s.state === "success").length;
 
             // Now each one
