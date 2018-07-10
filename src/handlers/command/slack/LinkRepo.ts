@@ -29,10 +29,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
-import * as _ from "lodash";
-
 import { LinkSlackChannelToRepo } from "../../../typings/types";
-import * as graphql from "../../../typings/types";
 import { isChannel } from "../../../util/slack";
 import {
     checkRepo,
@@ -118,14 +115,14 @@ export class LinkRepo implements HandleCommand {
         return checkRepo(this.githubToken, this.apiUrl, this.provider, this.name, this.owner, ctx)
             .then(repoExists => {
                 if (!repoExists) {
-                    return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx));
+                    return ctx.messageClient.respond(noRepoMessage(this.name, this.owner, ctx), { dashboard: false });
                 }
                 return linkSlackChannelToRepo(
                     ctx, this.teamId, this.channelId, this.name, this.owner, this.provider)
                     .then(() => {
                         if (this.msgId) {
                             return ctx.messageClient.addressChannels(
-                                this.msg, this.channelName, { id: this.msgId });
+                                this.msg, this.channelName, { id: this.msgId, dashboard: false });
                         }
                         return Success;
                     });

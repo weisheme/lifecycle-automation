@@ -30,7 +30,6 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
-
 import { DefaultGitHubApiUrl } from "../github/gitHubApi";
 import { LinkRepo } from "./LinkRepo";
 

@@ -90,7 +90,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                     color: "#45B254",
                 }],
             };
-            return ctx.messageClient.respond(msg, { id: this.msgId })
+            return ctx.messageClient.respond(msg, { id: this.msgId, dashboard: false })
                 .then(success, failure);
         } else if (!this.lifecycle) {
             return this.loadPreferences(ctx, LifecyclePreferences.key)
@@ -101,7 +101,7 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 })
                 .then(([preferences, emojisEnabled]) => {
                     return ctx.messageClient.respond(
-                        this.createMessage(preferences, emojisEnabled), { id: this.msgId });
+                        this.createMessage(preferences, emojisEnabled), { id: this.msgId, dashboard: false });
                 })
                 .then(success, failure);
         } else {
@@ -109,7 +109,8 @@ export class ConfigureLifecyclePreferences implements HandleCommand {
                 this.loadPreferences(ctx, LifecycleRendererPreferences.key)])
                 .then(preferences => {
                     return ctx.messageClient.respond(
-                        this.createConfigureMessage(preferences[0], preferences[1]), { id: this.msgId });
+                        this.createConfigureMessage(preferences[0],
+                            preferences[1]), { id: this.msgId, dashboard: false });
                 })
                 .then(success, failure);
         }

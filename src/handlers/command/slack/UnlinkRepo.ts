@@ -29,10 +29,7 @@ import {
     Tags,
 } from "@atomist/automation-client";
 import * as slack from "@atomist/slack-messages/SlackMessages";
-
-import {
-    codeLine,
-} from "@atomist/slack-messages/SlackMessages";
+import { codeLine } from "@atomist/slack-messages/SlackMessages";
 import * as graphql from "../../../typings/types";
 import { success } from "../../../util/messages";
 import {
@@ -99,7 +96,7 @@ export class UnlinkRepo implements HandleCommand {
                             const text = `Successfully unlinked repository ${
                                 codeLine(`${this.owner}/${this.name}`)} from this channel`;
                             const msg = success("Unlink Repository", text);
-                            return ctx.messageClient.respond(msg, { id: this.msgId });
+                            return ctx.messageClient.respond(msg, { id: this.msgId, dashboard: false });
                         });
                 }
             })

@@ -96,7 +96,7 @@ export class GitHubWebhookCreated implements HandleEvent<graphql.WebhookCreated.
             return ctx.messageClient.send(
                 welcomeMsg,
                 addressSlackUsers(teamId, ownerName),
-                {id: `webhook/create/${orgOwner}`})
+                { id: `webhook/create/${orgOwner}`, dashboard: false })
                 .then(() => Success, failure);
         }))
         .then(() => Success, failure);

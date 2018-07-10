@@ -117,7 +117,7 @@ export function sendUnMappedRepoMessage(
         return ctx.messageClient.send(
             mapRepoMessage(repo, chatId, botNames[chatId.chatTeam.id]) || DefaultBotName,
             addressSlackUsers(chatId.chatTeam.id, chatId.screenName),
-            { id });
+            { id, dashboard: false });
     }))
     .then(() => Success);
 }

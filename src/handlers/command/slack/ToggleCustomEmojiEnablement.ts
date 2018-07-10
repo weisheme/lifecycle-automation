@@ -106,7 +106,7 @@ export class ToggleCustomEmojiEnablement implements HandleCommand {
                     });
                 }
                 /* tslint:enable */
-                return ctx.messageClient.respond(msg, { id: this.msgId });
+                return ctx.messageClient.respond(msg, { id: this.msgId, dashboard: false });
             })
             .then(success, failure);
     }

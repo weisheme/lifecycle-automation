@@ -95,7 +95,7 @@ export class ListRepoLinks implements HandleCommand {
 
                     msg.attachments[0].pretext = "The following repositories are linked to this channel:";
 
-                    return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId });
+                    return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId, dashboard: false });
                 } else {
 
                     const text = "There are no repositories linked to this channel." +
@@ -110,7 +110,7 @@ export class ListRepoLinks implements HandleCommand {
                         }],
                     };
 
-                    return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId });
+                    return ctx.messageClient.respond(linkRepoAttachment(msg), { id: this.msgId, dashboard: false });
                 }
             })
             .then(() => Success, failure);

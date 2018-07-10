@@ -41,7 +41,7 @@ export class CancelParameters {
 
 export function cancelMessage() {
     return async (ctx: HandlerContext, params: CancelParameters): Promise<HandlerResult> => {
-            return ctx.messageClient.respond(success(params.title, params.text), { id: params.msgId })
+            return ctx.messageClient.respond(success(params.title, params.text), { id: params.msgId, dashboard: false })
                 .then(() => Success, failure);
         };
 }

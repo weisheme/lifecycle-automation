@@ -125,7 +125,7 @@ Please use one of the buttons below to install a Webhook in your repository or o
                         warning("Channel Linked", text, ctx,
                             [...createActions(repo), createListRepoLinksAction(msgId)]),
                         addressSlackChannels(teamId, channelName),
-                        { id: msgId });
+                        { id: msgId, dashboard: false });
                 }
             })
             .then(() => showLastPush(repo, this.orgToken, ctx))
@@ -149,7 +149,7 @@ Please use one of the buttons below to install a Webhook in your repository or o
                 ],
             }],
         };
-        return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName), { id: msgId });
+        return ctx.messageClient.send(msg, addressSlackChannels(teamId, channelName), { id: msgId, dashboard: false });
     }
 }
 

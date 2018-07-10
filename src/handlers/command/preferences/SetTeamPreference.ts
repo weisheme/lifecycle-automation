@@ -144,7 +144,7 @@ export class SetTeamPreference implements HandleCommand {
                         color: "#45B254",
                     }],
                 };
-                return ctx.messageClient.respond(msg, { id: this.msgId });
+                return ctx.messageClient.respond(msg, { id: this.msgId, dashboard: false });
             })
             .then(() => Success, err => failure(err));
     }

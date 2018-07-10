@@ -28,17 +28,12 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-import { QueryNoCacheOptions } from "@atomist/automation-client/spi/graph/GraphClient";
-import * as slack from "@atomist/slack-messages/SlackMessages";
-import * as _ from "lodash";
-
 import { codeLine } from "@atomist/slack-messages";
+import * as slack from "@atomist/slack-messages/SlackMessages";
 import { InviteUserToSlackChannel } from "../../../typings/types";
-import * as graphql from "../../../typings/types";
 import { warning } from "../../../util/messages";
 import { isChannel } from "../../../util/slack";
 import { extractScreenNameFromMapRepoMessageId } from "../../event/push/PushToUnmappedRepo";
-import * as github from "../github/gitHubApi";
 import { addBotToSlackChannel } from "./AddBotToChannel";
 import { linkSlackChannelToRepo } from "./LinkRepo";
 
@@ -48,24 +43,6 @@ export function checkRepo(token: string,
                           name: string,
                           owner: string,
                           ctx: HandlerContext): Promise<boolean> {
-    /*return ctx.graphClient.query<graphql.ProviderTypeFromRepo.Query, graphql.ProviderTypeFromRepo.Variables>({
-        name: "providerTypeFromRepo",
-        variables: {
-            name,
-            owner,
-            providerId,
-        },
-        options: QueryNoCacheOptions,
-    })
-    .then(result => {
-        const provider = _.get(result, "Repo[0].org.provider.providerType");
-        if (provider === "bitbucket_cloud" || provider === "bitbucket") {
-            return Promise.resolve(true);
-        } else {
-            return github.api(token, url).repos.get({ owner, repo: name })
-                .then(() => true, () => false);
-        }
-    });*/
     return Promise.resolve(true);
 }
 
@@ -136,13 +113,13 @@ export class AssociateRepo implements HandleCommand {
         if (!isChannel(this.channelId)) {
             const err = "The Atomist Bot can only link repositories to public channels. " +
                 "Please try again with a public channel.";
-            return ctx.messageClient.respond(err)
+            return ctx.messageClient.respond(err, { dashboard: false })
                 .then(() => Success, failure);
         }
         return checkRepo(this.githubToken, this.apiUrl, this.provider, this.repo, this.owner, ctx)
             .then(repoExists => {
                 if (!repoExists) {
-                    return ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx));
+                    return ctx.messageClient.respond(noRepoMessage(this.repo, this.owner, ctx), { dashboard: false });
                 }
                 return addBotToSlackChannel(ctx, this.teamId, this.channelId)
                     .then(() => linkSlackChannelToRepo(
@@ -153,9 +130,10 @@ export class AssociateRepo implements HandleCommand {
                             `${slack.channel(this.channelId)} and invited you to the channel.`;
                         const screenName = extractScreenNameFromMapRepoMessageId(this.msgId);
                         if (screenName) {
-                            return ctx.messageClient.addressUsers(msg, screenName, { id: this.msgId });
+                            return ctx.messageClient.addressUsers(
+                                msg, screenName, { id: this.msgId, dashboard: false });
                         } else {
-                            return ctx.messageClient.respond(msg);
+                            return ctx.messageClient.respond(msg, { dashboard: false });
                         }
                     });
             })

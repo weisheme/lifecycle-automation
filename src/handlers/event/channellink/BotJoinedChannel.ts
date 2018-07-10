@@ -99,13 +99,15 @@ export class BotJoinedChannel implements HandleEvent<graphql.BotJoinedChannel.Su
                 const linkedRepoNames = j.channel.repos.map(r => repoSlackLink(r));
                 const msg = `${helloText}
 I will post GitHub notifications about ${linkedRepoNames.join(", ")} here.`;
-                return ctx.messageClient.send(msg, addressSlackChannels(j.channel.team.id, channelName));
+                return ctx.messageClient.send(
+                    msg, addressSlackChannels(j.channel.team.id, channelName), { dashboard: false });
             }
 
             if (!j.channel.team || !j.channel.team.orgs || j.channel.team.orgs.length < 1) {
                 const msg = `${helloText}
 I won't be able to do much without GitHub integration, though. Run \`@${botName} enroll org\` to set that up.`;
-                return ctx.messageClient.send(msg, addressSlackChannels(j.channel.team.id, channelName));
+                return ctx.messageClient.send(
+                    msg, addressSlackChannels(j.channel.team.id, channelName), { dashboard: false });
             }
             const orgs = j.channel.team.orgs.filter(o => o);
 
@@ -152,7 +154,8 @@ I won't be able to do much without GitHub integration, though. Run \`@${botName}
                         ownerText = (ownerText) ? ` for ${ownerText}` : "";
                         const msg = `${helloText}
 I don't see any repositories in GitHub${ownerText}.`;
-                        return ctx.messageClient.send(msg, addressSlackChannels(j.channel.team.id, channelName));
+                        return ctx.messageClient.send(
+                            msg, addressSlackChannels(j.channel.team.id, channelName), { dashboard: false });
                     }
 
                     const msgId = `channel_link/bot_joined_channel/${channelName}`;
@@ -210,7 +213,7 @@ OK. If you want to link a repository later, type \`${linkCmd}\``;
                         ],
                     };
                     return ctx.messageClient.send(linkMsg,
-                        addressSlackChannels(j.channel.team.id, channelName), { id: msgId });
+                        addressSlackChannels(j.channel.team.id, channelName), { id: msgId, dashboard: false });
                 });
 
         })).then(x => Success, failure);

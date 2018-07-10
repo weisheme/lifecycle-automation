@@ -77,7 +77,7 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                     color: "#45B254",
                 }],
             };
-            return ctx.messageClient.respond(msg, { id: this.msgId })
+            return ctx.messageClient.respond(msg, { id: this.msgId, dashboard: false })
                 .then(() => Success, failure);
 
         } else {
@@ -101,7 +101,8 @@ export class ConfigureDirectMessageUserPreferences implements HandleCommand {
                     return {};
                 })
                 .then(preferences => {
-                    return ctx.messageClient.respond(this.createMessage(preferences, this.msgId), { id: this.msgId });
+                    return ctx.messageClient.respond(
+                        this.createMessage(preferences, this.msgId), { id: this.msgId, dashboard: false });
                 })
                 .then(() => Success, failure);
         }

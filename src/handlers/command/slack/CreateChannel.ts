@@ -28,7 +28,6 @@ import {
     Success,
     Tags,
 } from "@atomist/automation-client";
-
 import { CreateSlackChannel } from "../../../typings/types";
 import { error } from "../../../util/messages";
 import { AssociateRepo } from "./AssociateRepo";
@@ -107,7 +106,7 @@ export class CreateChannel implements HandleCommand {
                     return associateRepo.handle(ctx);
                 } else {
                     return ctx.messageClient.respond(
-                        error("Create Channel", "Channel creation failed", ctx))
+                        error("Create Channel", "Channel creation failed", ctx), { dashboard: false })
                         .then(() => Success, failure);
                 }
             })

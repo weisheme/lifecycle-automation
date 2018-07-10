@@ -153,7 +153,7 @@ export class SetUserPreference implements HandleCommand {
                     },
                     ],
                 };
-                return ctx.messageClient.respond(msg, { id: this.id });
+                return ctx.messageClient.respond(msg, { id: this.id, dashboard: false });
             })
             .then(() => Success, err => failure(err));
     }

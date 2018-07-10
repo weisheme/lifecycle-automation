@@ -43,7 +43,7 @@ export class NoLinkRepo implements HandleCommand {
 
     public handle(ctx: HandlerContext): Promise<HandlerResult> {
         if (this.msgId) {
-            return ctx.messageClient.addressChannels(this.msg, this.channelName, { id: this.msgId })
+            return ctx.messageClient.addressChannels(this.msg, this.channelName, { id: this.msgId, dashboard: false })
                 .then(() => Success, failure);
         }
         return Promise.resolve(Success);
