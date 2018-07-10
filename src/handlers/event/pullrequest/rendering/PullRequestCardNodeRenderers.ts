@@ -169,51 +169,50 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
         // List all the statuses on the head commit
         const commits = pr.commits.sort((c1, c2) => c2.timestamp.localeCompare(c1.timestamp))
             .filter(c => c.statuses != null && c.statuses.length > 0);
-        const statuses = commits[0].statuses;
-        if (statuses.length === 0) {
-            return Promise.resolve(msg);
-        }
 
-        const success = statuses.filter(s => s.state === "success").length;
+        if (commits && commits.length > 0) {
+            const statuses = commits[0].statuses
+            const success = statuses.filter(s => s.state === "success").length;
 
-        // Now each one
-        const body = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
+            // Now each one
+            const body = statuses.sort((s1, s2) => s1.context.localeCompare(s2.context)).map(s => {
 
-            let icon;
-            if (s.state === "success") {
-                icon = "css://icon-status-check";
-            } else if (s.state === "pending") {
-                icon = "css://icon-status-check alert";
-            } else {
-                icon = "css://icon-status-check fail";
-            }
+                let icon;
+                if (s.state === "success") {
+                    icon = "css://icon-status-check";
+                } else if (s.state === "pending") {
+                    icon = "css://icon-status-check alert";
+                } else {
+                    icon = "css://icon-status-check fail";
+                }
 
-            let text;
-            if (s.targetUrl != null && s.targetUrl.length > 0) {
-                text = `${s.description} | ${url(s.targetUrl, s.context)}`;
-            } else {
-                text = `${s.description} | ${s.context}`;
-            }
+                let text;
+                if (s.targetUrl != null && s.targetUrl.length > 0) {
+                    text = `${s.description} | ${url(s.targetUrl, s.context)}`;
+                } else {
+                    text = `${s.description} | ${s.context}`;
+                }
 
-            msg.events.push({
-                icon,
-                text,
-                ts: Date.parse(s.timestamp),
+                msg.events.push({
+                    icon,
+                    text,
+                    ts: Date.parse(s.timestamp),
+                });
+
+                return {
+                    icon,
+                    text,
+                };
             });
 
-            return {
-                icon,
-                text,
-            };
-        });
-
-        msg.correlations.push({
-            type: "status",
-            icon: `css://icon-status-check`,
-            shortTitle: `${success}/${statuses.length}`,
-            title: `${statuses.length} Check`,
-            body,
-        });
+            msg.correlations.push({
+                type: "status",
+                icon: `css://icon-status-check`,
+                shortTitle: `${success}/${statuses.length}`,
+                title: `${statuses.length} Check`,
+                body,
+            });
+        }
 
         msg.actions.push(...actions);
 
