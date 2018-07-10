@@ -161,8 +161,7 @@ export class StatusCardNodeRenderer extends AbstractIdentifiableContribution
     }
 
     public supports(node: any): boolean {
-        return node.baseBranchName && node.commits
-            && node.commits.length > 0 && node.commits.some(c => c.statuses && c.statuses.length > 0);
+        return node.baseBranchName && node.commits && node.commits.length > 0;
     }
 
     public render(pr: graphql.PullRequestToPullRequestLifecycle.PullRequest, actions: Action[], msg: CardMessage,
