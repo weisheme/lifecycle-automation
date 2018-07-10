@@ -24,7 +24,10 @@ import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
+import {
+    PullRequestCardLifecycleHandler,
+    PullRequestLifecycleHandler,
+} from "./PullRequestLifecycle";
 
 /**
  * Send a lifecycle message on Comment events.
@@ -46,5 +49,28 @@ export class CommentToPullRequestLifecycle
         event: EventFired<graphql.CommentToPullRequestLifecycle.Subscription>)
         : { [teamId: string]: Preferences[] } {
         return chatTeamsToPreferences(_.get(event, "data.Comment[0].pullRequest.repo.org.team.chatTeams"));
+    }
+}
+
+/**
+ * Send a lifecycle card on Comment events.
+ */
+@EventHandler("Send a lifecycle card on Comment events", subscription("commentToPullRequest"))
+@Tags("lifecycle", "pr", "comment")
+export class CommentToPullRequestCardLifecycle
+    extends PullRequestCardLifecycleHandler<graphql.CommentToPullRequestLifecycle.Subscription> {
+
+    protected extractNodes(event: EventFired<graphql.CommentToPullRequestLifecycle.Subscription>):
+        [graphql.CommentToPullRequestLifecycle.PullRequest, graphql.PullRequestFields.Repo,
+            string, boolean] {
+
+        const pr = _.get(event, "data.Comment[0].pullRequest");
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
+    }
+
+    protected extractPreferences(
+        event: EventFired<graphql.CommentToPullRequestLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return {};
     }
 }

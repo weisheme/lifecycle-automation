@@ -48,3 +48,26 @@ export class ReviewToPullRequestLifecycle
         return chatTeamsToPreferences(_.get(event, "data.Review[0].pullRequest.repo.org.team.chatTeams"));
     }
 }
+
+/**
+ * Send a lifecycle card on Review events.
+ */
+@EventHandler("Send a lifecycle card on Review events", subscription("reviewToPullRequest"))
+@Tags("lifecycle", "pr", "review")
+export class ReviewToPullRequestCardLifecycle
+    extends PullRequestLifecycleHandler<graphql.ReviewToPullRequestLifecycle.Subscription> {
+
+    protected extractNodes(event: EventFired<graphql.ReviewToPullRequestLifecycle.Subscription>):
+        [graphql.ReviewToPullRequestLifecycle.PullRequest, graphql.PullRequestFields.Repo,
+            string, boolean] {
+
+        const pr = _.get(event, "data.Review[0].pullRequest");
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
+    }
+
+    protected extractPreferences(
+        event: EventFired<graphql.ReviewToPullRequestLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return {};
+    }
+}

@@ -113,17 +113,35 @@ import { AutoMergeOnBuild } from "./handlers/event/pullrequest/AutoMergeOnBuild"
 import { AutoMergeOnPullRequest } from "./handlers/event/pullrequest/AutoMergeOnPullRequest";
 import { AutoMergeOnReview } from "./handlers/event/pullrequest/AutoMergeOnReview";
 import { AutoMergeOnStatus } from "./handlers/event/pullrequest/AutoMergeOnStatus";
-import { BranchToPullRequestLifecycle } from "./handlers/event/pullrequest/BranchToPullRequestLifecycle";
-import { CommentToPullRequestLifecycle } from "./handlers/event/pullrequest/CommentToPullRequestLifecycle";
-import { CommitToPullRequestLifecycle } from "./handlers/event/pullrequest/CommitToPullRequestLifecycle";
-import { DeletedBranchToPullRequestLifecycle } from "./handlers/event/pullrequest/DeletedBranchToPullRequestLifecycle";
+import {
+    BranchToPullRequestCardLifecycle,
+    BranchToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/BranchToPullRequestLifecycle";
+import {
+    CommentToPullRequestCardLifecycle,
+    CommentToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/CommentToPullRequestLifecycle";
+import {
+    CommitToPullRequestCardLifecycle,
+    CommitToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/CommitToPullRequestLifecycle";
+import {
+    DeletedBranchToPullRequestCardLifecycle,
+    DeletedBranchToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/DeletedBranchToPullRequestLifecycle";
 import { NotifyMentionedOnPullRequest } from "./handlers/event/pullrequest/NotifyMentionedOnPullRequest";
 import {
     PullRequestToPullRequestCardLifecycle,
     PullRequestToPullRequestLifecycle,
 } from "./handlers/event/pullrequest/PullRequestToPullRequestLifecycle";
-import { ReviewToPullRequestLifecycle } from "./handlers/event/pullrequest/ReviewToPullRequestLifecycle";
-import { StatusToPullRequestLifecycle } from "./handlers/event/pullrequest/StatusToPullRequestLifecycle";
+import {
+    ReviewToPullRequestCardLifecycle,
+    ReviewToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/ReviewToPullRequestLifecycle";
+import {
+    StatusToPullRequestCardLifecycle,
+    StatusToPullRequestLifecycle,
+} from "./handlers/event/pullrequest/StatusToPullRequestLifecycle";
 import {
     ApplicationToPushCardLifecycle,
     ApplicationToPushLifecycle,
@@ -334,7 +352,13 @@ export const configuration: any = {
         () => new TagToPushCardLifecycle(),
 
         // pullRequest
+        () => new BranchToPullRequestCardLifecycle(),
+        () => new CommentToPullRequestCardLifecycle(),
+        () => new CommitToPullRequestCardLifecycle(),
+        () => new DeletedBranchToPullRequestCardLifecycle(),
         () => new PullRequestToPullRequestCardLifecycle(),
+        () => new ReviewToPullRequestCardLifecycle(),
+        () => new StatusToPullRequestCardLifecycle(),
 
         // issue
         () => new IssueToIssueCardLifecycle(),

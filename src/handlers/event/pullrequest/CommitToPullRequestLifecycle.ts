@@ -24,7 +24,8 @@ import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
+import { PullRequestCardLifecycleHandler,
+    PullRequestLifecycleHandler } from "./PullRequestLifecycle";
 
 /**
  * Send a lifecycle message on Commit events.
@@ -46,5 +47,28 @@ export class CommitToPullRequestLifecycle
         event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>)
         : { [teamId: string]: Preferences[] } {
         return chatTeamsToPreferences(_.get(event, "data.Commit[0].pullRequests[0].repo.org.team.chatTeams"));
+    }
+}
+
+/**
+ * Send a lifecycle card on Commit events.
+ */
+@EventHandler("Send a lifecycle card on Commit events", subscription("commitToPullRequest"))
+@Tags("lifecycle", "pr", "commit")
+export class CommitToPullRequestCardLifecycle
+    extends PullRequestCardLifecycleHandler<graphql.CommitToPullRequestLifecycle.Subscription> {
+
+    protected extractNodes(event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>):
+        [graphql.CommitToPullRequestLifecycle.PullRequests, graphql.PullRequestFields.Repo,
+            string, boolean] {
+
+        const pr = _.get(event, "data.Commit[0].pullRequests[0]");
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
+    }
+
+    protected extractPreferences(
+        event: EventFired<graphql.CommitToPullRequestLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return {};
     }
 }

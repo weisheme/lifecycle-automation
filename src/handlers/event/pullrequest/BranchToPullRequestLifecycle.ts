@@ -24,7 +24,10 @@ import * as _ from "lodash";
 import { Preferences } from "../../../lifecycle/Lifecycle";
 import { chatTeamsToPreferences } from "../../../lifecycle/util";
 import * as graphql from "../../../typings/types";
-import { PullRequestLifecycleHandler } from "./PullRequestLifecycle";
+import {
+    PullRequestCardLifecycleHandler,
+    PullRequestLifecycleHandler,
+} from "./PullRequestLifecycle";
 
 /**
  * Send a lifecycle message on Branch events.
@@ -46,5 +49,28 @@ export class BranchToPullRequestLifecycle
         event: EventFired<graphql.BranchToPullRequestLifecycle.Subscription>)
         : { [teamId: string]: Preferences[] } {
         return chatTeamsToPreferences(_.get(event, "data.Branch[0].pullRequests[0].repo.org.team.chatTeams"));
+    }
+}
+
+/**
+ * Send a lifecycle message on Branch events.
+ */
+@EventHandler("Send a lifecycle message on Branch events", subscription("branchToPullRequest"))
+@Tags("lifecycle", "pr", "branch")
+export class BranchToPullRequestCardLifecycle
+    extends PullRequestCardLifecycleHandler<graphql.BranchToPullRequestLifecycle.Subscription> {
+
+    protected extractNodes(event: EventFired<graphql.BranchToPullRequestLifecycle.Subscription>):
+        [graphql.BranchToPullRequestLifecycle.PullRequests, graphql.PullRequestFields.Repo,
+            string, boolean ] {
+
+        const pr = _.get(event, "data.Branch[0].pullRequests[0]");
+        return [pr, _.get(pr, "repo"), Date.now().toString(), true];
+    }
+
+    protected extractPreferences(
+        event: EventFired<graphql.BranchToPullRequestLifecycle.Subscription>)
+        : { [teamId: string]: Preferences[] } {
+        return {};
     }
 }
