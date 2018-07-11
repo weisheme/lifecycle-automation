@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/lifecycle-automation/compare/0.8.39...HEAD)
 
+### Added
+
+-   Bitbucket support for links in Push message. [#194](https://github.com/atomist/lifecycle-automation/issues/194)
+
 ## [0.8.39](https://github.com/atomist/lifecycle-automation/compare/0.8.38...0.8.39) - 2018-07-10
 
 ### Added
