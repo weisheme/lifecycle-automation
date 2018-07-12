@@ -40,7 +40,9 @@ export class K8PodToPushLifecycle extends PushLifecycleHandler<graphql.K8PodToPu
         graphql.K8PodToPushLifecycle.Pushes[] {
 
         const pushes = [];
-        event.data.K8Pod[0].images.forEach(i => pushes.push(...i.commits[0].pushes));
+        event.data.K8Pod[0].images
+            .filter(i => i.commits && i.commits.length > 0)
+            .forEach(i => pushes.push(...i.commits[0].pushes));
         return pushes;
     }
 
@@ -63,7 +65,9 @@ export class K8PodToPushCardLifecycle extends PushCardLifecycleHandler<graphql.K
         graphql.K8PodToPushLifecycle.Pushes[] {
 
         const pushes = [];
-        event.data.K8Pod[0].images.forEach(i => pushes.push(...i.commits[0].pushes));
+        event.data.K8Pod[0].images
+            .filter(i => i.commits && i.commits.length > 0)
+            .forEach(i => pushes.push(...i.commits[0].pushes));
         return pushes;
     }
 
