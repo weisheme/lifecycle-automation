@@ -282,7 +282,7 @@ export function prRevieweeNotification(id: string,
             const login = _.get(review, "person.chatId.screenName");
             if (login
                 && pr.author
-                && pr.author.login !== login
+                && pr.author.login !== review.login
                 && !isDmDisabled(review.person.chatId, DirectMessagePreferences.reviewee.id)) {
                 // tslint:disable-next-line:variable-name
                 const footer_icon = `https://images.atomist.com/rug/pull-request-${state}.png`;
