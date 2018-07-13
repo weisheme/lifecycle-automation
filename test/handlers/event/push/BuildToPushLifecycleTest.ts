@@ -30,7 +30,7 @@ describe("BuildToPushLifecycle", () => {
   "data": {
     "Build": [{
       "push": {
-        builds": [{
+        "builds": [{
           "id": "T095SFFBK_280825123",
           "buildUrl": "https://travis-ci.org/atomisthq/lifecycle-demo/builds/280825123",
           "name": "133",
