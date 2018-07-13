@@ -8,6 +8,7 @@ fragment SdmGoalFields on SdmGoal {
   sha
   branch
   state
+  phase
   fulfillment {
     method
     name

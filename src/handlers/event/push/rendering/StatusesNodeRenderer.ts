@@ -249,6 +249,9 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
                 if (s.externalUrl) {
                     details = ` | ${url(s.externalUrl, "Link")}`;
                 }
+                if (s.state === SdmGoalState.in_process && s.phase) {
+                    details += ` | ${s.phase}`;
+                }
                 if (s.approval && s.approval.userId) {
                     details += ` | approved by @${s.approval.userId}`;
                 }
@@ -357,13 +360,16 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
 
             // Now each one
             sg.goals.forEach(s => {
-                let approval = "";
+                let details = "";
+                if (s.state === SdmGoalState.in_process && s.phase) {
+                    details += ` | ${s.phase}`;
+                }
                 if (s.approval && s.approval.userId) {
-                    approval = ` | approved by @${s.approval.userId}`;
+                    details = ` | approved by @${s.approval.userId}`;
                 }
                 gs.push({
                     name: s.name,
-                    description: `${s.description}${approval}`,
+                    description: `${s.description}${details}`,
                     state: s.state,
                     environment: sg.environment,
                     ts: s.ts,

@@ -4557,7 +4557,8 @@ export enum ProviderType {
   bitbucket_cloud = "bitbucket_cloud",
   github_com = "github_com",
   ghe = "ghe",
-  bitbucket = "bitbucket"
+  bitbucket = "bitbucket",
+  gitlab = "gitlab"
 }
 
 /* Enum for OwnerType */
@@ -5280,6 +5281,11 @@ export enum _UserJoinedChannelOrdering {
 export enum _Ordering {
   desc = "desc",
   asc = "asc"
+}
+
+export enum CommitIssueRelationshipType {
+  fixes = "fixes",
+  references = "references"
 }
 
 export enum SdmDeployState {
@@ -11666,6 +11672,7 @@ export namespace SdmGoalFields {
     sha?: string | null;
     branch?: string | null;
     state?: SdmGoalState | null;
+    phase?: string | null;
     fulfillment?: Fulfillment | null;
     description?: string | null;
     url?: string | null;
