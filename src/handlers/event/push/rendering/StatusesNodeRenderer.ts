@@ -246,7 +246,7 @@ export class GoalNodeRenderer extends AbstractIdentifiableContribution
             // Now each one
             const lines = statuses.map(s => {
                 let details = "";
-                if (s.state === SdmGoalState.in_process && s.phase) {
+                if ((s.state === SdmGoalState.in_process || s.state === SdmGoalState.failure) && s.phase) {
                     details += ` | ${s.phase}`;
                 }
                 if (s.externalUrl) {
@@ -361,7 +361,7 @@ export class GoalCardNodeRenderer extends AbstractIdentifiableContribution
             // Now each one
             sg.goals.forEach(s => {
                 let details = "";
-                if (s.state === SdmGoalState.in_process && s.phase) {
+                if ((s.state === SdmGoalState.in_process || s.state === SdmGoalState.failure) && s.phase) {
                     details += ` | ${s.phase}`;
                 }
                 if (s.approval && s.approval.userId) {
