@@ -115,6 +115,8 @@ export function commitIcon(repo: any): string {
         return "https://images.atomist.com/rug/github_grey.png";
     } else if (isBitBucket(repo)) {
         return "https://images.atomist.com/rug/bitbucket.png";
+    } else if (isGitlab(repo)) {
+        return "https://images.atomist.com/rug/gitlab_grey.png";
     } else {
         return "https://images.atomist.com/rug/commit.png";
     }
