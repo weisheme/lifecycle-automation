@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/lifecycle-automation/compare/0.8.42...HEAD)
 
+### Added
+
+-   Raise PR button shows when goal set is still running. [#237](https://github.com/atomist/lifecycle-automation/issues/237)
+
 ## [0.8.42](https://github.com/atomist/lifecycle-automation/compare/0.8.41...0.8.42) - 2018-07-13
 
 ## [0.8.41](https://github.com/atomist/lifecycle-automation/compare/0.8.40...0.8.41) - 2018-07-13
