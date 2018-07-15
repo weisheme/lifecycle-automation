@@ -350,7 +350,8 @@ export class PullRequestActionContributor extends AbstractIdentifiableContributi
             const push = node as graphql.PushToPushLifecycle.Push;
             return push.branch !== (push.repo.defaultBranch || "master")
                 && push.branch !== "gh-pages"
-                && (!push.builds || !push.builds.some(b => b.status !== "passed"));
+                && (!push.builds || !push.builds.some(b => b.status !== "passed")
+                && (!push.goals || !push.goals.some(g => g.state !== SdmGoalState.success)));
         } else {
             return false;
         }
